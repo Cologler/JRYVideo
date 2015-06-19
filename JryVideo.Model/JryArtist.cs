@@ -6,6 +6,8 @@ namespace JryVideo.Model
 {
     public class JryArtist : JryObject, ICounterable
     {
+        public string DoubanId { get; set; }
+
         public string Name { get; set; }
 
         public JryObject InitializeInstance(JryObject obj)

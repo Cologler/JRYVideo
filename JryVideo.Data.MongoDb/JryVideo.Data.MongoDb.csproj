@@ -53,6 +53,9 @@
   <ItemGroup>
     <Compile Include="JryVideoMongoDbDataSourceProviderManagerInitializeParameters.cs" />
     <Compile Include="JryVideoMongoDbDataSourceSetProvider.cs" />
+    <Compile Include="MongoArtistDataSource.cs" />
+    <Compile Include="MongoCoverDataSource.cs" />
+    <Compile Include="MongoItemDataSource.cs" />
     <Compile Include="MongoSeriesDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

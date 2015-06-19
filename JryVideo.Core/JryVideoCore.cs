@@ -1,14 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
-using JryVideo = JryVideo.Model.JryVideo;
 
 namespace JryVideo.Core
 {
     public class JryVideoCore
     {
-        public static void Initialize()
+        public static JryVideoCore Current { get; private set; }
+
+        static JryVideoCore()
+        {
+            Current = new JryVideoCore();
+        }
+
+        public async Task InitializeAsync()
         {
             var dataSourceManager = DataSourceManager.Default;
             dataSourceManager.Scan();
@@ -19,15 +27,26 @@ namespace JryVideo.Core
                 para.ParameterValue = "";
                 source.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
             }
-            source.Initialize();
+            await source.Initialize();
 
             var data = source.GetSeriesDataSourceProvider();
-            data.Put(new JrySeries()
+            await data.InsertAsync(new JrySeries()
             {
+                Names = new List<string>()
+                {
+                    "series123", "series456"
+                },
+
                 Videos = new List<Model.JryVideo>()
                 {
                     new Model.JryVideo()
                     {
+                        DoubanId = "25851657",
+
+                        Index = 1,
+
+                        Year = 2005,
+
                         Entities = new List<JryEntity>()
                         {
                             new JryEntity()
@@ -38,6 +57,13 @@ namespace JryVideo.Core
                     }.InitializeInstance()
                 }
             }.InitializeInstance());
+
+            this.CoverManager = new CoverManager(source.GetCoverDataSourceProvider());
+            this.SeriesManager = new SeriesManager(source.GetSeriesDataSourceProvider());
         }
+
+        public CoverManager CoverManager { get; private set; }
+
+        public SeriesManager SeriesManager { get; private set; }
     }
 }

@@ -73,9 +73,14 @@ namespace JryVideo.Data.MongoDb
             return new MongoSeriesDataSource(this.Database.GetCollection<JrySeries>("Series"));
         }
 
-        public IDataSourceProvider<JryCover> GetCoverDataSourceProvider()
+        public ICoverDataSourceProvider GetCoverDataSourceProvider()
         {
-            throw new NotImplementedException();
+            return new MongoCoverDataSource(this.Database.GetCollection<JryCover>("Cover"));
+        }
+
+        public IDataSourceProvider<JryArtist> GetArtistDataSourceProvider()
+        {
+            return new MongoArtistDataSource(this.Database.GetCollection<JryArtist>("Artist"));
         }
 
         public string Name

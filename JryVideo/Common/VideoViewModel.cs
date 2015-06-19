@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using JryVideo.Core;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
 
@@ -8,6 +10,8 @@ namespace JryVideo.Common
 {
     public class VideoViewModel : JasilyViewModel<Model.JryVideo>
     {
+        private byte[] _cover;
+
         public VideoViewModel(JrySeries series, Model.JryVideo source)
             : base(source)
         {
@@ -33,7 +37,48 @@ namespace JryVideo.Common
 
         public byte[] Cover
         {
-            get { return new CoverManager() [this.Source.CoverId]; }
+            get
+            {
+                if (this._cover == null)
+                    this.BeginUpdateCover();
+
+                return this._cover;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    this.SetPropertyRef(ref this._cover, value);
+                }
+            }
+        }
+
+        private async void BeginUpdateCover()
+        {
+            var coverManager = JryVideoCore.Current.CoverManager;
+            
+            if (this.Source.CoverId == Guid.Empty)
+            {
+                if (this.Source.DoubanId == null) return;
+
+                var guid = await coverManager.UpdateCoverFromDoubanIdAsync(this.Source.DoubanId);
+
+                if (guid == null) return;
+
+                this.Source.CoverId = guid.Value;
+
+                var seriesManager = JryVideoCore.Current.SeriesManager;
+                await seriesManager.UpdateAsync(this.Series);
+            }
+
+            var buff = await JryVideoCore.Current.CoverManager.LoadCoverAsync(this.Source.CoverId);
+
+            this.Cover = buff;
+        }
+
+        public static IEnumerable<VideoViewModel> Create(JrySeries series)
+        {
+            return series.Videos.Select(jryVideo => new VideoViewModel(series, jryVideo));
         }
     }
 }

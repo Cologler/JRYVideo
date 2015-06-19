@@ -37,6 +37,10 @@ namespace JryVideo.Model
             {
                 yield return "error Videos";
             }
+            else if (this.Videos.Count == 0)
+            {
+                yield return "error Videos Count";
+            }
         }
     }
 }

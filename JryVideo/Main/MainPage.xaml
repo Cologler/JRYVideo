@@ -4,52 +4,75 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:common="clr-namespace:JryVideo.Common"
+      xmlns:main="clr-namespace:JryVideo.Main"
       mc:Ignorable="d"
-      d:DesignHeight="300"
-      d:DesignWidth="300"
+      d:DesignHeight="500"
+      d:DesignWidth="800"
       Title="MainPage">
 
-    <Grid>
-        <ListView>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+    <Grid d:DataContext="{d:DesignInstance main:MainViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
         
-        <ListView>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid d:DataContext="{d:DesignInstance common:VideoViewModel}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        
-                        <Image Source="{Binding Cover}"/>
-                        
-                        <StackPanel Grid.Row="1">
-                            
-                            <TextBlock Text="{Binding SeriesName}"/>
-                            
-                            <TextBlock Text="{Binding Index}" />
-                            
-                            <TextBlock Text="{Binding VideoName}" />
-                            
-                        </StackPanel>
-                        
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid>
+            <TextBox HorizontalAlignment="Right"
+                     Width="200"
+                     Margin="3"/>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <ListView BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ListView BorderThickness="0"
+                      ItemsSource="{Binding VideosView}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid d:DataContext="{d:DesignInstance common:VideoViewModel}"
+                              Margin="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Image Source="{Binding Cover}"
+                                   Height="266"
+                                   Width="200" />
+
+                            <StackPanel Grid.Row="1">
+
+                                <TextBlock Text="{Binding SeriesName}"
+                                           HorizontalAlignment="Center" 
+                                           TextWrapping="WrapWithOverflow"/>
+
+                                <TextBlock Text="{Binding Index}"
+                                           HorizontalAlignment="Center" />
+
+                                <TextBlock Text="{Binding VideoName}"
+                                           HorizontalAlignment="Center" />
+
+                            </StackPanel>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

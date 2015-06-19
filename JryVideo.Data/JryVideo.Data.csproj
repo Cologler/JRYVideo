@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataSources\ICoverDataSourceProvider.cs" />
     <Compile Include="DataSources\IDataSourceProvider.cs" />
     <Compile Include="DataSources\IDataSourceReaderProvider.cs" />
     <Compile Include="DataSources\IDataSourceWriteProvider.cs" />

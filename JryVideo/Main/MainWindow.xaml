@@ -5,8 +5,11 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="MainWindow"
                       Height="500"
-                      Width="800"
-                      WindowStartupLocation="CenterScreen">
+                      Width="900"
+                      WindowStartupLocation="CenterScreen"
+                      BorderBrush="BlueViolet"
+                      WindowTitleBrush="BlueViolet"
+                      BorderThickness="1">
     <Grid>
         <Frame x:Name="MainFrame" />
     </Grid>

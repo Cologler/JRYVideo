@@ -7,6 +7,8 @@ namespace JryVideo.Model
     {
         public JryCoverType CoverType { get; set; }
 
+        public JryCoverSourceType CoverSourceType { get; set; }
+
         public string DoubanId { get; set; }
 
         public string Uri { get; set; }

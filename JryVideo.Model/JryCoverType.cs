@@ -1,9 +1,9 @@
 ﻿namespace JryVideo.Model
 {
-    public enum JryCoverType
+    public enum JryCoverType : int
     {
-        Artist,
+        Artist = 0,
 
-        Video
+        Video = 1
     }
 }
