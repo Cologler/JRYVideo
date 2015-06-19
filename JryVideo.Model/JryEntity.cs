@@ -25,11 +25,11 @@ namespace JryVideo.Model
 
         public JryEntity InitializeInstance(JryEntity obj)
         {
-            obj.Fansubs = new List<string>();
-            obj.Formats = new List<JryFormat>();
-            obj.SubTitleLanguages = new List<string>();
-            obj.Tags = new List<string>();
-            obj.TrackLanguages = new List<string>();
+            obj.Fansubs = obj.Fansubs ?? new List<string>();
+            obj.Formats = obj.Formats ?? new List<JryFormat>();
+            obj.SubTitleLanguages = obj.SubTitleLanguages ?? new List<string>();
+            obj.Tags = obj.Tags ?? new List<string>();
+            obj.TrackLanguages = obj.TrackLanguages ?? new List<string>();
 
             return base.InitializeInstance(obj);
         }

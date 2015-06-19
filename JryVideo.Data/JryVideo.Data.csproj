@@ -42,7 +42,10 @@
     <Compile Include="DataSources\IDataSourceProvider.cs" />
     <Compile Include="DataSources\IDataSourceReaderProvider.cs" />
     <Compile Include="DataSources\IDataSourceWriteProvider.cs" />
-    <Compile Include="IJryVideoDataSourceSetProvider.cs" />
+    <Compile Include="IDataSourceProviderManagerInitializeParameters.cs" />
+    <Compile Include="IJryVideoDataSourceProviderManager.cs" />
+    <Compile Include="InitializeParameter.cs" />
+    <Compile Include="InitializeParameterType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

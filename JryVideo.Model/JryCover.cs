@@ -5,6 +5,8 @@ namespace JryVideo.Model
 {
     public sealed class JryCover : JryObject, IInitializable<JryCover>
     {
+        public JryCoverType CoverType { get; set; }
+
         public string DoubanId { get; set; }
 
         public string Uri { get; set; }

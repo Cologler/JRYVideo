@@ -12,7 +12,7 @@ namespace JryVideo.Model
         protected virtual T InitializeInstance<T>(T obj)
             where T : JryObject
         {
-            obj.Id = new Guid();
+            obj.Id = Guid.NewGuid();
             obj.Created = DateTime.UtcNow;
             return obj;
         }

@@ -25,7 +25,7 @@ namespace JryVideo.Main
         {
             this.InitializeComponent();
 
-            DataSourceManager.Current.Scan();
+            JryVideo.Core.JryVideoCore.Initialize();
         }
     }
 }

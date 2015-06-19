@@ -51,10 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JryCoverType.cs" />
+    <Compile Include="JryArtist.cs" />
     <Compile Include="JryFormatType.cs" />
     <Compile Include="JryCover.cs" />
     <Compile Include="JryEntity.cs" />
     <Compile Include="JryFormat.cs" />
+    <Compile Include="JryInterfaces\CounterableMethod.cs" />
+    <Compile Include="JryInterfaces\ICounterable.cs" />
     <Compile Include="JryObject.cs" />
     <Compile Include="JrySeries.cs" />
     <Compile Include="JryVideo.cs" />

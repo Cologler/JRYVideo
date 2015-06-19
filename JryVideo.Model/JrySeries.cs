@@ -11,8 +11,8 @@ namespace JryVideo.Model
 
         public JrySeries InitializeInstance(JrySeries obj)
         {
-            obj.Names = new List<string>();
-            obj.Videos = new List<JryVideo>();
+            obj.Names = obj.Names ?? new List<string>();
+            obj.Videos = obj.Videos ?? new List<JryVideo>();
 
             return base.InitializeInstance(obj);
         }

@@ -10,18 +10,21 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
+    /// <summary>
+    /// 对客户端支持的数据源进行管理及选择
+    /// </summary>
     public class DataSourceManager
     {
-        public static DataSourceManager Current { get; private set; }
+        public static DataSourceManager Default { get; private set; }
 
         static DataSourceManager()
         {
-            Current = new DataSourceManager();
+            Default = new DataSourceManager();
         }
 
-        private readonly List<IJryVideoDataSourceSetProvider> SourceSetProviders = new List<IJryVideoDataSourceSetProvider>();
+        private readonly List<IJryVideoDataSourceProviderManager> SourceSetProviders = new List<IJryVideoDataSourceProviderManager>();
 
-        public DataSourceManager()
+        private DataSourceManager()
         {
         }
 
@@ -30,12 +33,12 @@ namespace JryVideo.Core.Managers
             this.SourceSetProviders.AddRange(GetLocalAllSourceSetProviders());
         }
 
-        public IDataSourceProvider<JrySeries> GetDefault()
+        public IJryVideoDataSourceProviderManager GetDefault()
         {
-            return null;
+            return this.SourceSetProviders.FirstOrDefault();
         }
 
-        private static IEnumerable<IJryVideoDataSourceSetProvider> GetLocalAllSourceSetProviders()
+        private static IEnumerable<IJryVideoDataSourceProviderManager> GetLocalAllSourceSetProviders()
         {
             var path = System.Environment.GetCommandLineArgs().First();
 
@@ -45,7 +48,7 @@ namespace JryVideo.Core.Managers
 
             var files = System.IO.Directory.GetFiles(dir, "JryVideo.Data.*.dll");
 
-            var @interface = typeof(IJryVideoDataSourceSetProvider);
+            var @interface = typeof(IJryVideoDataSourceProviderManager);
 
             foreach (var file in files)
             {
@@ -65,11 +68,11 @@ namespace JryVideo.Core.Managers
                 foreach (var type in assembly.GetExportedTypes()
                     .Where(z => @interface.IsAssignableFrom(z)))
                 {
-                    IJryVideoDataSourceSetProvider instance = null;
+                    IJryVideoDataSourceProviderManager instance = null;
 
                     try
                     {
-                        instance = type.CreateInstance<IJryVideoDataSourceSetProvider>();
+                        instance = type.CreateInstance<IJryVideoDataSourceProviderManager>();
                     }
                     catch
                     {
