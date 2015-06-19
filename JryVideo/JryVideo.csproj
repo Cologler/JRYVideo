@@ -34,8 +34,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MahApps.Metro, Version=1.1.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -53,7 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Main\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -61,12 +69,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Common\VideoViewModel.cs" />
+    <Compile Include="Main\MainViewModel.cs" />
+    <Compile Include="Main\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Main\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Main\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -84,6 +101,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -92,6 +110,32 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jasily\Jasily.Core.Desktop\Jasily.Core.Desktop.csproj">
+      <Project>{e90943e3-39c3-4649-9fe7-17096cbcd95e}</Project>
+      <Name>Jasily.Core.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Jasily\Jasily.Core\Jasily.Core.csproj">
+      <Project>{8442e8e7-d515-4481-8a36-71711b1fbf79}</Project>
+      <Name>Jasily.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JryVideo.Core\JryVideo.Core.csproj">
+      <Project>{330D6358-910A-4C5D-8251-E7CF4F456491}</Project>
+      <Name>JryVideo.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JryVideo.Data.MongoDb\JryVideo.Data.MongoDb.csproj">
+      <Project>{6491fb75-c11f-45b3-afe1-45cd05e6b382}</Project>
+      <Name>JryVideo.Data.MongoDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JryVideo.Data\JryVideo.Data.csproj">
+      <Project>{5705A29D-D8FE-4243-90AD-D43B83BC809D}</Project>
+      <Name>JryVideo.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JryVideo.Model\JryVideo.Model.csproj">
+      <Project>{40F1A88E-047C-47A4-9F9A-4CA7F83BFFD6}</Project>
+      <Name>JryVideo.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

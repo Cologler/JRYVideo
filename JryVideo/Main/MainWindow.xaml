@@ -1,0 +1,13 @@
+﻿<controls:MetroWindow x:Class="JryVideo.Main.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:main="clr-namespace:JryVideo.Main"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      Title="MainWindow"
+                      Height="500"
+                      Width="800"
+                      WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Frame x:Name="MainFrame" />
+    </Grid>
+</controls:MetroWindow>

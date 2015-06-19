@@ -12,17 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using JryVideo.Core.Managers;
 
-namespace JryVideo
+namespace JryVideo.Main
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// MainPage.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainPage : Page
     {
-        public MainWindow()
+        public MainPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+
+            DataSourceManager.Current.Scan();
         }
     }
 }

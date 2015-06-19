@@ -5,6 +5,18 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo", "JryVideo\JryVideo.csproj", "{B58150EA-B988-4B97-BE29-77FF0ED7493C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo.Model", "JryVideo.Model\JryVideo.Model.csproj", "{40F1A88E-047C-47A4-9F9A-4CA7F83BFFD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.Core", "Jasily\Jasily.Core\Jasily.Core.csproj", "{8442E8E7-D515-4481-8A36-71711B1FBF79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.Core.Desktop", "Jasily\Jasily.Core.Desktop\Jasily.Core.Desktop.csproj", "{E90943E3-39C3-4649-9FE7-17096CBCD95E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo.Core", "JryVideo.Core\JryVideo.Core.csproj", "{330D6358-910A-4C5D-8251-E7CF4F456491}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo.Data.MongoDb", "JryVideo.Data.MongoDb\JryVideo.Data.MongoDb.csproj", "{6491FB75-C11F-45B3-AFE1-45CD05E6B382}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo.Data", "JryVideo.Data\JryVideo.Data.csproj", "{5705A29D-D8FE-4243-90AD-D43B83BC809D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +27,30 @@ Global
 		{B58150EA-B988-4B97-BE29-77FF0ED7493C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B58150EA-B988-4B97-BE29-77FF0ED7493C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B58150EA-B988-4B97-BE29-77FF0ED7493C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40F1A88E-047C-47A4-9F9A-4CA7F83BFFD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40F1A88E-047C-47A4-9F9A-4CA7F83BFFD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40F1A88E-047C-47A4-9F9A-4CA7F83BFFD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40F1A88E-047C-47A4-9F9A-4CA7F83BFFD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8442E8E7-D515-4481-8A36-71711B1FBF79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8442E8E7-D515-4481-8A36-71711B1FBF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8442E8E7-D515-4481-8A36-71711B1FBF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8442E8E7-D515-4481-8A36-71711B1FBF79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E90943E3-39C3-4649-9FE7-17096CBCD95E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E90943E3-39C3-4649-9FE7-17096CBCD95E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E90943E3-39C3-4649-9FE7-17096CBCD95E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E90943E3-39C3-4649-9FE7-17096CBCD95E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{330D6358-910A-4C5D-8251-E7CF4F456491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{330D6358-910A-4C5D-8251-E7CF4F456491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{330D6358-910A-4C5D-8251-E7CF4F456491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{330D6358-910A-4C5D-8251-E7CF4F456491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6491FB75-C11F-45B3-AFE1-45CD05E6B382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6491FB75-C11F-45B3-AFE1-45CD05E6B382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6491FB75-C11F-45B3-AFE1-45CD05E6B382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6491FB75-C11F-45B3-AFE1-45CD05E6B382}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5705A29D-D8FE-4243-90AD-D43B83BC809D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5705A29D-D8FE-4243-90AD-D43B83BC809D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5705A29D-D8FE-4243-90AD-D43B83BC809D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5705A29D-D8FE-4243-90AD-D43B83BC809D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
