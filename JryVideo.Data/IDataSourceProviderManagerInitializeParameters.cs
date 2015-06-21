@@ -2,7 +2,7 @@
 
 namespace JryVideo.Data
 {
-    public interface IDataSourceProviderManagerInitializeParameters
+    public interface IJryVideoDataEngineInitializeParameters
     {
         IEnumerable<InitializeParameter> GetOptionalParameters();
 

@@ -5,13 +5,13 @@ using JryVideo.Model;
 
 namespace JryVideo.Data
 {
-    public interface IJryVideoDataSourceProviderManager
+    public interface IJryVideoDataEngine
     {
         string Name { get; }
 
-        IDataSourceProviderManagerInitializeParameters InitializeParametersInfo { get; }
+        IJryVideoDataEngineInitializeParameters InitializeParametersInfo { get; }
 
-        Task<bool> Initialize();
+        Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode);
 
         IDataSourceProvider<JrySeries> GetSeriesDataSourceProvider();
 

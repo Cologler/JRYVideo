@@ -44,12 +44,17 @@
     <Compile Include="DataSources\IDataSourceReaderProvider.cs" />
     <Compile Include="DataSources\IDataSourceWriteProvider.cs" />
     <Compile Include="IDataSourceProviderManagerInitializeParameters.cs" />
-    <Compile Include="IJryVideoDataSourceProviderManager.cs" />
+    <Compile Include="IJryVideoDataEngine.cs" />
     <Compile Include="InitializeParameter.cs" />
     <Compile Include="InitializeParameterType.cs" />
+    <Compile Include="JryVideoDataSourceProviderManagerMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Jasily\Jasily.Core.Desktop\Jasily.Core.Desktop.csproj">
+      <Project>{E90943E3-39C3-4649-9FE7-17096CBCD95E}</Project>
+      <Name>Jasily.Core.Desktop</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily.Core\Jasily.Core.csproj">
       <Project>{8442E8E7-D515-4481-8A36-71711B1FBF79}</Project>
       <Name>Jasily.Core</Name>

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using JryVideo.Core;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
@@ -10,7 +12,7 @@ namespace JryVideo.Common
 {
     public class VideoViewModel : JasilyViewModel<Model.JryVideo>
     {
-        private byte[] _cover;
+        private JryCover _cover;
 
         public VideoViewModel(JrySeries series, Model.JryVideo source)
             : base(source)
@@ -35,27 +37,39 @@ namespace JryVideo.Common
             get { return this.Source.Names.FirstOrDefault() ?? ""; }
         }
 
-        public byte[] Cover
+        public JryCover Cover
         {
             get
             {
-                if (this._cover == null)
-                    this.BeginUpdateCover();
+                var cover = this._cover;
 
-                return this._cover;
+                if (cover == null)
+                {
+                    this.BeginUpdateCover();
+                    return null;
+                }
+                else
+                {
+                    this._cover = null; // clear memery.
+                    return cover;
+                }
             }
             set
             {
-                if (value != null)
-                {
-                    this.SetPropertyRef(ref this._cover, value);
-                }
+                this.SetPropertyRef(ref this._cover, value);
             }
         }
 
-        private async void BeginUpdateCover()
+        public async Task<JryCover> TryGetCoverAsync()
         {
-            var coverManager = JryVideoCore.Current.CoverManager;
+            if (this.Source.CoverId == Guid.Empty) return null;
+
+            return await JryVideoCore.Current.CurrentDataCenter.CoverManager.LoadCoverAsync(this.Source.CoverId);
+        }
+
+        public async void BeginUpdateCover()
+        {
+            var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
             
             if (this.Source.CoverId == Guid.Empty)
             {
@@ -67,13 +81,11 @@ namespace JryVideo.Common
 
                 this.Source.CoverId = guid.Value;
 
-                var seriesManager = JryVideoCore.Current.SeriesManager;
+                var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
                 await seriesManager.UpdateAsync(this.Series);
             }
 
-            var buff = await JryVideoCore.Current.CoverManager.LoadCoverAsync(this.Source.CoverId);
-
-            this.Cover = buff;
+            this.Cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.LoadCoverAsync(this.Source.CoverId);
         }
 
         public static IEnumerable<VideoViewModel> Create(JrySeries series)

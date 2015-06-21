@@ -44,6 +44,7 @@
     <Compile Include="Douban\DoubanMovieJson.cs" />
     <Compile Include="JryVideoCore.cs" />
     <Compile Include="Managers\CoverManagers.cs" />
+    <Compile Include="Managers\DataCenter.cs" />
     <Compile Include="Managers\DataSourceManager.cs" />
     <Compile Include="Managers\SeriesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

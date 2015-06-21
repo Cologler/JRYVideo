@@ -11,68 +11,118 @@
       Title="MainPage">
 
     <Grid d:DataContext="{d:DesignInstance main:MainViewModel}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         
         <Grid>
-            <TextBox HorizontalAlignment="Right"
-                     Width="200"
-                     Margin="3"/>
+            <Grid VerticalAlignment="Top"
+                  Margin="0,16"
+                  Width="120">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+
+                <Border x:Name="NormalModeButton"
+                        Background="#442EFF"
+                        MouseLeftButtonUp="NormalModeButton_OnMouseLeftButtonUp">
+                    <TextBlock HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               Text="normal"/>
+                </Border>
+
+                <Border x:Name="SecureModeButton"
+                        Grid.Row="1"
+                        Background="#442EFF"
+                        MouseLeftButtonUp="SecureModeButton_OnMouseLeftButtonUp">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="secure" />
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <TextBox HorizontalAlignment="Right"
+                         Width="200"
+                         Margin="3" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <ListView BorderThickness="0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <ListView BorderThickness="0"
+                          ItemsSource="{Binding VideosView}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid d:DataContext="{d:DesignInstance common:VideoViewModel}"
+                                  Margin="3" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem x:Name="EditCover"
+                                                  Header="change cover"
+                                                  Click="EditCover_OnClick"/>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+
+                                <Grid Height="266"
+                                      Width="200">
+                                    <Grid>
+                                        <Image Source="{Binding Cover.BinaryData}"
+                                               Height="266"
+                                               Width="200"
+                                               RenderOptions.BitmapScalingMode="Fant"
+                                               RenderOptions.EdgeMode="Aliased" />
+                                    </Grid>
+                                </Grid>
+
+                                <StackPanel Grid.Row="1">
+
+                                    <TextBlock Text="{Binding SeriesName}"
+                                               HorizontalAlignment="Center"
+                                               TextWrapping="WrapWithOverflow" />
+
+                                    <TextBlock Text="{Binding Index}"
+                                               HorizontalAlignment="Center" />
+
+                                    <TextBlock Text="{Binding VideoName}"
+                                               HorizontalAlignment="Center" />
+
+                                </StackPanel>
+
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
         </Grid>
         
-        <Grid Grid.Row="1">
-            <ListView BorderThickness="0">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <ListView BorderThickness="0"
-                      ItemsSource="{Binding VideosView}"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid d:DataContext="{d:DesignInstance common:VideoViewModel}"
-                              Margin="3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Image Source="{Binding Cover}"
-                                   Height="266"
-                                   Width="200" />
-
-                            <StackPanel Grid.Row="1">
-
-                                <TextBlock Text="{Binding SeriesName}"
-                                           HorizontalAlignment="Center" 
-                                           TextWrapping="WrapWithOverflow"/>
-
-                                <TextBlock Text="{Binding Index}"
-                                           HorizontalAlignment="Center" />
-
-                                <TextBlock Text="{Binding VideoName}"
-                                           HorizontalAlignment="Center" />
-
-                            </StackPanel>
-
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
     </Grid>
 </Page>

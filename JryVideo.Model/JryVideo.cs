@@ -22,6 +22,8 @@ namespace JryVideo.Model
 
         public string ImdbId { get; set; }
 
+        public int EpisodesCount { get; set; }
+
         public List<string> Tags { get; set; }
 
         public Guid CoverId { get; set; }
@@ -62,6 +64,11 @@ namespace JryVideo.Model
             if (this.Index < 1 || this.Index > 100)
             {
                 yield return "error Index";
+            }
+
+            if (this.EpisodesCount < 1)
+            {
+                yield return "error EpisodesCount";
             }
         }
     }

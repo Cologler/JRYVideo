@@ -61,6 +61,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="EditCover\EditCoverWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Main\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -70,6 +74,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Common\VideoViewModel.cs" />
+    <Compile Include="EditCover\EditCoverViewModel.cs" />
+    <Compile Include="EditCover\EditCoverWindow.xaml.cs">
+      <DependentUpon>EditCoverWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Main\MainViewModel.cs" />
     <Compile Include="Main\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

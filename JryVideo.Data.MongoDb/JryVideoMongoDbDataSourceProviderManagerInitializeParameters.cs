@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class JryVideoMongoDbDataSourceProviderManagerInitializeParameters : IDataSourceProviderManagerInitializeParameters
+    public class JryVideoMongoDbJryVideoDataEngineInitializeParameters : IJryVideoDataEngineInitializeParameters
     {
         public string ConnectString { get; private set; }
 

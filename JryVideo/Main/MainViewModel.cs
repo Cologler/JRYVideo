@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -28,11 +29,12 @@ namespace JryVideo.Main
 
         public async Task LoadAsync()
         {
-            var manager = JryVideo.Core.JryVideoCore.Current.SeriesManager;
+            var manager = JryVideo.Core.JryVideoCore.Current.CurrentDataCenter.SeriesManager;
 
             var series = await manager.LoadAsync();
 
-            this.VideosObservableCollection.AddRange(series.SelectMany(VideoViewModel.Create));
+            this.VideosObservableCollection.AddRange(
+                await Task.Run(() => series.SelectMany(VideoViewModel.Create)));
         }
     }
 }

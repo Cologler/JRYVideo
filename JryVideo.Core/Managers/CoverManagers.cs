@@ -21,14 +21,11 @@ namespace JryVideo.Core.Managers
             this.Source = source;
         }
 
-        public async Task<byte[]> LoadCoverAsync(Guid coverId)
+        public async Task<JryCover> LoadCoverAsync(Guid coverId)
         {
             if (coverId == Guid.Empty) return null;
 
-            var cover = await this.Source.QueryAsync(coverId);
-
-            return cover == null ? null : cover.BinaryData;
-            
+            return await this.Source.QueryAsync(coverId);
         }
 
         public async Task<Guid?> UpdateCoverFromDoubanIdAsync(string doubanId)
@@ -50,14 +47,16 @@ namespace JryVideo.Core.Managers
                     this._writingDoubanId.Add(doubanId);
                 }
 
-                var json = await DoubanHelper.SendAsync(doubanId);
+                var json = await DoubanHelper.GetMovieInfoAsync(doubanId);
 
                 if (json == null || json.Images == null || json.Images.Large == null)
                 {
                     return null;
                 }
 
-                var request = WebRequest.CreateHttp(json.Images.Large);
+                var url = DoubanHelper.GetLargeImageUrl(json);
+
+                var request = WebRequest.CreateHttp(url);
 
                 var result = await request.GetResultAsBytesAsync();
 
@@ -69,7 +68,7 @@ namespace JryVideo.Core.Managers
                     cover.DoubanId = doubanId;
                     cover.Uri = json.Images.Large;
                     cover.BinaryData = result.Result;
-                    await this.Insert(cover);
+                    await this.InsertAsync(cover);
 
                     lock (this._syncRoot)
                     {
@@ -90,9 +89,14 @@ namespace JryVideo.Core.Managers
             });
         }
 
-        private async Task Insert(JryCover cover)
+        public async Task InsertAsync(JryCover cover)
         {
             await this.Source.InsertAsync(cover);
+        }
+
+        public async Task UpdateAsync(JryCover cover)
+        {
+            await this.Source.UpdateAsync(cover);
         }
 
         //public Video5Cover this[string doubanId]

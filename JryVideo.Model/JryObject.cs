@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Attributes;
 using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
     public abstract class JryObject
     {
+        [Cloneable]
         public Guid Id { get; set; }
 
+        [Cloneable]
         public DateTime Created { get; set; }
 
         protected virtual T InitializeInstance<T>(T obj)

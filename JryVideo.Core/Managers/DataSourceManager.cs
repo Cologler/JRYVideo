@@ -22,7 +22,8 @@ namespace JryVideo.Core.Managers
             Default = new DataSourceManager();
         }
 
-        private readonly List<IJryVideoDataSourceProviderManager> SourceSetProviders = new List<IJryVideoDataSourceProviderManager>();
+        private readonly Dictionary<string, Func<IJryVideoDataEngine>> SourceSetProviders =
+            new Dictionary<string, Func<IJryVideoDataEngine>>();
 
         private DataSourceManager()
         {
@@ -30,15 +31,33 @@ namespace JryVideo.Core.Managers
 
         public void Scan()
         {
-            this.SourceSetProviders.AddRange(GetLocalAllSourceSetProviders());
+            foreach (var providerManagerCreator in GetLocalAllSourceSetProviders())
+            {
+                string name = null;
+
+                try
+                {
+                    name = providerManagerCreator().Name;
+                    
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                if (name == null) continue;
+
+                this.SourceSetProviders.Add(name, providerManagerCreator);
+            }
         }
 
-        public IJryVideoDataSourceProviderManager GetDefault()
+        public IJryVideoDataEngine GetDefault()
         {
-            return this.SourceSetProviders.FirstOrDefault();
+            var firstOrDefault = this.SourceSetProviders.Values.FirstOrDefault();
+            return firstOrDefault != null ? firstOrDefault() : null;
         }
 
-        private static IEnumerable<IJryVideoDataSourceProviderManager> GetLocalAllSourceSetProviders()
+        private static IEnumerable<Func<IJryVideoDataEngine>> GetLocalAllSourceSetProviders()
         {
             var path = System.Environment.GetCommandLineArgs().First();
 
@@ -48,7 +67,7 @@ namespace JryVideo.Core.Managers
 
             var files = System.IO.Directory.GetFiles(dir, "JryVideo.Data.*.dll");
 
-            var @interface = typeof(IJryVideoDataSourceProviderManager);
+            var @interface = typeof(IJryVideoDataEngine);
 
             foreach (var file in files)
             {
@@ -68,11 +87,11 @@ namespace JryVideo.Core.Managers
                 foreach (var type in assembly.GetExportedTypes()
                     .Where(z => @interface.IsAssignableFrom(z)))
                 {
-                    IJryVideoDataSourceProviderManager instance = null;
+                    IJryVideoDataEngine instance = null;
 
                     try
                     {
-                        instance = type.CreateInstance<IJryVideoDataSourceProviderManager>();
+                        instance = type.CreateInstance<IJryVideoDataEngine>();
                     }
                     catch
                     {
@@ -80,7 +99,7 @@ namespace JryVideo.Core.Managers
                     }
 
                     if (instance != null)
-                        yield return instance;
+                        yield return type.CreateInstance<IJryVideoDataEngine>;
                 }
             }
         }

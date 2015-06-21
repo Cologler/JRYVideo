@@ -7,18 +7,18 @@ using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class JryVideoMongoDbDataSourceProviderManager : IJryVideoDataSourceProviderManager
+    public class JryVideoMongoDbDataEngine : IJryVideoDataEngine
     {
         public const string DataSourceProviderName = "MongoDb";
 
-        private readonly JryVideoMongoDbDataSourceProviderManagerInitializeParameters _initializeParameters;
+        private readonly JryVideoMongoDbJryVideoDataEngineInitializeParameters _initializeParameters;
 
-        public JryVideoMongoDbDataSourceProviderManager()
+        public JryVideoMongoDbDataEngine()
         {
-            this._initializeParameters = new JryVideoMongoDbDataSourceProviderManagerInitializeParameters();
+            this._initializeParameters = new JryVideoMongoDbJryVideoDataEngineInitializeParameters();
         }
 
-        public IDataSourceProviderManagerInitializeParameters InitializeParametersInfo
+        public IJryVideoDataEngineInitializeParameters InitializeParametersInfo
         {
             get { return this._initializeParameters; }
         }
@@ -27,7 +27,7 @@ namespace JryVideo.Data.MongoDb
 
         public IMongoDatabase Database { get; private set; }
 
-        public async Task<bool> Initialize()
+        public async Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode)
         {
             var builder = new MongoUrlBuilder();
             
@@ -63,7 +63,7 @@ namespace JryVideo.Data.MongoDb
 
             //return db;
 
-            this.Database = this.Client.GetDatabase("JryVideo");
+            this.Database = this.Client.GetDatabase("JryVideo_" + mode.ToString());
 
             return true;
         }

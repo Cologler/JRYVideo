@@ -5,7 +5,7 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="MainWindow"
                       Height="500"
-                      Width="900"
+                      Width="1000"
                       WindowStartupLocation="CenterScreen"
                       BorderBrush="BlueViolet"
                       WindowTitleBrush="BlueViolet"

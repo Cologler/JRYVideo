@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using JryVideo.Common;
 using JryVideo.Core.Managers;
+using JryVideo.EditCover;
 
 namespace JryVideo.Main
 {
@@ -41,6 +43,39 @@ namespace JryVideo.Main
             this.DataContext = this.ViewModel = new MainViewModel();
 
             await this.ViewModel.LoadAsync();
+        }
+
+        private void NormalModeButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+
+        private void SecureModeButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+
+        private async void EditCover_OnClick(object sender, RoutedEventArgs e)
+        {
+            var frameworkElement = sender as FrameworkElement;
+            if (frameworkElement == null) return;
+
+            var vm = frameworkElement.DataContext as VideoViewModel;
+            if (vm == null) return;
+
+            var cover = await vm.TryGetCoverAsync();
+            if (cover != null)
+            {
+                var dlg = new EditCoverWindow(cover)
+                {
+
+                };
+
+                if (dlg.ShowDialog() == true)
+                {
+                    vm.BeginUpdateCover();
+                }
+            }
         }
     }
 }

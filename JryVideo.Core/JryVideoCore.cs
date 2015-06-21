@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
+using JryVideo.Data;
 using JryVideo.Model;
 
 namespace JryVideo.Core
@@ -20,16 +21,35 @@ namespace JryVideo.Core
         {
             var dataSourceManager = DataSourceManager.Default;
             dataSourceManager.Scan();
-            var source = dataSourceManager.GetDefault();
-            foreach (var initializeParameter in source.InitializeParametersInfo.GetRequiredParameters())
+
+            var normal = dataSourceManager.GetDefault();
+            foreach (var initializeParameter in normal.InitializeParametersInfo.GetRequiredParameters())
             {
                 var para = initializeParameter;
                 para.ParameterValue = "";
-                source.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
+                normal.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
             }
-            await source.Initialize();
+            await normal.Initialize(JryVideoDataSourceProviderManagerMode.Public);
+            this.NormalDataCenter = new DataCenter(normal);
 
-            var data = source.GetSeriesDataSourceProvider();
+            var secure = dataSourceManager.GetDefault();
+            foreach (var initializeParameter in secure.InitializeParametersInfo.GetRequiredParameters())
+            {
+                var para = initializeParameter;
+                para.ParameterValue = "";
+                secure.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
+            }
+            await secure.Initialize(JryVideoDataSourceProviderManagerMode.Private);
+            this.SecureDataCenter = new DataCenter(secure);
+
+            this.Switch(JryVideoDataSourceProviderManagerMode.Public);
+
+            await this.TestForAllItem();
+        }
+
+        private async Task TestForAllItem()
+        {
+            var data = NormalDataCenter.ProviderManager.GetSeriesDataSourceProvider();
             await data.InsertAsync(new JrySeries()
             {
                 Names = new List<string>()
@@ -57,13 +77,29 @@ namespace JryVideo.Core
                     }.InitializeInstance()
                 }
             }.InitializeInstance());
-
-            this.CoverManager = new CoverManager(source.GetCoverDataSourceProvider());
-            this.SeriesManager = new SeriesManager(source.GetSeriesDataSourceProvider());
         }
 
-        public CoverManager CoverManager { get; private set; }
+        public DataCenter NormalDataCenter { get; private set; }
 
-        public SeriesManager SeriesManager { get; private set; }
+        public DataCenter SecureDataCenter { get; private set; }
+
+        public DataCenter CurrentDataCenter { get; private set; }
+
+        public void Switch(JryVideoDataSourceProviderManagerMode mode)
+        {
+            switch (mode)
+            {
+                case JryVideoDataSourceProviderManagerMode.Public:
+                    this.CurrentDataCenter = this.NormalDataCenter;
+                    break;
+
+                case JryVideoDataSourceProviderManagerMode.Private:
+                    this.CurrentDataCenter = this.SecureDataCenter;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException("mode", mode, null);
+            }
+        }
     }
 }
