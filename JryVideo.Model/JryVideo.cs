@@ -26,11 +26,10 @@ namespace JryVideo.Model
 
         public List<string> Tags { get; set; }
 
-        public Guid CoverId { get; set; }
+        public string CoverId { get; set; }
 
         public JryVideo InitializeInstance(JryVideo obj)
         {
-            obj.CoverId = Guid.Empty;
             obj.Names = obj.Names ?? new List<string>();
             obj.Entities = obj.Entities ?? new List<JryEntity>();
             obj.Tags = obj.Tags ?? new List<string>();

@@ -7,7 +7,7 @@ namespace JryVideo.Model
     public abstract class JryObject
     {
         [Cloneable]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Cloneable]
         public DateTime Created { get; set; }
@@ -15,14 +15,23 @@ namespace JryVideo.Model
         protected virtual T InitializeInstance<T>(T obj)
             where T : JryObject
         {
-            obj.Id = Guid.NewGuid();
+            obj.Id = this.BuildId();
             obj.Created = DateTime.UtcNow;
             return obj;
         }
 
+        /// <summary>
+        /// Guid.NewGuid().ToString().ToUpper()
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string BuildId()
+        {
+            return Guid.NewGuid().ToString().ToUpper();
+        }
+
         public virtual IEnumerable<string> CheckError()
         {
-            if (this.Id == Guid.Empty) yield return "error Id";
+            if (String.IsNullOrWhiteSpace(this.Id)) yield return "error Id";
 
             if (this.Created == DateTime.MinValue) yield return "error Created";
         }

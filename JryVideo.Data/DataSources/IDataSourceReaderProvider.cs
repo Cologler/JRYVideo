@@ -10,6 +10,11 @@ namespace JryVideo.Data.DataSources
     {
         Task<IEnumerable<T>> QueryAsync(int skip, int take);
 
-        Task<T> QueryAsync(Guid id);
+        /// <summary>
+        /// return null if not found.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<T> QueryAsync(string id);
     }
 }

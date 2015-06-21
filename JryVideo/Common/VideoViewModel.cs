@@ -62,7 +62,7 @@ namespace JryVideo.Common
 
         public async Task<JryCover> TryGetCoverAsync()
         {
-            if (this.Source.CoverId == Guid.Empty) return null;
+            if (this.Source.CoverId == null) return null;
 
             return await JryVideoCore.Current.CurrentDataCenter.CoverManager.LoadCoverAsync(this.Source.CoverId);
         }
@@ -71,7 +71,7 @@ namespace JryVideo.Common
         {
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
             
-            if (this.Source.CoverId == Guid.Empty)
+            if (this.Source.CoverId == null)
             {
                 if (this.Source.DoubanId == null) return;
 
@@ -79,7 +79,7 @@ namespace JryVideo.Common
 
                 if (guid == null) return;
 
-                this.Source.CoverId = guid.Value;
+                this.Source.CoverId = guid;
 
                 var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
                 await seriesManager.UpdateAsync(this.Series);

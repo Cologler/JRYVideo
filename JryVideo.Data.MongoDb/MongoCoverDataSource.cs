@@ -8,8 +8,8 @@ namespace JryVideo.Data.MongoDb
 {
     public class MongoCoverDataSource : MongoItemDataSource<JryCover>, ICoverDataSourceProvider
     {
-        public MongoCoverDataSource(IMongoCollection<JryCover> collection)
-            : base(collection)
+        public MongoCoverDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<JryCover> collection)
+            : base(engine, collection)
         {
         }
 

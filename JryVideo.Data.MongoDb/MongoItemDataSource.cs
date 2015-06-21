@@ -11,14 +11,17 @@ namespace JryVideo.Data.MongoDb
     public class MongoItemDataSource<T> : IDataSourceProvider<T>
         where T : JryObject
     {
-        public IMongoCollection<T> Collection { get; set; }
+        public JryVideoMongoDbDataEngine Engine { get; private set; }
 
-        public MongoItemDataSource(IMongoCollection<T> collection)
+        public IMongoCollection<T> Collection { get; private set; }
+
+        public MongoItemDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
         {
+            this.Engine = engine;
             this.Collection = collection;
         }
 
-        public async Task<IEnumerable<T>> QueryAsync(int skip = 0, int take = Int32.MaxValue)
+        public async virtual Task<IEnumerable<T>> QueryAsync(int skip = 0, int take = Int32.MaxValue)
         {
             return await (await this.Collection.FindAsync(
                 _ => true,
@@ -30,7 +33,7 @@ namespace JryVideo.Data.MongoDb
                 .ToListAsync();
         }
 
-        public async Task<T> QueryAsync(Guid id)
+        public async virtual Task<T> QueryAsync(string id)
         {
             var filter = Builders<T>.Filter;
 
@@ -40,20 +43,27 @@ namespace JryVideo.Data.MongoDb
                 .FirstOrDefault();
         }
 
-        public async Task<bool> InsertAsync(T value)
+        public async virtual Task<bool> InsertAsync(T value)
         {
             await this.Collection.InsertOneAsync(value);
             return true;
         }
 
-        public async Task<bool> UpdateAsync(T value)
+        public async virtual Task<bool> UpdateAsync(T value)
         {
             var filter = Builders<T>.Filter;
 
-            return
-                (await this.Collection.ReplaceOneAsync(
+            return (await this.Collection.ReplaceOneAsync(
                     filter.Eq(t => t.Id, value.Id),
                     value)).MatchedCount == 1;
+        }
+
+        public async Task<bool> RemoveAsync(T value)
+        {
+            var filter = Builders<T>.Filter;
+
+            return (await this.Collection.DeleteOneAsync(
+                    filter.Eq(t => t.Id, value.Id))).DeletedCount == 1;
         }
     }
 }

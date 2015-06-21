@@ -21,19 +21,17 @@ namespace JryVideo.Core.Managers
             this.Source = source;
         }
 
-        public async Task<JryCover> LoadCoverAsync(Guid coverId)
+        public async Task<JryCover> LoadCoverAsync(string coverId)
         {
-            if (coverId == Guid.Empty) return null;
-
-            return await this.Source.QueryAsync(coverId);
+            return coverId == null ? null : await this.Source.QueryAsync(coverId);
         }
 
-        public async Task<Guid?> UpdateCoverFromDoubanIdAsync(string doubanId)
+        public async Task<string> UpdateCoverFromDoubanIdAsync(string doubanId)
         {
             if (String.IsNullOrWhiteSpace(doubanId))
                 throw new ArgumentException();
 
-            return await Task.Run<Guid?>(async () =>
+            return await Task.Run<string>(async () =>
             {
                 foreach (var jryCover in await this.Source.QueryByDoubanIdAsync(JryCoverType.Video, doubanId))
                 {

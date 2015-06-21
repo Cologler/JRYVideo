@@ -70,17 +70,22 @@ namespace JryVideo.Data.MongoDb
 
         public IDataSourceProvider<JrySeries> GetSeriesDataSourceProvider()
         {
-            return new MongoSeriesDataSource(this.Database.GetCollection<JrySeries>("Series"));
+            return new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
+        }
+
+        public ICounterDataSourceProvider GetCounterDataSourceProvider()
+        {
+            return new MongoCounterDataSource(this, this.Database.GetCollection<JryCounter>("Counter"));
         }
 
         public ICoverDataSourceProvider GetCoverDataSourceProvider()
         {
-            return new MongoCoverDataSource(this.Database.GetCollection<JryCover>("Cover"));
+            return new MongoCoverDataSource(this, this.Database.GetCollection<JryCover>("Cover"));
         }
 
         public IDataSourceProvider<JryArtist> GetArtistDataSourceProvider()
         {
-            return new MongoArtistDataSource(this.Database.GetCollection<JryArtist>("Artist"));
+            return new MongoArtistDataSource(this, this.Database.GetCollection<JryArtist>("Artist"));
         }
 
         public string Name

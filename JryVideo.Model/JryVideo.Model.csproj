@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JryCounter.cs" />
+    <Compile Include="JryCounterType.cs" />
     <Compile Include="JryCoverSourceType.cs" />
     <Compile Include="JryCoverType.cs" />
     <Compile Include="JryArtist.cs" />
