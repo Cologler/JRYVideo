@@ -49,8 +49,9 @@ namespace JryVideo.Core
 
         private async Task TestForAllItem()
         {
-            var data = NormalDataCenter.ProviderManager.GetSeriesDataSourceProvider();
-            await data.InsertAsync(new JrySeries()
+            var manager = this.CurrentDataCenter.SeriesManager;
+
+            await manager.InsertAsync(new JrySeries()
             {
                 Names = new List<string>()
                 {
@@ -61,6 +62,8 @@ namespace JryVideo.Core
                 {
                     new Model.JryVideo()
                     {
+                        Type = "Movie",
+
                         DoubanId = "25851657",
 
                         Index = 1,

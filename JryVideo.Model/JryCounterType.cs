@@ -2,6 +2,20 @@
 {
     public enum JryCounterType : int
     {
-        Year = 1
+        VideoYear = 11,
+
+        VideoType = 12,
+
+        EntityResolution = 21,
+
+        EntityFilmSource = 22,
+
+        EntityExtension = 23,
+
+        EntityFansub = 24,
+
+        EntitySubTitleLanguage = 25,
+
+        EntityTrackLanguage = 26,
     }
 }

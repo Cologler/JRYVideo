@@ -8,7 +8,7 @@ namespace JryVideo.Core.Managers
         {
             this.ProviderManager = dataEngine;
             this.CoverManager = new CoverManager(dataEngine.GetCoverDataSourceProvider());
-            this.SeriesManager = new SeriesManager(dataEngine.GetSeriesDataSourceProvider());
+            this.SeriesManager = new SeriesManager(this, dataEngine.GetSeriesDataSourceProvider());
         }
 
         public IJryVideoDataEngine ProviderManager { get; private set; }
