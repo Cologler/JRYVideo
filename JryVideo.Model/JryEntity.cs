@@ -5,8 +5,17 @@ using System.Runtime.Remoting.Messaging;
 
 namespace JryVideo.Model
 {
-    public sealed class JryEntity : JryObject, IInitializable<JryEntity>
+    public sealed class JryEntity : JryObject
     {
+        public JryEntity()
+        {
+            this.Fansubs = new List<string>();
+            this.Formats = new List<JryFormat>();
+            this.SubTitleLanguages = new List<string>();
+            this.Tags = new List<string>();
+            this.TrackLanguages = new List<string>();
+        }
+
         public List<JryFormat> Formats { get; set; }
 
         public List<string> Tags { get; set; }
@@ -22,17 +31,6 @@ namespace JryVideo.Model
         public string FilmSource { get; set; }
 
         public string Extension { get; set; }
-
-        public JryEntity InitializeInstance(JryEntity obj)
-        {
-            obj.Fansubs = obj.Fansubs ?? new List<string>();
-            obj.Formats = obj.Formats ?? new List<JryFormat>();
-            obj.SubTitleLanguages = obj.SubTitleLanguages ?? new List<string>();
-            obj.Tags = obj.Tags ?? new List<string>();
-            obj.TrackLanguages = obj.TrackLanguages ?? new List<string>();
-
-            return base.InitializeInstance(obj);
-        }
 
         public override IEnumerable<string> CheckError()
         {

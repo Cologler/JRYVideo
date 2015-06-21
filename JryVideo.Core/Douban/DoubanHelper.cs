@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,8 +14,6 @@ namespace JryVideo.Core.Douban
 
         public static async Task<DoubanMovieJson> GetMovieInfoAsync(string doubanId)
         {
-            if (String.IsNullOrWhiteSpace(doubanId)) return null;
-
             var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/subject/" + doubanId);
 
             var result = await request.GetResultAsBytesAsync();
@@ -46,6 +46,23 @@ namespace JryVideo.Core.Douban
             var server = large[10].ToString();
             var item = large.Substring(large.LastIndexOf('/'));
             return String.Format(@"http://img{0}.douban.com/view/photo/raw/public{1}", server, item);
+        }
+
+        public static IEnumerable<string> ParseName(DoubanMovieJson json)
+        {
+            if (!String.IsNullOrWhiteSpace(json.OriginalTitle))
+                yield return json.OriginalTitle;
+
+            if (!String.IsNullOrWhiteSpace(json.Title))
+                yield return json.Title;
+
+            if (json.Aka != null)
+            {
+                foreach (var originName in json.Aka.Where(z => !String.IsNullOrWhiteSpace(z)))
+                {
+                    yield return originName;
+                }
+            }
         }
     }
 }

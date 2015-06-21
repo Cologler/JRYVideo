@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Model;
@@ -14,8 +14,7 @@ namespace JryVideo.EditCover
         private string _doubanId;
         private string _uri;
         private byte[] _binaryData;
-        private BitmapImage _bitmapImage;
-        private string _metaData;
+        private ImageViewModel _imageViewModel;
 
         public EditCoverViewModel(JryCover source)
             : base(source)
@@ -47,43 +46,17 @@ namespace JryVideo.EditCover
             }
         }
 
-        public BitmapImage BitmapImage
-        {
-            get { return this._bitmapImage; }
-            set { this.SetPropertyRef(ref this._bitmapImage, value); }
-        }
-
         public JryCoverSourceType CoverSourceType { get; set; }
 
-        public string MetaData
+        public ImageViewModel ImageViewModel
         {
-            get { return this._metaData; }
-            private set { this.SetPropertyRef(ref this._metaData, value); }
+            get { return this._imageViewModel; }
+            private set { this.SetPropertyRef(ref this._imageViewModel, value); }
         }
 
         private void OnUpdatedBinaryData()
         {
-            this.BitmapImage = this.BinaryData == null ? null : this.LoadImage(this.BinaryData);
-
-            this.MetaData = this.BitmapImage == null
-                ? "W x H: 0 x 0"
-                : String.Format("W x H: {0} x {1}", this.BitmapImage.PixelWidth, this.BitmapImage.PixelHeight);
-        }
-
-        private BitmapImage LoadImage(byte[] data)
-        {
-            try
-            {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = data.ToMemoryStream();
-                image.EndInit();
-                return image;
-            }
-            catch
-            {
-                return null;
-            }
+            this.ImageViewModel = this.BinaryData == null ? null : ImageViewModel.Build(this.BinaryData);
         }
 
         public async Task<bool> LoadFromUrlAsync()

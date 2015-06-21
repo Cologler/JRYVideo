@@ -4,8 +4,16 @@ using System.Linq;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideo : JryObject, IInitializable<JryVideo>
+    public sealed class JryVideo : JryObject
     {
+        public JryVideo()
+        {
+            this.Names = new List<string>();
+            this.Entities = new List<JryEntity>();
+            this.Tags = new List<string>();
+            this.ArtistIds = new List<Guid>();
+        }
+
         public string Type { get; set; }
 
         public int Year { get; set; }
@@ -27,16 +35,6 @@ namespace JryVideo.Model
         public List<string> Tags { get; set; }
 
         public string CoverId { get; set; }
-
-        public JryVideo InitializeInstance(JryVideo obj)
-        {
-            obj.Names = obj.Names ?? new List<string>();
-            obj.Entities = obj.Entities ?? new List<JryEntity>();
-            obj.Tags = obj.Tags ?? new List<string>();
-            obj.ArtistIds = obj.ArtistIds ?? new List<Guid>();
-
-            return base.InitializeInstance(obj);
-        }
 
         public override IEnumerable<string> CheckError()
         {

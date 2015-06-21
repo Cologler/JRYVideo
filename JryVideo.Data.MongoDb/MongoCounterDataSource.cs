@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
@@ -11,6 +12,15 @@ namespace JryVideo.Data.MongoDb
         public MongoCounterDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<JryCounter> collection)
             : base(engine, collection)
         {
+        }
+
+        public async Task<IEnumerable<JryCounter>> QueryAsync(JryCounterType type)
+        {
+            var filter = Builders<JryCounter>.Filter;
+
+            return await (await this.Collection.FindAsync(
+                filter.Eq(t => t.Type, type)))
+                .ToListAsync();
         }
 
         public async Task<bool> RefMathAsync(JryCounterType type, string value, int count)
@@ -28,7 +38,9 @@ namespace JryVideo.Data.MongoDb
                         Type = type,
                         Value = value,
                         Count = count
-                    }.InitializeInstance();
+                    };
+
+                    item.CreateMetaData();
 
                     return await this.InsertAsync(item);
                 }

@@ -43,6 +43,7 @@
     <Compile Include="Douban\DoubanHelper.cs" />
     <Compile Include="Douban\DoubanMovieJson.cs" />
     <Compile Include="JryVideoCore.cs" />
+    <Compile Include="Managers\CounterManager.cs" />
     <Compile Include="Managers\CoverManagers.cs" />
     <Compile Include="Managers\DataCenter.cs" />
     <Compile Include="Managers\DataSourceManager.cs" />

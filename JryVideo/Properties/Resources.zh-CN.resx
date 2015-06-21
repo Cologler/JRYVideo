@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EditSeries_Error_Title" xml:space="preserve">
-    <value>some error</value>
+    <value>发生错误</value>
   </data>
   <data name="Error_Series_Initialize_Failed" xml:space="preserve">
-    <value>series initialize failed</value>
+    <value>系列初始化失败</value>
   </data>
   <data name="Error_Series_Names_Empty" xml:space="preserve">
-    <value>series name can not be empty.</value>
+    <value>系列名不允许留空</value>
   </data>
 </root>

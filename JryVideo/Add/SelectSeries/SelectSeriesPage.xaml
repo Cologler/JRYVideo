@@ -1,0 +1,68 @@
+﻿<Page x:Class="JryVideo.Add.SelectSeries.SelectSeriesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
+      xmlns:selectSeries="clr-namespace:JryVideo.Add.SelectSeries"
+      mc:Ignorable="d"
+      d:DesignHeight="400"
+      d:DesignWidth="600">
+
+    <Grid d:DataContext="{d:DesignInstance selectSeries:SelectSeriesViewModel}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="4" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.Resources>
+            <Style x:Key="TitleStyle"
+                   TargetType="TextBlock">
+                <Setter Property="FontSize"
+                        Value="14" />
+                <Setter Property="Margin"
+                        Value="0,8,0,4" />
+            </Style>
+        </Grid.Resources>
+
+        <GroupBox Margin="0"
+                  Header="select exists series">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Row="0"
+                         x:Name="FilterTextTextBox"
+                         Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,4" />
+
+                <ListView Grid.Row="1"
+                          x:Name="SeriesListView"
+                          ItemsSource="{Binding SeriesView}"
+                          BorderThickness="0"
+                          SelectedItem="{Binding Selected, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid d:DataContext="{d:DesignInstance selectSeries:SeriesViewModel}">
+                                <TextBlock Text="{Binding DisplayName}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Column="2"
+                  Header="or add new series"
+                  Margin="0">
+
+            <editSeries:EditSeriesUserControl x:Name="EditSeriesUserControl" />
+
+        </GroupBox>
+
+    </Grid>
+</Page>

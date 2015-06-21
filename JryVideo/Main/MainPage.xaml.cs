@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using JryVideo.Add;
+using JryVideo.Add.SelectSeries;
 using JryVideo.Common;
 using JryVideo.Core.Managers;
 using JryVideo.EditCover;
@@ -73,9 +75,16 @@ namespace JryVideo.Main
 
                 if (dlg.ShowDialog() == true)
                 {
+                    await dlg.ViewModel.AcceptAsync();
                     vm.BeginUpdateCover();
                 }
             }
+        }
+
+        private void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var selectSeriesWindow = new AddWindow();
+            selectSeriesWindow.ShowDialog();
         }
     }
 }

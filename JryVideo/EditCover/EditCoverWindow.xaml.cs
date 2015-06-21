@@ -92,7 +92,6 @@ namespace JryVideo.EditCover
 
         private async void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await this.ViewModel.AcceptAsync();
             this.DialogResult = true;
         }
     }

@@ -61,6 +61,48 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Add\SelectSeries\SelectSeriesPage.xaml.cs">
+      <DependentUpon>SelectSeriesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Add\SelectVideo\SelectVideoPage.xaml.cs">
+      <DependentUpon>SelectVideoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Add\SelectVideo\SelectVideoViewModel.cs" />
+    <Compile Include="Common\ImageViewModel.cs" />
+    <Compile Include="Controls\EditSeries\EditSeriesUserControl.xaml.cs">
+      <DependentUpon>EditSeriesUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EditSeries\EditSeriesViewModel.cs" />
+    <Compile Include="Controls\EditVideo\EditVideoUserControl.xaml.cs">
+      <DependentUpon>EditVideoUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EditVideo\EditVideoViewModel.cs" />
+    <Compile Include="Properties\Resources.zh-CN.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.zh-CN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Add\SelectSeries\SelectSeriesViewModel.cs" />
+    <Compile Include="Add\AddWindow.xaml.cs">
+      <DependentUpon>AddWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Add\SelectSeries\SeriesViewModel.cs" />
+    <Page Include="Add\SelectSeries\SelectSeriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Add\SelectVideo\SelectVideoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EditSeries\EditSeriesUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EditVideo\EditVideoUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="EditCover\EditCoverWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -87,6 +129,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Add\AddWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\MainPage.xaml.cs">
@@ -105,6 +151,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.zh-CN.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.zh-CN.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -144,6 +194,9 @@
       <Project>{40F1A88E-047C-47A4-9F9A-4CA7F83BFFD6}</Project>
       <Name>JryVideo.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SelectSeries\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

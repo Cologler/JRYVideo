@@ -2,18 +2,13 @@
 
 namespace JryVideo.Model
 {
-    public class JryCounter : JryObject, IInitializable<JryCounter>
+    public class JryCounter : JryObject
     {
         public JryCounterType Type { get; set; }
 
         public string Value { get; set; }
 
         public int Count { get; set; }
-
-        public JryCounter InitializeInstance(JryCounter obj)
-        {
-            return base.InitializeInstance(obj);
-        }
 
         /// <summary>
         /// Guid.NewGuid().ToString().ToUpper()

@@ -1,0 +1,68 @@
+﻿<controls:MetroWindow x:Class="JryVideo.Add.AddWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
+                      xmlns:selectSeries1="clr-namespace:JryVideo.Add.SelectSeries"
+                      mc:Ignorable="d"
+                      Height="500"
+                      Width="700"
+                      ResizeMode="NoResize"
+                      GlowBrush="Black"
+                      BorderThickness="1"
+                      WindowStartupLocation="CenterScreen"
+                      ShowTitleBar="False">
+    
+    <Grid d:DataContext="{d:DesignInstance selectSeries1:SelectSeriesViewModel}"
+          Margin="8">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="Title" 
+                       FontSize="22"
+                       Text="select series"
+                       FontFamily="Microsoft YaHei UI Light"
+                       Margin="4,0,0,0"/>
+            
+            <Line Grid.Row="1"
+                  Margin="0,4,0,10"
+                  Width="200"
+                  HorizontalAlignment="Left"
+                  X1="0"
+                  X2="100"
+                  Fill="Black"
+                  Stroke="Black"
+                  StrokeThickness="1"
+                  SnapsToDevicePixels="True"
+                  Stretch="Fill" />
+            
+        </Grid>
+
+        <Frame Grid.Row="1"
+               x:Name="ContentFrame"
+               NavigationUIVisibility="Hidden" />
+        
+        <Grid Grid.Row="2"
+              Grid.ColumnSpan="3"
+              Margin="0,8">
+            <Button x:Name="NextButton"
+                    Content="next step"
+                    HorizontalAlignment="Right"
+                    Click="NextButton_OnClick"/>
+        </Grid>
+        
+    </Grid>
+    
+</controls:MetroWindow>

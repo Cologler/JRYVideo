@@ -50,10 +50,17 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Grid>
+            <Grid Margin="4">
+
+                <Menu HorizontalAlignment="Left">
+                    <MenuItem x:Name="AddMenuItem"
+                              HorizontalAlignment="Left"
+                              Header="add"
+                              Click="AddMenuItem_OnClick"/>
+                </Menu>
+                
                 <TextBox HorizontalAlignment="Right"
-                         Width="200"
-                         Margin="3" />
+                         Width="200" />
             </Grid>
 
             <Grid Grid.Row="1">

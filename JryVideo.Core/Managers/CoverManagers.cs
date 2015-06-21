@@ -60,7 +60,8 @@ namespace JryVideo.Core.Managers
 
                 if (result.IsSuccess)
                 {
-                    var cover = new JryCover().InitializeInstance();
+                    var cover = new JryCover();
+                    cover.CreateMetaData();
                     cover.CoverSourceType = JryCoverSourceType.Douban;
                     cover.CoverType = JryCoverType.Video;
                     cover.DoubanId = doubanId;

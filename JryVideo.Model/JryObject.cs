@@ -12,12 +12,10 @@ namespace JryVideo.Model
         [Cloneable]
         public DateTime Created { get; set; }
 
-        protected virtual T InitializeInstance<T>(T obj)
-            where T : JryObject
+        public void CreateMetaData()
         {
-            obj.Id = this.BuildId();
-            obj.Created = DateTime.UtcNow;
-            return obj;
+            this.Id = this.BuildId();
+            this.Created = DateTime.UtcNow;
         }
 
         /// <summary>

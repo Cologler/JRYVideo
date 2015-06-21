@@ -27,13 +27,13 @@
             </Grid.RowDefinitions>
 
             <Image Width="200"
-                   Margin="0,0,0,8"
-                   Source="{Binding BitmapImage}"
+                   Margin="0,0,0,4"
+                   Source="{Binding ImageViewModel.Source}"
                    RenderOptions.BitmapScalingMode="Fant"
                    RenderOptions.EdgeMode="Aliased" />
             
             <TextBlock Grid.Row="1"
-                       Text="{Binding MetaData}"
+                       Text="{Binding ImageViewModel.PixelMetaData}"
                        HorizontalAlignment="Center" />
 
         </Grid>

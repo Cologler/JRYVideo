@@ -10,11 +10,6 @@ namespace JryVideo.Model
 
         public string Name { get; set; }
 
-        public JryObject InitializeInstance(JryObject obj)
-        {
-            return base.InitializeInstance(obj);
-        }
-
         public override IEnumerable<string> CheckError()
         {
             foreach (var error in base.CheckError())

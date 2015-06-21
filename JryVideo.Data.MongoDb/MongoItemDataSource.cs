@@ -28,9 +28,17 @@ namespace JryVideo.Data.MongoDb
                 options: new FindOptions<T, T>()
                 {
                     Skip = skip,
-                    Limit = take
+                    Limit = take,
+                    Sort = this.BuildDefaultSort()
                 }))
                 .ToListAsync();
+        }
+
+        protected virtual SortDefinition<T> BuildDefaultSort()
+        {
+            var sorter = Builders<T>.Sort;
+
+            return sorter.Descending(z => z.Created);
         }
 
         public async virtual Task<T> QueryAsync(string id)

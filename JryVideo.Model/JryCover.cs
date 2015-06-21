@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public sealed class JryCover : JryObject, IInitializable<JryCover>, ICloneable<JryCover>
+    public sealed class JryCover : JryObject, ICloneable<JryCover>
     {
         [Cloneable]
         public JryCoverType CoverType { get; set; }
@@ -20,11 +20,6 @@ namespace JryVideo.Model
 
         [Cloneable]
         public byte[] BinaryData { get; set; }
-
-        public JryCover InitializeInstance(JryCover obj)
-        {
-            return base.InitializeInstance(obj);
-        }
 
         public override IEnumerable<string> CheckError()
         {

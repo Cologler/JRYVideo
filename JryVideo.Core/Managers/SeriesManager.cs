@@ -174,5 +174,18 @@ namespace JryVideo.Core.Managers
 
             return false;
         }
+
+        public async Task<bool> MergeAsync(JrySeries dest, JrySeries source)
+        {
+            return await Task.Run(async () =>
+            {
+                dest.Names.AddRange(source.Names);
+                dest.Names = dest.Names.Distinct().ToList();
+
+                dest.Videos.AddRange(source.Videos);
+
+                return await this.UpdateAsync(dest);
+            });
+        }
     }
 }
