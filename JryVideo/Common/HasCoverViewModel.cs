@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using JryVideo.Core;
 using JryVideo.Model;
@@ -28,7 +29,7 @@ namespace JryVideo.Common
                 }
                 else
                 {
-                    this._cover = null; // clear memery.
+                    this._cover = null; // release memery
                     return cover;
                 }
             }

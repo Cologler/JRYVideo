@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:common="clr-namespace:JryVideo.Common"
       xmlns:main="clr-namespace:JryVideo.Main"
+      xmlns:controls="clr-namespace:System.Windows.Controls;assembly=Jasily.Core.Desktop"
       mc:Ignorable="d"
       d:DesignHeight="500"
       d:DesignWidth="800"
@@ -75,8 +76,11 @@
                 </ListView>
 
                 <ListView BorderThickness="0"
-                          ItemsSource="{Binding VideosView}"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                          ItemsSource="{Binding VideosObservableCollection}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.IsDeferredScrollingEnabled="False">
+
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
@@ -86,7 +90,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid d:DataContext="{d:DesignInstance common:VideoViewModel}"
-                                  Margin="3" >
+                                  Margin="3">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition Height="Auto" />
@@ -106,7 +110,8 @@
                                                Height="266"
                                                Width="200"
                                                RenderOptions.BitmapScalingMode="Fant"
-                                               RenderOptions.EdgeMode="Aliased" />
+                                               RenderOptions.EdgeMode="Aliased"
+                                               />
                                     </Grid>
                                 </Grid>
 

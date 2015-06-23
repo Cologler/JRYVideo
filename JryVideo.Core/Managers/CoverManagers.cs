@@ -12,16 +12,35 @@ namespace JryVideo.Core.Managers
     public class CoverManager : JryObjectManager<JryCover, ICoverDataSourceProvider>
     {
         private readonly object _syncRoot = new object();
-        private readonly List<string> _writingDoubanId = new List<string>(); 
+        private readonly List<string> _writingDoubanId = new List<string>();
+        private readonly Dictionary<string, JryCover> Cache;
 
         public CoverManager(ICoverDataSourceProvider source)
             : base(source)
         {
+            this.Cache = new Dictionary<string, JryCover>();
         }
 
         public async Task<JryCover> LoadCoverAsync(string coverId)
         {
-            return coverId == null ? null : await this.Source.QueryAsync(coverId);
+            if (coverId == null) return null;
+
+            JryCover cover;
+
+            if (this.Cache.TryGetValue(coverId, out cover))
+                return cover;
+
+            cover = await this.Source.QueryAsync(coverId);
+
+            if (cover != null)
+            {
+                lock (this.Cache)
+                {
+                    return this.Cache.GetOrSetValue(coverId, cover);
+                }
+            }
+
+            return null;
         }
 
         public async Task<string> GetCoverFromDoubanIdAsync(JryCoverType type, string doubanId)

@@ -23,7 +23,7 @@ namespace JryVideo.Main
             return true;
         }
 
-        private ObservableCollection<VideoViewModel> VideosObservableCollection;
+        public ObservableCollection<VideoViewModel> VideosObservableCollection { get; private set; }
 
         public ListCollectionView VideosView { get; private set; }
 
@@ -34,7 +34,7 @@ namespace JryVideo.Main
             var series = await manager.LoadAsync();
 
             this.VideosObservableCollection.AddRange(
-                await Task.Run(() => series.SelectMany(VideoViewModel.Create)));
+                await Task.Run(() => series.SelectMany(VideoViewModel.Create).ToArray()));
         }
     }
 }
