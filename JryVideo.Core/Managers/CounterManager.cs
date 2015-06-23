@@ -6,13 +6,11 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class CounterManager
+    public class CounterManager : JryObjectManager<JryCounter, ICounterDataSourceProvider>
     {
-        public ICounterDataSourceProvider Source { get; private set; }
-
         public CounterManager(ICounterDataSourceProvider source)
+            : base(source)
         {
-            this.Source = source;
         }
 
         public async Task<IEnumerable<JryCounter>> LoadAsync(JryCounterType type)

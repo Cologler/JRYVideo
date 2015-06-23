@@ -21,7 +21,7 @@ namespace JryVideo.Model
         [Cloneable]
         public byte[] BinaryData { get; set; }
 
-        public override IEnumerable<string> CheckError()
+        public override IEnumerable<JryInvalidError> CheckError()
         {
             foreach (var error in base.CheckError())
             {
@@ -30,7 +30,7 @@ namespace JryVideo.Model
 
             if (this.BinaryData == null || this.BinaryData.Length == 0)
             {
-                yield return "error BinaryData";
+                yield return JryInvalidError.CoverBinaryCanNotBeEmpty;
             }
         }
 

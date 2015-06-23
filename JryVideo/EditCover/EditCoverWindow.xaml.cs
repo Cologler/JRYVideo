@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Enums;
 using System.IO;
 using System.Net;
 using System.Windows;
@@ -19,14 +20,41 @@ namespace JryVideo.EditCover
         public EditCoverWindow()
         {
             this.InitializeComponent();
+            this.SetCreate();
         }
 
         public EditCoverWindow(JryCover cover)
-            : this()
         {
-            this.DataContext = this.ViewModel = new EditCoverViewModel(cover);
-            
-            switch (cover.CoverSourceType)
+            this.InitializeComponent();
+            this.SetModify(cover);
+        }
+
+        public EditCoverWindow SetCreate()
+        {
+            var cover = new JryCover();
+            this.ViewModel = new EditCoverViewModel(cover)
+            {
+                Action = ObjectChangedAction.Create
+            };
+            this.InitializeDataContext();
+            return this;
+        }
+
+        public EditCoverWindow SetModify(JryCover cover)
+        {
+            this.ViewModel = new EditCoverViewModel(cover)
+            {
+                Action = ObjectChangedAction.Modify
+            };
+            this.InitializeDataContext();
+            return this;
+        }
+
+        private void InitializeDataContext()
+        {
+            this.DataContext = this.ViewModel;
+
+            switch (this.ViewModel.Source.CoverSourceType)
             {
                 case JryCoverSourceType.Local:
                     this.ChooseRadioButton.IsChecked = true;

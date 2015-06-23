@@ -70,11 +70,20 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
-        ///   查找类似 series initialize failed 的本地化字符串。
+        ///   查找类似 {0} initialize failed 的本地化字符串。
         /// </summary>
-        internal static string Error_Series_Initialize_Failed {
+        internal static string Error_Object_Initialize_Failed {
             get {
-                return ResourceManager.GetString("Error_Series_Initialize_Failed", resourceCulture);
+                return ResourceManager.GetString("Error_Object_Initialize_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0}&apos;s time less than zero 的本地化字符串。
+        /// </summary>
+        internal static string Error_Object_TimeLessThanZero {
+            get {
+                return ResourceManager.GetString("Error_Object_TimeLessThanZero", resourceCulture);
             }
         }
         
@@ -84,6 +93,42 @@ namespace JryVideo.Properties {
         internal static string Error_Series_Names_Empty {
             get {
                 return ResourceManager.GetString("Error_Series_Names_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 counter 的本地化字符串。
+        /// </summary>
+        internal static string Name_Object_Counter {
+            get {
+                return ResourceManager.GetString("Name_Object_Counter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 entity 的本地化字符串。
+        /// </summary>
+        internal static string Name_Object_Entity {
+            get {
+                return ResourceManager.GetString("Name_Object_Entity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 series 的本地化字符串。
+        /// </summary>
+        internal static string Name_Object_Series {
+            get {
+                return ResourceManager.GetString("Name_Object_Series", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 video 的本地化字符串。
+        /// </summary>
+        internal static string Name_Object_Video {
+            get {
+                return ResourceManager.GetString("Name_Object_Video", resourceCulture);
             }
         }
     }

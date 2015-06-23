@@ -40,13 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Douban\DoubanArtist.cs" />
+    <Compile Include="Douban\DoubanEntity.cs" />
     <Compile Include="Douban\DoubanHelper.cs" />
-    <Compile Include="Douban\DoubanMovieJson.cs" />
+    <Compile Include="Douban\DoubanImagesJson.cs" />
+    <Compile Include="Douban\DoubanMovie.cs" />
     <Compile Include="JryVideoCore.cs" />
+    <Compile Include="Managers\ArtistManager.cs" />
     <Compile Include="Managers\CounterManager.cs" />
     <Compile Include="Managers\CoverManagers.cs" />
     <Compile Include="Managers\DataCenter.cs" />
     <Compile Include="Managers\DataSourceManager.cs" />
+    <Compile Include="Managers\JryObjectManager.cs" />
     <Compile Include="Managers\SeriesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

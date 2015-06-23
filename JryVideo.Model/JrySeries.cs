@@ -15,7 +15,7 @@ namespace JryVideo.Model
 
         public List<JryVideo> Videos { get; set; }
 
-        public override IEnumerable<string> CheckError()
+        public override IEnumerable<JryInvalidError> CheckError()
         {
             foreach (var error in base.CheckError())
             {
@@ -24,16 +24,16 @@ namespace JryVideo.Model
 
             if (this.Names == null)
             {
-                yield return "Error_Series_Initialize_Failed";
+                yield return JryInvalidError.ObjectInitializeFailed;
             }
             else if (this.Names.Count == 0)
             {
-                yield return "Error_Series_Names_Empty";
+                yield return JryInvalidError.SeriesNamesCanNotBeEmpty;
             }
 
             if (this.Videos == null)
             {
-                yield return "Error_Series_Initialize_Failed";
+                yield return JryInvalidError.ObjectInitializeFailed;
             }
         }
     }

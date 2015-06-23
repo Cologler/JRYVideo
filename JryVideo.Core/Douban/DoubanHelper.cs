@@ -12,7 +12,7 @@ namespace JryVideo.Core.Douban
     {
         private const string ApiUrl = "http://api.douban.com/v2/movie/subject/";
 
-        public static async Task<DoubanMovieJson> GetMovieInfoAsync(string doubanId)
+        public static async Task<DoubanMovie> TryGetMovieInfoAsync(string doubanId)
         {
             var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/subject/" + doubanId);
 
@@ -22,7 +22,7 @@ namespace JryVideo.Core.Douban
             {
                 try
                 {
-                    return result.AsJson<DoubanMovieJson>().Result;
+                    return result.AsJson<DoubanMovie>().Result;
                 }
                 catch
                 {
@@ -33,12 +33,38 @@ namespace JryVideo.Core.Douban
             return null;
         }
 
-        public static string GetLargeImageUrl(DoubanMovieJson json)
+        public static async Task<DoubanArtist> TryGetArtistInfoAsync(string doubanId)
+        {
+            var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/celebrity/" + doubanId);
+
+            var result = await request.GetResultAsBytesAsync();
+
+            if (result.IsSuccess)
+            {
+                try
+                {
+                    return result.AsJson<DoubanArtist>().Result;
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            return null;
+        }
+
+        public static string GetLargeImageUrl(DoubanArtist json)
         {
             return json.ThrowIfNull("json").Images.Large.ThrowIfNullOrEmpty("Large");
         }
 
-        public static string GetRawImageUrl(DoubanMovieJson json)
+        public static string GetLargeImageUrl(DoubanMovie json)
+        {
+            return json.ThrowIfNull("json").Images.Large.ThrowIfNullOrEmpty("Large");
+        }
+
+        public static string GetRawImageUrl(DoubanMovie json)
         {
             var large = GetLargeImageUrl(json);
             // large like 'http://img4.douban.com/view/movie_poster_cover/ipst/public/p2236401229.jpg'
@@ -48,7 +74,32 @@ namespace JryVideo.Core.Douban
             return String.Format(@"http://img{0}.douban.com/view/photo/raw/public{1}", server, item);
         }
 
-        public static IEnumerable<string> ParseName(DoubanMovieJson json)
+        public static IEnumerable<string> ParseName(DoubanArtist json)
+        {
+            if (!String.IsNullOrWhiteSpace(json.Name))
+                yield return json.Name;
+
+            if (!String.IsNullOrWhiteSpace(json.OriginName))
+                yield return json.OriginName;
+
+            if (json.OtherNames != null)
+            {
+                foreach (var name in json.OtherNames.Where(z => !String.IsNullOrWhiteSpace(z)))
+                {
+                    yield return name;
+                }
+            }
+
+            if (json.OtherOriginNames != null)
+            {
+                foreach (var name in json.OtherOriginNames.Where(z => !String.IsNullOrWhiteSpace(z)))
+                {
+                    yield return name;
+                }
+            }
+        }
+
+        public static IEnumerable<string> ParseName(DoubanMovie json)
         {
             if (!String.IsNullOrWhiteSpace(json.OriginalTitle))
                 yield return json.OriginalTitle;
@@ -56,9 +107,9 @@ namespace JryVideo.Core.Douban
             if (!String.IsNullOrWhiteSpace(json.Title))
                 yield return json.Title;
 
-            if (json.Aka != null)
+            if (json.OtherNames != null)
             {
-                foreach (var originName in json.Aka.Where(z => !String.IsNullOrWhiteSpace(z)))
+                foreach (var originName in json.OtherNames.Where(z => !String.IsNullOrWhiteSpace(z)))
                 {
                     yield return originName;
                 }

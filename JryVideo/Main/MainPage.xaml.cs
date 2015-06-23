@@ -68,10 +68,7 @@ namespace JryVideo.Main
             var cover = await vm.TryGetCoverAsync();
             if (cover != null)
             {
-                var dlg = new EditCoverWindow(cover)
-                {
-
-                };
+                var dlg = new EditCoverWindow(cover);
 
                 if (dlg.ShowDialog() == true)
                 {

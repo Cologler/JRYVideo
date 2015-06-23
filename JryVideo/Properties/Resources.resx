@@ -120,10 +120,25 @@
   <data name="EditSeries_Error_Title" xml:space="preserve">
     <value>some error</value>
   </data>
-  <data name="Error_Series_Initialize_Failed" xml:space="preserve">
-    <value>series initialize failed</value>
+  <data name="Error_Object_Initialize_Failed" xml:space="preserve">
+    <value>{0} initialize failed</value>
+  </data>
+  <data name="Error_Object_TimeLessThanZero" xml:space="preserve">
+    <value>{0}'s time less than zero</value>
   </data>
   <data name="Error_Series_Names_Empty" xml:space="preserve">
     <value>series name can not be empty.</value>
+  </data>
+  <data name="Name_Object_Counter" xml:space="preserve">
+    <value>counter</value>
+  </data>
+  <data name="Name_Object_Entity" xml:space="preserve">
+    <value>entity</value>
+  </data>
+  <data name="Name_Object_Series" xml:space="preserve">
+    <value>series</value>
+  </data>
+  <data name="Name_Object_Video" xml:space="preserve">
+    <value>video</value>
   </data>
 </root>

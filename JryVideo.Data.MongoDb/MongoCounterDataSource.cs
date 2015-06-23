@@ -33,15 +33,12 @@ namespace JryVideo.Data.MongoDb
             {
                 if (count > 0)
                 {
-                    item = new JryCounter()
+                    item = new JryCounter(type, value)
                     {
-                        Type = type,
-                        Value = value,
                         Count = count
                     };
 
-                    item.CreateMetaData();
-
+                    item.BuildMetaData();
                     return await this.InsertAsync(item);
                 }
                 else

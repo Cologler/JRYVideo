@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +9,8 @@ using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public class VideoViewModel : JasilyViewModel<Model.JryVideo>
+    public class VideoViewModel : HasCoverViewModel<Model.JryVideo>
     {
-        private JryCover _cover;
-
         public VideoViewModel(JrySeries series, Model.JryVideo source)
             : base(source)
         {
@@ -37,55 +34,21 @@ namespace JryVideo.Common
             get { return this.Source.Names.FirstOrDefault() ?? ""; }
         }
 
-        public JryCover Cover
+        protected override async Task<bool> TryAutoAddCoverAsync()
         {
-            get
-            {
-                var cover = this._cover;
+            if (this.Source.DoubanId == null) return false;
 
-                if (cover == null)
-                {
-                    this.BeginUpdateCover();
-                    return null;
-                }
-                else
-                {
-                    this._cover = null; // clear memery.
-                    return cover;
-                }
-            }
-            set
-            {
-                this.SetPropertyRef(ref this._cover, value);
-            }
-        }
-
-        public async Task<JryCover> TryGetCoverAsync()
-        {
-            if (this.Source.CoverId == null) return null;
-
-            return await JryVideoCore.Current.CurrentDataCenter.CoverManager.LoadCoverAsync(this.Source.CoverId);
-        }
-
-        public async void BeginUpdateCover()
-        {
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
-            
-            if (this.Source.CoverId == null)
-            {
-                if (this.Source.DoubanId == null) return;
 
-                var guid = await coverManager.UpdateCoverFromDoubanIdAsync(this.Source.DoubanId);
+            var guid = await coverManager.GetCoverFromDoubanIdAsync(JryCoverType.Video, this.Source.DoubanId);
 
-                if (guid == null) return;
+            if (guid == null) return false;
 
-                this.Source.CoverId = guid;
+            this.Source.CoverId = guid;
 
-                var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
-                await seriesManager.UpdateAsync(this.Series);
-            }
-
-            this.Cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.LoadCoverAsync(this.Source.CoverId);
+            var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
+            await seriesManager.UpdateAsync(this.Series);
+            return true;
         }
 
         public static IEnumerable<VideoViewModel> Create(JrySeries series)

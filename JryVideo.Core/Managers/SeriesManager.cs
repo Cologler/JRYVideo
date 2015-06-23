@@ -2,27 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class SeriesManager
+    public class SeriesManager : JryObjectManager<JrySeries, IDataSourceProvider<JrySeries>>
     {
         public DataCenter DataCenter { get; private set; }
 
-        public IDataSourceProvider<JrySeries> Source { get; private set; }
-
         public SeriesManager(DataCenter dataCenter, IDataSourceProvider<JrySeries> source)
+            : base(source)
         {
             this.DataCenter = dataCenter;
-            this.Source = source;
         }
 
-        public async Task<bool> InsertAsync(JrySeries series)
+        public async override Task<bool> InsertAsync(JrySeries series)
         {
-            if (await this.Source.InsertAsync(series))
+            if (await base.InsertAsync(series))
             {
                 var dic = BuildCounterDictionary(series);
 
@@ -32,6 +31,56 @@ namespace JryVideo.Core.Managers
             }
 
             return false;
+        }
+
+        public static void BuildSeriesMetaData(JrySeries series)
+        {
+            SeriesAction(series, BuildObjectMetaData);
+        }
+
+        private static void BuildObjectMetaData(JryObject obj)
+        {
+            if (obj != null && !obj.IsMetaDataBuilded())
+            {
+                obj.BuildMetaData();
+            }
+        }
+
+        private static void SeriesAction(JrySeries series, Action<JryObject> action)
+        {
+            if (series == null) return;
+
+            var func = new Func<JryObject, bool>(z =>
+            {
+                action(z);
+                return true;
+            });
+
+            var j = SeriesFunc(series, func).ToArray();
+        }
+        private static IEnumerable<T> SeriesFunc<T>(JrySeries series, Func<JryObject, T> func)
+        {
+            if (series == null) return Enumerable.Empty<T>();
+
+            if (series.Videos == null)
+                return new [] { func(series) };
+
+            return new[] { func(series) }
+                .Concat(series.Videos.Select(z => func(z)))
+                .Concat(series.Videos.Where(z => z.Entities != null).SelectMany(x => x.Entities).Select(c => func(c)))
+                .ToArray();
+        }
+        private static IEnumerable<T> SeriesFunc<T>(JrySeries series, Func<JryObject, IEnumerable<T>> func)
+        {
+            if (series == null) return Enumerable.Empty<T>();
+
+            if (series.Videos == null)
+                return func(series).ToArray();
+
+            return func(series)
+                .Concat(series.Videos.SelectMany(z => func(z)))
+                .Concat(series.Videos.Where(z => z.Entities != null).SelectMany(x => x.Entities).SelectMany(c => func(c)))
+                .ToArray();
         }
 
         private async Task RefMathByCounterDictionary(Dictionary<JryCounterType, Dictionary<string, int>> dic)
@@ -154,16 +203,11 @@ namespace JryVideo.Core.Managers
             return dic;
         }
 
-        public async Task<IEnumerable<JrySeries>> LoadAsync()
+        public async override Task<bool> UpdateAsync(JrySeries series)
         {
-            return await this.Source.QueryAsync(0, Int32.MaxValue);
-        }
+            var old = await this.QueryAsync(series.Id);
 
-        public async Task<bool> UpdateAsync(JrySeries series)
-        {
-            var old = await this.Source.QueryAsync(series.Id);
-
-            if (await this.Source.UpdateAsync(series))
+            if (await base.UpdateAsync(series))
             {
                 var dic = BuildCounterDictionary(series, old);
 

@@ -9,16 +9,14 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class CoverManager
+    public class CoverManager : JryObjectManager<JryCover, ICoverDataSourceProvider>
     {
         private readonly object _syncRoot = new object();
         private readonly List<string> _writingDoubanId = new List<string>(); 
 
-        public ICoverDataSourceProvider Source { get; private set; }
-
         public CoverManager(ICoverDataSourceProvider source)
+            : base(source)
         {
-            this.Source = source;
         }
 
         public async Task<JryCover> LoadCoverAsync(string coverId)
@@ -26,17 +24,21 @@ namespace JryVideo.Core.Managers
             return coverId == null ? null : await this.Source.QueryAsync(coverId);
         }
 
-        public async Task<string> UpdateCoverFromDoubanIdAsync(string doubanId)
+        public async Task<string> GetCoverFromDoubanIdAsync(JryCoverType type, string doubanId)
         {
             if (String.IsNullOrWhiteSpace(doubanId))
                 throw new ArgumentException();
 
-            return await Task.Run<string>(async () =>
+            return await Task.Run(async () =>
             {
-                foreach (var jryCover in await this.Source.QueryByDoubanIdAsync(JryCoverType.Video, doubanId))
+                foreach (var jryCover in await this.Source.QueryByDoubanIdAsync(type, doubanId))
                 {
                     return jryCover.Id;
                 }
+
+                var url = await this.TryGetCoverUrlFromDoubanIdAsync(type, doubanId);
+
+                if (url == null) return null;
 
                 lock (this._syncRoot)
                 {
@@ -45,15 +47,6 @@ namespace JryVideo.Core.Managers
                     this._writingDoubanId.Add(doubanId);
                 }
 
-                var json = await DoubanHelper.GetMovieInfoAsync(doubanId);
-
-                if (json == null || json.Images == null || json.Images.Large == null)
-                {
-                    return null;
-                }
-
-                var url = DoubanHelper.GetLargeImageUrl(json);
-
                 var request = WebRequest.CreateHttp(url);
 
                 var result = await request.GetResultAsBytesAsync();
@@ -61,11 +54,11 @@ namespace JryVideo.Core.Managers
                 if (result.IsSuccess)
                 {
                     var cover = new JryCover();
-                    cover.CreateMetaData();
+                    cover.BuildMetaData();
                     cover.CoverSourceType = JryCoverSourceType.Douban;
                     cover.CoverType = JryCoverType.Video;
                     cover.DoubanId = doubanId;
-                    cover.Uri = json.Images.Large;
+                    cover.Uri = url;
                     cover.BinaryData = result.Result;
                     await this.InsertAsync(cover);
 
@@ -88,49 +81,26 @@ namespace JryVideo.Core.Managers
             });
         }
 
-        public async Task InsertAsync(JryCover cover)
+        private async Task<string> TryGetCoverUrlFromDoubanIdAsync(JryCoverType type, string doubanId)
         {
-            await this.Source.InsertAsync(cover);
+            DoubanEntity json = null;
+
+            switch (type)
+            {
+                case JryCoverType.Video:
+                    json = await DoubanHelper.TryGetMovieInfoAsync(doubanId);
+                    break;
+
+                case JryCoverType.Artist:
+                    json = await DoubanHelper.TryGetArtistInfoAsync(doubanId);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException("type", type, null);
+            }
+
+
+            return json != null ? json.GetLargeImageUrl() : null;
         }
-
-        public async Task UpdateAsync(JryCover cover)
-        {
-            await this.Source.UpdateAsync(cover);
-        }
-
-        //public Video5Cover this[string doubanId]
-        //{
-        //    get
-        //    {
-        //        if (doubanId == null)
-        //            return null;
-        //        return Collection<>.FindOne(Query<Video5Cover>.EQ(e => e.DoubanId, doubanId));
-        //    }
-        //}
-
-        //public byte[] this[Video5Entity entity]
-        //{
-        //    get
-        //    {
-        //        var cover = this[entity.DoubanId];
-
-        //        if (cover != null)
-        //            return cover.CoverData;
-        //        else
-        //            return null;
-        //    }
-        //    set
-        //    {
-        //        if (value == null || entity.DoubanId == null)
-        //            return;
-
-        //        var cover = this[entity.DoubanId];
-
-        //        if (cover == null)
-        //            cover = Video5Cover.Create(entity.DoubanId, value);
-
-        //        Collection.Save(cover);
-        //    }
-        //}
     }
 }

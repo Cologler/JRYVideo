@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideo : JryObject
+    public sealed class JryVideo : JryObject, IJryCoverParent
     {
         public JryVideo()
         {
@@ -36,7 +36,7 @@ namespace JryVideo.Model
 
         public string CoverId { get; set; }
 
-        public override IEnumerable<string> CheckError()
+        public override IEnumerable<JryInvalidError> CheckError()
         {
             foreach (var error in base.CheckError())
             {
@@ -45,27 +45,27 @@ namespace JryVideo.Model
 
             if (this.Names == null || this.Tags == null || this.Entities == null || this.ArtistIds == null)
             {
-                yield return "error InitializeInstance()";
+                yield return JryInvalidError.ObjectInitializeFailed;
             }
 
             if (String.IsNullOrWhiteSpace(this.Type))
             {
-                yield return "error Type";
+                yield return JryInvalidError.VideoTypeCanNotBeEmpty;
             }
 
             if (this.Year < 1900 || this.Year > 2100)
             {
-                yield return "error Year";
+                yield return JryInvalidError.VideoYearValueInvalid;
             }
 
             if (this.Index < 1 || this.Index > 100)
             {
-                yield return "error Index";
+                yield return JryInvalidError.VideoIndexLessThanOne;
             }
 
             if (this.EpisodesCount < 1)
             {
-                yield return "error EpisodesCount";
+                yield return JryInvalidError.VideoEpisodesCountLessThanOne;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
@@ -52,10 +53,8 @@ namespace JryVideo.Core
             var manager = this.CurrentDataCenter.SeriesManager;
 
             var entity = new JryEntity();
-            entity.CreateMetaData();
 
             var video = new Model.JryVideo();
-            video.CreateMetaData();
             video.Entities.Add(entity);
             video.Type = "Movie";
             video.DoubanId = "25851657";
@@ -63,9 +62,13 @@ namespace JryVideo.Core
             video.Year = 2005;
 
             var series = new JrySeries();
-            series.CreateMetaData();
             series.Names.AddRange(new [] { "series123", "series456" });
             series.Videos.Add(video);
+
+            SeriesManager.BuildSeriesMetaData(series);
+
+            if (!await manager.InsertAsync(series) && Debugger.IsAttached)
+                Debugger.Break();
         }
 
         public DataCenter NormalDataCenter { get; private set; }

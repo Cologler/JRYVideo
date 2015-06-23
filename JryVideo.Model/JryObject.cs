@@ -12,10 +12,15 @@ namespace JryVideo.Model
         [Cloneable]
         public DateTime Created { get; set; }
 
-        public void CreateMetaData()
+        public void BuildMetaData()
         {
             this.Id = this.BuildId();
             this.Created = DateTime.UtcNow;
+        }
+
+        public bool IsMetaDataBuilded()
+        {
+            return !String.IsNullOrWhiteSpace(this.Id);
         }
 
         /// <summary>
@@ -27,11 +32,10 @@ namespace JryVideo.Model
             return Guid.NewGuid().ToString().ToUpper();
         }
 
-        public virtual IEnumerable<string> CheckError()
+        public virtual IEnumerable<JryInvalidError> CheckError()
         {
-            if (String.IsNullOrWhiteSpace(this.Id)) yield return "error Id";
-
-            if (this.Created == DateTime.MinValue) yield return "error Created";
+            if (String.IsNullOrWhiteSpace(this.Id) || this.Created == DateTime.MinValue)
+                yield return JryInvalidError.ObjectMetaDataCreateFailed;
         }
     }
 }

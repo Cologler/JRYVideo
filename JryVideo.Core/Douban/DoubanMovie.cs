@@ -1,22 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Runtime.Serialization;
 
 namespace JryVideo.Core.Douban
 {
     [DataContract]
-    public class DoubanMovieJson
+    public class DoubanMovie : DoubanEntity
     {
         [DataMember(Name = "images")]
-        public JsonImages Images;
+        public DoubanImages Images;
 
         [DataMember(Name = "title")]
         public string Title;
 
         [DataMember(Name = "original_title")]
         public string OriginalTitle;
-
-        [DataMember(Name = "aka")]
-        public List<string> Aka;
 
         [DataMember(Name = "year")]
         public int Year;
@@ -27,17 +24,9 @@ namespace JryVideo.Core.Douban
         [DataMember(Name = "subtype")]
         public string SubType;
 
-        [DataContract]
-        public class JsonImages
+        public override string GetLargeImageUrl()
         {
-            [DataMember(Name = "small")]
-            public string Small { get; set; }
-
-            [DataMember(Name = "large")]
-            public string Large { get; set; }
-
-            [DataMember(Name = "medium")]
-            public string Medium { get; set; }
+            return this.Images.Large.ThrowIfNullOrEmpty("Large");
         }
     }
 }

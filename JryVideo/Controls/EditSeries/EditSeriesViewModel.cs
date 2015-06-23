@@ -3,12 +3,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Enums;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
+using JryVideo.Core.Managers;
 using JryVideo.Model;
-using JryVideo.Properties;
 
 namespace JryVideo.Controls.EditSeries
 {
@@ -51,13 +53,13 @@ namespace JryVideo.Controls.EditSeries
             set { this.SetPropertyRef(ref this._doubanId, value); }
         }
 
-        public DoubanMovieJson DoubanMovie { get; private set; }
+        public DoubanMovie DoubanMovie { get; private set; }
 
         public async Task LoadDoubanAsync()
         {
             if (String.IsNullOrWhiteSpace(this.DoubanId)) return;
 
-            this.DoubanMovie = await DoubanHelper.GetMovieInfoAsync(this.DoubanId);
+            this.DoubanMovie = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
 
             if (this.DoubanMovie != null)
             {
@@ -75,7 +77,6 @@ namespace JryVideo.Controls.EditSeries
             {
                 case ObjectChangedAction.Create:
                     series = new JrySeries();
-                    series.CreateMetaData();
                     break;
 
                 case ObjectChangedAction.Modify:
@@ -95,13 +96,13 @@ namespace JryVideo.Controls.EditSeries
 
             series.Names = series.Names.Distinct().ToList();
 
-            var error = series.CheckError().ToArray();
+            SeriesManager.BuildSeriesMetaData(series);
+
+            var error = series.FireObjectError().ToArray();
 
             if (error.Length > 0)
             {
-                var resourceCulture = Resources.Culture;
-
-                this.FindErrorMessages.Fire(this, error.Select(z => Resources.ResourceManager.GetString(z, resourceCulture)).ToArray());
+                this.FindErrorMessages.Fire(this, error);
 
                 return false;
             }

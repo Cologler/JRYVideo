@@ -68,15 +68,28 @@
       <DependentUpon>SelectVideoPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Add\SelectVideo\SelectVideoViewModel.cs" />
+    <Compile Include="Common\ArtistViewModel.cs" />
+    <Compile Include="Common\HasCoverViewModel.cs" />
     <Compile Include="Common\ImageViewModel.cs" />
+    <Compile Include="Controls\EditArtist\EditArtistUserControl.xaml.cs">
+      <DependentUpon>EditArtistUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EditArtist\EditArtistViewModel.cs" />
     <Compile Include="Controls\EditSeries\EditSeriesUserControl.xaml.cs">
       <DependentUpon>EditSeriesUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditSeries\EditSeriesViewModel.cs" />
+    <Compile Include="Common\JryObjectLocalizationHelper.cs" />
     <Compile Include="Controls\EditVideo\EditVideoUserControl.xaml.cs">
       <DependentUpon>EditVideoUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditVideo\EditVideoViewModel.cs" />
+    <Compile Include="Editor\EditArtist\EditArtistWindow.xaml.cs">
+      <DependentUpon>EditArtistWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\ArtistManager\ArtistManagerWindow.xaml.cs">
+      <DependentUpon>ArtistManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.zh-CN.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -95,6 +108,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\EditArtist\EditArtistUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\EditSeries\EditSeriesUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -104,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EditCover\EditCoverWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editor\EditArtist\EditArtistWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -130,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Add\AddWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Managers\ArtistManager\ArtistManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

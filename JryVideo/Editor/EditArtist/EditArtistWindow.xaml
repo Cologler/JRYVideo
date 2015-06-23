@@ -1,0 +1,71 @@
+﻿<controls:MetroWindow x:Class="JryVideo.Editor.EditArtist.EditArtistWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      Title="EditArtistWindow"
+                      Height="480"
+                      Width="600"
+                      ResizeMode="NoResize">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="all artist"
+                      Margin="0">
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    
+                    <TextBox />
+
+                    <ListView Grid.Row="1"
+                              BorderThickness="0"
+                              Margin="0,5,0,0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid x:Name="ExistsArtistPanel" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    
+                </Grid>
+                
+            </GroupBox>
+
+            <GroupBox Grid.Column="2"
+                      Header="current artist"
+                      Margin="0">
+
+                <ListView BorderThickness="0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="VideoArtistPanel" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+            </GroupBox>
+
+        </Grid>
+        
+        <Button x:Name="Accept"
+                Grid.Row="1" 
+                Content="accept"
+                HorizontalAlignment="Right"
+                Click="Accept_OnClick"
+                Margin="0,8" />
+        
+    </Grid>
+</controls:MetroWindow>

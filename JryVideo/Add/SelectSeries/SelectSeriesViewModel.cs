@@ -78,13 +78,13 @@ namespace JryVideo.Add.SelectSeries
                     .Select(z => new SeriesViewModel(z))));
         }
 
-        public DoubanMovieJson DoubanMovie { get; private set; }
+        public DoubanMovie DoubanMovie { get; private set; }
 
         public async Task LoadDoubanAsync(string doubanId)
         {
             if (String.IsNullOrWhiteSpace(doubanId)) return;
 
-            var info = await DoubanHelper.GetMovieInfoAsync(doubanId);
+            var info = await DoubanHelper.TryGetMovieInfoAsync(doubanId);
 
             if (info != null)
             {

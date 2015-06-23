@@ -32,7 +32,7 @@ namespace JryVideo.Model
 
         public string Extension { get; set; }
 
-        public override IEnumerable<string> CheckError()
+        public override IEnumerable<JryInvalidError> CheckError()
         {
             foreach (var error in base.CheckError())
             {
@@ -42,7 +42,7 @@ namespace JryVideo.Model
             if (this.Fansubs == null || this.Formats == null || this.SubTitleLanguages == null ||
                 this.Tags == null || this.TrackLanguages == null)
             {
-                yield return "error InitializeInstance()";
+                yield return JryInvalidError.ObjectInitializeFailed;
             }
         }
     }

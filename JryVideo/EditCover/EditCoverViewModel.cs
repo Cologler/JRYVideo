@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Enums;
 using System.Net;
 using System.Threading.Tasks;
 using JryVideo.Common;
@@ -54,6 +55,8 @@ namespace JryVideo.EditCover
             private set { this.SetPropertyRef(ref this._imageViewModel, value); }
         }
 
+        public ObjectChangedAction Action { get; set; }
+
         private void OnUpdatedBinaryData()
         {
             this.ImageViewModel = this.BinaryData == null ? null : ImageViewModel.Build(this.BinaryData);
@@ -79,7 +82,7 @@ namespace JryVideo.EditCover
         {
             if (string.IsNullOrWhiteSpace(this.DoubanId)) return false;
 
-            var json = await DoubanHelper.GetMovieInfoAsync(this.DoubanId);
+            var json = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
 
             if (json == null || json.Images == null || json.Images.Large == null)
             {
@@ -106,7 +109,22 @@ namespace JryVideo.EditCover
 
             this.Source.BinaryData = this.BinaryData;
 
-            await coverManager.UpdateAsync(this.Source);
+            switch (this.Action)
+            {
+                case ObjectChangedAction.Create:
+                    await coverManager.InsertAsync(this.Source);
+                    break;
+
+                case ObjectChangedAction.Modify:
+                    await coverManager.UpdateAsync(this.Source);
+                    break;
+
+                case ObjectChangedAction.Replace:
+                case ObjectChangedAction.Delete:
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
         }
     }
 }

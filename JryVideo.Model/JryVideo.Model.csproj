@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IJryCoverParent.cs" />
     <Compile Include="JryCounter.cs" />
     <Compile Include="JryCounterType.cs" />
     <Compile Include="JryCoverSourceType.cs" />
@@ -60,8 +61,7 @@
     <Compile Include="JryCover.cs" />
     <Compile Include="JryEntity.cs" />
     <Compile Include="JryFormat.cs" />
-    <Compile Include="JryInterfaces\CounterableMethod.cs" />
-    <Compile Include="JryInterfaces\ICounterable.cs" />
+    <Compile Include="JryInvalidError.cs" />
     <Compile Include="JryObject.cs" />
     <Compile Include="JrySeries.cs" />
     <Compile Include="JryVideo.cs" />
