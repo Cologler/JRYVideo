@@ -1,59 +1,28 @@
 ﻿using System;
-using System.Enums;
 using System.IO;
-using System.Net;
 using System.Windows;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 
-namespace JryVideo.EditCover
+namespace JryVideo.Editors.CoverEditor
 {
     /// <summary>
     /// EditCoverWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class EditCoverWindow : MetroWindow
+    public partial class CoverEditorWindow : MetroWindow
     {
-        public EditCoverViewModel ViewModel { get; private set; }
+        public CoverEditorViewModel ViewModel { get; private set; }
 
-        public EditCoverWindow()
+        public CoverEditorWindow()
         {
             this.InitializeComponent();
-            this.SetCreate();
+            this.DataContext = this.ViewModel = new CoverEditorViewModel();
         }
 
-        public EditCoverWindow(JryCover cover)
+        public void UpdateRadioButtonCheckedStatus()
         {
-            this.InitializeComponent();
-            this.SetModify(cover);
-        }
-
-        public EditCoverWindow SetCreate()
-        {
-            var cover = new JryCover();
-            this.ViewModel = new EditCoverViewModel(cover)
-            {
-                Action = ObjectChangedAction.Create
-            };
-            this.InitializeDataContext();
-            return this;
-        }
-
-        public EditCoverWindow SetModify(JryCover cover)
-        {
-            this.ViewModel = new EditCoverViewModel(cover)
-            {
-                Action = ObjectChangedAction.Modify
-            };
-            this.InitializeDataContext();
-            return this;
-        }
-
-        private void InitializeDataContext()
-        {
-            this.DataContext = this.ViewModel;
-
             switch (this.ViewModel.Source.CoverSourceType)
             {
                 case JryCoverSourceType.Local:
@@ -102,6 +71,7 @@ namespace JryVideo.EditCover
 
             if (dlg.ShowDialog() == true)
             {
+                this.ChooseRadioButton.IsChecked = true;
                 this.ViewModel.BinaryData = dlg.OpenFile().ToArray();
             }
         }
@@ -109,18 +79,37 @@ namespace JryVideo.EditCover
         private async void LoadFromUrlButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (!await this.ViewModel.LoadFromUrlAsync())
+            {
                 MessageBox.Show("load failed.");
+            }
+            else
+            {
+                this.UrlRadioButton.IsChecked = true;
+            }
         }
 
         private async void LoadFromDoubanButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (!await this.ViewModel.LoadFromDoubanAsync())
+            {
                 MessageBox.Show("load failed.");
+            }
+            else
+            {
+                this.DoubanRadioButton.IsChecked = true;
+            }
         }
 
         private async void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            if (this.ViewModel.ImageViewModel != null)
+            {
+                this.DialogResult = true;
+            }
+            else
+            {
+                await this.ShowMessageAsync("error", "don't have image.");
+            }
         }
     }
 }

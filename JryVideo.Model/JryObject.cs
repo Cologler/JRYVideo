@@ -12,8 +12,10 @@ namespace JryVideo.Model
         [Cloneable]
         public DateTime Created { get; set; }
 
-        public void BuildMetaData()
+        public virtual void BuildMetaData(bool isForce = false)
         {
+            if (!isForce && this.Id != null) throw new Exception("can not rebuild meta data.");
+
             this.Id = this.BuildId();
             this.Created = DateTime.UtcNow;
         }
@@ -35,7 +37,9 @@ namespace JryVideo.Model
         public virtual IEnumerable<JryInvalidError> CheckError()
         {
             if (String.IsNullOrWhiteSpace(this.Id) || this.Created == DateTime.MinValue)
-                yield return JryInvalidError.ObjectMetaDataCreateFailed;
+                throw new Exception("forgot to build meta data.");
+
+            yield break;
         }
     }
 }

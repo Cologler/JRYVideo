@@ -8,6 +8,6 @@ namespace JryVideo.Data.DataSources
 
         Task<bool> UpdateAsync(T value);
 
-        Task<bool> RemoveAsync(T value);
+        Task<bool> RemoveAsync(string id);
     }
 }

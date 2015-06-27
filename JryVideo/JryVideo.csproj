@@ -61,16 +61,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Add\SelectSeries\SelectSeriesPage.xaml.cs">
-      <DependentUpon>SelectSeriesPage.xaml</DependentUpon>
+    <Compile Include="Add\SeriesSelector\SeriesSelectorPage.xaml.cs">
+      <DependentUpon>SeriesSelectorPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Add\SelectVideo\SelectVideoPage.xaml.cs">
-      <DependentUpon>SelectVideoPage.xaml</DependentUpon>
+    <Compile Include="Add\VideoCreator\VideoCreatorPage.xaml.cs">
+      <DependentUpon>VideoCreatorPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Add\SelectVideo\SelectVideoViewModel.cs" />
+    <Compile Include="Add\VideoCreator\VideoCreatorViewModel.cs" />
     <Compile Include="Common\ArtistViewModel.cs" />
+    <Compile Include="Common\FlagViewModel.cs" />
     <Compile Include="Common\HasCoverViewModel.cs" />
     <Compile Include="Common\ImageViewModel.cs" />
+    <Compile Include="Common\EditorItemViewModel.cs" />
     <Compile Include="Controls\EditArtist\EditArtistUserControl.xaml.cs">
       <DependentUpon>EditArtistUserControl.xaml</DependentUpon>
     </Compile>
@@ -84,27 +86,37 @@
       <DependentUpon>EditVideoUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditVideo\EditVideoViewModel.cs" />
-    <Compile Include="Editor\EditArtist\EditArtistWindow.xaml.cs">
+    <Compile Include="Editors\EditArtist\EditArtistWindow.xaml.cs">
       <DependentUpon>EditArtistWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Main\MainSeriesItemViewerViewModel.cs" />
     <Compile Include="Managers\ArtistManager\ArtistManagerWindow.xaml.cs">
       <DependentUpon>ArtistManagerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\FlagManager\FlagManagerViewModel.cs" />
+    <Compile Include="Managers\FlagManager\FlagManagerWindow.xaml.cs">
+      <DependentUpon>FlagManagerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.zh-CN.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.zh-CN.resx</DependentUpon>
     </Compile>
-    <Compile Include="Add\SelectSeries\SelectSeriesViewModel.cs" />
+    <Compile Include="Add\SeriesSelector\SeriesSelectorViewModel.cs" />
     <Compile Include="Add\AddWindow.xaml.cs">
       <DependentUpon>AddWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Add\SelectSeries\SeriesViewModel.cs" />
-    <Page Include="Add\SelectSeries\SelectSeriesPage.xaml">
+    <Compile Include="Add\SeriesSelector\SeriesViewModel.cs" />
+    <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml.cs">
+      <DependentUpon>SeriesItemViewerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerViewModel.cs" />
+    <Compile Include="Viewer\SeriesItemViewer\SingleSeriesItemViewerViewModel.cs" />
+    <Page Include="Add\SeriesSelector\SeriesSelectorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Add\SelectVideo\SelectVideoPage.xaml">
+    <Page Include="Add\VideoCreator\VideoCreatorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -120,11 +132,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditCover\EditCoverWindow.xaml">
+    <Page Include="Editors\CoverEditor\CoverEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editor\EditArtist\EditArtistWindow.xaml">
+    <Page Include="Editors\EditArtist\EditArtistWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -137,9 +149,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Common\VideoViewModel.cs" />
-    <Compile Include="EditCover\EditCoverViewModel.cs" />
-    <Compile Include="EditCover\EditCoverWindow.xaml.cs">
-      <DependentUpon>EditCoverWindow.xaml</DependentUpon>
+    <Compile Include="Editors\CoverEditor\CoverEditorViewModel.cs" />
+    <Compile Include="Editors\CoverEditor\CoverEditorWindow.xaml.cs">
+      <DependentUpon>CoverEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\MainViewModel.cs" />
     <Compile Include="Main\MainWindow.xaml.cs">
@@ -155,6 +167,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Managers\ArtistManager\ArtistManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Managers\FlagManager\FlagManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

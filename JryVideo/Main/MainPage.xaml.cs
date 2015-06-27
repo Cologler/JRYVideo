@@ -16,7 +16,7 @@ using JryVideo.Add;
 using JryVideo.Add.SelectSeries;
 using JryVideo.Common;
 using JryVideo.Core.Managers;
-using JryVideo.EditCover;
+using JryVideo.Editors.CoverEditor;
 
 namespace JryVideo.Main
 {
@@ -44,7 +44,7 @@ namespace JryVideo.Main
 
             this.DataContext = this.ViewModel = new MainViewModel();
 
-            await this.ViewModel.LoadAsync();
+            await this.ViewModel.VideosViewModel.LoadAsync();
         }
 
         private void NormalModeButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -68,11 +68,13 @@ namespace JryVideo.Main
             var cover = await vm.TryGetCoverAsync();
             if (cover != null)
             {
-                var dlg = new EditCoverWindow(cover);
+                var dlg = new CoverEditorWindow();
+                dlg.ViewModel.ModifyMode(cover);
+                dlg.UpdateRadioButtonCheckedStatus();
 
                 if (dlg.ShowDialog() == true)
                 {
-                    await dlg.ViewModel.AcceptAsync();
+                    await dlg.ViewModel.CommitAsync();
                     vm.BeginUpdateCover();
                 }
             }

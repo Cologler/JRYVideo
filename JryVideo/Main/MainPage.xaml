@@ -76,7 +76,7 @@
                 </ListView>
 
                 <ListView BorderThickness="0"
-                          ItemsSource="{Binding VideosObservableCollection}"
+                          ItemsSource="{Binding VideosViewModel.VideosObservableCollection}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.IsDeferredScrollingEnabled="False">

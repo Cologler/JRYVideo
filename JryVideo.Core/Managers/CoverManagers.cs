@@ -25,22 +25,25 @@ namespace JryVideo.Core.Managers
         {
             if (coverId == null) return null;
 
-            JryCover cover;
-
-            if (this.Cache.TryGetValue(coverId, out cover))
-                return cover;
-
-            cover = await this.Source.QueryAsync(coverId);
-
-            if (cover != null)
+            return await Task.Run(async() =>
             {
-                lock (this.Cache)
-                {
-                    return this.Cache.GetOrSetValue(coverId, cover);
-                }
-            }
+                JryCover cover;
 
-            return null;
+                if (this.Cache.TryGetValue(coverId, out cover))
+                    return cover;
+
+                cover = await this.Source.FindAsync(coverId);
+
+                if (cover != null)
+                {
+                    lock (this.Cache)
+                    {
+                        return this.Cache.GetOrSetValue(coverId, cover);
+                    }
+                }
+
+                return null;
+            });
         }
 
         public async Task<string> GetCoverFromDoubanIdAsync(JryCoverType type, string doubanId)

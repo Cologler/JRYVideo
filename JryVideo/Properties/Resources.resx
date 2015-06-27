@@ -120,9 +120,6 @@
   <data name="EditSeries_Error_Title" xml:space="preserve">
     <value>some error</value>
   </data>
-  <data name="Error_Object_Initialize_Failed" xml:space="preserve">
-    <value>{0} initialize failed</value>
-  </data>
   <data name="Error_Object_TimeLessThanZero" xml:space="preserve">
     <value>{0}'s time less than zero</value>
   </data>

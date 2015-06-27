@@ -1,0 +1,57 @@
+﻿<Page x:Class="JryVideo.Viewer.SeriesItemViewer.SeriesItemViewerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:common="clr-namespace:JryVideo.Common"
+      mc:Ignorable="d"
+      d:DesignHeight="300"
+      d:DesignWidth="300"
+      Title="SeriesItemViewerPage">
+
+    <Grid>
+        <ListView BorderThickness="0"
+                  ItemsSource="{Binding VideosObservableCollection}"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid d:DataContext="{d:DesignInstance common:VideoViewModel}"
+                          Margin="3"
+                          Width="150">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="200"/>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid>
+                                <Image Source="{Binding Cover.BinaryData}"
+                                       RenderOptions.BitmapScalingMode="Fant"
+                                       RenderOptions.EdgeMode="Aliased" />
+                            </Grid>
+                        </Grid>
+
+                        <StackPanel Grid.Row="1">
+
+                            <TextBlock Text="{Binding Index}"
+                                       HorizontalAlignment="Center" />
+
+                            <TextBlock Text="{Binding VideoName}"
+                                       HorizontalAlignment="Center" />
+
+                        </StackPanel>
+
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

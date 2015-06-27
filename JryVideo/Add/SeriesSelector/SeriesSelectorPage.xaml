@@ -1,15 +1,16 @@
-﻿<Page x:Class="JryVideo.Add.SelectSeries.SelectSeriesPage"
+﻿<Page x:Class="JryVideo.Add.SeriesSelector.SeriesSelectorPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
       xmlns:selectSeries="clr-namespace:JryVideo.Add.SelectSeries"
+      xmlns:seriesSelector="clr-namespace:JryVideo.Add.SeriesSelector"
       mc:Ignorable="d"
       d:DesignHeight="400"
       d:DesignWidth="600">
 
-    <Grid d:DataContext="{d:DesignInstance selectSeries:SelectSeriesViewModel}">
+    <Grid d:DataContext="{d:DesignInstance seriesSelector:SeriesSelectorViewModel}">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -42,9 +43,9 @@
 
                 <ListView Grid.Row="1"
                           x:Name="SeriesListView"
-                          ItemsSource="{Binding SeriesView}"
+                          ItemsSource="{Binding Items.View}"
                           BorderThickness="0"
-                          SelectedItem="{Binding Selected, Mode=TwoWay}">
+                          SelectedItem="{Binding Items.Selected, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid d:DataContext="{d:DesignInstance selectSeries:SeriesViewModel}">

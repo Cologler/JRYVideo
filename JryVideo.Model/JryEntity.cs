@@ -39,10 +39,13 @@ namespace JryVideo.Model
                 yield return error;
             }
 
-            if (this.Fansubs == null || this.Formats == null || this.SubTitleLanguages == null ||
-                this.Tags == null || this.TrackLanguages == null)
+            if (this.Fansubs == null ||
+                this.Formats == null ||
+                this.SubTitleLanguages == null ||
+                this.Tags == null ||
+                this.TrackLanguages == null)
             {
-                yield return JryInvalidError.ObjectInitializeFailed;
+                throw new ArgumentException();
             }
         }
     }

@@ -41,7 +41,7 @@ namespace JryVideo.Data.MongoDb
             return sorter.Descending(z => z.Created);
         }
 
-        public async virtual Task<T> QueryAsync(string id)
+        public async virtual Task<T> FindAsync(string id)
         {
             var filter = Builders<T>.Filter;
 
@@ -66,12 +66,12 @@ namespace JryVideo.Data.MongoDb
                     value)).MatchedCount == 1;
         }
 
-        public async Task<bool> RemoveAsync(T value)
+        public async Task<bool> RemoveAsync(string id)
         {
             var filter = Builders<T>.Filter;
 
             return (await this.Collection.DeleteOneAsync(
-                    filter.Eq(t => t.Id, value.Id))).DeletedCount == 1;
+                    filter.Eq(t => t.Id, id))).DeletedCount == 1;
         }
     }
 }

@@ -15,6 +15,6 @@ namespace JryVideo.Data.DataSources
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<T> QueryAsync(string id);
+        Task<T> FindAsync(string id);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Enums;
+﻿using System.Enums;
 using System.Net;
 using System.Threading.Tasks;
 using JryVideo.Common;
@@ -8,41 +6,53 @@ using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Model;
 
-namespace JryVideo.EditCover
+namespace JryVideo.Editors.CoverEditor
 {
-    public class EditCoverViewModel : JasilyViewModel<JryCover>
+    public class CoverEditorViewModel : EditorItemViewModel<JryCover>
     {
-        private string _doubanId;
-        private string _uri;
-        private byte[] _binaryData;
-        private ImageViewModel _imageViewModel;
+        private string doubanId;
+        private string uri;
+        private byte[] binaryData;
+        private ImageViewModel imageViewModel;
 
-        public EditCoverViewModel(JryCover source)
-            : base(source)
+        public override void CreateMode()
         {
-            this.DoubanId = this.Source.DoubanId;
-            this.Uri = this.Source.Uri;
-            this.BinaryData = this.Source.BinaryData;
+            this.DoubanId = this.Uri = null;
+            this.BinaryData = null;
+
+            base.CreateMode();
+        }
+
+        public override void ModifyMode(JryCover source)
+        {
+            this.DoubanId = source.DoubanId;
+            this.Uri = source.Uri;
+            this.BinaryData = source.BinaryData;
+
+            base.ModifyMode(source);
         }
 
         public string DoubanId
         {
-            get { return this._doubanId; }
-            set { this.SetPropertyRef(ref this._doubanId, value); }
+            get { return this.doubanId; }
+            set { this.SetPropertyRef(ref this.doubanId, value); }
         }
 
         public string Uri
         {
-            get { return this._uri; }
-            set { this.SetPropertyRef(ref this._uri, value); }
+            get { return this.uri; }
+            set { this.SetPropertyRef(ref this.uri, value); }
         }
 
+        /// <summary>
+        /// can be null.
+        /// </summary>
         public byte[] BinaryData
         {
-            get { return this._binaryData; }
+            get { return this.binaryData; }
             set
             {
-                if (this.SetPropertyRef(ref this._binaryData, value))
+                if (this.SetPropertyRef(ref this.binaryData, value))
                     this.OnUpdatedBinaryData();
             }
         }
@@ -51,11 +61,9 @@ namespace JryVideo.EditCover
 
         public ImageViewModel ImageViewModel
         {
-            get { return this._imageViewModel; }
-            private set { this.SetPropertyRef(ref this._imageViewModel, value); }
+            get { return this.imageViewModel; }
+            private set { this.SetPropertyRef(ref this.imageViewModel, value); }
         }
-
-        public ObjectChangedAction Action { get; set; }
 
         private void OnUpdatedBinaryData()
         {
@@ -98,33 +106,24 @@ namespace JryVideo.EditCover
             return this.BinaryData != null;
         }
 
-        public async Task AcceptAsync()
+        public void SaveToSource()
+        {
+            this.Source.CoverSourceType = this.CoverSourceType;
+            this.Source.DoubanId = this.DoubanId;
+            this.Source.Uri = this.Uri;
+            this.Source.BinaryData = this.BinaryData;
+        }
+
+        public async Task<bool> CommitAsync()
         {
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
 
-            this.Source.CoverSourceType = this.CoverSourceType;
-            
-            this.Source.DoubanId = this.DoubanId;
-            this.Source.Uri = this.Uri;
+            this.SaveToSource();
 
-            this.Source.BinaryData = this.BinaryData;
+            if (this.Action == ObjectChangedAction.Create)
+                this.Source.BuildMetaData();
 
-            switch (this.Action)
-            {
-                case ObjectChangedAction.Create:
-                    await coverManager.InsertAsync(this.Source);
-                    break;
-
-                case ObjectChangedAction.Modify:
-                    await coverManager.UpdateAsync(this.Source);
-                    break;
-
-                case ObjectChangedAction.Replace:
-                case ObjectChangedAction.Delete:
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
+            return await this.CommitAsync(coverManager, this.Source);
         }
     }
 }

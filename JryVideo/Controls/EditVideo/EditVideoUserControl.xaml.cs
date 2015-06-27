@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Enums;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using JryVideo.Core;
+using JryVideo.Editors.CoverEditor;
+using JryVideo.Managers.FlagManager;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -24,8 +28,6 @@ namespace JryVideo.Controls.EditVideo
 
         public EditVideoUserControl()
         {
-            this.DataContext = this.ViewModel = new EditVideoViewModel();
-
             this.InitializeComponent();
         }
 
@@ -37,7 +39,64 @@ namespace JryVideo.Controls.EditVideo
         {
             base.OnInitialized(e);
 
-            await this.ViewModel.LoadAsync();;
+            this.DataContext = this.ViewModel = new EditVideoViewModel();
+            await this.ViewModel.LoadAsync();
+        }
+
+        private async void EditCoverButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dlg = new CoverEditorWindow();
+
+            if (this.ViewModel.Cover != null)
+            {
+                if (this.ViewModel.Cover.Action == ObjectChangedAction.Create)
+                {
+                    dlg.ViewModel.CreateMode();
+                }
+                else
+                {
+                    dlg.ViewModel.ModifyMode(this.ViewModel.Cover.Source);
+                }
+
+                dlg.ViewModel.DoubanId = this.ViewModel.Cover.DoubanId;
+                dlg.ViewModel.CoverSourceType = this.ViewModel.Cover.CoverSourceType;
+                dlg.ViewModel.Uri = this.ViewModel.Cover.Uri;
+                dlg.ViewModel.BinaryData = this.ViewModel.Cover.BinaryData;
+                dlg.ViewModel.SaveToSource();
+            }
+            else
+            {
+                if (this.ViewModel.Action == ObjectChangedAction.Create /* create a video */ ||
+                    this.ViewModel.Source.CoverId == null /* video has not cover */)
+                {
+                    dlg.ViewModel.CreateMode();
+                }
+                else
+                {
+                    var cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.FindAsync(this.ViewModel.Source.CoverId);
+
+                    if (cover == null) // database error ?
+                    {
+                        dlg.ViewModel.CreateMode();
+                    }
+                    else
+                    {
+                        dlg.ViewModel.ModifyMode(cover);
+                    }
+                }
+            }
+
+            dlg.UpdateRadioButtonCheckedStatus();
+
+            if (dlg.ShowDialog() == true)
+            {
+                this.ViewModel.Cover = dlg.ViewModel;
+            }
+        }
+
+        private void EditVideoTypeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            new FlagManagerWindow().ShowDialog();
         }
     }
 }

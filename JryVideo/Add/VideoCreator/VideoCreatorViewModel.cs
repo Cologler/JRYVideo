@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Model;
 
-namespace JryVideo.Add.SelectVideo
+namespace JryVideo.Add.VideoCreator
 {
-    public class SelectVideoViewModel : JasilyViewModel<JrySeries>
+    public class VideoCreatorViewModel : JasilyViewModel<JrySeries>
     {
-        private VideoViewModel _selected;
+        private VideoViewModel selected;
 
         public ObservableCollection<VideoViewModel> VideoCollection { get; private set; }
 
@@ -24,7 +20,7 @@ namespace JryVideo.Add.SelectVideo
                 await Task.Run(() => VideoViewModel.Create(series)));
         }
 
-        public SelectVideoViewModel(JrySeries source)
+        public VideoCreatorViewModel(JrySeries source)
             : base(source)
         {
             this.VideoCollection = new ObservableCollection<VideoViewModel>();
@@ -32,8 +28,8 @@ namespace JryVideo.Add.SelectVideo
 
         public VideoViewModel Selected
         {
-            get { return this._selected; }
-            set { this.SetPropertyRef(ref this._selected, value); }
+            get { return this.selected; }
+            set { this.SetPropertyRef(ref this.selected, value); }
         }
     }
 }

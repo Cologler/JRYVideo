@@ -11,6 +11,10 @@ namespace JryVideo.Core.Managers
 {
     public class SeriesManager : JryObjectManager<JrySeries, IDataSourceProvider<JrySeries>>
     {
+        public event EventHandler<JrySeries> SeriesCreated;
+        public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoRemoved;
+        public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoCreated;
+
         public DataCenter DataCenter { get; private set; }
 
         public SeriesManager(DataCenter dataCenter, IDataSourceProvider<JrySeries> source)
@@ -23,9 +27,39 @@ namespace JryVideo.Core.Managers
         {
             if (await base.InsertAsync(series))
             {
-                var dic = BuildCounterDictionary(series);
+                // Video
+                this.SeriesCreated.BeginFire(this, series);
 
-                await this.RefMathByCounterDictionary(dic);
+                if (series.Videos.Count > 0)
+                    this.VideoInfoCreated.BeginFire(this, series.Videos.ToArray());
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public async override Task<bool> UpdateAsync(JrySeries series)
+        {
+            var old = await this.FindAsync(series.Id);
+
+            if (await base.UpdateAsync(series))
+            {
+                // Video
+                var oldVideos = old.Videos.ToDictionary(z => z.Id);
+                var newVideos = series.Videos.ToDictionary(z => z.Id);
+
+                var oldVideoIds = oldVideos.Keys.ToArray();
+                var newVideoIds = newVideos.Keys.ToArray();
+
+                var onlyOld = oldVideoIds.Except(newVideoIds).Select(id => oldVideos[id]).ToArray();
+                var onlyNew = newVideoIds.Except(oldVideoIds).Select(id => newVideos[id]).ToArray();
+
+                if (onlyOld.Length > 0)
+                    this.VideoInfoRemoved.BeginFire(this, onlyOld);
+
+                if (onlyNew.Length > 0)
+                    this.VideoInfoCreated.BeginFire(this, onlyNew);
 
                 return true;
             }
@@ -67,156 +101,7 @@ namespace JryVideo.Core.Managers
 
             return new[] { func(series) }
                 .Concat(series.Videos.Select(z => func(z)))
-                .Concat(series.Videos.Where(z => z.Entities != null).SelectMany(x => x.Entities).Select(c => func(c)))
                 .ToArray();
-        }
-        private static IEnumerable<T> SeriesFunc<T>(JrySeries series, Func<JryObject, IEnumerable<T>> func)
-        {
-            if (series == null) return Enumerable.Empty<T>();
-
-            if (series.Videos == null)
-                return func(series).ToArray();
-
-            return func(series)
-                .Concat(series.Videos.SelectMany(z => func(z)))
-                .Concat(series.Videos.Where(z => z.Entities != null).SelectMany(x => x.Entities).SelectMany(c => func(c)))
-                .ToArray();
-        }
-
-        private async Task RefMathByCounterDictionary(Dictionary<JryCounterType, Dictionary<string, int>> dic)
-        {
-            var counterDataSource = this.DataCenter.ProviderManager.GetCounterDataSourceProvider();
-
-            foreach (var item in dic)
-            {
-                foreach (var value in item.Value)
-                {
-                    await counterDataSource.RefMathAsync(item.Key, value.Key, value.Value);
-                }
-            }
-        }
-
-        private static Dictionary<JryCounterType, List<string>> BuildCounterValueListDictionary(JrySeries series)
-        {
-            return new Dictionary<JryCounterType, List<string>>()
-            {
-                // single in video
-                {
-                    JryCounterType.VideoType,
-                    series.Videos
-                        .Select(z => z.Type.ToString())
-                        .ToList()
-                },
-                {
-                    JryCounterType.VideoYear,
-                    series.Videos
-                        .Select(z => z.Year.ToString())
-                        .ToList()
-                },
-
-                // single in entity
-                {
-                    JryCounterType.EntityExtension,
-                    series.Videos
-                        .SelectMany(z => z.Entities)
-                        .Where(z => !String.IsNullOrWhiteSpace(z.Extension))
-                        .Select(z => z.Extension)
-                        .ToList()
-                },
-                {
-                    JryCounterType.EntityFilmSource,
-                    series.Videos
-                        .SelectMany(z => z.Entities)
-                        .Where(z => !String.IsNullOrWhiteSpace(z.FilmSource))
-                        .Select(z => z.FilmSource)
-                        .ToList()
-                },
-                {
-                    JryCounterType.EntityResolution,
-                    series.Videos
-                        .SelectMany(z => z.Entities)
-                        .Where(z => !String.IsNullOrWhiteSpace(z.Resolution))
-                        .Select(z => z.Resolution)
-                        .ToList()
-                },
-
-                // muilt in entity
-                {
-                    JryCounterType.EntityFansub,
-                    series.Videos
-                        .SelectMany(z => z.Entities)
-                        .SelectMany(x => x.Fansubs)
-                        .ToList()
-                },
-                {
-                    JryCounterType.EntitySubTitleLanguage,
-                    series.Videos
-                        .SelectMany(z => z.Entities)
-                        .SelectMany(x => x.SubTitleLanguages)
-                        .ToList()
-                },
-                {
-                    JryCounterType.EntityTrackLanguage,
-                    series.Videos
-                        .SelectMany(z => z.Entities)
-                        .SelectMany(x => x.TrackLanguages)
-                        .ToList()
-                },
-            };
-        }
-
-        private static Dictionary<JryCounterType, Dictionary<string, int>> BuildCounterDictionary(JrySeries series, JrySeries oldSeries = null)
-        {
-            var dic = ((JryCounterType[]) Enum.GetValues(typeof(JryCounterType))).ToDictionary(z => z, z => new Dictionary<string, int>());
-
-            foreach (var selector in BuildCounterValueListDictionary(series))
-            {
-                foreach (var value in selector.Value)
-                {
-                    if (dic[selector.Key].ContainsKey(value))
-                        dic[selector.Key][value]++;
-                    else
-                    {
-                        dic[selector.Key].Add(value, 1);
-                    }
-                }
-            }
-
-            if (oldSeries != null)
-            {
-                foreach (var selector in BuildCounterValueListDictionary(oldSeries))
-                {
-                    foreach (var value in selector.Value)
-                    {
-                        if (dic[selector.Key].ContainsKey(value))
-                            dic[selector.Key][value]--;
-                        else
-                        {
-                            dic[selector.Key].Add(value, -1);
-                        }
-                    }
-                }
-
-                return dic;
-            }
-
-            return dic;
-        }
-
-        public async override Task<bool> UpdateAsync(JrySeries series)
-        {
-            var old = await this.QueryAsync(series.Id);
-
-            if (await base.UpdateAsync(series))
-            {
-                var dic = BuildCounterDictionary(series, old);
-
-                await this.RefMathByCounterDictionary(dic);
-
-                return true;
-            }
-
-            return false;
         }
 
         public async Task<bool> MergeAsync(JrySeries dest, JrySeries source)

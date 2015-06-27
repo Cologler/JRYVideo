@@ -2,10 +2,6 @@
 {
     public enum JryInvalidError
     {
-        // all
-        ObjectInitializeFailed,
-        ObjectMetaDataCreateFailed,
-
         // series
         SeriesNamesCanNotBeEmpty,
 

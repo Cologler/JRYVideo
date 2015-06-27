@@ -3,15 +3,9 @@ using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public class JryCounter : JryObject
+    public class JryFlag : JryObject
     {
-        public JryCounter(JryCounterType type, string value)
-        {
-            this.Type = type;
-            this.Value = value;
-        }
-
-        public JryCounterType Type { get; set; }
+        public JryFlagType Type { get; set; }
 
         public string Value { get; set; }
 
@@ -22,7 +16,7 @@ namespace JryVideo.Model
             return BuildCounterId(this.Type, this.Value);
         }
 
-        public static string BuildCounterId(JryCounterType type, string value)
+        public static string BuildCounterId(JryFlagType type, string value)
         {
             return String.Format("{0}/{1}", (int)type, value.ThrowIfNullOrEmpty("value"));
         }

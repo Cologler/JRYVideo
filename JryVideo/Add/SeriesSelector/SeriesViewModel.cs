@@ -13,7 +13,7 @@ namespace JryVideo.Add.SelectSeries
 
         public string DisplayName
         {
-            get { return String.Format("({0} item) {1}", this.Source.Videos.Count, String.Join(" / ", this.Source.Names)); }
+            get { return String.Format("({0} videos) {1}", this.Source.Videos.Count, String.Join(" / ", this.Source.Names)); }
         }
     }
 }

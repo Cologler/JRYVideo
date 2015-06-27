@@ -31,17 +31,6 @@ namespace JryVideo.Controls.EditSeries
             }
         }
 
-        public void SetCreate()
-        {
-            this.ViewModel.Action = ObjectChangedAction.Create;
-        }
-
-        public void SetModify(JrySeries series)
-        {
-            this.ViewModel.Action = ObjectChangedAction.Modify;
-            this.ViewModel.Source = series;
-        }
-
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.CommitAsync();

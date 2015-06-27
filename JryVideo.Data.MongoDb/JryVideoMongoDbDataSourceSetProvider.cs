@@ -73,9 +73,14 @@ namespace JryVideo.Data.MongoDb
             return new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
         }
 
-        public ICounterDataSourceProvider GetCounterDataSourceProvider()
+        public IDataSourceProvider<Model.JryVideo> GetVideoDataSourceProvider()
         {
-            return new MongoCounterDataSource(this, this.Database.GetCollection<JryCounter>("Counter"));
+            return new MongoVideoDataSource(this, this.Database.GetCollection<Model.JryVideo>("Video"));
+        }
+
+        public IFlagDataSourceProvider GetCounterDataSourceProvider()
+        {
+            return new MongoFlagDataSource(this, this.Database.GetCollection<JryFlag>("Flag"));
         }
 
         public ICoverDataSourceProvider GetCoverDataSourceProvider()

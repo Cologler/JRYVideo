@@ -120,9 +120,6 @@
   <data name="EditSeries_Error_Title" xml:space="preserve">
     <value>发生错误</value>
   </data>
-  <data name="Error_Object_Initialize_Failed" xml:space="preserve">
-    <value>{0} 初始化失败</value>
-  </data>
   <data name="Error_Object_TimeLessThanZero" xml:space="preserve">
     <value>{0} 次数少于 0</value>
   </data>

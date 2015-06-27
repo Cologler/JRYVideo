@@ -54,8 +54,7 @@ namespace JryVideo.Core
 
             var entity = new JryEntity();
 
-            var video = new Model.JryVideo();
-            video.Entities.Add(entity);
+            var video = new Model.JryVideoInfo();
             video.Type = "Movie";
             video.DoubanId = "25851657";
             video.Index = 1;

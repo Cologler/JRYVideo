@@ -6,31 +6,47 @@
              xmlns:editVideo="clr-namespace:JryVideo.Controls.EditVideo"
              mc:Ignorable="d"
              d:DesignHeight="400"
-             d:DesignWidth="400">
+             d:DesignWidth="600">
     <Grid d:DataContext="{d:DesignInstance editVideo:EditVideoViewModel}">
-        <Grid.Resources>
-            <Style x:Key="TitleStyle"
-                   TargetType="TextBlock">
-                <Setter Property="FontSize"
-                        Value="14" />
-                <Setter Property="Margin"
-                        Value="0,8,5,8" />
-                <Setter Property="VerticalAlignment"
-                        Value="Center" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Left" />
-            </Style>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Grid>
+        <Grid VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Image Height="266"
+                   Width="200"
+                   Source="{Binding ImageViewModel.Source}"
+                   RenderOptions.BitmapScalingMode="Fant"
+                   RenderOptions.EdgeMode="Aliased" />
+
+            <TextBlock Grid.Row="1"
+                       Text="{Binding ImageViewModel.PixelMetaData}"
+                       HorizontalAlignment="Center"
+                       Margin="0,4,0,0" />
+
+            <Button Grid.Row="2"
+                    Content="edit cover"
+                    Margin="0,4,0,0"
+                    x:Name="EditCoverButton"
+                    Click="EditCoverButton_OnClick" />
+
+        </Grid>
+
+        <Grid Grid.Column="1"
+              Margin="12,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -59,7 +75,9 @@
 
             <Button Grid.Column="3"
                     Content="edit"
-                    VerticalAlignment="Center" />
+                    VerticalAlignment="Center"
+                    x:Name="EditVideoTypeButton"
+                    Click="EditVideoTypeButton_OnClick"/>
 
             <TextBlock Grid.Row="1"
                        Style="{StaticResource TitleStyle}"
@@ -112,40 +130,11 @@
 
         </Grid>
         
-        <Grid Grid.Column="1"
-              VerticalAlignment="Top"
-              Margin="4,0,0,0" >
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Image Height="200"
-                   Width="150"
-                   Source="{Binding ImageViewModel.Source}"
-                   RenderOptions.BitmapScalingMode="Fant"
-                   RenderOptions.EdgeMode="Aliased" />
-
-            <TextBlock Grid.Row="1"
-                       Text="{Binding ImageViewModel.PixelMetaData}"
-                       HorizontalAlignment="Center"
-                       Margin="0,4,0,0" />
-
-            <Button Grid.Row="2"
-                    Content="load from douban"
-                    Margin="0,4,0,0"/>
-            
-            <Button Grid.Row="3"
-                    Content="edit cover" 
-                    Margin="0,4,0,0"/>
-            
-        </Grid>
+        
 
         <Button Grid.Row="1"
                 Content="commit"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 Margin="0,8,0,0"
                 HorizontalAlignment="Right" />
     </Grid>

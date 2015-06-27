@@ -22,7 +22,7 @@ namespace JryVideo.Common
             if (type == typeof(JrySeries))
                 return Resources.Name_Object_Series;
 
-            if (type == typeof(Model.JryVideo))
+            if (type == typeof(Model.JryVideoInfo))
                 return Resources.Name_Object_Video;
 
             if (type == typeof(JryEntity))
@@ -36,9 +36,6 @@ namespace JryVideo.Common
         {
             switch (error)
             {
-                case JryInvalidError.ObjectMetaDataCreateFailed:
-                    return String.Format(Resources.Error_Object_Initialize_Failed, JryObjectGetName<T>());
-
                 case JryInvalidError.CounterCountLessThanOne:
                     return String.Format(Resources.Error_Object_TimeLessThanZero, JryObjectGetName<T>());
 
@@ -47,14 +44,10 @@ namespace JryVideo.Common
             }
         }
 
-        public static string[] FireObjectError(this JrySeries obj)
-        {
-            return obj.CheckError().Select(ErrorCodeToMessage<JrySeries>).ToArray();
-        }
         public static string[] FireObjectError<T>(this T obj)
             where T : JryObject
         {
-            return null;
+            return obj.CheckError().Select(ErrorCodeToMessage<T>).ToArray();
         }
     }
 }

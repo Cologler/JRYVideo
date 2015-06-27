@@ -1,40 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideo : JryObject, IJryCoverParent
+    public sealed class JryVideo : JryObject
     {
         public JryVideo()
         {
-            this.Names = new List<string>();
             this.Entities = new List<JryEntity>();
-            this.Tags = new List<string>();
-            this.ArtistIds = new List<Guid>();
         }
 
-        public string Type { get; set; }
-
-        public int Year { get; set; }
-
-        public int Index { get; set; }
-
-        public List<Guid> ArtistIds { get; set; }
-
-        public List<string> Names { get; set; }
-
         public List<JryEntity> Entities { get; set; }
-
-        public string DoubanId { get; set; }
-
-        public string ImdbId { get; set; }
-
-        public int EpisodesCount { get; set; }
-
-        public List<string> Tags { get; set; }
-
-        public string CoverId { get; set; }
 
         public override IEnumerable<JryInvalidError> CheckError()
         {
@@ -43,30 +19,27 @@ namespace JryVideo.Model
                 yield return error;
             }
 
-            if (this.Names == null || this.Tags == null || this.Entities == null || this.ArtistIds == null)
+            if (this.Entities == null)
             {
-                yield return JryInvalidError.ObjectInitializeFailed;
+                throw new ArgumentException();
             }
+        }
 
-            if (String.IsNullOrWhiteSpace(this.Type))
-            {
-                yield return JryInvalidError.VideoTypeCanNotBeEmpty;
-            }
+        /// <summary>
+        /// Guid.NewGuid().ToString().ToUpper()
+        /// </summary>
+        /// <returns></returns>
+        protected override string BuildId()
+        {
+            return this.Id;
+        }
 
-            if (this.Year < 1900 || this.Year > 2100)
+        public static JryVideo Build(JryVideoInfo info)
+        {
+            return new JryVideo()
             {
-                yield return JryInvalidError.VideoYearValueInvalid;
-            }
-
-            if (this.Index < 1 || this.Index > 100)
-            {
-                yield return JryInvalidError.VideoIndexLessThanOne;
-            }
-
-            if (this.EpisodesCount < 1)
-            {
-                yield return JryInvalidError.VideoEpisodesCountLessThanOne;
-            }
+                Id = info.Id
+            };
         }
     }
 }

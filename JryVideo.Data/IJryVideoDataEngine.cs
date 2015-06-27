@@ -15,7 +15,9 @@ namespace JryVideo.Data
 
         IDataSourceProvider<JrySeries> GetSeriesDataSourceProvider();
 
-        ICounterDataSourceProvider GetCounterDataSourceProvider();
+        IDataSourceProvider<Model.JryVideo> GetVideoDataSourceProvider();
+
+        IFlagDataSourceProvider GetCounterDataSourceProvider();
 
         ICoverDataSourceProvider GetCoverDataSourceProvider();
 

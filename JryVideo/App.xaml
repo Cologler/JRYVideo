@@ -14,6 +14,35 @@
                 
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+                    <Style x:Key="TitleStyle"
+                           TargetType="TextBlock">
+                        <Setter Property="FontSize"
+                                Value="14" />
+                        <Setter Property="Margin"
+                                Value="0,8,5,8" />
+                        <Setter Property="VerticalAlignment"
+                                Value="Center" />
+                        <Setter Property="HorizontalAlignment"
+                                Value="Left" />
+                    </Style>
+
+                    <Style x:Key="CaptionStyle"
+                           TargetType="TextBlock"
+                           >
+                        <Setter Property="FontSize"
+                                Value="20" />
+                        <Setter Property="Height"
+                                Value="40" />
+                        <Setter Property="FontFamily"
+                                Value="Microsoft YaHei UI Light" />
+                        <Setter Property="Margin"
+                                Value="4,0,0,0" />
+                        <Setter Property="VerticalAlignment"
+                                Value="Center" />
+                        <Setter Property="HorizontalAlignment"
+                                Value="Left" />
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

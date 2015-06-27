@@ -8,12 +8,12 @@ namespace JryVideo.Model
         public JrySeries()
         {
             this.Names = new List<string>();
-            this.Videos = new List<JryVideo>();
+            this.Videos = new List<JryVideoInfo>();
         }
 
         public List<string> Names { get; set; }
 
-        public List<JryVideo> Videos { get; set; }
+        public List<JryVideoInfo> Videos { get; set; }
 
         public override IEnumerable<JryInvalidError> CheckError()
         {
@@ -22,18 +22,15 @@ namespace JryVideo.Model
                 yield return error;
             }
 
-            if (this.Names == null)
+            if (this.Names == null || this.Videos == null)
             {
-                yield return JryInvalidError.ObjectInitializeFailed;
+                throw new ArgumentException();
             }
-            else if (this.Names.Count == 0)
+            
+            
+            if (this.Names.Count == 0)
             {
                 yield return JryInvalidError.SeriesNamesCanNotBeEmpty;
-            }
-
-            if (this.Videos == null)
-            {
-                yield return JryInvalidError.ObjectInitializeFailed;
             }
         }
     }

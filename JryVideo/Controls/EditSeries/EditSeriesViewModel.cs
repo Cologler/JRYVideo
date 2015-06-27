@@ -14,43 +14,31 @@ using JryVideo.Model;
 
 namespace JryVideo.Controls.EditSeries
 {
-    public class EditSeriesViewModel : JasilyViewModel
+    public class EditSeriesViewModel : EditorItemViewModel<JrySeries>
     {
-        private string _names;
-        private JrySeries _source;
-        private string _doubanId;
-
-        public event EventHandler<string[]> FindErrorMessages;
-        public event EventHandler<JrySeries> Created;
-        public event EventHandler<JrySeries> Updated;
+        private string names;
+        private string doubanId;
 
         public EditSeriesViewModel()
         {
-            this._names = "";
-        }
-
-        public ObjectChangedAction Action { get; set; }
-
-        public JrySeries Source
-        {
-            get { return this._source; }
-            set
-            {
-                this._source = value;
-                this.Names = value == null || value.Names == null ? "" : value.Names.AsLines();
-            }
+            this.UpdateNames();
         }
 
         public string Names
         {
-            get { return this._names; }
-            set { this.SetPropertyRef(ref this._names, value); }
+            get { return this.names; }
+            set { this.SetPropertyRef(ref this.names, value); }
+        }
+
+        public void UpdateNames()
+        {
+            this.Names = this.Source == null ? "" : this.Source.Names.AsLines();
         }
 
         public string DoubanId
         {
-            get { return this._doubanId; }
-            set { this.SetPropertyRef(ref this._doubanId, value); }
+            get { return this.doubanId; }
+            set { this.SetPropertyRef(ref this.doubanId, value); }
         }
 
         public DoubanMovie DoubanMovie { get; private set; }
@@ -71,23 +59,7 @@ namespace JryVideo.Controls.EditSeries
 
         public async Task<bool> CommitAsync()
         {
-            JrySeries series;
-
-            switch (this.Action)
-            {
-                case ObjectChangedAction.Create:
-                    series = new JrySeries();
-                    break;
-
-                case ObjectChangedAction.Modify:
-                    series = this.Source.ThrowIfNull("Source");
-                    break;
-
-                case ObjectChangedAction.Replace:
-                case ObjectChangedAction.Delete:
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var series = this.Source;
 
             series.ThrowIfNull("series").Names.AddRange(
                 this.Names.AsLines()
@@ -98,50 +70,9 @@ namespace JryVideo.Controls.EditSeries
 
             SeriesManager.BuildSeriesMetaData(series);
 
-            var error = series.FireObjectError().ToArray();
-
-            if (error.Length > 0)
-            {
-                this.FindErrorMessages.Fire(this, error);
-
-                return false;
-            }
-            else
-            {
-                var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
-
-                switch (this.Action)
-                {
-                    case ObjectChangedAction.Create:
-                        if (await seriesManager.InsertAsync(series))
-                        {
-                            this.Created.BeginFire(this, series);
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                        break;
-
-                    case ObjectChangedAction.Modify:
-                        if (await seriesManager.UpdateAsync(series))
-                        {
-                            this.Updated.BeginFire(this, series);
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                        break;
-
-                    case ObjectChangedAction.Replace:
-                    case ObjectChangedAction.Delete:
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
+            
+            return await this.CommitAsync(seriesManager, series);
         }
     }
 }

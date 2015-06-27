@@ -1,0 +1,119 @@
+﻿<controls:MetroWindow x:Class="JryVideo.Managers.FlagManager.FlagManagerWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      Title="FlagManagerWindow"
+                      Height="400"
+                      Width="600"
+                      ResizeMode="NoResize"
+                      ShowTitleBar="False"
+                      BorderThickness="1"
+                      GlowBrush="Black">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <TextBlock Style="{StaticResource CaptionStyle}" 
+                       Text="flag manager"/>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="all items"
+                      Padding="4"
+                      Margin="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBox />
+
+                    <ListView Grid.Row="1"
+                              BorderThickness="0"
+                              Margin="0,4,0,0">
+
+                    </ListView>
+                </Grid>
+            </GroupBox>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <GroupBox Header="new or replace"
+                          Padding="4"
+                          Margin="0">
+
+                    <StackPanel>
+                        <TextBlock Text="name"
+                                   Style="{StaticResource TitleStyle}"/>
+                        
+                        <TextBox />
+
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,4,0,0">
+                            
+                            <Button Content="add"
+                                    Width="80"/>
+
+                            <Button Content="replace"
+                                    Margin="4,0,0,0"
+                                    Width="80" />
+
+                        </StackPanel>
+                    </StackPanel>
+                    
+                </GroupBox>
+
+                <GroupBox Header="selected"
+                          Grid.Row="1"
+                          Padding="4"
+                          Margin="0,4,0,0">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel>
+                            <TextBlock Text="name"
+                                       Style="{StaticResource TitleStyle}" />
+
+                            <TextBox />
+
+                            
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="1"
+                                    Orientation="Horizontal"
+                                    FlowDirection="RightToLeft">
+                            
+                            <Button Grid.Row="1"
+                                    Content="commit" />
+                            
+                        </StackPanel>
+
+                    </Grid>
+                    
+                    
+                </GroupBox>
+
+            </Grid>
+
+        </Grid>
+    </Grid>
+</controls:MetroWindow>

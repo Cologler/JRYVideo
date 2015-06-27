@@ -6,8 +6,9 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
                       xmlns:selectSeries1="clr-namespace:JryVideo.Add.SelectSeries"
+                      xmlns:seriesSelector="clr-namespace:JryVideo.Add.SeriesSelector"
                       mc:Ignorable="d"
-                      Height="500"
+                      Height="510"
                       Width="700"
                       ResizeMode="NoResize"
                       GlowBrush="Black"
@@ -15,7 +16,7 @@
                       WindowStartupLocation="CenterScreen"
                       ShowTitleBar="False">
     
-    <Grid d:DataContext="{d:DesignInstance selectSeries1:SelectSeriesViewModel}"
+    <Grid d:DataContext="{d:DesignInstance seriesSelector:SeriesSelectorViewModel}"
           Margin="8">
 
         <Grid.RowDefinitions>
@@ -25,28 +26,9 @@
         </Grid.RowDefinitions>
         
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
 
             <TextBlock x:Name="Title" 
-                       FontSize="22"
-                       Text="select series"
-                       FontFamily="Microsoft YaHei UI Light"
-                       Margin="4,0,0,0"/>
-            
-            <Line Grid.Row="1"
-                  Margin="0,4,0,10"
-                  Width="200"
-                  HorizontalAlignment="Left"
-                  X1="0"
-                  X2="100"
-                  Fill="Black"
-                  Stroke="Black"
-                  StrokeThickness="1"
-                  SnapsToDevicePixels="True"
-                  Stretch="Fill" />
+                       Style="{StaticResource CaptionStyle}"/>
             
         </Grid>
 
@@ -57,10 +39,19 @@
         <Grid Grid.Row="2"
               Grid.ColumnSpan="3"
               Margin="0,8">
+
+            <Button x:Name="LastButton"
+                    Content="last step"
+                    Width="100"
+                    HorizontalAlignment="Left"
+                    Click="LastButton_OnClick" />
+
             <Button x:Name="NextButton"
                     Content="next step"
+                    Width="100"
                     HorizontalAlignment="Right"
                     Click="NextButton_OnClick"/>
+            
         </Grid>
         
     </Grid>

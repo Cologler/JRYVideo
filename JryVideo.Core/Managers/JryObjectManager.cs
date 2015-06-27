@@ -7,7 +7,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class JryObjectManager<T, TProvider>
+    public class JryObjectManager<T, TProvider> : IObjectEditProvider<T>
         where T : JryObject
         where TProvider : IDataSourceProvider<T>
     {
@@ -23,9 +23,9 @@ namespace JryVideo.Core.Managers
             return await this.Source.QueryAsync(0, Int32.MaxValue);
         }
 
-        public async virtual Task<T> QueryAsync(string id)
+        public async virtual Task<T> FindAsync(string id)
         {
-            return await this.Source.QueryAsync(id);
+            return await this.Source.FindAsync(id);
         }
 
         public async virtual Task<bool> InsertAsync(T obj)
@@ -40,6 +40,11 @@ namespace JryVideo.Core.Managers
             if (obj.CheckError().ToArray().Length > 0) return false;
 
             return await this.Source.UpdateAsync(obj);
+        }
+
+        public async virtual Task<bool> RemoveAsync(string id)
+        {
+            return await this.Source.RemoveAsync(id);
         }
     }
 }

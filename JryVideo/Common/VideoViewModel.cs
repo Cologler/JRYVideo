@@ -9,9 +9,9 @@ using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public class VideoViewModel : HasCoverViewModel<Model.JryVideo>
+    public class VideoViewModel : HasCoverViewModel<Model.JryVideoInfo>
     {
-        public VideoViewModel(JrySeries series, Model.JryVideo source)
+        public VideoViewModel(JrySeries series, Model.JryVideoInfo source)
             : base(source)
         {
             this.Series = series;

@@ -1,44 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using JryVideo.Add.SelectSeries;
 using JryVideo.Model;
 
-namespace JryVideo.Add.SelectSeries
+namespace JryVideo.Add.SeriesSelector
 {
     /// <summary>
     /// SelectSeriesPage.xaml 的交互逻辑
     /// </summary>
-    public partial class SelectSeriesPage : Page
+    public partial class SeriesSelectorPage : Page
     {
-        public SelectSeriesPage()
+        public SeriesSelectorPage()
         {
             this.InitializeComponent();
 
             this.EditSeriesUserControl.ViewModel.Created += this.EditSeriesUserControl_ViewModel_Created;
         }
 
-        public SelectSeriesViewModel ViewModel { get; private set; }
+        public SeriesSelectorViewModel SelectorViewModel { get; private set; }
 
         void EditSeriesUserControl_ViewModel_Created(object sender, JrySeries e)
         {
             if (this.Dispatcher.CheckAccessOrBeginInvoke(this.EditSeriesUserControl_ViewModel_Created, sender, e))
             {
-                if (this.ViewModel != null)
+                if (this.SelectorViewModel != null)
                 {
                     var vm = new SeriesViewModel(e);
-                    this.ViewModel.SeriesList.Add(vm);
-                    this.ViewModel.Selected = vm;
+                    this.SelectorViewModel.Items.Collection.Add(vm);
+                    this.SelectorViewModel.Items.Selected = vm;
                     this.SeriesListView.ScrollIntoView(vm);
                 }
             }
@@ -52,11 +42,11 @@ namespace JryVideo.Add.SelectSeries
         {
             base.OnInitialized(e);
 
-            this.EditSeriesUserControl.SetCreate();
+            this.EditSeriesUserControl.ViewModel.CreateMode();
 
-            this.DataContext = this.ViewModel = new SelectSeriesViewModel();
+            this.DataContext = this.SelectorViewModel = new SeriesSelectorViewModel();
 
-            await this.ViewModel.LoadAsync();
+            await this.SelectorViewModel.LoadAsync();
         }
     }
 }

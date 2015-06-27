@@ -4,10 +4,10 @@ using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {
-    public interface ICounterDataSourceProvider : IDataSourceProvider<JryCounter>
+    public interface IFlagDataSourceProvider : IDataSourceProvider<JryFlag>
     {
-        Task<IEnumerable<JryCounter>> QueryAsync(JryCounterType type);
+        Task<IEnumerable<JryFlag>> QueryAsync(JryFlagType type);
 
-        Task<bool> RefMathAsync(JryCounterType type, string value, int count);
+        Task<bool> RefMathAsync(JryFlagType type, string value, int count);
     }
 }

@@ -1,0 +1,23 @@
+﻿<Page x:Class="JryVideo.Add.VideoCreator.VideoCreatorPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:editVideo="clr-namespace:JryVideo.Controls.EditVideo"
+      xmlns:common="clr-namespace:JryVideo.Common"
+      xmlns:videoCreator="clr-namespace:JryVideo.Add.VideoCreator"
+      mc:Ignorable="d"
+      d:DesignHeight="400"
+      d:DesignWidth="600">
+
+    <Grid d:DataContext="{d:DesignInstance videoCreator:VideoCreatorViewModel}">
+
+        <GroupBox Header="add new video"
+                  Margin="0">
+
+            <editVideo:EditVideoUserControl />
+
+        </GroupBox>
+
+    </Grid>
+</Page>

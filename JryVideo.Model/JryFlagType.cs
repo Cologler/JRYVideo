@@ -1,6 +1,6 @@
 ﻿namespace JryVideo.Model
 {
-    public enum JryCounterType : int
+    public enum JryFlagType : int
     {
         VideoYear = 11,
 
