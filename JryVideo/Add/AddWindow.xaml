@@ -5,8 +5,7 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
-                      xmlns:selectSeries1="clr-namespace:JryVideo.Add.SelectSeries"
-                      xmlns:seriesSelector="clr-namespace:JryVideo.Add.SeriesSelector"
+                      xmlns:seriesSelector1="clr-namespace:JryVideo.Selectors.SeriesSelector"
                       mc:Ignorable="d"
                       Height="510"
                       Width="700"
@@ -16,7 +15,7 @@
                       WindowStartupLocation="CenterScreen"
                       ShowTitleBar="False">
     
-    <Grid d:DataContext="{d:DesignInstance seriesSelector:SeriesSelectorViewModel}"
+    <Grid d:DataContext="{d:DesignInstance seriesSelector1:SeriesSelectorViewModel}"
           Margin="8">
 
         <Grid.RowDefinitions>

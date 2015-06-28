@@ -10,24 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MahApps.Metro.Controls;
 
-namespace JryVideo.Editor.EditArtist
+namespace JryVideo.Selectors.ArtistSelector
 {
     /// <summary>
-    /// EditArtistWindow.xaml 的交互逻辑
+    /// ArtistSelectorPage.xaml 的交互逻辑
     /// </summary>
-    public partial class EditArtistWindow : MetroWindow
+    public partial class ArtistSelectorPage : Page
     {
-        public EditArtistWindow()
+        public ArtistSelectorPage()
         {
-            this.InitializeComponent();
-        }
-
-        private void Accept_OnClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            InitializeComponent();
         }
     }
 }

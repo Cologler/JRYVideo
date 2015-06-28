@@ -15,7 +15,7 @@
         <GroupBox Header="add new video"
                   Margin="0">
 
-            <editVideo:EditVideoUserControl />
+            <editVideo:EditVideoUserControl x:Name="EditVideoUserControl"/>
 
         </GroupBox>
 

@@ -50,20 +50,35 @@ namespace JryVideo.Model
                 yield return JryInvalidError.VideoTypeCanNotBeEmpty;
             }
 
-            if (this.Year < 1900 || this.Year > 2100)
+            if (!IsYearValid(this.Year))
             {
                 yield return JryInvalidError.VideoYearValueInvalid;
             }
 
-            if (this.Index < 1 || this.Index > 100)
+            if (!IsIndexValid(this.Index))
             {
                 yield return JryInvalidError.VideoIndexLessThanOne;
             }
 
-            if (this.EpisodesCount < 1)
+            if (!IsEpisodesCountValid(this.EpisodesCount))
             {
                 yield return JryInvalidError.VideoEpisodesCountLessThanOne;
             }
+        }
+
+        public static bool IsYearValid(int year)
+        {
+            return year < 2100 && year > 1900;
+        }
+
+        public static bool IsIndexValid(int index)
+        {
+            return index > 0 && index < 100;
+        }
+
+        public static bool IsEpisodesCountValid(int episodesCount)
+        {
+            return episodesCount > 0;
         }
     }
 }

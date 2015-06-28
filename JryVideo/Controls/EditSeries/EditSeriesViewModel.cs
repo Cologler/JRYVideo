@@ -51,21 +51,23 @@ namespace JryVideo.Controls.EditSeries
 
             if (this.DoubanMovie != null)
             {
+                var doubanName = DoubanHelper.ParseMainName(this.DoubanMovie).AsLines();
+
                 this.Names = String.IsNullOrWhiteSpace(this.Names)
-                    ? DoubanHelper.ParseName(this.DoubanMovie).AsLines()
-                    : String.Join("\r\n", this.Names, DoubanHelper.ParseName(this.DoubanMovie).AsLines());
+                    ? doubanName
+                    : String.Join("\r\n", this.Names, doubanName);
             }
         }
 
         public async Task<bool> CommitAsync()
         {
-            var series = this.Source;
+            var series = this.GetCommitObject().ThrowIfNull("series");
 
-            series.ThrowIfNull("series").Names.AddRange(
+            series.Names.Clear();
+            series.Names.AddRange(
                 this.Names.AsLines()
                     .Select(z => z.Trim())
                     .Where(z => !String.IsNullOrWhiteSpace(z)));
-
             series.Names = series.Names.Distinct().ToList();
 
             SeriesManager.BuildSeriesMetaData(series);

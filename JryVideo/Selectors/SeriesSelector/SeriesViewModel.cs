@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using JryVideo.Model;
 
-namespace JryVideo.Add.SelectSeries
+namespace JryVideo.Selectors.SeriesSelector
 {
     public sealed class SeriesViewModel : JasilyViewModel<JrySeries>
     {

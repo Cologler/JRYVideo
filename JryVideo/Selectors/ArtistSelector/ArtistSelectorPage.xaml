@@ -1,0 +1,63 @@
+﻿<Page x:Class="JryVideo.Selectors.ArtistSelector.ArtistSelectorPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:JryVideo.Selectors.ArtistSelector"
+      mc:Ignorable="d"
+      d:DesignHeight="600"
+      d:DesignWidth="600"
+      Title="ArtistSelectorPage"
+      d:DataContext="{d:DesignInstance local:ArtistSelectorViewModel}">
+
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Grid Margin="0,0,0,4">
+            <TextBox Width="220"
+                     Text="{Binding FilterText}"
+                     HorizontalAlignment="Right"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <ListView BorderThickness="0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid></Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <ListView Height="150"
+                      BorderThickness="0">
+                
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid></Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+    </Grid>
+</Page>

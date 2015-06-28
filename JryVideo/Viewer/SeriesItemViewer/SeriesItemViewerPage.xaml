@@ -11,7 +11,7 @@
 
     <Grid>
         <ListView BorderThickness="0"
-                  ItemsSource="{Binding VideosObservableCollection}"
+                  ItemsSource="{Binding VideosView.View}"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
@@ -23,7 +23,7 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid d:DataContext="{d:DesignInstance common:VideoViewModel}"
+                    <Grid d:DataContext="{d:DesignInstance common:VideoInfoViewModel}"
                           Margin="3"
                           Width="150">
                         <Grid.RowDefinitions>

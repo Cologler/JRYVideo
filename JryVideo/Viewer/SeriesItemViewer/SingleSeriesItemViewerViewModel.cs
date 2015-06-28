@@ -27,7 +27,7 @@ namespace JryVideo.Viewer.SeriesItemViewer
         {
             var series = this.Source;
             Debug.Assert(series != null);
-            this.VideosObservableCollection.AddRange(await Task.Run(() => VideoViewModel.Create(series).ToArray()));
+            this.VideosView.Collection.AddRange(await Task.Run(() => VideoInfoViewModel.Create(series).ToArray()));
         }
     }
 }

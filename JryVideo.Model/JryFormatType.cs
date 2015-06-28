@@ -2,8 +2,14 @@ namespace JryVideo.Model
 {
     public enum JryFormatType
     {
-        Regex,
+        /// <summary>
+        /// ÕýÔò
+        /// </summary>
+        Regex = 1,
 
-        Wildcard
+        /// <summary>
+        /// Í¨Åä·û
+        /// </summary>
+        Wildcard = 2
     }
 }

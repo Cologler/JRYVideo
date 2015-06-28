@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,10 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using JryVideo.Add;
-using JryVideo.Add.SelectSeries;
 using JryVideo.Common;
 using JryVideo.Core.Managers;
 using JryVideo.Editors.CoverEditor;
+using MahApps.Metro.Controls;
 
 namespace JryVideo.Main
 {
@@ -25,6 +26,8 @@ namespace JryVideo.Main
     /// </summary>
     public partial class MainPage : Page
     {
+        public event EventHandler<VideoInfoViewModel> VideoSelected;
+
         private MainViewModel ViewModel;
 
         public MainPage()
@@ -39,22 +42,13 @@ namespace JryVideo.Main
         protected override async void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-
-            await JryVideo.Core.JryVideoCore.Current.InitializeAsync();
-
-            this.DataContext = this.ViewModel = new MainViewModel();
-
-            await this.ViewModel.VideosViewModel.LoadAsync();
-        }
-
-        private void NormalModeButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
             
-        }
-
-        private void SecureModeButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                await JryVideo.Core.JryVideoCore.Current.InitializeAsync();
+                this.DataContext = this.ViewModel = new MainViewModel();
+                await this.ViewModel.LoadAsync();
+            }
         }
 
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
@@ -62,7 +56,7 @@ namespace JryVideo.Main
             var frameworkElement = sender as FrameworkElement;
             if (frameworkElement == null) return;
 
-            var vm = frameworkElement.DataContext as VideoViewModel;
+            var vm = frameworkElement.DataContext as VideoInfoViewModel;
             if (vm == null) return;
 
             var cover = await vm.TryGetCoverAsync();
@@ -84,6 +78,12 @@ namespace JryVideo.Main
         {
             var selectSeriesWindow = new AddWindow();
             selectSeriesWindow.ShowDialog();
+        }
+
+        private void VideoPanel_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            if (vm != null) this.VideoSelected.Fire(this, vm);
         }
     }
 }

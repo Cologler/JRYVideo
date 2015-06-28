@@ -54,6 +54,7 @@
     <Compile Include="Managers\IObjectEditProvider.cs" />
     <Compile Include="Managers\JryObjectManager.cs" />
     <Compile Include="Managers\SeriesManager.cs" />
+    <Compile Include="Managers\VideoInfoManager.cs" />
     <Compile Include="Managers\VideoManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

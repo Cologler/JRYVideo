@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Enums;
 using System.Threading.Tasks;
 using JryVideo.Core;
@@ -16,7 +17,7 @@ namespace JryVideo.Common
             : base(source)
         {
             this._doubanId = this.Source.DoubanId;
-            this._name = this.Source.Name;
+            this._name = String.Join(" / ", this.Source.Names);
             this._description = this.Source.Description;
         }
 

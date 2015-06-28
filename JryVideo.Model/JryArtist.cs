@@ -6,12 +6,17 @@ namespace JryVideo.Model
 {
     public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent
     {
+        public JryArtist()
+        {
+            this.Names = new List<string>();
+        }
+
         /// <summary>
         /// may null.
         /// </summary>
         public string DoubanId { get; set; }
 
-        public string Name { get; set; }
+        public List<string> Names { get; set; }
 
         /// <summary>
         /// may null.
@@ -27,9 +32,9 @@ namespace JryVideo.Model
                 yield return error;
             }
 
-            if (String.IsNullOrWhiteSpace(this.Name))
+            if (this.Names == null)
             {
-                yield return JryInvalidError.NameCanNotBeEmpty;
+                throw new ArgumentException();
             }
         }
 

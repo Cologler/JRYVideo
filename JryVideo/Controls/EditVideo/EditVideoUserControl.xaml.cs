@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Enums;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,9 @@ using System.Windows.Shapes;
 using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Managers.FlagManager;
+using JryVideo.Selectors.ArtistSelector;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -39,8 +43,11 @@ namespace JryVideo.Controls.EditVideo
         {
             base.OnInitialized(e);
 
-            this.DataContext = this.ViewModel = new EditVideoViewModel();
-            await this.ViewModel.LoadAsync();
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                this.DataContext = this.ViewModel = new EditVideoViewModel();
+                await this.ViewModel.LoadAsync();
+            }
         }
 
         private async void EditCoverButton_OnClick(object sender, RoutedEventArgs e)
@@ -62,7 +69,7 @@ namespace JryVideo.Controls.EditVideo
                 dlg.ViewModel.CoverSourceType = this.ViewModel.Cover.CoverSourceType;
                 dlg.ViewModel.Uri = this.ViewModel.Cover.Uri;
                 dlg.ViewModel.BinaryData = this.ViewModel.Cover.BinaryData;
-                dlg.ViewModel.SaveToSource();
+                dlg.ViewModel.SaveToObject(dlg.ViewModel.Source);
             }
             else
             {
@@ -97,6 +104,27 @@ namespace JryVideo.Controls.EditVideo
         private void EditVideoTypeButton_OnClick(object sender, RoutedEventArgs e)
         {
             new FlagManagerWindow().ShowDialog();
+        }
+
+        private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = this.TryFindParent<MetroWindow>();
+
+            if (await this.ViewModel.CommitAsync(window))
+            {
+                await window.ShowMessageAsync("error", "commit failed.");
+                return;
+            }
+        }
+
+        private void SelectArtistButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dlg = new ArtistSelectorWindow();
+
+            if (dlg.ShowDialog() == true)
+            {
+                
+            }
         }
     }
 }

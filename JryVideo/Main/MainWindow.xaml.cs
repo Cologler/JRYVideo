@@ -1,5 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
+using JryVideo.Common;
+using JryVideo.Viewer.VideoViewer;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Main
@@ -9,6 +13,8 @@ namespace JryVideo.Main
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private MainPage MainPage;
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -22,7 +28,41 @@ namespace JryVideo.Main
         {
             base.OnSourceInitialized(e);
 
-            this.MainFrame.Navigate(new MainPage());
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                this.MainPage = new MainPage();
+                this.MainPage.VideoSelected += this.MainPage_VideoSelected;
+
+                this.NavigateToMainPage();
+            }
+        }
+
+        void MainPage_VideoSelected(object sender, VideoInfoViewModel e)
+        {
+            this.NavigateToVideoViewerPage(e);
+        }
+
+        private void NavigateToMainPage()
+        {
+            this.MainFrame.Navigate(this.MainPage);
+        }
+
+        private async void NavigateToVideoViewerPage(VideoInfoViewModel info)
+        {
+            var page = VideoViewerPage.BuildPage(info);
+            page.GoBackButton.Click += this.VideoViewerPage_GoBackButton_Click;
+            this.MainFrame.Navigate(page);
+            await page.ViewModel.LoadAsync();
+        }
+
+        void VideoViewerPage_GoBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            ((Button) sender).Click -= this.VideoViewerPage_GoBackButton_Click;
+
+            if (this.MainFrame.CanGoBack)
+            {
+                this.MainFrame.GoBack();
+            }
         }
     }
 }

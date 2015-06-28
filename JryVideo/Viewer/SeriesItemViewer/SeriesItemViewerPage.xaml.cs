@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,8 +40,11 @@ namespace JryVideo.Viewer.SeriesItemViewer
         public SeriesItemViewerPage(JrySeries series)
             : this()
         {
-            this.ViewModel = new SingleSeriesItemViewerViewModel(series);
-            this.ViewModel.LoadAsync();
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                this.ViewModel = new SingleSeriesItemViewerViewModel(series);
+                this.ViewModel.LoadAsync();
+            }
         }
     }
 }

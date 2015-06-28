@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using JryVideo.Add.SelectSeries;
 using JryVideo.Model;
 
-namespace JryVideo.Add.SeriesSelector
+namespace JryVideo.Selectors.SeriesSelector
 {
     /// <summary>
     /// SelectSeriesPage.xaml 的交互逻辑

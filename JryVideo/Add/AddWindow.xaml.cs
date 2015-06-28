@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using JryVideo.Add.SelectSeries;
-using JryVideo.Add.SeriesSelector;
 using JryVideo.Add.VideoCreator;
+using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Viewer.SeriesItemViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -55,7 +54,7 @@ namespace JryVideo.Add
             }
             else if (this.ContentFrame.Content == this.seriesItemViewerPage)
             {
-                await this.NavigateToSelectVideoPage(selected);
+                await this.NavigateToCreateVideoPage(selected);
                 return;
             }
         }
@@ -81,7 +80,7 @@ namespace JryVideo.Add
             this.ContentFrame.Navigate(this.seriesItemViewerPage);
         }
 
-        private async Task NavigateToSelectVideoPage(SeriesViewModel series)
+        private async Task NavigateToCreateVideoPage(SeriesViewModel series)
         {
             this.Title.Text = "create video";
             this.NextButton.Visibility = Visibility.Hidden;
@@ -89,11 +88,14 @@ namespace JryVideo.Add
             if (this.videoCreatorPage == null || this.videoCreatorPage.CreatorViewModel.Source != series.Source)
             {
                 this.videoCreatorPage = new VideoCreatorPage(series.Source);
-            }
 
-            if (this.seriesSelectorPage.EditSeriesUserControl.ViewModel.DoubanMovie != null)
-            {
+                var doubanInfo = this.seriesSelectorPage.EditSeriesUserControl.ViewModel.DoubanMovie;
 
+                if (doubanInfo != null)
+                {
+                    this.videoCreatorPage.EditVideoUserControl.ViewModel.DoubanId = doubanInfo.Id;
+                    this.videoCreatorPage.EditVideoUserControl.ViewModel.LoadDouban(doubanInfo);
+                }
             }
 
             this.ContentFrame.Navigate(this.videoCreatorPage);
@@ -103,24 +105,13 @@ namespace JryVideo.Add
 
         private async void LastButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (this.ContentFrame.Content == this.seriesItemViewerPage)
+            if (this.ContentFrame.CanGoBack)
             {
-                this.NavigateToSeriesSelectorPage();
-                return;
+                this.ContentFrame.GoBack();
             }
-            else if (this.ContentFrame.Content == this.videoCreatorPage)
-            {
-                var selected = this.seriesSelectorPage.SelectorViewModel.Items.Selected;
 
-                if (selected == null)
-                {
-                    this.NavigateToSeriesSelectorPage();
-                }
-                else
-                {
-                    this.NavigateToSeriesItemViewerPage(selected);
-                }
-            }
+            this.NextButton.Visibility = Visibility.Visible;
+            this.LastButton.Visibility = this.ContentFrame.CanGoBack ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }

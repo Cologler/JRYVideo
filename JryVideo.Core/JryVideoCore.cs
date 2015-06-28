@@ -59,6 +59,7 @@ namespace JryVideo.Core
             video.DoubanId = "25851657";
             video.Index = 1;
             video.Year = 2005;
+            video.EpisodesCount = 1;
 
             var series = new JrySeries();
             series.Names.AddRange(new [] { "series123", "series456" });

@@ -3,14 +3,26 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:main="clr-namespace:JryVideo.Main"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      Title="MainWindow"
-                      Height="500"
+                      Height="700"
                       Width="1000"
                       WindowStartupLocation="CenterScreen"
-                      BorderBrush="BlueViolet"
-                      WindowTitleBrush="BlueViolet"
-                      BorderThickness="1">
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      WindowTitleBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1"
+                      ShowTitleBar="False">
     <Grid>
-        <Frame x:Name="MainFrame" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid Margin="8">
+            <TextBlock Text="main windows"
+                       Style="{StaticResource CaptionStyle}" />
+        </Grid>
+
+        <Frame Grid.Row="1"
+               x:Name="MainFrame"
+               NavigationUIVisibility="Hidden" />
     </Grid>
 </controls:MetroWindow>

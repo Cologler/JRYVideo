@@ -115,5 +115,23 @@ namespace JryVideo.Core.Douban
                 }
             }
         }
+
+        public static IEnumerable<string> ParseSecondName(DoubanMovie json)
+        {
+            return ParseName(json)
+                .Select(z => z.Split(new string[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries))
+                .Where(z => z.Length > 1)
+                .Select(z => z[1])
+                .ToArray();
+        }
+
+        public static IEnumerable<string> ParseMainName(DoubanMovie json)
+        {
+            return ParseName(json)
+                .Select(z => z.Split(new string[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries))
+                .Where(z => z.Length > 0)
+                .Select(z => z[0])
+                .ToArray();
+        }
     }
 }

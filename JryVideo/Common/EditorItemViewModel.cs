@@ -32,6 +32,11 @@ namespace JryVideo.Common
             this.Action = ObjectChangedAction.Modify;
         }
 
+        public T GetCommitObject()
+        {
+            return this.Action == ObjectChangedAction.Create ? new T() : this.Source;
+        }
+
         public ObjectChangedAction Action { get; private set; }
 
         /// <summary>

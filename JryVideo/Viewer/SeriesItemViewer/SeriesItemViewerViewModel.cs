@@ -11,19 +11,18 @@ namespace JryVideo.Viewer.SeriesItemViewer
     {
         public SeriesItemViewerViewModel()
         {
-            this.VideosObservableCollection = new ObservableCollection<VideoViewModel>();
-            this.VideosView = new ListCollectionView(this.VideosObservableCollection);
-            this.VideosView.Filter = new Predicate<object>(this.SearchFilter);
+            this.VideosView = new JasilyCollectionView<VideoInfoViewModel>()
+            {
+                Filter = this.ItemFilter
+            };
         }
 
-        protected virtual bool SearchFilter(object obj)
+        public JasilyCollectionView<VideoInfoViewModel> VideosView { get; private set; }
+
+        protected virtual bool ItemFilter(VideoInfoViewModel obj)
         {
             return true;
         }
-
-        public ObservableCollection<VideoViewModel> VideosObservableCollection { get; private set; }
-
-        public ListCollectionView VideosView { get; private set; }
 
         public abstract Task LoadAsync();
     }

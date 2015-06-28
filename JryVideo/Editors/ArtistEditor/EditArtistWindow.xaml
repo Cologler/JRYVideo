@@ -1,4 +1,4 @@
-﻿<controls:MetroWindow x:Class="JryVideo.Editor.EditArtist.EditArtistWindow"
+﻿<controls:MetroWindow x:Class="JryVideo.Editors.ArtistEditor.EditArtistWindow"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
@@ -20,7 +20,8 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Header="all artist"
-                      Margin="0">
+                      Margin="0"
+                      Padding="4">
                 
                 <Grid>
                     <Grid.RowDefinitions>
@@ -46,7 +47,8 @@
 
             <GroupBox Grid.Column="2"
                       Header="current artist"
-                      Margin="0">
+                      Margin="0"
+                      Padding="4">
 
                 <ListView BorderThickness="0">
                     <ListView.ItemTemplate>

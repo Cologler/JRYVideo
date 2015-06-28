@@ -69,7 +69,11 @@ namespace JryVideo.Core.Managers
 
         public static void BuildSeriesMetaData(JrySeries series)
         {
-            SeriesAction(series, BuildObjectMetaData);
+            BuildObjectMetaData(series);
+            foreach (var jryVideoInfo in series.Videos)
+            {
+                BuildObjectMetaData(jryVideoInfo);
+            }
         }
 
         private static void BuildObjectMetaData(JryObject obj)
@@ -80,41 +84,60 @@ namespace JryVideo.Core.Managers
             }
         }
 
-        private static void SeriesAction(JrySeries series, Action<JryObject> action)
+        public VideoInfoManager GetVideoInfoManager(JrySeries obj)
         {
-            if (series == null) return;
-
-            var func = new Func<JryObject, bool>(z =>
-            {
-                action(z);
-                return true;
-            });
-
-            var j = SeriesFunc(series, func).ToArray();
-        }
-        private static IEnumerable<T> SeriesFunc<T>(JrySeries series, Func<JryObject, T> func)
-        {
-            if (series == null) return Enumerable.Empty<T>();
-
-            if (series.Videos == null)
-                return new [] { func(series) };
-
-            return new[] { func(series) }
-                .Concat(series.Videos.Select(z => func(z)))
-                .ToArray();
+            return new VideoInfoManager(new VideoInfoDataSourceProvider(this, obj));
         }
 
-        public async Task<bool> MergeAsync(JrySeries dest, JrySeries source)
+        private class VideoInfoDataSourceProvider : IDataSourceProvider<JryVideoInfo>
         {
-            return await Task.Run(async () =>
+            public SeriesManager SeriesManager { get; set; }
+
+            public JrySeries Series { get; set; }
+
+            public VideoInfoDataSourceProvider(SeriesManager SeriesManager, JrySeries series)
             {
-                dest.Names.AddRange(source.Names);
-                dest.Names = dest.Names.Distinct().ToList();
+                this.SeriesManager = SeriesManager;
+                this.Series = series;
+            }
 
-                dest.Videos.AddRange(source.Videos);
+            public async Task<IEnumerable<JryVideoInfo>> QueryAsync(int skip, int take)
+            {
+                return this.Series.Videos.ToArray();
+            }
 
-                return await this.UpdateAsync(dest);
-            });
+            /// <summary>
+            /// return null if not found.
+            /// </summary>
+            /// <param name="id"></param>
+            /// <returns></returns>
+            public async Task<JryVideoInfo> FindAsync(string id)
+            {
+                return this.Series.Videos.FirstOrDefault(z => z.Id == id);
+            }
+
+            public async Task<bool> InsertAsync(JryVideoInfo value)
+            {
+                this.Series.Videos.Add(value);
+                return await this.SeriesManager.UpdateAsync(this.Series);
+            }
+
+            public async Task<bool> UpdateAsync(JryVideoInfo value)
+            {
+                var index = this.Series.Videos.FindIndex(z => z.Id == value.Id);
+                if (index == -1) return false;
+                this.Series.Videos[index] = value;
+                return await this.SeriesManager.UpdateAsync(this.Series);
+            }
+
+            public async Task<bool> RemoveAsync(string id)
+            {
+                if (this.Series.Videos.RemoveAll(z => z.Id == id) > 0)
+                {
+                    return await this.SeriesManager.UpdateAsync(this.Series);
+                }
+                return false;
+            }
         }
     }
 }

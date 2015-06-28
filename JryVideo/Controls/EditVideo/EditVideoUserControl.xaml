@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:editVideo="clr-namespace:JryVideo.Controls.EditVideo"
+             xmlns:validationRules="clr-namespace:JryVideo.Common.ValidationRules"
              mc:Ignorable="d"
              d:DesignHeight="400"
-             d:DesignWidth="600">
+             d:DesignWidth="700">
     <Grid d:DataContext="{d:DesignInstance editVideo:EditVideoViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -14,7 +15,6 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
@@ -47,95 +47,207 @@
 
         <Grid Grid.Column="1"
               Margin="12,0,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition Width="4" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-            <TextBlock Text="type"
-                       Style="{StaticResource TitleStyle}" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="1"
-                      VerticalAlignment="Center"
-                      Height="28"
-                      ItemsSource="{Binding TypeCollection}"
-                      DisplayMemberPath="Value"
-                      SelectedItem="{Binding SelectedType, Mode=TwoWay}"/>
+                <TextBlock Text="type"
+                           Style="{StaticResource TitleStyle}" />
 
-            <Button Grid.Column="3"
-                    Content="edit"
-                    VerticalAlignment="Center"
-                    x:Name="EditVideoTypeButton"
-                    Click="EditVideoTypeButton_OnClick"/>
+                <ComboBox Grid.Column="1"
+                          VerticalAlignment="Center"
+                          Height="28"
+                          ItemsSource="{Binding TypeCollection}"
+                          Text="{Binding SelectedVideoType, Mode=TwoWay}"
+                          IsEditable="True" />
 
-            <TextBlock Grid.Row="1"
-                       Style="{StaticResource TitleStyle}"
-                       Text="year" />
+                <Button Grid.Column="3"
+                        Content="edit"
+                        VerticalAlignment="Center"
+                        x:Name="EditVideoTypeButton"
+                        Click="EditVideoTypeButton_OnClick" />
 
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Height="28" />
+                <TextBlock Grid.Row="1"
+                           Style="{StaticResource TitleStyle}"
+                           Text="year" />
 
-            <TextBlock Grid.Row="2"
-                       Text="index"
-                       Style="{StaticResource TitleStyle}" />
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          Height="28"
+                          ItemsSource="{Binding YearCollection}"
+                          IsEditable="True">
+                    <ComboBox.Text>
+                        <Binding Path="Year"
+                                 Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <validationRules:VideoYearValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </ComboBox.Text>
+                </ComboBox>
 
-            <TextBox Grid.Row="2"
-                     Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Height="28" />
+                <TextBlock Grid.Row="2"
+                           Text="index"
+                           Style="{StaticResource TitleStyle}" />
 
-            <TextBlock Grid.Row="3"
-                       Text="douban Id"
-                       Style="{StaticResource TitleStyle}" />
+                <ComboBox Grid.Row="2"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          Height="28"
+                          IsEditable="True"
+                          ItemsSource="{Binding IndexCollection}">
+                    <ComboBox.Text>
+                        <Binding Path="Index"
+                                 Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <validationRules:VideoIndexValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </ComboBox.Text>
+                </ComboBox>
 
-            <TextBox Grid.Row="3"
-                     Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Height="28" />
+                <TextBlock Grid.Row="3"
+                           Text="douban Id"
+                           Style="{StaticResource TitleStyle}" />
 
-            <Button Grid.Row="3"
-                    Grid.Column="3"
-                    Content="load"
-                    VerticalAlignment="Center" />
+                <TextBox Grid.Row="3"
+                         Grid.Column="1"
+                         VerticalAlignment="Center"
+                         Height="28"
+                         Text="{Binding DoubanId, Mode=TwoWay}" />
 
-            <TextBlock Grid.Row="4"
-                       Text="imdb Id"
-                       Style="{StaticResource TitleStyle}" />
+                <Button Grid.Row="3"
+                        Grid.Column="3"
+                        Content="load"
+                        VerticalAlignment="Center" />
 
-            <TextBox Grid.Row="4"
-                     Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Height="28" />
+                <TextBlock Grid.Row="4"
+                           Text="imdb Id"
+                           Style="{StaticResource TitleStyle}" />
 
-            <TextBlock Grid.Row="5"
-                       Style="{StaticResource TitleStyle}"
-                       Grid.ColumnSpan="4"
-                       Text="name (each line one name)" />
+                <TextBox Grid.Row="4"
+                         Grid.Column="1"
+                         VerticalAlignment="Center"
+                         Height="28"
+                         Text="{Binding ImdbId, Mode=TwoWay}" />
 
-            <TextBox Grid.Row="6"
-                     Grid.ColumnSpan="4" />
+                <TextBlock Grid.Row="5"
+                           Text="episodes&#xD;&#xA;count">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource TitleStyle}"
+                               TargetType="TextBlock">
+                            <Setter Property="Margin"
+                                    Value="0" />
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <ComboBox Grid.Row="5"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          Height="28"
+                          ItemsSource="{Binding EpisodesCountCollection}"
+                          IsEditable="True">
+                    <ComboBox.Text>
+                        <Binding Path="EpisodesCount"
+                                 Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <validationRules:VideoEpisodesCountValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </ComboBox.Text>
+                </ComboBox>
+
+            </Grid>
+            
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+
+                <TextBlock Style="{StaticResource TitleStyle}"
+                           Grid.ColumnSpan="4"
+                           Text="name (each line one name)" />
+
+                <TextBox Grid.Row="1"
+                         Grid.ColumnSpan="4"
+                         Text="{Binding Names, Mode=TwoWay}"
+                         AcceptsReturn="True" />
+            </Grid>
+            
+            <Grid Grid.Row="1"
+                  Grid.ColumnSpan="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Style="{StaticResource TitleStyle}"
+                               Text="artist" />
+
+                    <Button Grid.Column="1"
+                            x:Name="SelectArtistButton"
+                            Click="SelectArtistButton_OnClick"
+                            Content="select"
+                            Margin="40,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            IsEnabled="False"/>
+                </Grid>
+                
+                <Grid Grid.Row="1"
+                      Margin="0,4,0,0">
+                    
+                    <TextBlock Text="come soon ..."
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               FontSize="40"/>
+                    
+                </Grid>
+                
+            </Grid>
 
         </Grid>
-        
-        
 
         <Button Grid.Row="1"
                 Content="commit"
-                Grid.ColumnSpan="3"
+                Grid.ColumnSpan="2"
                 Margin="0,8,0,0"
-                HorizontalAlignment="Right" />
+                HorizontalAlignment="Right" 
+                x:Name="CommitButton"
+                Click="CommitButton_OnClick"/>
     </Grid>
 </UserControl>

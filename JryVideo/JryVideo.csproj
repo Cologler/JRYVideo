@@ -61,7 +61,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Add\SeriesSelector\SeriesSelectorPage.xaml.cs">
+    <Compile Include="Common\EntityViewModel.cs" />
+    <Compile Include="Common\SeriesViewModel.cs" />
+    <Compile Include="Common\VideoViewModel.cs" />
+    <Compile Include="Selectors\ArtistSelector\ArtistSelectorPage.xaml.cs">
+      <DependentUpon>ArtistSelectorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Selectors\ArtistSelector\ArtistSelectorViewModel.cs" />
+    <Compile Include="Selectors\ArtistSelector\ArtistSelectorWindow.xaml.cs">
+      <DependentUpon>ArtistSelectorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Selectors\Common\BaseSelectorViewModel.cs" />
+    <Compile Include="Selectors\SeriesSelector\SeriesSelectorPage.xaml.cs">
       <DependentUpon>SeriesSelectorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Add\VideoCreator\VideoCreatorPage.xaml.cs">
@@ -73,6 +84,9 @@
     <Compile Include="Common\HasCoverViewModel.cs" />
     <Compile Include="Common\ImageViewModel.cs" />
     <Compile Include="Common\EditorItemViewModel.cs" />
+    <Compile Include="Common\ValidationRules\VideoEpisodesCountValidationRule.cs" />
+    <Compile Include="Common\ValidationRules\VideoIndexValidationRule.cs" />
+    <Compile Include="Common\ValidationRules\VideoYearValidationRules.cs" />
     <Compile Include="Controls\EditArtist\EditArtistUserControl.xaml.cs">
       <DependentUpon>EditArtistUserControl.xaml</DependentUpon>
     </Compile>
@@ -86,9 +100,10 @@
       <DependentUpon>EditVideoUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditVideo\EditVideoViewModel.cs" />
-    <Compile Include="Editors\EditArtist\EditArtistWindow.xaml.cs">
+    <Compile Include="Editors\ArtistEditor\EditArtistWindow.xaml.cs">
       <DependentUpon>EditArtistWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Main\DataModeViewModel.cs" />
     <Compile Include="Main\MainSeriesItemViewerViewModel.cs" />
     <Compile Include="Managers\ArtistManager\ArtistManagerWindow.xaml.cs">
       <DependentUpon>ArtistManagerWindow.xaml</DependentUpon>
@@ -102,17 +117,29 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.zh-CN.resx</DependentUpon>
     </Compile>
-    <Compile Include="Add\SeriesSelector\SeriesSelectorViewModel.cs" />
+    <Compile Include="Selectors\SeriesSelector\SeriesSelectorViewModel.cs" />
     <Compile Include="Add\AddWindow.xaml.cs">
       <DependentUpon>AddWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Add\SeriesSelector\SeriesViewModel.cs" />
+    <Compile Include="Selectors\SeriesSelector\SeriesViewModel.cs" />
     <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml.cs">
       <DependentUpon>SeriesItemViewerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerViewModel.cs" />
     <Compile Include="Viewer\SeriesItemViewer\SingleSeriesItemViewerViewModel.cs" />
-    <Page Include="Add\SeriesSelector\SeriesSelectorPage.xaml">
+    <Compile Include="Viewer\VideoViewer\VideoViewerPage.xaml.cs">
+      <DependentUpon>VideoViewerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Viewer\VideoViewer\VideoViewerViewModel.cs" />
+    <Page Include="Selectors\ArtistSelector\ArtistSelectorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Selectors\ArtistSelector\ArtistSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Selectors\SeriesSelector\SeriesSelectorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -136,7 +163,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\EditArtist\EditArtistWindow.xaml">
+    <Page Include="Editors\ArtistEditor\EditArtistWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -148,7 +175,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\VideoViewModel.cs" />
+    <Compile Include="Common\VideoInfoViewModel.cs" />
     <Compile Include="Editors\CoverEditor\CoverEditorViewModel.cs" />
     <Compile Include="Editors\CoverEditor\CoverEditorWindow.xaml.cs">
       <DependentUpon>CoverEditorWindow.xaml</DependentUpon>
@@ -175,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Viewer\VideoViewer\VideoViewerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -240,9 +271,7 @@
       <Name>JryVideo.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SelectSeries\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

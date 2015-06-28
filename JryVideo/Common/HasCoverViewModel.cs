@@ -29,7 +29,6 @@ namespace JryVideo.Common
                 }
                 else
                 {
-                    this._cover = null; // release memery
                     return cover;
                 }
             }

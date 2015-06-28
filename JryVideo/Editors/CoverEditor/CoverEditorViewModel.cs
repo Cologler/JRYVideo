@@ -106,24 +106,26 @@ namespace JryVideo.Editors.CoverEditor
             return this.BinaryData != null;
         }
 
-        public void SaveToSource()
+        public void SaveToObject(JryCover commitObject)
         {
-            this.Source.CoverSourceType = this.CoverSourceType;
-            this.Source.DoubanId = this.DoubanId;
-            this.Source.Uri = this.Uri;
-            this.Source.BinaryData = this.BinaryData;
+            commitObject.CoverSourceType = this.CoverSourceType;
+            commitObject.DoubanId = this.DoubanId;
+            commitObject.Uri = this.Uri;
+            commitObject.BinaryData = this.BinaryData;
         }
 
         public async Task<bool> CommitAsync()
         {
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
 
-            this.SaveToSource();
+            var obj = this.GetCommitObject();
+
+            this.SaveToObject(obj);
 
             if (this.Action == ObjectChangedAction.Create)
-                this.Source.BuildMetaData();
+                obj.BuildMetaData();
 
-            return await this.CommitAsync(coverManager, this.Source);
+            return await this.CommitAsync(coverManager, obj);
         }
     }
 }
