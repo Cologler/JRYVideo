@@ -1,0 +1,116 @@
+﻿<controls:MetroWindow x:Class="JryVideo.Selectors.FlagSelector.FlagSelectorWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:local="clr-namespace:JryVideo.Selectors.FlagSelector"
+                      xmlns:editFlag="clr-namespace:JryVideo.Controls.EditFlag"
+                      mc:Ignorable="d"
+                      Title="FlagSelectorWindow"
+                      Height="500"
+                      Width="540"
+                      ResizeMode="NoResize"
+                      d:DataContext="{d:DesignInstance local:FlagSelectorViewModel}"
+                      ShowTitleBar="False"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1">
+    <Grid Style="{StaticResource ParentPanelStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <TextBlock x:Name="TitleTextBlock"
+                       Text="selecter"
+                       Style="{StaticResource CaptionStyle}"/>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            
+           <GroupBox Margin="0"
+                     Padding="4"
+                     Header="all">
+               <Grid>
+                   <Grid.RowDefinitions>
+                       <RowDefinition Height="Auto"/>
+                       <RowDefinition />
+                   </Grid.RowDefinitions>
+
+                   <TextBox Text="{Binding FilterText}" />
+
+                    <ListView Grid.Row="1"
+                              ItemsSource="{Binding Items.View}"
+                              BorderThickness="0"
+                              Margin="0,4,0,0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid d:DataContext="{d:DesignInstance local:FlagViewModel}"
+                                      x:Name="SourceItemPanel"
+                                      MouseLeftButtonUp="SourceItemPanel_OnMouseLeftButtonUp">
+                                    <TextBlock Text="{Binding Source.Value}"
+                                               Style="{StaticResource ListViewItemSingleLineTextStyle}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                   
+               </Grid>
+           </GroupBox>
+            
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                
+                <GroupBox Margin="0"
+                          Padding="4"
+                          Header="create new">
+
+                    <editFlag:EditFlagUserControl />
+                    
+                </GroupBox>
+                
+                <GroupBox Grid.Row="1"
+                          Margin="0,4,0,0"
+                          Padding="4"
+                          Header="selected">
+
+                    <ListView ItemsSource="{Binding SelectedItems}"
+                              BorderThickness="0"
+                              Margin="0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid d:DataContext="{d:DesignInstance local:FlagViewModel}"
+                                      x:Name="SelectedItemPanel"
+                                      MouseLeftButtonUp="SelectedItemPanel_OnMouseLeftButtonUp">
+                                    <TextBlock Text="{Binding Source.Value}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </GroupBox>
+                
+            </Grid>
+            
+        </Grid>
+        
+        <Grid Grid.Row="2"
+              Style="{StaticResource AcceptPanelStyle}">
+            <Button x:Name="AccetpButton"
+                    Content="accept"
+                    Click="AccetpButton_OnClick"
+                    HorizontalAlignment="Right"/>
+        </Grid>
+        
+    </Grid>
+</controls:MetroWindow>

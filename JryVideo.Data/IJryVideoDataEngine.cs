@@ -13,7 +13,7 @@ namespace JryVideo.Data
 
         Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode);
 
-        IDataSourceProvider<JrySeries> GetSeriesDataSourceProvider();
+        ISeriesDataSourceProvider GetSeriesDataSourceProvider();
 
         IDataSourceProvider<Model.JryVideo> GetVideoDataSourceProvider();
 

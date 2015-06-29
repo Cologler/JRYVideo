@@ -63,7 +63,12 @@
     </ApplicationDefinition>
     <Compile Include="Common\EntityViewModel.cs" />
     <Compile Include="Common\SeriesViewModel.cs" />
+    <Compile Include="Common\ValidationRules\FlagValueValidationRule.cs" />
     <Compile Include="Common\VideoViewModel.cs" />
+    <Compile Include="Controls\EditFlag\EditFlagUserControl.xaml.cs">
+      <DependentUpon>EditFlagUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EditFlag\EditFlagViewModel.cs" />
     <Compile Include="Selectors\ArtistSelector\ArtistSelectorPage.xaml.cs">
       <DependentUpon>ArtistSelectorPage.xaml</DependentUpon>
     </Compile>
@@ -72,6 +77,11 @@
       <DependentUpon>ArtistSelectorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Selectors\Common\BaseSelectorViewModel.cs" />
+    <Compile Include="Selectors\FlagSelector\FlagSelectorViewModel.cs" />
+    <Compile Include="Selectors\FlagSelector\FlagSelectorWindow.xaml.cs">
+      <DependentUpon>FlagSelectorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Selectors\FlagSelector\FlagViewModel.cs" />
     <Compile Include="Selectors\SeriesSelector\SeriesSelectorPage.xaml.cs">
       <DependentUpon>SeriesSelectorPage.xaml</DependentUpon>
     </Compile>
@@ -131,11 +141,19 @@
       <DependentUpon>VideoViewerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Viewer\VideoViewer\VideoViewerViewModel.cs" />
+    <Page Include="Controls\EditFlag\EditFlagUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Selectors\ArtistSelector\ArtistSelectorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Selectors\ArtistSelector\ArtistSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Selectors\FlagSelector\FlagSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

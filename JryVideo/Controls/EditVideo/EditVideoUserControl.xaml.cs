@@ -110,7 +110,7 @@ namespace JryVideo.Controls.EditVideo
         {
             var window = this.TryFindParent<MetroWindow>();
 
-            if (await this.ViewModel.CommitAsync(window))
+            if (await this.ViewModel.CommitAsync(window) == null)
             {
                 await window.ShowMessageAsync("error", "commit failed.");
                 return;

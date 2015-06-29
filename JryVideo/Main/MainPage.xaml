@@ -67,7 +67,8 @@
                     <TextBox Width="200"
                              Text="{Binding VideosViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              mah:TextBoxHelper.ClearTextButton="True"
-                             VerticalAlignment="Center"/>
+                             VerticalAlignment="Center"
+                             x:Name="FilterTextBox" />
 
                     <TextBlock Text="query"
                                VerticalAlignment="Center"
@@ -76,7 +77,9 @@
                     <TextBox Width="200"
                              Text="{Binding VideosViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              mah:TextBoxHelper.ClearTextButton="True"
-                             VerticalAlignment="Center" />
+                             VerticalAlignment="Center"
+                             x:Name="SearchTextBox"
+                             KeyUp="SearchTextBox_OnKeyUp"/>
                     
                 </StackPanel>
                 

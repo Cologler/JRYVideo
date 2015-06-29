@@ -30,6 +30,18 @@ namespace JryVideo.Controls.EditSeries
             set { this.SetPropertyRef(ref this.names, value); }
         }
 
+        public override void CreateMode()
+        {
+            base.CreateMode();
+            this.UpdateNames();
+        }
+
+        public override void ModifyMode(JrySeries source)
+        {
+            base.ModifyMode(source);
+            this.UpdateNames();
+        }
+
         public void UpdateNames()
         {
             this.Names = this.Source == null ? "" : this.Source.Names.AsLines();
@@ -59,16 +71,20 @@ namespace JryVideo.Controls.EditSeries
             }
         }
 
-        public async Task<bool> CommitAsync()
+        public async Task<JrySeries> CommitAsync()
         {
             var series = this.GetCommitObject().ThrowIfNull("series");
 
             series.Names.Clear();
-            series.Names.AddRange(
-                this.Names.AsLines()
-                    .Select(z => z.Trim())
-                    .Where(z => !String.IsNullOrWhiteSpace(z)));
-            series.Names = series.Names.Distinct().ToList();
+
+            if (!String.IsNullOrWhiteSpace(this.Names))
+            {
+                series.Names.AddRange(
+                    this.Names.AsLines()
+                        .Select(z => z.Trim())
+                        .Where(z => !String.IsNullOrWhiteSpace(z)));
+                series.Names = series.Names.Distinct().ToList();
+            }
 
             SeriesManager.BuildSeriesMetaData(series);
 

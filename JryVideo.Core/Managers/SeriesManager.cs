@@ -9,7 +9,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class SeriesManager : JryObjectManager<JrySeries, IDataSourceProvider<JrySeries>>
+    public class SeriesManager : JryObjectManager<JrySeries, ISeriesDataSourceProvider>
     {
         public event EventHandler<JrySeries> SeriesCreated;
         public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoRemoved;
@@ -17,7 +17,7 @@ namespace JryVideo.Core.Managers
 
         public DataCenter DataCenter { get; private set; }
 
-        public SeriesManager(DataCenter dataCenter, IDataSourceProvider<JrySeries> source)
+        public SeriesManager(DataCenter dataCenter, ISeriesDataSourceProvider source)
             : base(source)
         {
             this.DataCenter = dataCenter;
@@ -65,6 +65,16 @@ namespace JryVideo.Core.Managers
             }
 
             return false;
+        }
+
+        public async override Task<IEnumerable<JrySeries>> LoadAsync()
+        {
+            return await this.Source.QueryAsync(0, Int32.MaxValue);
+        }
+
+        public async Task<IEnumerable<JrySeries>> QueryAsync(string searchText)
+        {
+            return await this.Source.QueryByNameAsync(searchText, 0, Int32.MaxValue);
         }
 
         public static void BuildSeriesMetaData(JrySeries series)

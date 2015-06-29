@@ -45,14 +45,14 @@ namespace JryVideo.Common
         /// <param name="provider"></param>
         /// <param name="obj"></param>
         /// <returns></returns>
-        protected async Task<bool> CommitAsync(IObjectEditProvider<T> provider, T obj)
+        protected async Task<T> CommitAsync(IObjectEditProvider<T> provider, T obj)
         {
             var error = obj.FireObjectError().ToArray();
             
             if (error.Length > 0)
             {
                 this.FindErrorMessages.Fire(this, error);
-                return false;
+                return null;
             }
 
             switch (this.Action)
@@ -61,11 +61,11 @@ namespace JryVideo.Common
                     if (await provider.InsertAsync(obj))
                     {
                         this.Created.BeginFire(this, obj);
-                        return true;
+                        return obj;
                     }
                     else
                     {
-                        return false;
+                        return null;
                     }
                     break;
 
@@ -73,11 +73,11 @@ namespace JryVideo.Common
                     if (await provider.UpdateAsync(obj))
                     {
                         this.Updated.BeginFire(this, obj);
-                        return true;
+                        return obj;
                     }
                     else
                     {
-                        return false;
+                        return null;
                     }
                     break;
 

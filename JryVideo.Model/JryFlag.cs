@@ -33,10 +33,15 @@ namespace JryVideo.Model
                 yield return JryInvalidError.CounterCountLessThanOne;
             }
 
-            if (String.IsNullOrWhiteSpace(this.Value))
+            if (!IsValueValid(this.Value))
             {
                 yield return JryInvalidError.NameCanNotBeEmpty;
             }
+        }
+
+        public static bool IsValueValid(string value)
+        {
+            return !String.IsNullOrWhiteSpace(value);
         }
     }
 }

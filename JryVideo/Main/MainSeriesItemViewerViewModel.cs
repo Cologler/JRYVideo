@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace JryVideo.Main
     {
         private string searchText;
         private string filterText;
+        private bool isSearching;
 
         public string FilterText
         {
@@ -24,16 +26,38 @@ namespace JryVideo.Main
         public string SearchText
         {
             get { return this.searchText; }
-            set
+            set { this.SetPropertyRef(ref this.searchText, value); }
+        }
+
+        public async Task SearchAsync()
+        {
+            var source = await this.GetSourceAsync();
+
+            if (source != null)
             {
-                if (this.SetPropertyRef(ref this.searchText, value))
-                    this.BeginDelaySearch();
+                this.VideosView.Collection.Clear();
+                this.VideosView.Collection.AddRange(source);
             }
         }
 
-        public async void BeginDelaySearch()
+        private async Task<IEnumerable<VideoInfoViewModel>> GetSourceAsync()
         {
-            
+            var manager = JryVideo.Core.JryVideoCore.Current.CurrentDataCenter.SeriesManager;
+            var text = this.SearchText;
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                if (this.isSearching)
+                {
+                    return await Task.Run(async () => (await manager.LoadAsync()).SelectMany(VideoInfoViewModel.Create).ToArray());
+                }
+
+                return null;
+            }
+            else
+            {
+                return await Task.Run(async () => (await manager.QueryAsync(text)).SelectMany(VideoInfoViewModel.Create).ToArray());
+            }
         }
 
         public async void BeginDelayFilter()
@@ -56,13 +80,8 @@ namespace JryVideo.Main
 
         public async override Task LoadAsync()
         {
-            var manager = JryVideo.Core.JryVideoCore.Current.CurrentDataCenter.SeriesManager;
-
-            var series = await manager.LoadAsync();
-
-            this.VideosView.Collection.Clear();
-            this.VideosView.Collection.AddRange(
-                await Task.Run(() => series.SelectMany(VideoInfoViewModel.Create).ToArray()));
+            this.isSearching = true;
+            await this.SearchAsync();
         }
     }
 }

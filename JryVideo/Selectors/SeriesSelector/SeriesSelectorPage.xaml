@@ -48,7 +48,8 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid d:DataContext="{d:DesignInstance local:SeriesViewModel}">
-                                <TextBlock Text="{Binding DisplayName}" />
+                                <TextBlock Text="{Binding DisplayName}"
+                                           Style="{StaticResource ListViewItemSingleLineTextStyle}" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

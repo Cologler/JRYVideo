@@ -170,35 +170,35 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
-        public async Task<bool> CommitAsync(MetroWindow window)
+        public async Task<Model.JryVideoInfo> CommitAsync(MetroWindow window)
         {
             var parent = this.Parent.ThrowIfNull("Parent");
 
             if (String.IsNullOrWhiteSpace(this.SelectedVideoType))
             {
                 await window.ShowMessageAsync("error", "must set a type.");
-                return false;
+                return null;
             }
 
             var error = new VideoYearValidationRule().Validate(this.Year, CultureInfo.CurrentCulture);
             if (!error.IsValid)
             {
                 await window.ShowMessageAsync("error", String.Format("error {0} :\r\n {1}", "year", error.ErrorContent.ToString()));
-                return false;
+                return null;
             }
 
             error = new VideoIndexValidationRule().Validate(this.Index, CultureInfo.CurrentCulture);
             if (!error.IsValid)
             {
                 await window.ShowMessageAsync("error", String.Format("error {0} :\r\n {1}", "index", error.ErrorContent.ToString()));
-                return false;
+                return null;
             }
 
             error = new VideoEpisodesCountValidationRule().Validate(this.EpisodesCount, CultureInfo.CurrentCulture);
             if (!error.IsValid)
             {
                 await window.ShowMessageAsync("error", String.Format("error {0} :\r\n {1}", "episodes count", error.ErrorContent.ToString()));
-                return false;
+                return null;
             }
 
             var obj = this.GetCommitObject();

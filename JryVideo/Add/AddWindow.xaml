@@ -10,10 +10,10 @@
                       Height="510"
                       Width="700"
                       ResizeMode="NoResize"
-                      GlowBrush="Black"
-                      BorderThickness="1"
                       WindowStartupLocation="CenterScreen"
-                      ShowTitleBar="False">
+                      ShowTitleBar="False"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1">
     
     <Grid d:DataContext="{d:DesignInstance seriesSelector1:SeriesSelectorViewModel}"
           Margin="8">
@@ -37,7 +37,7 @@
         
         <Grid Grid.Row="2"
               Grid.ColumnSpan="3"
-              Margin="0,8">
+              Style="{StaticResource AcceptPanelStyle}">
 
             <Button x:Name="LastButton"
                     Content="last step"

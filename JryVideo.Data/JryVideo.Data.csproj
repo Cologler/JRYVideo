@@ -39,11 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataSources\ICounterDataSourceProvider.cs" />
+    <Compile Include="DataSources\IFlagDataSourceProvider.cs" />
     <Compile Include="DataSources\ICoverDataSourceProvider.cs" />
     <Compile Include="DataSources\IDataSourceProvider.cs" />
     <Compile Include="DataSources\IDataSourceReaderProvider.cs" />
     <Compile Include="DataSources\IDataSourceWriteProvider.cs" />
+    <Compile Include="DataSources\ISeriesDataSourceProvider.cs" />
     <Compile Include="IJryVideoDataEngineInitializeParameters.cs" />
     <Compile Include="IJryVideoDataEngine.cs" />
     <Compile Include="InitializeParameter.cs" />

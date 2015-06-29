@@ -114,7 +114,7 @@ namespace JryVideo.Editors.CoverEditor
             commitObject.BinaryData = this.BinaryData;
         }
 
-        public async Task<bool> CommitAsync()
+        public async Task<JryCover> CommitAsync()
         {
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
 

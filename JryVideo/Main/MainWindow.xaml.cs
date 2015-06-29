@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using JryVideo.Common;
+using JryVideo.Model;
+using JryVideo.Selectors.FlagSelector;
 using JryVideo.Viewer.VideoViewer;
 using MahApps.Metro.Controls;
 
@@ -34,6 +36,8 @@ namespace JryVideo.Main
                 this.MainPage.VideoSelected += this.MainPage_VideoSelected;
 
                 this.NavigateToMainPage();
+
+                new FlagSelectorWindow(JryFlagType.VideoYear).ShowDialog();
             }
         }
 

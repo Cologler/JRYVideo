@@ -68,7 +68,7 @@ namespace JryVideo.Data.MongoDb
             return true;
         }
 
-        public IDataSourceProvider<JrySeries> GetSeriesDataSourceProvider()
+        public ISeriesDataSourceProvider GetSeriesDataSourceProvider()
         {
             return new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
         }

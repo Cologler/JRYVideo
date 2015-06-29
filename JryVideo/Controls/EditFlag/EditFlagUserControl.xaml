@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="JryVideo.Controls.EditFlag.EditFlagUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:JryVideo.Controls.EditFlag"
+             xmlns:validationRules="clr-namespace:JryVideo.Common.ValidationRules"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance local:EditFlagViewModel}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBox>
+            <TextBox.Text>
+                <Binding Path="Value"
+                         Mode="TwoWay">
+                    <Binding.ValidationRules>
+                        <validationRules:FlagValueValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+        <Button x:Name="CommitButton"
+                Content="commit"
+                HorizontalAlignment="Right"
+                Grid.Row="1"
+                Margin="0,8,0,0"
+                Click="CommitButton_OnClick" />
+
+    </Grid>
+</UserControl>

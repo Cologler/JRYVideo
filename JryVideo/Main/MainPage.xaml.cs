@@ -85,5 +85,13 @@ namespace JryVideo.Main
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             if (vm != null) this.VideoSelected.Fire(this, vm);
         }
+
+        private async void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                await this.ViewModel.VideosViewModel.SearchAsync();
+            }
+        }
     }
 }
