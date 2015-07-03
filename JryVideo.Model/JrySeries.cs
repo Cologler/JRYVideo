@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JryVideo.Model
 {
@@ -15,23 +16,22 @@ namespace JryVideo.Model
 
         public List<JryVideoInfo> Videos { get; set; }
 
-        public override IEnumerable<JryInvalidError> CheckError()
+        protected override bool InnerTestHasError()
         {
-            foreach (var error in base.CheckError())
-            {
-                yield return error;
-            }
+            if (base.InnerTestHasError()) return true;
 
             if (this.Names == null || this.Videos == null)
             {
                 throw new ArgumentException();
             }
             
-            
             if (this.Names.Count == 0)
             {
-                yield return JryInvalidError.SeriesNamesCanNotBeEmpty;
+                JasilyLogger.Current.WriteLine<JrySeries>(JasilyLogger.LoggerMode.Debug, "series name can not be empty.");
+                return true;
             }
+
+            return false;
         }
     }
 }

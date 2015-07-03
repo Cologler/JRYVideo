@@ -23,11 +23,11 @@ namespace JryVideo.Controls.EditSeries
             this.ViewModel.FindErrorMessages += this.ViewModel_FindErrorMessages;
         }
 
-        void ViewModel_FindErrorMessages(object sender, string[] e)
+        void ViewModel_FindErrorMessages(object sender, object e)
         {
             if (this.Dispatcher.CheckAccessOrBeginInvoke(this.ViewModel_FindErrorMessages, sender, e))
             {
-                this.TryFindParent<MetroWindow>().ShowMessageAsync(Properties.Resources.EditSeries_Error_Title, e.AsLines());
+                this.TryFindParent<MetroWindow>().ShowMessageAsync(Properties.Resources.EditSeries_Error_Title, "");
             }
         }
 

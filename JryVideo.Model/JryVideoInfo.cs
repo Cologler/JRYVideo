@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace JryVideo.Model
@@ -10,7 +11,7 @@ namespace JryVideo.Model
         {
             this.Names = new List<string>();
             this.Tags = new List<string>();
-            this.ArtistIds = new List<Guid>();
+            this.ArtistIds = new List<JryVideoArtistInfo>();
         }
 
         public string Type { get; set; }
@@ -19,7 +20,7 @@ namespace JryVideo.Model
 
         public int Index { get; set; }
 
-        public List<Guid> ArtistIds { get; set; }
+        public List<JryVideoArtistInfo> ArtistIds { get; set; }
 
         public List<string> Names { get; set; }
 
@@ -33,37 +34,40 @@ namespace JryVideo.Model
 
         public string CoverId { get; set; }
 
-        public override IEnumerable<JryInvalidError> CheckError()
+        protected override bool InnerTestHasError()
         {
-            foreach (var error in base.CheckError())
-            {
-                yield return error;
-            }
+            if (base.InnerTestHasError()) return true;
 
             if (this.Names == null || this.Tags == null || this.ArtistIds == null)
             {
                 throw new ArgumentException();
             }
 
-            if (String.IsNullOrWhiteSpace(this.Type))
+            if (this.Type.IsNullOrWhiteSpace())
             {
-                yield return JryInvalidError.VideoTypeCanNotBeEmpty;
+                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video type can not be empty.");
+                return true;
             }
 
             if (!IsYearValid(this.Year))
             {
-                yield return JryInvalidError.VideoYearValueInvalid;
+                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video year was invalid.");
+                return true;
             }
 
             if (!IsIndexValid(this.Index))
             {
-                yield return JryInvalidError.VideoIndexLessThanOne;
+                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video index was invalid.");
+                return true;
             }
 
             if (!IsEpisodesCountValid(this.EpisodesCount))
             {
-                yield return JryInvalidError.VideoEpisodesCountLessThanOne;
+                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video episodes count was invalid.");
+                return true;
             }
+
+            return false;
         }
 
         public static bool IsYearValid(int year)

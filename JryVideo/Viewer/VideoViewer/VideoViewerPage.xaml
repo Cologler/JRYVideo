@@ -4,9 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:JryVideo.Viewer.VideoViewer"
+      xmlns:common="clr-namespace:JryVideo.Common"
       mc:Ignorable="d"
       d:DesignHeight="600"
-      d:DesignWidth="600"
+      d:DesignWidth="800"
       Title="VideoViewerPage"
       d:DataContext="{d:DesignInstance local:VideoViewerViewModel}">
 
@@ -69,7 +70,74 @@
         
         <Grid Grid.Column="1">
             
-            
+            <TabControl ItemsSource="{Binding EntitesView.View}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Text="{Binding Key}"></TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <ListView ItemsSource="{Binding}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid d:DataContext="{d:DesignInstance common:EntityViewModel}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="40"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            
+                                            <Grid VerticalAlignment="Center">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <TextBlock Text="{Binding DisplayExtension}"/>
+                                                
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding DisplayFansubs}" />
+                                                
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding DisplaySubTitleLanguages}" />
+                                                
+                                                <TextBlock Grid.Column="3"
+                                                           Text="{Binding DisplayTrackLanguages}" />
+
+                                                <TextBlock Grid.Row="1"
+                                                           Grid.ColumnSpan="4"
+                                                           Text="{Binding DisplayFormat}" />
+
+                                            </Grid>
+
+                                            <Grid Grid.Row="1"
+                                                  Margin="4"
+                                                  Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Button Content="copy guid" />
+                                                
+                                            </Grid>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
             
         </Grid>
         

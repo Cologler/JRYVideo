@@ -65,6 +65,7 @@
     <Compile Include="JryObject.cs" />
     <Compile Include="JrySeries.cs" />
     <Compile Include="JryVideo.cs" />
+    <Compile Include="JryVideoArtistInfo.cs" />
     <Compile Include="JryVideoInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

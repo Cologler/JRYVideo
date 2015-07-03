@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Attributes;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public abstract class JryObject
+    public abstract class JryObject : IPrint
     {
         [Cloneable]
         public string Id { get; set; }
@@ -34,12 +35,25 @@ namespace JryVideo.Model
             return Guid.NewGuid().ToString().ToUpper();
         }
 
-        public virtual IEnumerable<JryInvalidError> CheckError()
+        public bool HasError()
+        {
+            if (this.InnerTestHasError())
+            {
+                JasilyLogger.Current.WriteLine(JasilyLogger.LoggerMode.Debug, this.Print(), this.GetType());
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        protected virtual bool InnerTestHasError()
         {
             if (String.IsNullOrWhiteSpace(this.Id) || this.Created == DateTime.MinValue)
                 throw new Exception("forgot to build meta data.");
 
-            yield break;
+            return false;
         }
     }
 }

@@ -36,8 +36,6 @@ namespace JryVideo.Main
                 this.MainPage.VideoSelected += this.MainPage_VideoSelected;
 
                 this.NavigateToMainPage();
-
-                new FlagSelectorWindow(JryFlagType.VideoYear).ShowDialog();
             }
         }
 

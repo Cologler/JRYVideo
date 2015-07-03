@@ -105,7 +105,6 @@
       <DependentUpon>EditSeriesUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditSeries\EditSeriesViewModel.cs" />
-    <Compile Include="Common\JryObjectLocalizationHelper.cs" />
     <Compile Include="Controls\EditVideo\EditVideoUserControl.xaml.cs">
       <DependentUpon>EditVideoUserControl.xaml</DependentUpon>
     </Compile>

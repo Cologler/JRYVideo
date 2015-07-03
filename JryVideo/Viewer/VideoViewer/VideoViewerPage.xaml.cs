@@ -48,7 +48,7 @@ namespace JryVideo.Viewer.VideoViewer
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = this.ViewModel.Info;
-
+            
             var cover = await vm.TryGetCoverAsync();
             if (cover != null)
             {

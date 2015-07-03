@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
 
@@ -12,6 +15,7 @@ namespace JryVideo.Viewer.VideoViewer
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
             this.Info = info;
+            this.EntitesView = new JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>>();
         }
 
         public VideoInfoViewModel Info { get; private set; }
@@ -28,8 +32,21 @@ namespace JryVideo.Viewer.VideoViewer
 
             var video = await manager.FindAsync(this.Info.Source.Id);
 
-            this.Video = video == null ? null : new VideoViewModel(video);
+            if (video == null)
+            {
+                this.Video = null;
+            }
+            else
+            {
+                this.Video = new VideoViewModel(video);
+
+                this.EntitesView.Collection.AddRange(video.Entities
+                    .Select(z => new EntityViewModel(z))
+                    .GroupBy(v => v.Source.Resolution ?? "unknown")
+                    .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g)));
+            }
         }
 
+        public JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>> EntitesView { get; private set; }
     }
 }

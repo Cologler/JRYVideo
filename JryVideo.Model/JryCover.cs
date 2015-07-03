@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Attributes;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JryVideo.Model
 {
@@ -21,17 +22,17 @@ namespace JryVideo.Model
         [Cloneable]
         public byte[] BinaryData { get; set; }
 
-        public override IEnumerable<JryInvalidError> CheckError()
+        protected override bool InnerTestHasError()
         {
-            foreach (var error in base.CheckError())
-            {
-                yield return error;
-            }
+            if (base.InnerTestHasError()) return true;
 
             if (this.BinaryData == null || this.BinaryData.Length == 0)
             {
-                yield return JryInvalidError.CoverBinaryCanNotBeEmpty;
+                JasilyLogger.Current.WriteLine<JryCover>(JasilyLogger.LoggerMode.Debug, "cover data can not be empty.");
+                return true;
             }
+
+            return false;
         }
 
         public JryCover Clone()

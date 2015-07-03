@@ -148,6 +148,13 @@ namespace JryVideo.Core.Managers
                 }
                 return false;
             }
+
+
+            public async Task<bool> InsertAsync(IEnumerable<JryVideoInfo> items)
+            {
+                this.Series.Videos.AddRange(items);
+                return await this.SeriesManager.UpdateAsync(this.Series);
+            }
         }
     }
 }

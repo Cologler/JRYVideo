@@ -11,7 +11,7 @@ namespace JryVideo.Common
     public abstract class EditorItemViewModel<T> : JasilyViewModel<T>
         where T : JryObject, new()
     {
-        public event EventHandler<string[]> FindErrorMessages;
+        public event EventHandler FindErrorMessages;
         public event EventHandler<T> Created;
         public event EventHandler<T> Updated;
 
@@ -47,11 +47,9 @@ namespace JryVideo.Common
         /// <returns></returns>
         protected async Task<T> CommitAsync(IObjectEditProvider<T> provider, T obj)
         {
-            var error = obj.FireObjectError().ToArray();
-            
-            if (error.Length > 0)
+            if (obj.HasError())
             {
-                this.FindErrorMessages.Fire(this, error);
+                this.FindErrorMessages.Fire(this);
                 return null;
             }
 

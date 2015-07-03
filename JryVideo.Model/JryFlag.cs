@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JryVideo.Model
 {
@@ -21,27 +22,28 @@ namespace JryVideo.Model
             return String.Format("{0}/{1}", (int)type, value.ThrowIfNullOrEmpty("value"));
         }
 
-        public override IEnumerable<JryInvalidError> CheckError()
+        protected override bool InnerTestHasError()
         {
-            foreach (var error in base.CheckError())
-            {
-                yield return error;
-            }
+            if (base.InnerTestHasError()) return true;
 
             if (this.Count < 1)
             {
-                yield return JryInvalidError.CounterCountLessThanOne;
+                JasilyLogger.Current.WriteLine<JryFlag>(JasilyLogger.LoggerMode.Debug, "flag count can not less than 1.");
+                return true;
             }
 
             if (!IsValueValid(this.Value))
             {
-                yield return JryInvalidError.NameCanNotBeEmpty;
+                JasilyLogger.Current.WriteLine<JryFlag>(JasilyLogger.LoggerMode.Release, "flag value can not be empty.");
+                return true;
             }
+
+            return false;
         }
 
         public static bool IsValueValid(string value)
         {
-            return !String.IsNullOrWhiteSpace(value);
+            return !value.IsNullOrWhiteSpace();
         }
     }
 }

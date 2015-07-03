@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 
@@ -13,13 +14,12 @@ namespace JryVideo.Core.Managers
 
         public async void SeriesManager_VideoInfoCreated(object sender, IEnumerable<JryVideoInfo> e)
         {
-            foreach (var info in e)
+            await this.InsertAsync(e.Select(i => 
             {
-                var v = Model.JryVideo.Build(info);
+                var v = Model.JryVideo.Build(i);
                 v.BuildMetaData(true);
-
-                await this.InsertAsync(v);
-            }
+                return v;
+            }));
         }
 
         public async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)

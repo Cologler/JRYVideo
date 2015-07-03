@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Management.Instrumentation;
 using System.Runtime.Remoting.Messaging;
 
 namespace JryVideo.Model
 {
-    public sealed class JryEntity : JryObject
+    public sealed class JryEntity : JryObject, IJasilyLoggerObject<JryEntity>
     {
         public JryEntity()
         {
             this.Fansubs = new List<string>();
-            this.Formats = new List<JryFormat>();
             this.SubTitleLanguages = new List<string>();
             this.Tags = new List<string>();
             this.TrackLanguages = new List<string>();
         }
 
-        public List<JryFormat> Formats { get; set; }
+        public JryFormat Format { get; set; }
 
         public List<string> Tags { get; set; }
 
@@ -32,21 +32,30 @@ namespace JryVideo.Model
 
         public string Extension { get; set; }
 
-        public override IEnumerable<JryInvalidError> CheckError()
+        protected override bool InnerTestHasError()
         {
-            foreach (var error in base.CheckError())
-            {
-                yield return error;
-            }
+            if (base.InnerTestHasError()) return true;
 
             if (this.Fansubs == null ||
-                this.Formats == null ||
                 this.SubTitleLanguages == null ||
                 this.Tags == null ||
                 this.TrackLanguages == null)
             {
                 throw new ArgumentException();
             }
+
+            if (IsResolutionValid(this.Resolution))
+            {
+                this.Log(JasilyLogger.LoggerMode.Debug, "entity resolution can not be empty.");
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsResolutionValid(string resolution)
+        {
+            return !resolution.IsNullOrWhiteSpace();
         }
     }
 }

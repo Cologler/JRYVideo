@@ -5,7 +5,7 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
-                      xmlns:seriesSelector1="clr-namespace:JryVideo.Selectors.SeriesSelector"
+                      xmlns:seriesSelector="clr-namespace:JryVideo.Selectors.SeriesSelector"
                       mc:Ignorable="d"
                       Height="510"
                       Width="700"
@@ -15,7 +15,7 @@
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       BorderThickness="1">
     
-    <Grid d:DataContext="{d:DesignInstance seriesSelector1:SeriesSelectorViewModel}"
+    <Grid d:DataContext="{d:DesignInstance seriesSelector:SeriesSelectorViewModel}"
           Margin="8">
 
         <Grid.RowDefinitions>

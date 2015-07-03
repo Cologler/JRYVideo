@@ -30,14 +30,21 @@ namespace JryVideo.Core.Managers
 
         public async virtual Task<bool> InsertAsync(T obj)
         {
-            if (obj.CheckError().ToArray().Length > 0) return false;
+            if (obj.HasError()) return false;
 
             return await this.Source.InsertAsync(obj);
         }
 
+        public async virtual Task<bool> InsertAsync(IEnumerable<T> objs)
+        {
+            if (objs.Any(obj => obj.HasError())) return false;
+
+            return await this.Source.InsertAsync(objs);
+        }
+
         public async virtual Task<bool> UpdateAsync(T obj)
         {
-            if (obj.CheckError().ToArray().Length > 0) return false;
+            if (obj.HasError()) return false;
 
             return await this.Source.UpdateAsync(obj);
         }

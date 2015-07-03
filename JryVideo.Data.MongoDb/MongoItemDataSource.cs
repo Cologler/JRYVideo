@@ -57,6 +57,12 @@ namespace JryVideo.Data.MongoDb
             return true;
         }
 
+        public async Task<bool> InsertAsync(IEnumerable<T> items)
+        {
+            await this.Collection.InsertManyAsync(items);
+            return true;
+        }
+
         public async virtual Task<bool> UpdateAsync(T value)
         {
             var filter = Builders<T>.Filter;

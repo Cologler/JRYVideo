@@ -12,17 +12,16 @@ namespace JryVideo.Model
 
         public List<JryEntity> Entities { get; set; }
 
-        public override IEnumerable<JryInvalidError> CheckError()
+        protected override bool InnerTestHasError()
         {
-            foreach (var error in base.CheckError())
-            {
-                yield return error;
-            }
+            if (base.InnerTestHasError()) return true;
 
             if (this.Entities == null)
             {
                 throw new ArgumentException();
             }
+
+            return false;
         }
 
         /// <summary>

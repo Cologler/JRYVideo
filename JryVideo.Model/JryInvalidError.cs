@@ -20,5 +20,6 @@
         // artist & counter
         NameCanNotBeEmpty,
         
+        // entity
     }
 }
