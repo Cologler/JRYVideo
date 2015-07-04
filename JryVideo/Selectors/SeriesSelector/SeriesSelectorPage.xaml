@@ -48,6 +48,13 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid d:DataContext="{d:DesignInstance local:SeriesViewModel}">
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="edit"
+                                                  x:Name="EditSeriesMenuItem"
+                                                  Click="MenuItem_OnClick"/>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
                                 <TextBlock Text="{Binding DisplayName}"
                                            Style="{StaticResource ListViewItemSingleLineTextStyle}" />
                             </Grid>

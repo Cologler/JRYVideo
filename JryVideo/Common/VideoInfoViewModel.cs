@@ -11,22 +11,36 @@ namespace JryVideo.Common
 {
     public class VideoInfoViewModel : HasCoverViewModel<Model.JryVideoInfo>
     {
+        private string index;
+        private string videoName;
+
         public VideoInfoViewModel(JrySeries series, Model.JryVideoInfo source)
             : base(source)
         {
             this.SeriesView = new SeriesViewModel(series);
+
+            this.Reload();
         }
 
         public SeriesViewModel SeriesView { get; private set; }
 
         public string Index
         {
-            get { return String.Format("({0}) {1}", this.Source.Year, this.Source.Index); }
+            get { return this.index; }
+            set { this.SetPropertyRef(ref this.index, value); }
         }
 
         public string VideoName
         {
-            get { return this.Source.Names.FirstOrDefault() ?? ""; }
+            get { return this.videoName; }
+            set { this.SetPropertyRef(ref this.videoName, value); }
+        }
+
+        public override void Reload()
+        {
+            base.Reload();
+            this.Index = String.Format("({0}) {1}", this.Source.Year, this.Source.Index);
+            this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
         }
 
         protected override async Task<bool> TryAutoAddCoverAsync()

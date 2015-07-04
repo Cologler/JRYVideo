@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Editable;
 using System.Diagnostics;
 using System.Linq;
 
@@ -14,6 +15,7 @@ namespace JryVideo.Model
             this.ArtistIds = new List<JryVideoArtistInfo>();
         }
 
+        [EditableField]
         public string Type { get; set; }
 
         public int Year { get; set; }
@@ -24,8 +26,10 @@ namespace JryVideo.Model
 
         public List<string> Names { get; set; }
 
+        [EditableField]
         public string DoubanId { get; set; }
 
+        [EditableField]
         public string ImdbId { get; set; }
 
         public int EpisodesCount { get; set; }

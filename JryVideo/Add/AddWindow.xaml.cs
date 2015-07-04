@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using JryVideo.Add.VideoCreator;
+using JryVideo.Model;
 using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Viewer.SeriesItemViewer;
 using MahApps.Metro.Controls;
@@ -14,10 +15,9 @@ namespace JryVideo.Add
     /// </summary>
     public partial class AddWindow : MetroWindow
     {
-        private SeriesSelectorPage seriesSelectorPage;
+        private readonly SeriesSelectorPage seriesSelectorPage;
         private SeriesItemViewerPage seriesItemViewerPage;
         private VideoCreatorPage videoCreatorPage;
-        
 
         public AddWindow()
         {
@@ -88,14 +88,6 @@ namespace JryVideo.Add
             if (this.videoCreatorPage == null || this.videoCreatorPage.CreatorViewModel.Source != series.Source)
             {
                 this.videoCreatorPage = new VideoCreatorPage(series.Source);
-
-                var doubanInfo = this.seriesSelectorPage.EditSeriesUserControl.ViewModel.DoubanMovie;
-
-                if (doubanInfo != null)
-                {
-                    this.videoCreatorPage.EditVideoUserControl.ViewModel.DoubanId = doubanInfo.Id;
-                    this.videoCreatorPage.EditVideoUserControl.ViewModel.LoadDouban(doubanInfo);
-                }
             }
 
             this.ContentFrame.Navigate(this.videoCreatorPage);

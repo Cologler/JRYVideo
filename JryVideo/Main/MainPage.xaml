@@ -122,7 +122,8 @@
                                   Margin="1"
                                   Background="#00000000"
                                   x:Name="VideoPanel"
-                                  MouseLeftButtonUp="VideoPanel_OnMouseLeftButtonUp">
+                                  MouseLeftButtonUp="VideoPanel_OnMouseLeftButtonUp"
+                                  Width="208">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition Height="Auto" />

@@ -117,25 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EditSeries_Error_Title" xml:space="preserve">
-    <value>some error</value>
+  <data name="EditSeries_InvalidInput_Title" xml:space="preserve">
+    <value>invalid input</value>
   </data>
-  <data name="Error_Object_TimeLessThanZero" xml:space="preserve">
-    <value>{0}'s time less than zero</value>
+  <data name="FlagSelectorWindow_Title_Format" xml:space="preserve">
+    <value>{0} selector</value>
   </data>
-  <data name="Error_Series_Names_Empty" xml:space="preserve">
-    <value>series name can not be empty.</value>
+  <data name="JryEntity_AudioSource" xml:space="preserve">
+    <value>audio source</value>
   </data>
-  <data name="Name_Object_Counter" xml:space="preserve">
-    <value>counter</value>
+  <data name="JryEntity_Extension" xml:space="preserve">
+    <value>extension</value>
   </data>
-  <data name="Name_Object_Entity" xml:space="preserve">
-    <value>entity</value>
+  <data name="JryEntity_Fansubs" xml:space="preserve">
+    <value>fansub</value>
   </data>
-  <data name="Name_Object_Series" xml:space="preserve">
-    <value>series</value>
+  <data name="JryEntity_FilmSource" xml:space="preserve">
+    <value>film source</value>
   </data>
-  <data name="Name_Object_Video" xml:space="preserve">
-    <value>video</value>
+  <data name="JryEntity_Resolution" xml:space="preserve">
+    <value>extension</value>
+  </data>
+  <data name="JryFlagType_EntityAudioSource" xml:space="preserve">
+    <value>audio source</value>
+  </data>
+  <data name="JryFlagType_EntityExtension" xml:space="preserve">
+    <value>extension</value>
+  </data>
+  <data name="JryFlagType_EntityFansub" xml:space="preserve">
+    <value>fansub</value>
+  </data>
+  <data name="JryFlagType_EntityFilmSource" xml:space="preserve">
+    <value>film source</value>
+  </data>
+  <data name="JryFlagType_EntityResolution" xml:space="preserve">
+    <value>resolution</value>
+  </data>
+  <data name="JryFlagType_EntitySubTitleLanguage" xml:space="preserve">
+    <value>subtitle language</value>
+  </data>
+  <data name="JryFlagType_EntityTrackLanguage" xml:space="preserve">
+    <value>track language</value>
+  </data>
+  <data name="JryFlagType_VideoType" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="JryFlagType_VideoYear" xml:space="preserve">
+    <value>year</value>
   </data>
 </root>

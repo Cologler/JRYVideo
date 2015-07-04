@@ -22,7 +22,7 @@ namespace JryVideo.Common.ValidationRules
                 return new ValidationResult(false, "please input value.");
             }
 
-            if (JryFlag.IsValueValid(text))
+            if (JryFlag.IsValueInvalid(text))
             {
                 return new ValidationResult(false, "can not be empty.");
             }

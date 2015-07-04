@@ -39,7 +39,8 @@ namespace JryVideo.Model
         {
             if (this.InnerTestHasError())
             {
-                JasilyLogger.Current.WriteLine(JasilyLogger.LoggerMode.Debug, this.Print(), this.GetType());
+                JasilyLogger.Current.WriteLine(JasilyLogger.LoggerMode.Debug, "object has error.", this.GetType());
+                JasilyLogger.Current.WriteLine(JasilyLogger.LoggerMode.Debug, this.Print() + "\r\n", this.GetType());
                 return true;
             }
             else

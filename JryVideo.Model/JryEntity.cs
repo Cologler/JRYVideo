@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Editable;
 using System.Diagnostics;
 using System.Management.Instrumentation;
 using System.Runtime.Remoting.Messaging;
@@ -26,10 +27,22 @@ namespace JryVideo.Model
 
         public List<string> TrackLanguages { get; set; }
 
+        /// <summary>
+        /// can not empty.
+        /// </summary>
+        [EditableField]
         public string Resolution { get; set; }
 
+        [EditableField]
         public string FilmSource { get; set; }
 
+        [EditableField]
+        public string AudioSource { get; set; }
+
+        /// <summary>
+        /// can not empty.
+        /// </summary>
+        [EditableField]
         public string Extension { get; set; }
 
         protected override bool InnerTestHasError()
@@ -44,18 +57,29 @@ namespace JryVideo.Model
                 throw new ArgumentException();
             }
 
-            if (IsResolutionValid(this.Resolution))
+            if (IsResolutionInvalid(this.Resolution))
             {
                 this.Log(JasilyLogger.LoggerMode.Debug, "entity resolution can not be empty.");
+                return true;
+            }
+
+            if (IsExtensionInvalid(this.Extension))
+            {
+                this.Log(JasilyLogger.LoggerMode.Debug, "entity extension can not be empty.");
                 return true;
             }
 
             return false;
         }
 
-        public static bool IsResolutionValid(string resolution)
+        public static bool IsResolutionInvalid(string resolution)
         {
-            return !resolution.IsNullOrWhiteSpace();
+            return resolution.IsNullOrWhiteSpace();
+        }
+
+        public static bool IsExtensionInvalid(string extension)
+        {
+            return extension.IsNullOrWhiteSpace();
         }
     }
 }

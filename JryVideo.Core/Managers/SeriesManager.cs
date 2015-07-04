@@ -12,8 +12,9 @@ namespace JryVideo.Core.Managers
     public class SeriesManager : JryObjectManager<JrySeries, ISeriesDataSourceProvider>
     {
         public event EventHandler<JrySeries> SeriesCreated;
-        public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoRemoved;
         public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoCreated;
+        public event EventHandler<IEnumerable<ChangeEventArgs<JryVideoInfo>>> VideoInfoUpdated;
+        public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoRemoved;
 
         public DataCenter DataCenter { get; private set; }
 
@@ -23,7 +24,7 @@ namespace JryVideo.Core.Managers
             this.DataCenter = dataCenter;
         }
 
-        public async override Task<bool> InsertAsync(JrySeries series)
+        public override async Task<bool> InsertAsync(JrySeries series)
         {
             if (await base.InsertAsync(series))
             {
@@ -39,6 +40,21 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
+        public override async Task<bool> InsertAsync(IEnumerable<JrySeries> objs)
+        {
+            if (await base.InsertAsync(objs))
+            {
+                var videos = objs.SelectMany(z => z.Videos).ToArray();
+
+                if (videos.Length > 0)
+                    this.VideoInfoCreated.BeginFire(this, videos.ToArray());
+
+                return true;
+            }
+
+            return false;
+        }
+
         public async override Task<bool> UpdateAsync(JrySeries series)
         {
             var old = await this.FindAsync(series.Id);
@@ -46,20 +62,34 @@ namespace JryVideo.Core.Managers
             if (await base.UpdateAsync(series))
             {
                 // Video
+                // for video info, just need add and remove, don't need update event.
                 var oldVideos = old.Videos.ToDictionary(z => z.Id);
                 var newVideos = series.Videos.ToDictionary(z => z.Id);
 
                 var oldVideoIds = oldVideos.Keys.ToArray();
                 var newVideoIds = newVideos.Keys.ToArray();
 
-                var onlyOld = oldVideoIds.Except(newVideoIds).Select(id => oldVideos[id]).ToArray();
-                var onlyNew = newVideoIds.Except(oldVideoIds).Select(id => newVideos[id]).ToArray();
+                var onlyOldIds = oldVideoIds.Except(newVideoIds).ToArray(); // 只在 old
+                var onlyNewIds = newVideoIds.Except(oldVideoIds).ToArray(); // 只在 new
+                var bothIds = oldVideoIds.Intersect(newVideoIds).ToArray(); // 交集
 
-                if (onlyOld.Length > 0)
-                    this.VideoInfoRemoved.BeginFire(this, onlyOld);
+                if (onlyOldIds.Length > 0)
+                {
+                    var items = onlyOldIds.Select(id => oldVideos[id]).ToArray();
+                    this.VideoInfoRemoved.BeginFire(this, items);
+                }
 
-                if (onlyNew.Length > 0)
-                    this.VideoInfoCreated.BeginFire(this, onlyNew);
+                if (onlyNewIds.Length > 0)
+                {
+                    var items = onlyNewIds.Select(id => newVideos[id]).ToArray();
+                    this.VideoInfoCreated.BeginFire(this, items);
+                }
+
+                if (bothIds.Length > 0)
+                {
+                    var items = bothIds.Select(id => new ChangeEventArgs<JryVideoInfo>(oldVideos[id], newVideos[id])).ToArray();
+                    this.VideoInfoUpdated.BeginFire(this, items);
+                }
 
                 return true;
             }
@@ -126,29 +156,25 @@ namespace JryVideo.Core.Managers
                 return this.Series.Videos.FirstOrDefault(z => z.Id == id);
             }
 
-            public async Task<bool> InsertAsync(JryVideoInfo value)
+            public async Task<bool> InsertAsync(JryVideoInfo entity)
             {
-                this.Series.Videos.Add(value);
+                this.Series.Videos.Add(entity);
                 return await this.SeriesManager.UpdateAsync(this.Series);
             }
 
-            public async Task<bool> UpdateAsync(JryVideoInfo value)
+            public async Task<bool> UpdateAsync(JryVideoInfo entity)
             {
-                var index = this.Series.Videos.FindIndex(z => z.Id == value.Id);
+                var index = this.Series.Videos.FindIndex(z => z.Id == entity.Id);
                 if (index == -1) return false;
-                this.Series.Videos[index] = value;
+                this.Series.Videos[index] = entity;
                 return await this.SeriesManager.UpdateAsync(this.Series);
             }
 
             public async Task<bool> RemoveAsync(string id)
             {
-                if (this.Series.Videos.RemoveAll(z => z.Id == id) > 0)
-                {
-                    return await this.SeriesManager.UpdateAsync(this.Series);
-                }
-                return false;
+                return this.Series.Videos.RemoveAll(z => z.Id == id) > 0 &&
+                       await this.SeriesManager.UpdateAsync(this.Series);
             }
-
 
             public async Task<bool> InsertAsync(IEnumerable<JryVideoInfo> items)
             {

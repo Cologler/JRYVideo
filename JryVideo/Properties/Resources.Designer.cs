@@ -61,65 +61,146 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
-        ///   查找类似 some error 的本地化字符串。
+        ///   查找类似 invalid input 的本地化字符串。
         /// </summary>
-        internal static string EditSeries_Error_Title {
+        internal static string EditSeries_InvalidInput_Title {
             get {
-                return ResourceManager.GetString("EditSeries_Error_Title", resourceCulture);
+                return ResourceManager.GetString("EditSeries_InvalidInput_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 {0}&apos;s time less than zero 的本地化字符串。
+        ///   查找类似 {0} selector 的本地化字符串。
         /// </summary>
-        internal static string Error_Object_TimeLessThanZero {
+        internal static string FlagSelectorWindow_Title_Format {
             get {
-                return ResourceManager.GetString("Error_Object_TimeLessThanZero", resourceCulture);
+                return ResourceManager.GetString("FlagSelectorWindow_Title_Format", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 series name can not be empty. 的本地化字符串。
+        ///   查找类似 audio source 的本地化字符串。
         /// </summary>
-        internal static string Error_Series_Names_Empty {
+        internal static string JryEntity_AudioSource {
             get {
-                return ResourceManager.GetString("Error_Series_Names_Empty", resourceCulture);
+                return ResourceManager.GetString("JryEntity_AudioSource", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 counter 的本地化字符串。
+        ///   查找类似 extension 的本地化字符串。
         /// </summary>
-        internal static string Name_Object_Counter {
+        internal static string JryEntity_Extension {
             get {
-                return ResourceManager.GetString("Name_Object_Counter", resourceCulture);
+                return ResourceManager.GetString("JryEntity_Extension", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 entity 的本地化字符串。
+        ///   查找类似 fansub 的本地化字符串。
         /// </summary>
-        internal static string Name_Object_Entity {
+        internal static string JryEntity_Fansubs {
             get {
-                return ResourceManager.GetString("Name_Object_Entity", resourceCulture);
+                return ResourceManager.GetString("JryEntity_Fansubs", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 series 的本地化字符串。
+        ///   查找类似 film source 的本地化字符串。
         /// </summary>
-        internal static string Name_Object_Series {
+        internal static string JryEntity_FilmSource {
             get {
-                return ResourceManager.GetString("Name_Object_Series", resourceCulture);
+                return ResourceManager.GetString("JryEntity_FilmSource", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 video 的本地化字符串。
+        ///   查找类似 extension 的本地化字符串。
         /// </summary>
-        internal static string Name_Object_Video {
+        internal static string JryEntity_Resolution {
             get {
-                return ResourceManager.GetString("Name_Object_Video", resourceCulture);
+                return ResourceManager.GetString("JryEntity_Resolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 audio source 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_EntityAudioSource {
+            get {
+                return ResourceManager.GetString("JryFlagType_EntityAudioSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 extension 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_EntityExtension {
+            get {
+                return ResourceManager.GetString("JryFlagType_EntityExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 fansub 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_EntityFansub {
+            get {
+                return ResourceManager.GetString("JryFlagType_EntityFansub", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 film source 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_EntityFilmSource {
+            get {
+                return ResourceManager.GetString("JryFlagType_EntityFilmSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 resolution 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_EntityResolution {
+            get {
+                return ResourceManager.GetString("JryFlagType_EntityResolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 subtitle language 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_EntitySubTitleLanguage {
+            get {
+                return ResourceManager.GetString("JryFlagType_EntitySubTitleLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 track language 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_EntityTrackLanguage {
+            get {
+                return ResourceManager.GetString("JryFlagType_EntityTrackLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 type 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_VideoType {
+            get {
+                return ResourceManager.GetString("JryFlagType_VideoType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 year 的本地化字符串。
+        /// </summary>
+        internal static string JryFlagType_VideoYear {
+            get {
+                return ResourceManager.GetString("JryFlagType_VideoYear", resourceCulture);
             }
         }
     }

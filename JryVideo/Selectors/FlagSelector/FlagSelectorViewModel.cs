@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
@@ -12,10 +13,13 @@ namespace JryVideo.Selectors.FlagSelector
 {
     public sealed class FlagSelectorViewModel : BaseSelectorViewModel<FlagViewModel>
     {
+        private readonly IEnumerable<string> readySelected;
+
         public JryFlagType Type { get; private set; }
 
-        public FlagSelectorViewModel(JryFlagType type)
+        public FlagSelectorViewModel(JryFlagType type, IEnumerable<string> readySelected)
         {
+            this.readySelected = readySelected;
             this.Type = type;
             this.SelectedItems = new ObservableCollection<FlagViewModel>();
         }
@@ -51,7 +55,13 @@ namespace JryVideo.Selectors.FlagSelector
             var items = (await manager.LoadAsync(this.Type)).ToArray();
 
             this.Items.Collection.Clear();
-            this.Items.Collection.AddRange(items.Select(z => new FlagViewModel(z)));
+            foreach (var item in items.Select(z => new FlagViewModel(z)))
+            {
+                if (this.readySelected.Contains(item.Source.Value))
+                    this.SelectedItems.Add(item);
+                
+                this.Items.Collection.Add(item);
+            }
         }
 
         public void SelectItem(FlagViewModel item)
@@ -67,6 +77,15 @@ namespace JryVideo.Selectors.FlagSelector
             if (this.SelectedItems.Remove(item))
             {
                 this.Items.View.Refresh();
+            }
+        }
+
+        public void EditFlagUserControl_ViewModel_Created(object sender, JryFlag e)
+        {
+            if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(
+                this.EditFlagUserControl_ViewModel_Created, sender, e))
+            {
+                this.Items.Collection.Add(new FlagViewModel(e));
             }
         }
     }

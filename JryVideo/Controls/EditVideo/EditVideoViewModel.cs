@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Enums;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -51,7 +52,7 @@ namespace JryVideo.Controls.EditVideo
 
         public ObservableCollection<string> EpisodesCountCollection { get; private set; }
 
-        public string SelectedVideoType
+        public string Type
         {
             get { return this.selectedType; }
             set { this.SetPropertyRef(ref this.selectedType, value); }
@@ -116,6 +117,33 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
+        public override void WriteToObject(JryVideoInfo obj)
+        {
+            base.WriteToObject(obj);
+
+            obj.Type = this.selectedType;
+            obj.Year = Int32.Parse(this.Year);
+            obj.Index = Int32.Parse(this.Index);
+            obj.DoubanId = this.DoubanId;
+            obj.ImdbId = this.ImdbId;
+            obj.EpisodesCount = Int32.Parse(this.EpisodesCount);
+            obj.Names.Clear();
+            if (!this.Names.IsNullOrWhiteSpace())
+            {
+                obj.Names.AddRange(this.Names.AsLines().Select(z => z.Trim()).Where(z => !z.IsNullOrWhiteSpace()).Distinct());
+            }
+        }
+
+        public override void ReadFromObject(JryVideoInfo obj)
+        {
+            base.ReadFromObject(obj);
+
+            this.Index = obj.Index.ToString();
+            this.Year = obj.Year.ToString();
+            this.Names = obj.Names.AsLines();
+            this.EpisodesCount = obj.EpisodesCount.ToString();
+        }
+
         public void LoadDouban(DoubanMovie info)
         {
             var doubanSecondName = DoubanHelper.ParseSecondName(info).AsLines();
@@ -148,7 +176,7 @@ namespace JryVideo.Controls.EditVideo
             // type
             var types = (await JryVideoCore.Current.CurrentDataCenter.FlagManager.LoadAsync(JryFlagType.VideoType)).ToArray();
             this.TypeCollection.AddRange(types.Select(z => z.Value));
-            this.SelectedVideoType = this.TypeCollection.FirstOrDefault();
+            this.Type = this.TypeCollection.FirstOrDefault();
 
             // year
             this.YearCollection.AddRange(Enumerable.Range(DateTime.Now.Year - 7, 8).Select(z => z.ToString()));
@@ -157,7 +185,7 @@ namespace JryVideo.Controls.EditVideo
             this.IndexCollection.AddRange(Enumerable.Range(1, 8).Select(z => z.ToString()));
 
             // episodes count
-            this.EpisodesCountCollection.AddRange(Enumerable.Range(1, 8).Select(z => z.ToString()));
+            this.EpisodesCountCollection.AddRange(new [] { 1, 8, 10, 12, 13, 24, 25 }.Select(z => z.ToString()));
 
             // initialize cover
             if (this.Source != null && this.Source.CoverId != null)
@@ -174,7 +202,7 @@ namespace JryVideo.Controls.EditVideo
         {
             var parent = this.Parent.ThrowIfNull("Parent");
 
-            if (String.IsNullOrWhiteSpace(this.SelectedVideoType))
+            if (this.Type.IsNullOrWhiteSpace())
             {
                 await window.ShowMessageAsync("error", "must set a type.");
                 return null;
@@ -203,19 +231,18 @@ namespace JryVideo.Controls.EditVideo
 
             var obj = this.GetCommitObject();
 
-            obj.Type = this.selectedType;
-            obj.Year = Int32.Parse(this.Year);
-            obj.Index = Int32.Parse(this.Index);
-            obj.DoubanId = this.DoubanId;
-            obj.ImdbId = this.ImdbId;
-            obj.EpisodesCount = Int32.Parse(this.EpisodesCount);
-            obj.Names.Clear();
-            obj.Names.AddRange(
-                (this.Names.AsLines() ?? Enumerable.Empty<String>())
-                    .Select(z => z.Trim())
-                    .Where(z => !String.IsNullOrWhiteSpace(z)));
-            obj.Names = obj.Names.Distinct().ToList();
+            this.WriteToObject(obj);
+            
             obj.BuildMetaData();
+
+            if (this.Cover != null)
+            {
+                if (this.Cover.Action == ObjectChangedAction.Create)
+                {
+                    var cover = await this.Cover.CommitAsync();
+                    obj.CoverId = cover.Id;
+                }
+            }
 
             var videoManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(parent);
 

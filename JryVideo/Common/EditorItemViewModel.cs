@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.Editable;
+using System.Diagnostics;
 using System.Enums;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +10,9 @@ using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public abstract class EditorItemViewModel<T> : JasilyViewModel<T>
+    public abstract class EditorItemViewModel<T> : JasilyEditableViewModel<T>
         where T : JryObject, new()
     {
-        public event EventHandler FindErrorMessages;
         public event EventHandler<T> Created;
         public event EventHandler<T> Updated;
 
@@ -30,9 +31,11 @@ namespace JryVideo.Common
         {
             this.Source = source.ThrowIfNull("source");
             this.Action = ObjectChangedAction.Modify;
+
+            this.ReadFromObject(source);
         }
 
-        public T GetCommitObject()
+        public virtual T GetCommitObject()
         {
             return this.Action == ObjectChangedAction.Create ? new T() : this.Source;
         }
@@ -49,7 +52,7 @@ namespace JryVideo.Common
         {
             if (obj.HasError())
             {
-                this.FindErrorMessages.Fire(this);
+                if (Debugger.IsAttached) Debugger.Break();
                 return null;
             }
 
@@ -58,6 +61,7 @@ namespace JryVideo.Common
                 case ObjectChangedAction.Create:
                     if (await provider.InsertAsync(obj))
                     {
+                        this.Clear();
                         this.Created.BeginFire(this, obj);
                         return obj;
                     }
@@ -84,6 +88,11 @@ namespace JryVideo.Common
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public virtual void Clear()
+        {
+            
         }
     }
 }

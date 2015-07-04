@@ -17,5 +17,7 @@
         EntitySubTitleLanguage = 25,
 
         EntityTrackLanguage = 26,
+
+        EntityAudioSource = 27,
     }
 }

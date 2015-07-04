@@ -28,6 +28,11 @@ namespace JryVideo.Viewer.VideoViewer
 
         public async Task LoadAsync()
         {
+            await this.ReloadVideoAsync();
+        }
+
+        public async Task ReloadVideoAsync()
+        {
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
 
             var video = await manager.FindAsync(this.Info.Source.Id);
@@ -40,6 +45,7 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 this.Video = new VideoViewModel(video);
 
+                this.EntitesView.Collection.Clear();
                 this.EntitesView.Collection.AddRange(video.Entities
                     .Select(z => new EntityViewModel(z))
                     .GroupBy(v => v.Source.Resolution ?? "unknown")

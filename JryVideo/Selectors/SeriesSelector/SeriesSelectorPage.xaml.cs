@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
+using MahApps.Metro.Controls;
 
 namespace JryVideo.Selectors.SeriesSelector
 {
@@ -46,6 +48,21 @@ namespace JryVideo.Selectors.SeriesSelector
             this.DataContext = this.SelectorViewModel = new SeriesSelectorViewModel();
 
             await this.SelectorViewModel.LoadAsync();
+        }
+
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var seriesViewModel = ((FrameworkElement) sender).DataContext as SeriesViewModel;
+
+            if (seriesViewModel != null)
+            {
+                var dlg = new SeriesEditorWindow(seriesViewModel.Source)
+                {
+                    Owner = this.TryFindParent<Window>()
+                };
+                dlg.ShowDialog();
+                seriesViewModel.Reload();
+            }
         }
     }
 }

@@ -1,0 +1,40 @@
+﻿<mah:MetroWindow x:Class="JryVideo.Editors.EntityEditor.EntityEditorWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 Title="EntityEditorWindow"
+                 Height="500"
+                 Width="600"
+                 ShowTitleBar="False"
+                 ResizeMode="NoResize"
+                 WindowStartupLocation="CenterOwner"
+                 BorderThickness="1"
+                 GlowBrush="{DynamicResource AccentColorBrush}"
+                 FontFamily="Microsoft YaHei Light">
+    
+    <Grid Style="{StaticResource ParentPanelStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <TextBlock Style="{StaticResource CaptionStyle}"
+                       Text="creator" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Frame x:Name="MainFrame" />
+        </Grid>
+
+        <Grid Grid.Row="2"
+              Style="{StaticResource AcceptPanelStyle}">
+            <Button HorizontalAlignment="Right"
+                    Content="accept" 
+                    x:Name="AcceptButton"
+                    Click="AcceptButton_OnClick"/>
+        </Grid>
+
+    </Grid>
+</mah:MetroWindow>

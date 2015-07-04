@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
@@ -8,7 +9,7 @@ using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoItemDataSource<T> : IDataSourceProvider<T>
+    public class MongoItemDataSource<T> : IDataSourceProvider<T>, IJasilyLoggerObject<T>
         where T : JryObject
     {
         public JryVideoMongoDbDataEngine Engine { get; private set; }
@@ -51,33 +52,35 @@ namespace JryVideo.Data.MongoDb
                 .FirstOrDefault();
         }
 
-        public async virtual Task<bool> InsertAsync(T value)
+        public async virtual Task<bool> InsertAsync(T entity)
         {
-            await this.Collection.InsertOneAsync(value);
+            this.Log(JasilyLogger.LoggerMode.Release, "insert \r\n" + entity.Print() + "\r\n");
+            await this.Collection.InsertOneAsync(entity);
             return true;
         }
 
         public async Task<bool> InsertAsync(IEnumerable<T> items)
         {
+            foreach (var item in items)
+                this.Log(JasilyLogger.LoggerMode.Release, "insert \r\n" + item.Print() + "\r\n");
             await this.Collection.InsertManyAsync(items);
             return true;
         }
 
-        public async virtual Task<bool> UpdateAsync(T value)
+        public async virtual Task<bool> UpdateAsync(T entity)
         {
+            this.Log(JasilyLogger.LoggerMode.Release, "update \r\n" + entity.Print() + "\r\n");
             var filter = Builders<T>.Filter;
-
             return (await this.Collection.ReplaceOneAsync(
-                    filter.Eq(t => t.Id, value.Id),
-                    value)).MatchedCount == 1;
+                    filter.Eq(t => t.Id, entity.Id),
+                    entity)).MatchedCount == 1;
         }
 
         public async Task<bool> RemoveAsync(string id)
         {
+            this.Log(JasilyLogger.LoggerMode.Release, "remove \r\n" + id);
             var filter = Builders<T>.Filter;
-
-            return (await this.Collection.DeleteOneAsync(
-                    filter.Eq(t => t.Id, id))).DeletedCount == 1;
+            return (await this.Collection.DeleteOneAsync(filter.Eq(t => t.Id, id))).DeletedCount == 1;
         }
     }
 }

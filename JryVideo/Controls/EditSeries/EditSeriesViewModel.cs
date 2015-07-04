@@ -53,17 +53,15 @@ namespace JryVideo.Controls.EditSeries
             set { this.SetPropertyRef(ref this.doubanId, value); }
         }
 
-        public DoubanMovie DoubanMovie { get; private set; }
-
         public async Task LoadDoubanAsync()
         {
             if (String.IsNullOrWhiteSpace(this.DoubanId)) return;
 
-            this.DoubanMovie = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
+            var movie = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
 
-            if (this.DoubanMovie != null)
+            if (movie != null)
             {
-                var doubanName = DoubanHelper.ParseMainName(this.DoubanMovie).AsLines();
+                var doubanName = DoubanHelper.ParseMainName(movie).AsLines();
 
                 this.Names = String.IsNullOrWhiteSpace(this.Names)
                     ? doubanName
@@ -89,8 +87,14 @@ namespace JryVideo.Controls.EditSeries
             SeriesManager.BuildSeriesMetaData(series);
 
             var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
-            
+
             return await this.CommitAsync(seriesManager, series);
+        }
+
+        public override void Clear()
+        {
+            this.Names = "";
+            this.DoubanId = "";
         }
     }
 }

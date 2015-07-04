@@ -22,13 +22,14 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
             <Grid>
                 <Button Content="go back"
                         FontSize="16"
                         MinHeight="35"
-                        Margin="-8,0,0,8"
+                        Margin="-8,-8,0,8"
                         HorizontalAlignment="Left"
                         x:Name="GoBackButton"
                         Foreground="White"
@@ -65,79 +66,100 @@
                            HorizontalAlignment="Center" />
 
             </StackPanel>
+            
+            <Grid Grid.Row="3"
+                  Margin="0,4,0,0">
+                <Button Content="edit"
+                        x:Name="EditVideoButton"
+                        Click="EditVideoButton_OnClick"></Button>
+            </Grid>
 
         </Grid>
         
         <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             
-            <TabControl ItemsSource="{Binding EntitesView.View}">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <TextBlock Text="{Binding Key}"></TextBlock>
-                        </Grid>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <ListView ItemsSource="{Binding}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid d:DataContext="{d:DesignInstance common:EntityViewModel}">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="40"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-                                            
-                                            <Grid VerticalAlignment="Center">
+            <Grid>
+                <Menu>
+                    <MenuItem Header="add"
+                              x:Name="AddEntityMenuItem"
+                              Click="AddEntityMenuItem_OnClick"/>
+                </Menu>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <TabControl ItemsSource="{Binding EntitesView.View}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="{Binding Key}"></TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <ListView ItemsSource="{Binding}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid d:DataContext="{d:DesignInstance common:EntityViewModel}">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition />
-                                                    <RowDefinition />
+                                                    <RowDefinition Height="40" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                
-                                                <TextBlock Text="{Binding DisplayExtension}"/>
-                                                
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding DisplayFansubs}" />
-                                                
-                                                <TextBlock Grid.Column="2"
-                                                           Text="{Binding DisplaySubTitleLanguages}" />
-                                                
-                                                <TextBlock Grid.Column="3"
-                                                           Text="{Binding DisplayTrackLanguages}" />
 
-                                                <TextBlock Grid.Row="1"
-                                                           Grid.ColumnSpan="4"
-                                                           Text="{Binding DisplayFormat}" />
+                                                <Grid VerticalAlignment="Center">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
+                                                    <TextBlock Text="{Binding DisplayExtension}" />
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding DisplayFansubs}" />
+
+                                                    <TextBlock Grid.Column="2"
+                                                               Text="{Binding DisplaySubTitleLanguages}" />
+
+                                                    <TextBlock Grid.Column="3"
+                                                               Text="{Binding DisplayTrackLanguages}" />
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.ColumnSpan="4"
+                                                               Text="{Binding DisplayFormat}" />
+
+                                                </Grid>
+
+                                                <Grid Grid.Row="1"
+                                                      Margin="4"
+                                                      Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="100" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Button Content="copy guid" />
+
+                                                </Grid>
                                             </Grid>
-
-                                            <Grid Grid.Row="1"
-                                                  Margin="4"
-                                                  Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="100"/>
-                                                    <ColumnDefinition />
-                                                </Grid.ColumnDefinitions>
-
-                                                <Button Content="copy guid" />
-                                                
-                                            </Grid>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </Grid>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Grid>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </Grid>
             
         </Grid>
         

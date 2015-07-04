@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using JryVideo.Common;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 
@@ -28,10 +29,16 @@ namespace JryVideo.Selectors.FlagSelector
             this.InitializeComponent();
         }
 
-        public FlagSelectorWindow(JryFlagType type)
+        public FlagSelectorWindow(JryFlagType type, IEnumerable<string> readySelected = null)
             : this()
         {
-            this.DataContext = this.ViewModel = new FlagSelectorViewModel(type);
+            this.TitleTextBlock.Text = String.Format(
+                Properties.Resources.FlagSelectorWindow_Title_Format,
+                type.GetLocalizeString());
+
+            this.DataContext = this.ViewModel = new FlagSelectorViewModel(type, readySelected ?? Enumerable.Empty<string>());
+            this.EditFlagUserControl.FlagType = type;
+            this.EditFlagUserControl.ViewModel.Created += this.ViewModel.EditFlagUserControl_ViewModel_Created;
             this.ViewModel.LoadAsync();
         }
 
@@ -42,18 +49,12 @@ namespace JryVideo.Selectors.FlagSelector
 
         private void SourceItemPanel_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount > 1)
-            {
-                this.ViewModel.SelectItem(((FrameworkElement)sender).DataContext as FlagViewModel);
-            }
+            this.ViewModel.SelectItem(((FrameworkElement)sender).DataContext as FlagViewModel);
         }
 
         private void SelectedItemPanel_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount > 1)
-            {
-                this.ViewModel.UnselectItem(((FrameworkElement)sender).DataContext as FlagViewModel);
-            }
+            this.ViewModel.UnselectItem(((FrameworkElement)sender).DataContext as FlagViewModel);
         }
     }
 }

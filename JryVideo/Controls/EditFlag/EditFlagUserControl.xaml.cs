@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using JryVideo.Model;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Controls.EditFlag
 {
@@ -28,9 +31,17 @@ namespace JryVideo.Controls.EditFlag
             this.DataContext = this.ViewModel = new EditFlagViewModel();
         }
 
-        private void CommitButton_OnClick(object sender, RoutedEventArgs e)
-        {
+        public JryFlagType? FlagType { get; set; }
 
+        private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.ViewModel.Value.IsNullOrWhiteSpace())
+            {
+                await this.TryFindParent<MetroWindow>().ShowMessageAsync("error", "name can not be empty.");
+                return;
+            }
+
+            await this.ViewModel.CommitAsync(this.FlagType.Value);
         }
     }
 }

@@ -58,5 +58,10 @@ namespace JryVideo.Common
                 this.Cover = await coverManager.LoadCoverAsync(this.Source.CoverId);
             }
         }
+
+        public virtual void Reload()
+        {
+            this.Cover = null;
+        }
     }
 }

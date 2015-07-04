@@ -14,7 +14,8 @@
                       d:DataContext="{d:DesignInstance local:FlagSelectorViewModel}"
                       ShowTitleBar="False"
                       GlowBrush="{DynamicResource AccentColorBrush}"
-                      BorderThickness="1">
+                      BorderThickness="1"
+                      WindowStartupLocation="CenterOwner">
     <Grid Style="{StaticResource ParentPanelStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -75,7 +76,7 @@
                           Padding="4"
                           Header="create new">
 
-                    <editFlag:EditFlagUserControl />
+                    <editFlag:EditFlagUserControl x:Name="EditFlagUserControl"/>
                     
                 </GroupBox>
                 
@@ -92,7 +93,8 @@
                                 <Grid d:DataContext="{d:DesignInstance local:FlagViewModel}"
                                       x:Name="SelectedItemPanel"
                                       MouseLeftButtonUp="SelectedItemPanel_OnMouseLeftButtonUp">
-                                    <TextBlock Text="{Binding Source.Value}" />
+                                    <TextBlock Text="{Binding Source.Value}"
+                                               Style="{StaticResource ListViewItemSingleLineTextStyle}" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

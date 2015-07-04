@@ -17,17 +17,18 @@ namespace JryVideo.Main
         public MainViewModel()
         {
             this.VideosViewModel = new MainSeriesItemViewerViewModel();
-            this.ModeCollection = new ObservableCollection<DataModeViewModel>();
+            this.ModeCollection = new ObservableCollection<DataModeViewModel>()
+            {
+                new DataModeViewModel(JryVideoDataSourceProviderManagerMode.Public),
+                new DataModeViewModel(JryVideoDataSourceProviderManagerMode.Private)
+            };
+            this.selectedMode = this.ModeCollection[0];
         }
 
         public MainSeriesItemViewerViewModel VideosViewModel { get; private set; }
 
         public async Task LoadAsync()
         {
-            this.ModeCollection.Add(new DataModeViewModel(JryVideoDataSourceProviderManagerMode.Public));
-            this.ModeCollection.Add(new DataModeViewModel(JryVideoDataSourceProviderManagerMode.Private));
-            this.SelectedMode = this.ModeCollection[0];
-
             this.BeginUpdateDataSouce();
         }
 

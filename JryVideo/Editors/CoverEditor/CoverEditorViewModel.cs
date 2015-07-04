@@ -8,7 +8,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Editors.CoverEditor
 {
-    public class CoverEditorViewModel : EditorItemViewModel<JryCover>
+    public sealed class CoverEditorViewModel : EditorItemViewModel<JryCover>
     {
         private string doubanId;
         private string uri;

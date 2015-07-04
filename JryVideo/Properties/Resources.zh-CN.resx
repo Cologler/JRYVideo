@@ -117,25 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EditSeries_Error_Title" xml:space="preserve">
-    <value>发生错误</value>
+  <data name="EditSeries_InvalidInput_Title" xml:space="preserve">
+    <value>无效输入</value>
   </data>
-  <data name="Error_Object_TimeLessThanZero" xml:space="preserve">
-    <value>{0} 次数少于 0</value>
+  <data name="FlagSelectorWindow_Title_Format" xml:space="preserve">
+    <value>{0} 选择器</value>
   </data>
-  <data name="Error_Series_Names_Empty" xml:space="preserve">
-    <value>系列名不允许留空</value>
+  <data name="JryEntity_AudioSource" xml:space="preserve">
+    <value>音源</value>
   </data>
-  <data name="Name_Object_Counter" xml:space="preserve">
-    <value>计数器</value>
+  <data name="JryEntity_Extension" xml:space="preserve">
+    <value>扩展名</value>
   </data>
-  <data name="Name_Object_Entity" xml:space="preserve">
-    <value>实体</value>
+  <data name="JryEntity_Fansubs" xml:space="preserve">
+    <value>字幕组</value>
   </data>
-  <data name="Name_Object_Series" xml:space="preserve">
-    <value>系列</value>
+  <data name="JryEntity_FilmSource" xml:space="preserve">
+    <value>片源</value>
   </data>
-  <data name="Name_Object_Video" xml:space="preserve">
-    <value>影片</value>
+  <data name="JryEntity_Resolution" xml:space="preserve">
+    <value>扩展名</value>
+  </data>
+  <data name="JryFlagType_EntityAudioSource" xml:space="preserve">
+    <value>音源</value>
+  </data>
+  <data name="JryFlagType_EntityExtension" xml:space="preserve">
+    <value>扩展名</value>
+  </data>
+  <data name="JryFlagType_EntityFansub" xml:space="preserve">
+    <value>字幕组</value>
+  </data>
+  <data name="JryFlagType_EntityFilmSource" xml:space="preserve">
+    <value>片源</value>
+  </data>
+  <data name="JryFlagType_EntityResolution" xml:space="preserve">
+    <value>分辨率</value>
+  </data>
+  <data name="JryFlagType_EntitySubTitleLanguage" xml:space="preserve">
+    <value>字幕语言</value>
+  </data>
+  <data name="JryFlagType_EntityTrackLanguage" xml:space="preserve">
+    <value>音轨语音</value>
+  </data>
+  <data name="JryFlagType_VideoType" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="JryFlagType_VideoYear" xml:space="preserve">
+    <value>年代</value>
   </data>
 </root>

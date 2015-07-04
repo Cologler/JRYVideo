@@ -82,7 +82,7 @@
                           VerticalAlignment="Center"
                           Height="28"
                           ItemsSource="{Binding TypeCollection}"
-                          Text="{Binding SelectedVideoType, Mode=TwoWay}"
+                          Text="{Binding Type, Mode=TwoWay}"
                           IsEditable="True" />
 
                 <Button Grid.Column="3"
@@ -144,7 +144,9 @@
                 <Button Grid.Row="3"
                         Grid.Column="3"
                         Content="load"
-                        VerticalAlignment="Center" />
+                        VerticalAlignment="Center" 
+                        x:Name="LoadDoubanButton"
+                        Click="LoadDoubanButton_OnClick"/>
 
                 <TextBlock Grid.Row="4"
                            Text="imdb Id"

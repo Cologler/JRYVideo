@@ -44,57 +44,6 @@ namespace JryVideo.Core
             this.SecureDataCenter = new DataCenter(secure);
 
             this.Switch(JryVideoDataSourceProviderManagerMode.Public);
-
-            await this.TestForAllItem();
-        }
-
-        private async Task TestForAllItem()
-        {
-            var manager = this.CurrentDataCenter.SeriesManager;
-
-            var info = new Model.JryVideoInfo();
-            info.Type = "Movie";
-            info.DoubanId = "25851657";
-            info.Index = 1;
-            info.Year = 2005;
-            info.EpisodesCount = 1;
-
-            var series = new JrySeries();
-            series.Names.AddRange(new [] { "series123", "series456" });
-            series.Videos.Add(info);
-            
-            SeriesManager.BuildSeriesMetaData(series);
-
-            if (!await manager.InsertAsync(series) && Debugger.IsAttached)
-                Debugger.Break();
-
-            var entity1 = new JryEntity();
-            entity1.BuildMetaData();
-            entity1.Resolution = "720P";
-            entity1.Extension = "mp1";
-            entity1.Fansubs.Add("A");
-
-            var entity2 = new JryEntity();
-            entity2.BuildMetaData();
-            entity2.Resolution = "720P";
-            entity2.Extension = "mp2";
-            entity2.Fansubs.Add("A");
-            entity2.Fansubs.Add("B");
-
-            var entity3 = new JryEntity();
-            entity3.BuildMetaData();
-            entity3.Resolution = "1080P";
-            entity3.Extension = "mp3";
-            entity3.Fansubs.Add("A");
-            entity3.Fansubs.Add("C");
-
-            var video = await this.CurrentDataCenter.VideoManager.FindAsync(info.Id);
-            video.Entities.AddRange(new []
-            {
-                entity1, entity2, entity3
-            });
-
-            await this.CurrentDataCenter.VideoManager.UpdateAsync(video);
         }
 
         public DataCenter NormalDataCenter { get; private set; }

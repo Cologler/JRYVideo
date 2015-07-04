@@ -103,7 +103,10 @@ namespace JryVideo.Controls.EditVideo
 
         private void EditVideoTypeButton_OnClick(object sender, RoutedEventArgs e)
         {
-            new FlagManagerWindow().ShowDialog();
+            new FlagManagerWindow()
+            {
+                Owner = this.TryFindParent<Window>()
+            }.ShowDialog();
         }
 
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
@@ -125,6 +128,11 @@ namespace JryVideo.Controls.EditVideo
             {
                 
             }
+        }
+
+        private async void LoadDoubanButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.ViewModel.LoadDoubanAsync();
         }
     }
 }

@@ -1,0 +1,30 @@
+﻿<mah:MetroWindow x:Class="JryVideo.Editors.VideoEditor.VideoEditorWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:editVideo="clr-namespace:JryVideo.Controls.EditVideo"
+                 Title="SeriesEditorWindow"
+                 Height="500"
+                 Width="740"
+                 ResizeMode="NoResize"
+                 ShowTitleBar="False"
+                 GlowBrush="{StaticResource AccentColorBrush}"
+                 BorderThickness="1"
+                 WindowStartupLocation="CenterOwner">
+    <Grid Style="{StaticResource ParentPanelStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <TextBlock Style="{StaticResource CaptionStyle}"
+                       Text="video editor" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <editVideo:EditVideoUserControl x:Name="EditVideoUserControl" />
+        </Grid>
+
+    </Grid>
+</mah:MetroWindow>

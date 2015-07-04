@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Editable;
 using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public class JryFlag : JryObject
+    public class JryFlag : JryObject, IJasilyLoggerObject<JryFlag>
     {
         public JryFlagType Type { get; set; }
 
+        [EditableField]
         public string Value { get; set; }
 
         public int Count { get; set; }
@@ -26,24 +28,24 @@ namespace JryVideo.Model
         {
             if (base.InnerTestHasError()) return true;
 
-            if (this.Count < 1)
+            if (this.Count < 0)
             {
-                JasilyLogger.Current.WriteLine<JryFlag>(JasilyLogger.LoggerMode.Debug, "flag count can not less than 1.");
+                this.Log(JasilyLogger.LoggerMode.Debug, "flag count can not less than 0.");
                 return true;
             }
 
-            if (!IsValueValid(this.Value))
+            if (IsValueInvalid(this.Value))
             {
-                JasilyLogger.Current.WriteLine<JryFlag>(JasilyLogger.LoggerMode.Release, "flag value can not be empty.");
+                this.Log(JasilyLogger.LoggerMode.Release, "flag value can not be empty.");
                 return true;
             }
 
             return false;
         }
 
-        public static bool IsValueValid(string value)
+        public static bool IsValueInvalid(string value)
         {
-            return !value.IsNullOrWhiteSpace();
+            return value.IsNullOrWhiteSpace();
         }
     }
 }

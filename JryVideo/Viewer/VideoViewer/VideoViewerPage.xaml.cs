@@ -13,7 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using JryVideo.Common;
+using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
+using JryVideo.Editors.EntityEditor;
+using JryVideo.Editors.VideoEditor;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -62,6 +67,32 @@ namespace JryVideo.Viewer.VideoViewer
                     vm.BeginUpdateCover();
                 }
             }
+        }
+
+        private async void AddEntityMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var w = this.TryFindParent<MetroWindow>();
+
+            var dlg = new EntityEditorWindow(this.ViewModel.Video.Source)
+            {
+                Owner = w
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                await this.ViewModel.ReloadVideoAsync();
+            }
+        }
+
+        private void EditVideoButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dlg = new VideoEditorWindow(this.ViewModel.Info.SeriesView.Source, this.ViewModel.Info.Source)
+            {
+                Owner = this.TryFindParent<Window>()
+            };
+
+            dlg.ShowDialog();
+            this.ViewModel.Info.Reload();
         }
     }
 }

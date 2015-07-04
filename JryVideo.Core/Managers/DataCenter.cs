@@ -17,7 +17,11 @@ namespace JryVideo.Core.Managers
             this.SeriesManager.VideoInfoRemoved += this.VideoManager.SeriesManager_VideoInfoRemoved;
 
             this.SeriesManager.VideoInfoCreated += this.FlagManager.SeriesManager_VideoInfoCreated;
+            this.SeriesManager.VideoInfoUpdated += this.FlagManager.SeriesManager_VideoInfoUpdated;
             this.SeriesManager.VideoInfoRemoved += this.FlagManager.SeriesManager_VideoInfoRemoved;
+            this.VideoManager.EntitiesCreated += this.FlagManager.VideoManager_EntitiesCreated;
+            this.VideoManager.EntitiesUpdated += this.FlagManager.VideoManager_EntitiesUpdated;
+            this.VideoManager.EntitiesRemoved += this.FlagManager.VideoManager_EntitiesRemoved;
         }
 
         public IJryVideoDataEngine ProviderManager { get; private set; }
