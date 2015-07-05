@@ -30,8 +30,8 @@
         
         <StatusBar Grid.Row="2">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="memory" />
-                <Grid Width="90">
+                <TextBlock Text="memory usge" />
+                <Grid Width="86">
                     <TextBlock x:Name="MemoryTextBlock"
                                HorizontalAlignment="Right" />
                 </Grid>

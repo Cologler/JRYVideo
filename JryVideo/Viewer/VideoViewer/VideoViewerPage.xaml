@@ -38,7 +38,9 @@
                 </Button>
             </Grid>
             
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1"
+                  ToolTip="{Binding Info.SeriesView.DisplayFullName}"
+                  Background="#00000000">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
@@ -89,7 +91,8 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
@@ -98,19 +101,18 @@
                            Text="index"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
-                <TextBlock Text="{Binding Info.Index}"
+                <TextBlock Text="{Binding Info.YearWithIndex}"
                            Grid.Row="0"
                            Grid.Column="1"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Grid.Row="1"
-                           Text="video"
+                           Text="episodes"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
-                <TextBlock Text="{Binding Info.VideoName}"
-                           HorizontalAlignment="Center"
-                           Grid.Row="1"
+                <TextBlock Grid.Row="1"
                            Grid.Column="1"
+                           Text="{Binding Info.Source.EpisodesCount}"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Grid.Row="2"
@@ -128,6 +130,16 @@
                         HorizontalAlignment="Right"
                         Click="GotoDoubanButton_OnClick"
                         Visibility="{Binding Info.IsEnterDoubanButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <TextBlock Grid.Row="3"
+                           Text="video"
+                           Style="{StaticResource LabelTextBlockStyle}" />
+
+                <TextBlock Text="{Binding Info.VideoName}"
+                           HorizontalAlignment="Center"
+                           Grid.Row="3"
+                           Grid.Column="1"
+                           Style="{StaticResource LabelTextBlockStyle}" />
 
             </Grid>
             

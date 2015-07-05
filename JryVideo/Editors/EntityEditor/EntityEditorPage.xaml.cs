@@ -58,6 +58,15 @@ namespace JryVideo.Editors.EntityEditor
             }
         }
 
-        
+
+        private void CopyFlagMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var flag = ((FrameworkElement) sender).DataContext as string;
+
+            if (flag != null)
+            {
+                Clipboard.SetText(flag);
+            }
+        }
     }
 }

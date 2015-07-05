@@ -95,7 +95,7 @@ namespace JryVideo.Main
                 this.HasLast = false;
                 this.HasNext = false;
 
-                this.VideosView.View.CustomSort = new Comparer();
+                this.VideosView.View.CustomSort = new DayOfWeekComparer();
             }
             else
             {
@@ -110,14 +110,39 @@ namespace JryVideo.Main
                 this.HasLast = this.PageIndex > 0;
                 this.HasNext = sources.Length == this.PageSize;
 
-                this.VideosView.View.CustomSort = null;
+                this.VideosView.View.CustomSort = new DefaultComparer();
             }
 
             this.currentIsOnlyTracking = this.IsOnlyTracking;
             return sources.SelectMany(VideoInfoViewModel.Create).ToArray();
         }
 
-        private class Comparer : Comparer<VideoInfoViewModel>
+        private class DefaultComparer : Comparer<VideoInfoViewModel>
+        {
+            /// <summary>
+            /// 在派生类中重写时，对同一类型的两个对象执行比较并返回一个值，指示一个对象是小于、等于还是大于另一个对象。
+            /// </summary>
+            /// <returns>
+            /// 一个有符号整数，指示 <paramref name="x"/> 与 <paramref name="y"/> 的相对值，如下表所示。 值 含义 小于零 <paramref name="x"/> 小于 <paramref name="y"/>。 零 <paramref name="x"/> 等于 <paramref name="y"/>。 大于零 <paramref name="x"/> 大于 <paramref name="y"/>。
+            /// </returns>
+            /// <param name="x">要比较的第一个对象。</param><param name="y">要比较的第二个对象。</param><exception cref="T:System.ArgumentException">类型 <paramref name="T"/> 没有实现 <see cref="T:System.IComparable`1"/> 泛型接口或 <see cref="T:System.IComparable"/> 接口。</exception>
+            public override int Compare(VideoInfoViewModel x, VideoInfoViewModel y)
+            {
+                Debug.Assert(x != null, "x != null");
+                Debug.Assert(y != null, "y != null");
+
+                if (x.Source.IsTracking != y.Source.IsTracking)
+                {
+                    return x.Source.IsTracking ? -1 : 1;
+                }
+                else
+                {
+                    return y.Source.Created.CompareTo(x.Source.Created);
+                }
+            }
+        }
+
+        private class DayOfWeekComparer : Comparer<VideoInfoViewModel>
         {
             private DayOfWeek DayOfWeek = DateTime.Now.DayOfWeek;
 
@@ -133,27 +158,28 @@ namespace JryVideo.Main
                 Debug.Assert(x != null, "x != null");
                 Debug.Assert(y != null, "y != null");
 
-                if (x.Source.Id == y.Source.Id) return 0;
-
-                var v = this.Compare(x.Source.DayOfWeek, y.Source.DayOfWeek);
-
-                if (v != 0) return -v;
-
-                return -(-1);
+                if (x.Source.DayOfWeek != y.Source.DayOfWeek)
+                {
+                    return this.Compare(x.Source.DayOfWeek, y.Source.DayOfWeek);
+                }
+                else
+                {
+                    return y.Source.Created.CompareTo(x.Source.Created);
+                }
             }
 
             private int Compare(DayOfWeek? d1, DayOfWeek? d2)
             {
                 if (d1 == this.DayOfWeek) return -1;
-                if (d2 == this.DayOfWeek) return -1;
+                if (d2 == this.DayOfWeek) return 1;
 
                 if (d1 == null) return -1;
-                if (d2 == null) return -1;
+                if (d2 == null) return 1;
 
                 var sub1 = ((int) d1) - ((int) this.DayOfWeek);
                 var sub2 = ((int) d2) - ((int) this.DayOfWeek);
 
-                return sub1 * sub2 > 0 ? sub1 - sub2 : (sub1 < sub2 ? 1 : -1);
+                return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
             }
         }
 

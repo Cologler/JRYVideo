@@ -85,7 +85,7 @@ namespace JryVideo.Selectors.FlagSelector
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(
                 this.EditFlagUserControl_ViewModel_Created, sender, e))
             {
-                this.Items.Collection.Add(new FlagViewModel(e));
+                this.Items.Collection.Add(this.SelectedItems.AddAndReturn(new FlagViewModel(e)));
             }
         }
     }

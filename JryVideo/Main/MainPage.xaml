@@ -24,8 +24,7 @@
                         <TextBlock FontSize="18"
                                    Foreground="White"
                                    Text="{Binding Name}"
-                                   FontFamily="Microsoft YaHei UI"
-                                   Margin="4"
+                                   Margin="16,4"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"/>
                     </Grid>
@@ -215,7 +214,7 @@
                                                HorizontalAlignment="Center"
                                                TextWrapping="WrapWithOverflow" />
 
-                                    <TextBlock Text="{Binding Index}"
+                                    <TextBlock Text="{Binding YearWithIndex}"
                                                HorizontalAlignment="Center" />
 
                                     <TextBlock Text="{Binding VideoName}"

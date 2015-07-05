@@ -12,6 +12,7 @@ namespace JryVideo.Common
         private string displayNameInfo;
         private string displayNameOtherLines;
         private bool hasOtherLine;
+        private string displayFullName;
 
         public SeriesViewModel(JrySeries source)
             : base(source)
@@ -44,12 +45,21 @@ namespace JryVideo.Common
         }
 
         /// <summary>
-        /// like B\r\nC
+        /// like B\r\nC ( max count 3)
         /// </summary>
         public string DisplayNameOtherLines
         {
             get { return this.displayNameOtherLines; }
             private set { this.SetPropertyRef(ref this.displayNameOtherLines, value); }
+        }
+
+        /// <summary>
+        /// like A \r\n B \r\n C
+        /// </summary>
+        public string DisplayFullName
+        {
+            get { return this.displayFullName; }
+            private set { this.SetPropertyRef(ref this.displayFullName, value); }
         }
 
         /// <summary>
@@ -67,7 +77,8 @@ namespace JryVideo.Common
             this.DisplayNameInfo = String.Format("({0} videos) {1}", this.Source.Videos.Count, this.DisplayName);
             this.DisplayNameFirstLine = this.Source.Names[0];
             this.HasOtherLine = this.Source.Names.Count > 1;
-            this.DisplayNameOtherLines = this.HasOtherLine ? this.Source.Names.Skip(1).AsLines() : "";
+            this.DisplayNameOtherLines = this.HasOtherLine ? this.Source.Names.Skip(1).Take(3).AsLines() : "";
+            this.DisplayFullName = this.Source.Names.AsLines();
         }
     }
 }

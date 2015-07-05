@@ -11,7 +11,7 @@ namespace JryVideo.Common
 {
     public class VideoInfoViewModel : HasCoverViewModel<Model.JryVideoInfo>
     {
-        private string index;
+        private string yearWithIndex;
         private string videoName;
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
@@ -23,16 +23,15 @@ namespace JryVideo.Common
             : base(source)
         {
             this.SeriesView = new SeriesViewModel(series);
-
             this.Reload();
         }
 
         public SeriesViewModel SeriesView { get; private set; }
 
-        public string Index
+        public string YearWithIndex
         {
-            get { return this.index; }
-            set { this.SetPropertyRef(ref this.index, value); }
+            get { return this.yearWithIndex; }
+            set { this.SetPropertyRef(ref this.yearWithIndex, value); }
         }
 
         public string VideoName
@@ -44,7 +43,7 @@ namespace JryVideo.Common
         public string DayOfWeek
         {
             get { return this.dayOfWeek; }
-            private set { this.dayOfWeek = value; }
+            private set { this.SetPropertyRef(ref this.dayOfWeek, value); }
         }
 
         public string DoubanId
@@ -63,9 +62,24 @@ namespace JryVideo.Common
         {
             base.Reload();
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
-            this.Index = String.Format("({0}) {1}", this.Source.Year, this.Source.Index);
+            this.YearWithIndex = String.Format("({0}) {1}", this.Source.Year, this.Source.Index);
             this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
-            this.DayOfWeek = this.Source.DayOfWeek.HasValue ? this.Source.DayOfWeek.Value.ToString() : "Unknown";
+            if (this.Source.DayOfWeek.HasValue)
+            {
+                if (this.Source.DayOfWeek.Value == DateTime.Now.DayOfWeek)
+                {
+                    this.DayOfWeek = this.Source.DayOfWeek.Value.ToString() + " (today)";
+                }
+                else
+                {
+                    this.DayOfWeek = this.Source.DayOfWeek.Value.ToString();
+                }
+            }
+            else
+            {
+                this.DayOfWeek = "Unknown";
+            }
+
             this.IsEnterDoubanButtonEnable = !this.Source.DoubanId.IsNullOrWhiteSpace();
             this.DoubanId = this.Source.DoubanId;
         }

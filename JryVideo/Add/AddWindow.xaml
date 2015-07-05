@@ -10,7 +10,7 @@
                       Height="510"
                       Width="700"
                       ResizeMode="NoResize"
-                      WindowStartupLocation="CenterScreen"
+                      WindowStartupLocation="CenterOwner"
                       ShowTitleBar="False"
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       BorderThickness="1">

@@ -156,6 +156,12 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid Style="{StaticResource ItemGridStyle}">
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="copy"
+                                                  Click="CopyFlagMenuItem_OnClick" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
                                 <TextBlock Text="{Binding}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"
@@ -189,6 +195,12 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid Style="{StaticResource ItemGridStyle}">
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="copy"
+                                                  Click="CopyFlagMenuItem_OnClick" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
                                 <TextBlock Text="{Binding}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"
@@ -222,6 +234,12 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid Style="{StaticResource ItemGridStyle}">
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="copy"
+                                                  Click="CopyFlagMenuItem_OnClick" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
                                 <TextBlock Text="{Binding}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"
