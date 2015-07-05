@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 using JryVideo.Core.Douban;
@@ -9,7 +10,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class CoverManager : JryObjectManager<JryCover, ICoverDataSourceProvider>
+    public class CoverManager : JryObjectManager<JryCover, ICoverDataSourceProvider>, IJasilyLoggerObject<CoverManager>
     {
         private readonly object _syncRoot = new object();
         private readonly List<string> _writingDoubanId = new List<string>();
@@ -67,6 +68,7 @@ namespace JryVideo.Core.Managers
                     if (this._writingDoubanId.Contains(doubanId)) return null;
 
                     this._writingDoubanId.Add(doubanId);
+                    this.Log(JasilyLogger.LoggerMode.Debug, String.Format("added thread for cover. total [{0}].", this._writingDoubanId.Count));
                 }
 
                 var request = WebRequest.CreateHttp(url);
@@ -96,6 +98,7 @@ namespace JryVideo.Core.Managers
                     lock (this._syncRoot)
                     {
                         this._writingDoubanId.Remove(doubanId);
+                        this.Log(JasilyLogger.LoggerMode.Debug, String.Format("finish thread for cover. total [{0}].", this._writingDoubanId.Count));
                     }
 
                     return null;

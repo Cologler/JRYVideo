@@ -37,7 +37,7 @@ namespace JryVideo.Selectors.FlagSelector
             }
             else
             {
-                return obj.Source.Value.Contains(this.FilterText.Trim());
+                return obj.Source.Value.ToLower().Contains(this.FilterText.Trim().ToLower());
             }
         }
 

@@ -97,14 +97,19 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        public async override Task<IEnumerable<JrySeries>> LoadAsync()
-        {
-            return await this.Source.QueryAsync(0, Int32.MaxValue);
-        }
-
         public async Task<IEnumerable<JrySeries>> QueryAsync(string searchText)
         {
             return await this.Source.QueryByNameAsync(searchText, 0, Int32.MaxValue);
+        }
+
+        public async Task<IEnumerable<JrySeries>> QueryAsync(string searchText, int skip, int take)
+        {
+            return await this.Source.QueryByNameAsync(searchText, skip, take);
+        }
+
+        public async Task<IEnumerable<JrySeries>> ListTrackingAsync()
+        {
+            return await this.Source.ListTrackingAsync();
         }
 
         public static void BuildSeriesMetaData(JrySeries series)

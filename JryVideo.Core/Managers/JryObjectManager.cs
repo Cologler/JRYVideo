@@ -23,6 +23,11 @@ namespace JryVideo.Core.Managers
             return await this.Source.QueryAsync(0, Int32.MaxValue);
         }
 
+        public async virtual Task<IEnumerable<T>> LoadAsync(int skip, int take)
+        {
+            return await this.Source.QueryAsync(skip, take);
+        }
+
         public async virtual Task<T> FindAsync(string id)
         {
             return await this.Source.FindAsync(id);

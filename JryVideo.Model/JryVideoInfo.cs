@@ -29,6 +29,14 @@ namespace JryVideo.Model
         [EditableField]
         public string DoubanId { get; set; }
 
+        /// <summary>
+        /// 是否正在追剧
+        /// </summary>
+        [EditableField]
+        public bool IsTracking { get; set; }
+
+        public DayOfWeek? DayOfWeek { get; set; }
+
         [EditableField]
         public string ImdbId { get; set; }
 
@@ -86,7 +94,7 @@ namespace JryVideo.Model
 
         public static bool IsEpisodesCountValid(int episodesCount)
         {
-            return episodesCount > 0;
+            return episodesCount >= 0;
         }
     }
 }

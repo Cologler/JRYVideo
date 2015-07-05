@@ -45,7 +45,7 @@
                        <RowDefinition />
                    </Grid.RowDefinitions>
 
-                   <TextBox Text="{Binding FilterText}" />
+                   <TextBox Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                     <ListView Grid.Row="1"
                               ItemsSource="{Binding Items.View}"

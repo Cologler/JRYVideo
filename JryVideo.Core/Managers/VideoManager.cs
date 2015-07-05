@@ -174,13 +174,7 @@ namespace JryVideo.Core.Managers
                        (left.Fansubs.SequenceEqual(right.Fansubs) &&
                         left.SubTitleLanguages.SequenceEqual(right.SubTitleLanguages) &&
                         left.TrackLanguages.SequenceEqual(right.TrackLanguages) &&
-                        IsSame(left.Format, right.Format));
-            }
-
-            private static bool IsSame(JryFormat left, JryFormat right)
-            {
-                return ReferenceEquals(left, right) ||
-                       left != null && right != null && (left.Type == right.Type && left.Value == right.Value);
+                        left.Format.NormalEquals(right.Format));
             }
         }
 

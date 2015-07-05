@@ -36,5 +36,20 @@ namespace JryVideo.Data.MongoDb
                 }))
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<JrySeries>> ListTrackingAsync()
+        {
+            var builder = Builders<JrySeries>.Filter;
+
+            var filter = builder.Eq("Videos.IsTracking", true);
+
+            return await (await this.Collection.FindAsync(
+                filter,
+                options: new FindOptions<JrySeries, JrySeries>()
+                {
+                    Sort = this.BuildDefaultSort()
+                }))
+                .ToListAsync();
+        }
     }
 }

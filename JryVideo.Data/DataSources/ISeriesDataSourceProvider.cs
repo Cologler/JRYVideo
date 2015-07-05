@@ -7,5 +7,7 @@ namespace JryVideo.Data.DataSources
     public interface ISeriesDataSourceProvider : IDataSourceProvider<JrySeries>
     {
         Task<IEnumerable<JrySeries>> QueryByNameAsync(string searchText, int skip, int take);
+
+        Task<IEnumerable<JrySeries>> ListTrackingAsync();
     }
 }
