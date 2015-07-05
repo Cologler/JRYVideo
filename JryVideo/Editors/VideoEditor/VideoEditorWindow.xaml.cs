@@ -1,4 +1,5 @@
-﻿using JryVideo.Model;
+﻿using System.Windows;
+using JryVideo.Model;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Editors.VideoEditor
@@ -23,7 +24,10 @@ namespace JryVideo.Editors.VideoEditor
 
         void VideoInfo_Updated(object sender, JryVideoInfo e)
         {
-            this.DialogResult = true;
+            if (this.Dispatcher.CheckAccessOrBeginInvoke(this.VideoInfo_Updated, sender, e))
+            {
+                this.DialogResult = true;
+            }
         }
 
         

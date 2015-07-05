@@ -53,19 +53,23 @@ namespace JryVideo.Viewer.VideoViewer
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = this.ViewModel.Info;
-            
+
+            var dlg = new CoverEditorWindow();
             var cover = await vm.TryGetCoverAsync();
             if (cover != null)
             {
-                var dlg = new CoverEditorWindow();
                 dlg.ViewModel.ModifyMode(cover);
                 dlg.UpdateRadioButtonCheckedStatus();
+            }
+            else
+            {
+                dlg.ViewModel.CreateMode();
+            }
 
-                if (dlg.ShowDialog() == true)
-                {
-                    await dlg.ViewModel.CommitAsync();
-                    vm.BeginUpdateCover();
-                }
+            if (dlg.ShowDialog() == true)
+            {
+                await dlg.ViewModel.CommitAsync();
+                vm.BeginUpdateCover();
             }
         }
 
@@ -93,6 +97,41 @@ namespace JryVideo.Viewer.VideoViewer
 
             dlg.ShowDialog();
             this.ViewModel.Info.Reload();
+        }
+
+        private void CopyGuidButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement) sender).DataContext as EntityViewModel;
+
+            if (vm != null)
+            {
+                Clipboard.SetText(vm.Source.Id);
+            }
+        }
+
+        private void EditEntityButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement) sender).DataContext as EntityViewModel;
+
+            if (vm != null)
+            {
+                var w = this.TryFindParent<MetroWindow>();
+
+                var dlg = new EntityEditorWindow(this.ViewModel.Video.Source, vm.Source)
+                {
+                    Owner = w
+                };
+
+                if (dlg.ShowDialog() == true)
+                {
+                    vm.Reload();
+                }
+            }
+        }
+
+        private void GotoDoubanButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.Info.EnterDouban();
         }
     }
 }

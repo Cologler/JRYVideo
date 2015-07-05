@@ -69,7 +69,6 @@ namespace JryVideo.Common
                     {
                         return null;
                     }
-                    break;
 
                 case ObjectChangedAction.Modify:
                     if (await provider.UpdateAsync(obj))
@@ -81,10 +80,7 @@ namespace JryVideo.Common
                     {
                         return null;
                     }
-                    break;
 
-                case ObjectChangedAction.Replace:
-                case ObjectChangedAction.Delete:
                 default:
                     throw new ArgumentOutOfRangeException();
             }

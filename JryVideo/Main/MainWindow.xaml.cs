@@ -1,5 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Enums;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using JryVideo.Common;
@@ -36,6 +39,19 @@ namespace JryVideo.Main
                 this.MainPage.VideoSelected += this.MainPage_VideoSelected;
 
                 this.NavigateToMainPage();
+
+                this.BeginRefresh();
+            }
+        }
+
+        private async void BeginRefresh()
+        {
+            while (true)
+            {
+                var bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
+                this.MemoryTextBlock.Text = bs.ToString();
+                if (bs.OriginValue > 1024 * 1024 * 200) GC.Collect();
+                await Task.Delay(1000);
             }
         }
 

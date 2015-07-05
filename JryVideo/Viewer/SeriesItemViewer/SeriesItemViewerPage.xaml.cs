@@ -43,7 +43,7 @@ namespace JryVideo.Viewer.SeriesItemViewer
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 this.ViewModel = new SingleSeriesItemViewerViewModel(series);
-                this.ViewModel.LoadAsync();
+                this.ViewModel.RefreshAsync();
             }
         }
     }

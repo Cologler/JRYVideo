@@ -53,23 +53,68 @@
                        RenderOptions.EdgeMode="Aliased" />
             </Grid>
 
-            <StackPanel Grid.Row="2">
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="series"
+                           Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Text="{Binding Info.SeriesView.SeriesNameFirstLine}"
-                           HorizontalAlignment="Center"
-                           TextWrapping="WrapWithOverflow" />
+                           TextWrapping="WrapWithOverflow"
+                           Grid.Column="1"
+                           Style="{StaticResource LabelTextBlockStyle}" />
+
+                <TextBlock Grid.Row="1"
+                           Text="index"
+                           Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Text="{Binding Info.Index}"
-                           HorizontalAlignment="Center" />
+                           Grid.Row="1"
+                           Grid.Column="1"
+                           Style="{StaticResource LabelTextBlockStyle}" />
+
+                <TextBlock Grid.Row="2"
+                           Text="video"
+                           Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Text="{Binding Info.VideoName}"
-                           HorizontalAlignment="Center" />
+                           HorizontalAlignment="Center"
+                           Grid.Row="2"
+                           Grid.Column="1"
+                           Style="{StaticResource LabelTextBlockStyle}" />
 
-            </StackPanel>
+                <TextBlock Grid.Row="3"
+                           Text="douban id"
+                           Style="{StaticResource LabelTextBlockStyle}"/>
+
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{Binding Info.Source.DoubanId}"
+                           Style="{StaticResource LabelTextBlockStyle}" />
+                
+                <Button Content="douban"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Click="GotoDoubanButton_OnClick"
+                        Visibility="{Binding Info.IsEnterDoubanButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            </Grid>
             
             <Grid Grid.Row="3"
                   Margin="0,4,0,0">
                 <Button Content="edit"
+                        HorizontalAlignment="Right"
+                        Width="60"
                         x:Name="EditVideoButton"
                         Click="EditVideoButton_OnClick"></Button>
             </Grid>
@@ -91,6 +136,14 @@
             </Grid>
 
             <Grid Grid.Row="1">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock"
+                           x:Key="FieldLabelTextBlockStyle">
+                        <Setter Property="Foreground"
+                                Value="#A91BB6"/>
+                    </Style>
+                </Grid.Resources>
+                
                 <TabControl ItemsSource="{Binding EntitesView.View}">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
@@ -105,9 +158,10 @@
                                 <ListView ItemsSource="{Binding}">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid d:DataContext="{d:DesignInstance common:EntityViewModel}">
+                                            <Grid d:DataContext="{d:DesignInstance common:EntityViewModel}"
+                                                  Margin="4">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="40" />
+                                                    <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
@@ -141,14 +195,40 @@
                                                 </Grid>
 
                                                 <Grid Grid.Row="1"
-                                                      Margin="4"
+                                                      Margin="0,4,0,0"
                                                       Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="100" />
+                                                        <ColumnDefinition Width="80" />
+                                                        <ColumnDefinition Width="80"/>
                                                         <ColumnDefinition />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <Button Content="copy guid" />
+                                                    <StackPanel Grid.ColumnSpan="3"
+                                                                Orientation="Horizontal"
+                                                                Margin="0,0,0,4">
+                                                        
+                                                        <TextBlock Text="ID"
+                                                                   Style="{StaticResource FieldLabelTextBlockStyle}"
+                                                                   Margin="0,0,8,0"/>
+                                                        
+                                                        <TextBlock Text="{Binding Source.Id}" />
+                                                        
+                                                    </StackPanel>
+
+                                                    <Button Grid.Row="1"
+                                                            Content="edit"
+                                                            Click="EditEntityButton_OnClick"/>
+
+                                                    <Button Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            Content="copy guid"
+                                                            Padding="0,1"
+                                                            Click="CopyGuidButton_OnClick"
+                                                            Margin="4,0,0,0"/>
 
                                                 </Grid>
                                             </Grid>

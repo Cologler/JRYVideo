@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using JryVideo.Model;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Editors.EntityEditor
@@ -31,6 +32,15 @@ namespace JryVideo.Editors.EntityEditor
             : this()
         {
             this.Page = new EntityEditorPage(video);
+            this.Page.ViewModel.CreateMode();
+            this.TitleTextBlock.Text = "creator";
+        }
+
+        public EntityEditorWindow(Model.JryVideo video, JryEntity entity)
+            : this(video)
+        {
+            this.Page.ViewModel.ModifyMode(entity);
+            this.TitleTextBlock.Text = "editor";
         }
 
         /// <summary>

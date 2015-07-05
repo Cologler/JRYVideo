@@ -5,6 +5,8 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Height="700"
                       Width="1000"
+                      MinHeight="700"
+                      MinWidth="1000"
                       WindowStartupLocation="CenterScreen"
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       WindowTitleBrush="{DynamicResource AccentColorBrush}"
@@ -14,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid Margin="8">
@@ -24,5 +27,16 @@
         <Frame Grid.Row="1"
                x:Name="MainFrame"
                NavigationUIVisibility="Hidden" />
+        
+        <StatusBar Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="memory" />
+                <Grid Width="90">
+                    <TextBlock x:Name="MemoryTextBlock"
+                               HorizontalAlignment="Right" />
+                </Grid>
+            </StackPanel>
+        </StatusBar>
+        
     </Grid>
 </controls:MetroWindow>

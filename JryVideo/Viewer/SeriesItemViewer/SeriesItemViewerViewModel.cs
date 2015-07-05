@@ -24,6 +24,6 @@ namespace JryVideo.Viewer.SeriesItemViewer
             return true;
         }
 
-        public abstract Task LoadAsync();
+        public abstract Task RefreshAsync();
     }
 }

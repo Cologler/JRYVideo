@@ -49,7 +49,29 @@ namespace JryVideo.Main
 
         private async void BeginUpdateDataSouce()
         {
-            await this.VideosViewModel.LoadAsync();
+            await this.VideosViewModel.RefreshAsync();
+        }
+
+        public async Task LastPageAsync()
+        {
+            this.VideosViewModel.PageIndex--;
+            await this.VideosViewModel.RefreshAsync();
+        }
+
+        public async Task NextPageAsync()
+        {
+            this.VideosViewModel.PageIndex++;
+            await this.VideosViewModel.RefreshAsync();
+        }
+
+        public async Task SetOnlyTrackingAsync()
+        {
+            await this.VideosViewModel.RefreshAsync();
+        }
+
+        public async Task UnsetOnlyTrackingAsync()
+        {
+            await this.VideosViewModel.RefreshAsync();
         }
     }
 }

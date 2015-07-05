@@ -13,6 +13,11 @@ namespace JryVideo.Common
     {
         private string index;
         private string videoName;
+        private bool isTrackButtonEnable;
+        private bool isUntrackButtonEnable;
+        private string dayOfWeek;
+        private bool isEnterDoubanButtonEnable;
+        private string doubanId;
 
         public VideoInfoViewModel(JrySeries series, Model.JryVideoInfo source)
             : base(source)
@@ -36,11 +41,44 @@ namespace JryVideo.Common
             set { this.SetPropertyRef(ref this.videoName, value); }
         }
 
+        public string DayOfWeek
+        {
+            get { return this.dayOfWeek; }
+            private set { this.dayOfWeek = value; }
+        }
+
+        public string DoubanId
+        {
+            get { return this.doubanId; }
+            set { this.SetPropertyRef(ref this.doubanId, value); }
+        }
+
+        public bool IsEnterDoubanButtonEnable
+        {
+            get { return this.isEnterDoubanButtonEnable; }
+            private set { this.SetPropertyRef(ref this.isEnterDoubanButtonEnable, value); }
+        }
+
         public override void Reload()
         {
             base.Reload();
+            this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
             this.Index = String.Format("({0}) {1}", this.Source.Year, this.Source.Index);
             this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
+            this.DayOfWeek = this.Source.DayOfWeek.HasValue ? this.Source.DayOfWeek.Value.ToString() : "Unknown";
+            this.IsEnterDoubanButtonEnable = !this.Source.DoubanId.IsNullOrWhiteSpace();
+            this.DoubanId = this.Source.DoubanId;
+        }
+
+        public void EnterDouban()
+        {
+            var douban = this.Source.DoubanId;
+            if (!douban.IsNullOrWhiteSpace())
+            {
+                using (Process.Start("http://movie.douban.com/subject/" + douban))
+                {
+                }
+            }
         }
 
         protected override async Task<bool> TryAutoAddCoverAsync()
@@ -62,6 +100,50 @@ namespace JryVideo.Common
         public static IEnumerable<VideoInfoViewModel> Create(JrySeries series)
         {
             return series.Videos.Select(jryVideo => new VideoInfoViewModel(series, jryVideo));
+        }
+
+        public async Task<bool> TrackAsync()
+        {
+            this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;
+            var manager =
+                JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            this.Source.IsTracking = true;
+
+            if (await manager.UpdateAsync(this.Source))
+            {
+                this.IsUntrackButtonEnable = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> UntrackAsync()
+        {
+            this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;
+            var manager =
+                JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            this.Source.IsTracking = false;
+
+            if (await manager.UpdateAsync(this.Source))
+            {
+                this.IsTrackButtonEnable = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsTrackButtonEnable
+        {
+            get { return this.isTrackButtonEnable; }
+            set { this.SetPropertyRef(ref this.isTrackButtonEnable, value); }
+        }
+
+        public bool IsUntrackButtonEnable
+        {
+            get { return this.isUntrackButtonEnable; }
+            set { this.SetPropertyRef(ref this.isUntrackButtonEnable, value); }
         }
     }
 }

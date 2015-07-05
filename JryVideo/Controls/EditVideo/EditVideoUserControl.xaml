@@ -189,19 +189,55 @@
             
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="34" />
+                        <RowDefinition Height="34" />
+                    </Grid.RowDefinitions>
 
-                <TextBlock Style="{StaticResource TitleStyle}"
-                           Grid.ColumnSpan="4"
-                           Text="name (each line one name)" />
+                    <CheckBox IsChecked="{Binding IsTracking, Mode=TwoWay}"
+                              Grid.ColumnSpan="2">
+                        <TextBlock Text="is tracking"
+                                   Style="{StaticResource LabelTextBlockStyle}" />
+                    </CheckBox>
+                    
+                    <TextBlock Grid.Row="1"
+                               Style="{StaticResource TitleStyle}"
+                               Text="day of week"/>
+                    
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="1"
+                              Height="28"
+                              VerticalAlignment="Center" 
+                              ItemsSource="{Binding DayOfWeekCollection}"
+                              SelectedItem="{Binding DayOfWeek, Mode=TwoWay}"/>
 
-                <TextBox Grid.Row="1"
-                         Grid.ColumnSpan="4"
-                         Text="{Binding Names, Mode=TwoWay}"
-                         AcceptsReturn="True" />
+                </Grid>
+                
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Style="{StaticResource TitleStyle}"
+                               Grid.ColumnSpan="4"
+                               Text="name (each line one name)" />
+
+                    <TextBox Grid.Row="1"
+                             Grid.ColumnSpan="4"
+                             Text="{Binding Names, Mode=TwoWay}"
+                             AcceptsReturn="True" />
+                </Grid>
+                
             </Grid>
             
             <Grid Grid.Row="1"

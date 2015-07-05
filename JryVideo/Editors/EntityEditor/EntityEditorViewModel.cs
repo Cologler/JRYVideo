@@ -204,15 +204,17 @@ namespace JryVideo.Editors.EntityEditor
 
             this.WriteToObject(entity);
 
-            if (this.Action == ObjectChangedAction.Create)
-                entity.BuildMetaData();
-
             var provider = JryVideoCore.Current.CurrentDataCenter.VideoManager.GetEntityManager(this.Video);
 
-            if (provider.IsExists(entity))
+            if (this.Action == ObjectChangedAction.Create)
             {
-                await window.ShowMessageAsync("error", "had same entity.");
-                return null;
+                entity.BuildMetaData();
+
+                if (provider.IsExists(entity))
+                {
+                    await window.ShowMessageAsync("error", "had same entity.");
+                    return null;
+                }
             }
 
             return await base.CommitAsync(provider, entity);

@@ -23,7 +23,7 @@ namespace JryVideo.Viewer.SeriesItemViewer
             set { this.SetPropertyRef(ref this.source, value); }
         }
 
-        public async override Task LoadAsync()
+        public async override Task RefreshAsync()
         {
             var series = this.Source;
             Debug.Assert(series != null);

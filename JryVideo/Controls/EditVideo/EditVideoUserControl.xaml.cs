@@ -116,7 +116,6 @@ namespace JryVideo.Controls.EditVideo
             if (await this.ViewModel.CommitAsync(window) == null)
             {
                 await window.ShowMessageAsync("error", "commit failed.");
-                return;
             }
         }
 

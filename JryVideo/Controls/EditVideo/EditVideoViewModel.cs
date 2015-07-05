@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -29,6 +30,8 @@ namespace JryVideo.Controls.EditVideo
         private string doubanId;
         private string names;
         private string episodesCount;
+        private bool isTracking;
+        private NameValuePair<string, DayOfWeek?>? dayOfWeek;
 
         public EditVideoViewModel()
         {
@@ -36,6 +39,7 @@ namespace JryVideo.Controls.EditVideo
             this.YearCollection = new ObservableCollection<string>();
             this.IndexCollection = new ObservableCollection<string>();
             this.EpisodesCountCollection = new ObservableCollection<string>();
+            this.DayOfWeekCollection = new ObservableCollection<NameValuePair<string, DayOfWeek?>>();
         }
 
         public ImageViewModel ImageViewModel
@@ -51,6 +55,8 @@ namespace JryVideo.Controls.EditVideo
         public ObservableCollection<string> IndexCollection { get; private set; }
 
         public ObservableCollection<string> EpisodesCountCollection { get; private set; }
+
+        public ObservableCollection<NameValuePair<string, DayOfWeek?>> DayOfWeekCollection { get; private set; }
 
         public string Type
         {
@@ -74,6 +80,18 @@ namespace JryVideo.Controls.EditVideo
         {
             get { return this.imdbId; }
             set { this.SetPropertyRef(ref this.imdbId, value); }
+        }
+
+        public bool IsTracking
+        {
+            get { return this.isTracking; }
+            set { this.SetPropertyRef(ref this.isTracking, value); }
+        }
+
+        public NameValuePair<string, DayOfWeek?>? DayOfWeek
+        {
+            get { return this.dayOfWeek; }
+            set { this.SetPropertyRef(ref this.dayOfWeek, value); }
         }
 
         public JrySeries Parent { get; set; }
@@ -121,17 +139,15 @@ namespace JryVideo.Controls.EditVideo
         {
             base.WriteToObject(obj);
 
-            obj.Type = this.selectedType;
             obj.Year = Int32.Parse(this.Year);
             obj.Index = Int32.Parse(this.Index);
-            obj.DoubanId = this.DoubanId;
-            obj.ImdbId = this.ImdbId;
             obj.EpisodesCount = Int32.Parse(this.EpisodesCount);
             obj.Names.Clear();
             if (!this.Names.IsNullOrWhiteSpace())
             {
                 obj.Names.AddRange(this.Names.AsLines().Select(z => z.Trim()).Where(z => !z.IsNullOrWhiteSpace()).Distinct());
             }
+            obj.DayOfWeek = this.DayOfWeek == null ? null : this.DayOfWeek.Value.Value;
         }
 
         public override void ReadFromObject(JryVideoInfo obj)
@@ -142,6 +158,8 @@ namespace JryVideo.Controls.EditVideo
             this.Year = obj.Year.ToString();
             this.Names = obj.Names.AsLines();
             this.EpisodesCount = obj.EpisodesCount.ToString();
+
+            this.DayOfWeek = this.DayOfWeekCollection.First(z => z.Value == obj.DayOfWeek);
         }
 
         public void LoadDouban(DoubanMovie info)
@@ -173,11 +191,6 @@ namespace JryVideo.Controls.EditVideo
 
         public async Task LoadAsync()
         {
-            // type
-            var types = (await JryVideoCore.Current.CurrentDataCenter.FlagManager.LoadAsync(JryFlagType.VideoType)).ToArray();
-            this.TypeCollection.AddRange(types.Select(z => z.Value));
-            this.Type = this.TypeCollection.FirstOrDefault();
-
             // year
             this.YearCollection.AddRange(Enumerable.Range(DateTime.Now.Year - 7, 8).Select(z => z.ToString()));
 
@@ -185,7 +198,18 @@ namespace JryVideo.Controls.EditVideo
             this.IndexCollection.AddRange(Enumerable.Range(1, 8).Select(z => z.ToString()));
 
             // episodes count
-            this.EpisodesCountCollection.AddRange(new [] { 1, 8, 10, 12, 13, 24, 25 }.Select(z => z.ToString()));
+            this.EpisodesCountCollection.AddRange(new[] { 1, 8, 10, 12, 13, 24, 25 }.Select(z => z.ToString()));
+
+            // day of week
+            this.DayOfWeekCollection.Add(new NameValuePair<string, DayOfWeek?>("None", null));
+            this.DayOfWeekCollection.AddRange(
+                ((DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+                .Select(z => new NameValuePair<string, DayOfWeek?>(z.ToString(), z)));
+
+            // type
+            var types = (await JryVideoCore.Current.CurrentDataCenter.FlagManager.LoadAsync(JryFlagType.VideoType)).ToArray();
+            this.TypeCollection.AddRange(types.Select(z => z.Value));
+            this.Type = this.TypeCollection.FirstOrDefault();
 
             // initialize cover
             if (this.Source != null && this.Source.CoverId != null)
@@ -232,8 +256,9 @@ namespace JryVideo.Controls.EditVideo
             var obj = this.GetCommitObject();
 
             this.WriteToObject(obj);
-            
-            obj.BuildMetaData();
+
+            if (this.Action == ObjectChangedAction.Create)
+                obj.BuildMetaData();
 
             if (this.Cover != null)
             {

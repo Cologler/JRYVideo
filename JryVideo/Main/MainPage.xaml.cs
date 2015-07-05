@@ -59,18 +59,22 @@ namespace JryVideo.Main
             var vm = frameworkElement.DataContext as VideoInfoViewModel;
             if (vm == null) return;
 
+            var dlg = new CoverEditorWindow();
             var cover = await vm.TryGetCoverAsync();
             if (cover != null)
             {
-                var dlg = new CoverEditorWindow();
                 dlg.ViewModel.ModifyMode(cover);
                 dlg.UpdateRadioButtonCheckedStatus();
+            }
+            else
+            {
+                dlg.ViewModel.CreateMode();
+            }
 
-                if (dlg.ShowDialog() == true)
-                {
-                    await dlg.ViewModel.CommitAsync();
-                    vm.BeginUpdateCover();
-                }
+            if (dlg.ShowDialog() == true)
+            {
+                await dlg.ViewModel.CommitAsync();
+                vm.BeginUpdateCover();
             }
         }
 
@@ -91,7 +95,53 @@ namespace JryVideo.Main
         {
             if (e.Key == Key.Enter)
             {
-                await this.ViewModel.VideosViewModel.SearchAsync();
+                await this.ViewModel.VideosViewModel.RefreshAsync();
+            }
+        }
+
+        private async void LastPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.ViewModel.LastPageAsync();
+        }
+
+        private async void NextPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.ViewModel.NextPageAsync();
+        }
+
+        private async void IsOnlyTrackingCheckBox_OnChecked(object sender, RoutedEventArgs e)
+        {
+            await this.ViewModel.SetOnlyTrackingAsync();
+            this.VideosListView.GroupStyle.Add(this.Resources["TrackingGroupStyle"] as GroupStyle); 
+        }
+
+        private async void IsOnlyTrackingCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            await this.ViewModel.UnsetOnlyTrackingAsync();
+            this.VideosListView.GroupStyle.Clear();
+        }
+
+        private async void TrackMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            if (vm != null)
+            {
+                if (await vm.TrackAsync())
+                {
+                    this.ViewModel.VideosViewModel.VideosView.View.Refresh();
+                }
+            }
+        }
+
+        private async void UntrackMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            if (vm != null)
+            {
+                if (await vm.UntrackAsync())
+                {
+                    this.ViewModel.VideosViewModel.VideosView.View.Refresh();
+                }
             }
         }
     }

@@ -61,7 +61,7 @@ namespace JryVideo.Add
 
         private void NavigateToSeriesSelectorPage()
         {
-            this.Title.Text = "select series";
+            this.TitleTextBlock.Text = "select series";
             this.LastButton.Visibility = Visibility.Hidden;
 
             this.ContentFrame.Navigate(this.seriesSelectorPage);
@@ -69,7 +69,7 @@ namespace JryVideo.Add
 
         private void NavigateToSeriesItemViewerPage(SeriesViewModel series)
         {
-            this.Title.Text = "sure video was not exists";
+            this.TitleTextBlock.Text = "sure video was not exists";
             this.LastButton.Visibility = this.NextButton.Visibility = Visibility.Visible;
 
             if (this.seriesItemViewerPage == null || this.seriesItemViewerPage.ViewModel.Source != series.Source)
@@ -82,7 +82,7 @@ namespace JryVideo.Add
 
         private async Task NavigateToCreateVideoPage(SeriesViewModel series)
         {
-            this.Title.Text = "create video";
+            this.TitleTextBlock.Text = "create video";
             this.NextButton.Visibility = Visibility.Hidden;
 
             if (this.videoCreatorPage == null || this.videoCreatorPage.CreatorViewModel.Source != series.Source)

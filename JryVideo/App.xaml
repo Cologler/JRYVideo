@@ -21,10 +21,16 @@
                     <SolidColorBrush x:Key="AccentColorBrush3"
                                      Color="#D1C1E1" />
                     
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontFamily"
+                                Value="Microsoft YaHei UI Light" />
+                    </Style>
+                    
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
                     <Style x:Key="TitleStyle"
-                           TargetType="TextBlock">
+                           TargetType="TextBlock"
+                           BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="FontSize"
                                 Value="14" />
                         <Setter Property="Margin"
@@ -35,15 +41,24 @@
                                 Value="Left" />
                     </Style>
 
+                    <Style x:Key="LabelTextBlockStyle"
+                           TargetType="TextBlock"
+                           BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="FontSize"
+                                Value="14" />
+                        <Setter Property="Margin"
+                                Value="4,0" />
+                        <Setter Property="VerticalAlignment"
+                                Value="Center" />
+                    </Style>
+
                     <Style x:Key="CaptionStyle"
                            TargetType="TextBlock"
-                           >
+                           BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="FontSize"
                                 Value="20" />
                         <Setter Property="Height"
                                 Value="40" />
-                        <Setter Property="FontFamily"
-                                Value="Microsoft YaHei UI Light" />
                         <Setter Property="Margin"
                                 Value="4,0,0,0" />
                         <Setter Property="VerticalAlignment"

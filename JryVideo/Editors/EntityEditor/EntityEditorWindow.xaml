@@ -21,7 +21,8 @@
 
         <Grid>
             <TextBlock Style="{StaticResource CaptionStyle}"
-                       Text="creator" />
+                       Text="creator"
+                       x:Name="TitleTextBlock"/>
         </Grid>
 
         <Grid Grid.Row="1">

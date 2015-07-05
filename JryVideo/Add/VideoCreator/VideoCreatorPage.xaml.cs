@@ -1,5 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using JryVideo.Model;
+using MahApps.Metro.Controls;
 
 namespace JryVideo.Add.VideoCreator
 {
@@ -20,6 +22,15 @@ namespace JryVideo.Add.VideoCreator
         {
             this.DataContext = this.CreatorViewModel = new VideoCreatorViewModel(series);
             this.EditVideoUserControl.ViewModel.Parent = series;
+            this.EditVideoUserControl.ViewModel.Created += this.ViewModel_Created;
+        }
+
+        void ViewModel_Created(object sender, JryVideoInfo e)
+        {
+            if (this.Dispatcher.CheckAccessOrBeginInvoke(this.ViewModel_Created, sender, e))
+            {
+                this.TryFindParent<Window>().DialogResult = true;
+            }
         }
     }
 }
