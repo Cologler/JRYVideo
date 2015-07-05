@@ -115,7 +115,7 @@
                         </Setter.Value>
                     </Setter>
                     <Setter Property="Width"
-                            Value="280" />
+                            Value="340" />
                 </Style>
                 <Style TargetType="Button"
                        BasedOn="{StaticResource {x:Type Button}}">
@@ -127,6 +127,15 @@
                             Value="Top" />
                     <Setter Property="Margin"
                             Value="4,0,0,0" />
+                </Style>
+                <Style TargetType="Grid"
+                       x:Key="ItemGridStyle">
+                    <Setter Property="MinWidth"
+                            Value="40"/>
+                    <Setter Property="Background"
+                            Value="#C059CF" />
+                    <Setter Property="Margin"
+                            Value="2" />
                 </Style>
             </Grid.Resources>
 
@@ -146,11 +155,12 @@
                 <ListView ItemsSource="{Binding Fansubs}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid Style="{StaticResource ItemGridStyle}">
                                 <TextBlock Text="{Binding}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"
-                                           Margin="6" />
+                                           Margin="6"
+                                           Foreground="White" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -178,11 +188,12 @@
                 <ListView ItemsSource="{Binding SubTitleLanguages}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid MinWidth="40"
-                                  Height="20">
+                            <Grid Style="{StaticResource ItemGridStyle}">
                                 <TextBlock Text="{Binding}"
                                            VerticalAlignment="Center"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           Margin="6"
+                                           Foreground="White" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -210,11 +221,12 @@
                 <ListView ItemsSource="{Binding TrackLanguages}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid MinWidth="40"
-                                  Height="20">
+                            <Grid Style="{StaticResource ItemGridStyle}">
                                 <TextBlock Text="{Binding}"
                                            VerticalAlignment="Center"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           Margin="6"
+                                           Foreground="White"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
