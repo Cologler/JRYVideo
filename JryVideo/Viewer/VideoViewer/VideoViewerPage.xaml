@@ -13,11 +13,11 @@
 
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
-        <Grid>
+
+        <Grid MaxWidth="280">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -52,14 +52,12 @@
 
                 <TextBlock Grid.Column="0"
                            Text="{Binding Info.SeriesView.DisplayNameFirstLine}"
-                           TextWrapping="WrapWithOverflow"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0"
                            Visibility="{Binding Info.SeriesView.HasOtherLine, Converter={StaticResource BooleanToVisibilityConverter}}"
                            Text="{Binding Info.SeriesView.DisplayNameOtherLines}"
-                           TextWrapping="WrapWithOverflow"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <Button Content="edit"
