@@ -144,7 +144,6 @@
     <Compile Include="Add\AddWindow.xaml.cs">
       <DependentUpon>AddWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Selectors\SeriesSelector\SeriesViewModel.cs" />
     <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml.cs">
       <DependentUpon>SeriesItemViewerPage.xaml</DependentUpon>
     </Compile>

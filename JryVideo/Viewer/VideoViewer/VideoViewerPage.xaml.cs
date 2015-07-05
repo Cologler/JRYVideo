@@ -1,24 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
+using JryVideo.Editors.SeriesEditor;
 using JryVideo.Editors.VideoEditor;
 using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -132,6 +119,21 @@ namespace JryVideo.Viewer.VideoViewer
         private void GotoDoubanButton_OnClick(object sender, RoutedEventArgs e)
         {
             this.ViewModel.Info.EnterDouban();
+        }
+
+        private void EditSeriesButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var seriesViewModel = this.ViewModel.Info.SeriesView;
+
+            if (seriesViewModel != null)
+            {
+                var dlg = new SeriesEditorWindow(seriesViewModel.Source)
+                {
+                    Owner = this.TryFindParent<Window>()
+                };
+                dlg.ShowDialog();
+                seriesViewModel.Reload();
+            }
         }
     }
 }

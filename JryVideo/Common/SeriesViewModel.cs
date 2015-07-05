@@ -5,21 +5,69 @@ using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public class SeriesViewModel : JasilyViewModel<JrySeries>
+    public sealed class SeriesViewModel : JasilyViewModel<JrySeries>
     {
+        private string displayName;
+        private string displayNameFirstLine;
+        private string displayNameInfo;
+        private string displayNameOtherLines;
+        private bool hasOtherLine;
+
         public SeriesViewModel(JrySeries source)
             : base(source)
         {
+            this.Reload();
         }
 
-        public string SeriesNameFirstLine
+        /// <summary>
+        /// like A / B / C
+        /// </summary>
+        public string DisplayName
         {
-            get { return this.Source.Names[0]; }
+            get { return this.displayName; }
+            private set { this.SetPropertyRef(ref this.displayName, value); }
         }
 
-        public string SeriesName
+        /// <summary>
+        /// like A
+        /// </summary>
+        public string DisplayNameFirstLine
         {
-            get { return String.Join(" / ", this.Source.Names.First()); }
+            get { return this.displayNameFirstLine; }
+            private set { this.SetPropertyRef(ref this.displayNameFirstLine, value); }
+        }
+
+        public bool HasOtherLine
+        {
+            get { return this.hasOtherLine; }
+            private set { this.SetPropertyRef(ref this.hasOtherLine, value); }
+        }
+
+        /// <summary>
+        /// like B\r\nC
+        /// </summary>
+        public string DisplayNameOtherLines
+        {
+            get { return this.displayNameOtherLines; }
+            private set { this.SetPropertyRef(ref this.displayNameOtherLines, value); }
+        }
+
+        /// <summary>
+        /// like ({0} videos) this.DisplayName
+        /// </summary>
+        public string DisplayNameInfo
+        {
+            get { return this.displayNameInfo; }
+            private set { this.SetPropertyRef(ref this.displayNameInfo, value); }
+        }
+
+        public void Reload()
+        {
+            this.DisplayName = String.Join(" / ", this.Source.Names);
+            this.DisplayNameInfo = String.Format("({0} videos) {1}", this.Source.Videos.Count, this.DisplayName);
+            this.DisplayNameFirstLine = this.Source.Names[0];
+            this.HasOtherLine = this.Source.Names.Count > 1;
+            this.DisplayNameOtherLines = this.HasOtherLine ? this.Source.Names.Skip(1).AsLines() : "";
         }
     }
 }

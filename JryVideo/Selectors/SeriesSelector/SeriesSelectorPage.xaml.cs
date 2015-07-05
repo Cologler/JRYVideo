@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using JryVideo.Common;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
 using MahApps.Metro.Controls;

@@ -211,7 +211,7 @@
 
                                 <StackPanel Grid.Row="1">
 
-                                    <TextBlock Text="{Binding SeriesView.SeriesNameFirstLine}"
+                                    <TextBlock Text="{Binding SeriesView.DisplayNameFirstLine}"
                                                HorizontalAlignment="Center"
                                                TextWrapping="WrapWithOverflow" />
 

@@ -35,7 +35,10 @@ namespace JryVideo.Editors.SeriesEditor
 
         void ViewModel_Updated(object sender, JrySeries e)
         {
-            this.DialogResult = true;
+            if (this.Dispatcher.CheckAccessOrBeginInvoke(this.ViewModel_Updated, sender, e))
+            {
+                this.DialogResult = true;
+            }
         }
     }
 }

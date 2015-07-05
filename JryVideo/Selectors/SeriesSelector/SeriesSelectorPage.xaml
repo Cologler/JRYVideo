@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
       xmlns:local="clr-namespace:JryVideo.Selectors.SeriesSelector"
+      xmlns:common="clr-namespace:JryVideo.Common"
       mc:Ignorable="d"
       d:DesignHeight="400"
       d:DesignWidth="600">
@@ -16,16 +17,6 @@
             <ColumnDefinition Width="4" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
-        <Grid.Resources>
-            <Style x:Key="TitleStyle"
-                   TargetType="TextBlock">
-                <Setter Property="FontSize"
-                        Value="14" />
-                <Setter Property="Margin"
-                        Value="0,8,0,4" />
-            </Style>
-        </Grid.Resources>
 
         <GroupBox Margin="0"
                   Header="select exists series">
@@ -47,7 +38,7 @@
                           SelectedItem="{Binding Items.Selected, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid d:DataContext="{d:DesignInstance local:SeriesViewModel}">
+                            <Grid d:DataContext="{d:DesignInstance common:SeriesViewModel}">
                                 <Grid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="edit"
@@ -55,7 +46,7 @@
                                                   Click="MenuItem_OnClick"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
-                                <TextBlock Text="{Binding DisplayName}"
+                                <TextBlock Text="{Binding DisplayNameInfo}"
                                            Style="{StaticResource ListViewItemSingleLineTextStyle}" />
                             </Grid>
                         </DataTemplate>

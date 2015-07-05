@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Selectors.Common;
 
