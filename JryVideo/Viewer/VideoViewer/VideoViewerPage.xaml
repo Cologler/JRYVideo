@@ -194,9 +194,11 @@
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <Grid VerticalAlignment="Center">
+                                                <Grid VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
                                                         <RowDefinition />
@@ -206,26 +208,50 @@
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition />
                                                     </Grid.ColumnDefinitions>
+                                                    <Grid.Resources>
+                                                        <Style TargetType="TextBlock"
+                                                               BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                            <Setter Property="Foreground"
+                                                                    Value="White" />
+                                                            <Setter Property="Margin"
+                                                                    Value="4,3" />
+                                                        </Style>
+                                                    </Grid.Resources>
 
-                                                    <TextBlock Text="{Binding DisplayExtension}" />
+                                                    <Grid Background="#FF5F5F"
+                                                          Margin="0,0,4,0">
+                                                        <TextBlock Text="{Binding DisplayExtension}"/>
+                                                    </Grid>
 
-                                                    <TextBlock Grid.Column="1"
-                                                               Text="{Binding DisplayFansubs}" />
+                                                    <Grid Background="#4E4EFB"
+                                                          Margin="0,0,4,0"
+                                                          Grid.Column="1">
+                                                        <TextBlock Text="{Binding DisplayFansubs}" />
+                                                    </Grid>
 
-                                                    <TextBlock Grid.Column="2"
-                                                               Text="{Binding DisplaySubTitleLanguages}" />
+                                                    <Grid Background="#FF8F42"
+                                                          Margin="0,0,4,0"
+                                                          Grid.Column="2">
+                                                        <TextBlock Text="{Binding DisplaySubTitleLanguages}" />
+                                                    </Grid>
 
-                                                    <TextBlock Grid.Column="3"
-                                                               Text="{Binding DisplayTrackLanguages}" />
-
-                                                    <TextBlock Grid.Row="1"
-                                                               Grid.ColumnSpan="4"
-                                                               Text="{Binding DisplayFormat}" />
-
+                                                    <Grid Background="#08AE66"
+                                                          Margin="0,0,4,0"
+                                                          Grid.Column="3">
+                                                        <TextBlock Text="{Binding DisplayTrackLanguages}" />
+                                                    </Grid>
+                                                    
                                                 </Grid>
 
-                                                <Grid Grid.Row="1"
+                                                <Grid Margin="0,4,0,0"
+                                                      Grid.Row="1"
+                                                      HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding DisplayFormat}" />
+                                                </Grid>
+
+                                                <Grid Grid.Row="2"
                                                       Margin="0,4,0,0"
                                                       Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}">
                                                     <Grid.RowDefinitions>

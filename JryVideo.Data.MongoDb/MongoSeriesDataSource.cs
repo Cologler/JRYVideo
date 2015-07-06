@@ -23,8 +23,8 @@ namespace JryVideo.Data.MongoDb
             var builder = Builders<JrySeries>.Filter;
 
             var filter = builder.Or(
-                builder.Regex(z => z.Names, new BsonRegularExpression(new Regex(Regex.Escape(searchText)))),
-                builder.Regex("Videos.Names", new BsonRegularExpression(new Regex(Regex.Escape(searchText)))));
+                builder.Regex(z => z.Names, new BsonRegularExpression(new Regex(Regex.Escape(searchText), RegexOptions.IgnoreCase))),
+                builder.Regex("Videos.Names", new BsonRegularExpression(new Regex(Regex.Escape(searchText), RegexOptions.IgnoreCase))));
 
             return await (await this.Collection.FindAsync(
                 filter,
