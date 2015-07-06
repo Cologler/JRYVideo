@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
+using JryVideo.Core;
 
 namespace JryVideo.Common
 {
@@ -14,6 +16,19 @@ namespace JryVideo.Common
         {
             this.EntityViews = new JasilyCollectionView<EntityViewModel>();
             this.EntityViews.Collection.AddRange(source.Entities.Select(z => new EntityViewModel(z)));
+        }
+
+        public async Task<bool> RemoveAsync(EntityViewModel entity)
+        {
+            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager.GetEntityManager(this.Source);
+
+            if (await manager.RemoveAsync(entity.Source.Id))
+            {
+                this.EntityViews.Collection.Remove(entity);
+
+                return true;
+            }
+            return false;
         }
     }
 }

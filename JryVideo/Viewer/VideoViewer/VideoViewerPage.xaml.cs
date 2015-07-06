@@ -6,6 +6,7 @@ using JryVideo.Editors.EntityEditor;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Editors.VideoEditor;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -133,6 +134,20 @@ namespace JryVideo.Viewer.VideoViewer
                 };
                 dlg.ShowDialog();
                 seriesViewModel.Reload();
+            }
+        }
+
+        private async void DeleteEntityButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if ((await this.TryFindParent<MetroWindow>()
+                .ShowMessageAsync("warnning", "are you sure you want to delete it?", MessageDialogStyle.AffirmativeAndNegative))
+                == MessageDialogResult.Affirmative)
+            {
+                var entity = ((FrameworkElement) sender).DataContext as EntityViewModel;
+                if (entity != null)
+                {
+                    await this.ViewModel.Video.RemoveAsync(entity);
+                }
             }
         }
     }

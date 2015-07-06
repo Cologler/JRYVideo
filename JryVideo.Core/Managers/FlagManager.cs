@@ -106,18 +106,21 @@ namespace JryVideo.Core.Managers
         }
 
         private static Dictionary<JryFlagType, Dictionary<string, int>> CalcFlagDictionary(
-            Dictionary<JryFlagType, List<string>> add, Dictionary<JryFlagType, List<string>> sub = null)
+            Dictionary<JryFlagType, List<string>> add = null, Dictionary<JryFlagType, List<string>> sub = null)
         {
             var dic = ((JryFlagType[])Enum.GetValues(typeof(JryFlagType))).ToDictionary(z => z, z => new Dictionary<string, int>());
 
-            foreach (var selector in add)
+            if (add != null)
             {
-                foreach (var value in selector.Value)
+                foreach (var selector in add)
                 {
-                    if (dic[selector.Key].ContainsKey(value))
-                        dic[selector.Key][value]++;
-                    else
-                        dic[selector.Key].Add(value, 1);
+                    foreach (var value in selector.Value)
+                    {
+                        if (dic[selector.Key].ContainsKey(value))
+                            dic[selector.Key][value]++;
+                        else
+                            dic[selector.Key].Add(value, 1);
+                    }
                 }
             }
 
@@ -154,7 +157,7 @@ namespace JryVideo.Core.Managers
 
         public async void VideoManager_EntitiesRemoved(object sender, IEnumerable<JryEntity> e)
         {
-            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
+            var dict = CalcFlagDictionary(null, BuildFlagDictionary(e));
 
             await this.ApplyFlagDictionaryAsync(dict);
         }
