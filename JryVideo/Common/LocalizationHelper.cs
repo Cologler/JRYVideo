@@ -36,5 +36,33 @@ namespace JryVideo.Common
                     throw new ArgumentOutOfRangeException("flag", flag, null);
             }
         }
+
+        public static string GetLocalizeString(this DayOfWeek dayOfWeek)
+        {
+            switch (dayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    return Resources.DayOfWeek_Sunday;
+                case DayOfWeek.Monday:
+                    return Resources.DayOfWeek_Monday;
+                case DayOfWeek.Tuesday:
+                    return Resources.DayOfWeek_Tuesday;
+                case DayOfWeek.Wednesday:
+                    return Resources.DayOfWeek_Wednesday;
+                case DayOfWeek.Thursday:
+                    return Resources.DayOfWeek_Thursday;
+                case DayOfWeek.Friday:
+                    return Resources.DayOfWeek_Friday;
+                case DayOfWeek.Saturday:
+                    return Resources.DayOfWeek_Saturday;
+                default:
+                    throw new ArgumentOutOfRangeException("dayOfWeek", dayOfWeek, null);
+            }
+        }
+
+        public static string GetLocalizeString(this DayOfWeek? dayOfWeek)
+        {
+            return dayOfWeek.HasValue ? dayOfWeek.Value.GetLocalizeString() : Resources.DayOfWeek_Unknown;
+        }
     }
 }

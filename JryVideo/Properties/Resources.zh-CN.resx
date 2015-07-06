@@ -117,6 +117,33 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DayOfWeek_Friday" xml:space="preserve">
+    <value>周五</value>
+  </data>
+  <data name="DayOfWeek_Monday" xml:space="preserve">
+    <value>周一</value>
+  </data>
+  <data name="DayOfWeek_Saturday" xml:space="preserve">
+    <value>周六</value>
+  </data>
+  <data name="DayOfWeek_Sunday" xml:space="preserve">
+    <value>周日</value>
+  </data>
+  <data name="DayOfWeek_Thursday" xml:space="preserve">
+    <value>周四</value>
+  </data>
+  <data name="DayOfWeek_Today" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="DayOfWeek_Tuesday" xml:space="preserve">
+    <value>周二</value>
+  </data>
+  <data name="DayOfWeek_Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="DayOfWeek_Wednesday" xml:space="preserve">
+    <value>周三</value>
+  </data>
   <data name="EditSeries_InvalidInput_Title" xml:space="preserve">
     <value>无效输入</value>
   </data>

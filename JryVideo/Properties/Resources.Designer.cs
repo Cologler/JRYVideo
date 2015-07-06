@@ -61,6 +61,87 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
+        ///   查找类似 friday 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Friday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 monday 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Monday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Monday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 saturday 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Saturday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Saturday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 sunday 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Sunday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Sunday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 thursday 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Thursday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Thursday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 today 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Today {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Today", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 tuesday 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Tuesday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 unknown 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Unknown {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 wednesday 的本地化字符串。
+        /// </summary>
+        internal static string DayOfWeek_Wednesday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Wednesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 invalid input 的本地化字符串。
         /// </summary>
         internal static string EditSeries_InvalidInput_Title {

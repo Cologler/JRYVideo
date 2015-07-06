@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using JryVideo.Core;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
+using JryVideo.Properties;
 
 namespace JryVideo.Common
 {
@@ -64,21 +65,13 @@ namespace JryVideo.Common
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
             this.YearWithIndex = String.Format("({0}) {1}", this.Source.Year, this.Source.Index);
             this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
-            if (this.Source.DayOfWeek.HasValue)
-            {
-                if (this.Source.DayOfWeek.Value == DateTime.Now.DayOfWeek)
-                {
-                    this.DayOfWeek = this.Source.DayOfWeek.Value.ToString() + " (today)";
-                }
-                else
-                {
-                    this.DayOfWeek = this.Source.DayOfWeek.Value.ToString();
-                }
-            }
-            else
-            {
-                this.DayOfWeek = "Unknown";
-            }
+
+            this.DayOfWeek =
+                this.Source.DayOfWeek == DateTime.Now.DayOfWeek
+                ? String.Format("{0} ({1})",
+                    this.Source.DayOfWeek.GetLocalizeString(),
+                    Resources.DayOfWeek_Today)
+                : this.Source.DayOfWeek.GetLocalizeString();
 
             this.IsEnterDoubanButtonEnable = !this.Source.DoubanId.IsNullOrWhiteSpace();
             this.DoubanId = this.Source.DoubanId;

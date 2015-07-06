@@ -14,6 +14,7 @@ using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Model;
+using JryVideo.Properties;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -204,7 +205,7 @@ namespace JryVideo.Controls.EditVideo
             this.DayOfWeekCollection.Add(new NameValuePair<string, DayOfWeek?>("None", null));
             this.DayOfWeekCollection.AddRange(
                 ((DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
-                .Select(z => new NameValuePair<string, DayOfWeek?>(z.ToString(), z)));
+                .Select(z => new NameValuePair<string, DayOfWeek?>(z.GetLocalizeString(), z)));
 
             // type
             var types = (await JryVideoCore.Current.CurrentDataCenter.FlagManager.LoadAsync(JryFlagType.VideoType)).ToArray();
