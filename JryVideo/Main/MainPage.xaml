@@ -26,7 +26,7 @@
                                    Text="{Binding Name}"
                                    Margin="16,4"
                                    HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
+                                   VerticalAlignment="Center" />
                     </Grid>
                 </DataTemplate>
             </GroupStyle.HeaderTemplate>
@@ -38,15 +38,15 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
+
         <Grid Margin="0,0,6,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
+
             <Grid VerticalAlignment="Top"
                   Margin="0,8"
                   Width="120">
@@ -63,17 +63,18 @@
                     </ComboBox.ItemContainerStyle>
                 </ComboBox>
             </Grid>
-            
+
             <Grid Grid.Row="1">
                 <CheckBox IsChecked="{Binding VideosViewModel.IsOnlyTracking, Mode=TwoWay}"
                           x:Name="IsOnlyTrackingCheckBox"
                           Checked="IsOnlyTrackingCheckBox_OnChecked"
-                          Unchecked="IsOnlyTrackingCheckBox_OnUnchecked">
+                          Unchecked="IsOnlyTrackingCheckBox_OnUnchecked"
+                          Margin="8,0,0,0">
                     <TextBlock Text="tracking"
                                Style="{StaticResource LabelTextBlockStyle}" />
                 </CheckBox>
             </Grid>
-            
+
             <Grid Grid.Row="3"
                   Margin="0,4,0,0">
                 <Grid.ColumnDefinitions>
@@ -85,13 +86,13 @@
                 <Button Content="last"
                         x:Name="LastPageButton"
                         IsEnabled="{Binding VideosViewModel.HasLast}"
-                        Click="LastPageButton_OnClick"/>
+                        Click="LastPageButton_OnClick" />
 
                 <Button Grid.Column="2"
                         Content="next"
                         x:Name="NextPageButton"
                         IsEnabled="{Binding VideosViewModel.HasNext}"
-                        Click="NextPageButton_OnClick"/>
+                        Click="NextPageButton_OnClick" />
 
             </Grid>
         </Grid>
@@ -108,12 +109,12 @@
                     <MenuItem x:Name="AddMenuItem"
                               HorizontalAlignment="Left"
                               Header="add"
-                              Click="AddMenuItem_OnClick"/>
+                              Click="AddMenuItem_OnClick" />
                 </Menu>
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
-                    
+
                     <TextBlock Text="filter"
                                Style="{StaticResource LabelTextBlockStyle}" />
 
@@ -124,18 +125,18 @@
                              x:Name="FilterTextBox" />
 
                     <TextBlock Text="query"
-                               Style="{StaticResource LabelTextBlockStyle}"/>
+                               Style="{StaticResource LabelTextBlockStyle}" />
 
                     <TextBox Width="200"
                              Text="{Binding VideosViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              mah:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Center"
                              x:Name="SearchTextBox"
-                             KeyUp="SearchTextBox_OnKeyUp"/>
-                    
+                             KeyUp="SearchTextBox_OnKeyUp" />
+
                 </StackPanel>
-                
-                
+
+
             </Grid>
 
             <Grid Grid.Row="1">
@@ -153,7 +154,7 @@
                           BorderThickness="0"
                           ItemsSource="{Binding VideosViewModel.VideosView.View}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          SelectedItem="{Binding VideosViewModel.VideosView.Selected}" >
+                          SelectedItem="{Binding VideosViewModel.VideosView.Selected}">
 
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -185,7 +186,7 @@
                                     <ContextMenu>
                                         <MenuItem x:Name="EditCover"
                                                   Header="change cover"
-                                                  Click="EditCover_OnClick"/>
+                                                  Click="EditCover_OnClick" />
                                         <MenuItem x:Name="TrackMenuItem"
                                                   Visibility="{Binding IsTrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Header="track"
@@ -199,12 +200,38 @@
 
                                 <Grid Height="266"
                                       Width="200">
-                                    <Grid>
+                                    <Grid HorizontalAlignment="Center"
+                                          VerticalAlignment="Center">
                                         <Image Source="{Binding Cover.BinaryData}"
-                                               Height="266"
-                                               Width="200"
                                                RenderOptions.BitmapScalingMode="Fant"
                                                RenderOptions.EdgeMode="Aliased" />
+
+                                        <Grid Width="150"
+                                              Height="150"
+                                              VerticalAlignment="Top"
+                                              Visibility="{Binding IsToday, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                              HorizontalAlignment="Right">
+                                            <Grid.Clip>
+                                                <RectangleGeometry Rect="0,0,150,150" />
+                                            </Grid.Clip>
+                                            <Grid Background="DarkOrange"
+                                                  Width="150"
+                                                  VerticalAlignment="Top"
+                                                  RenderTransformOrigin="0.25,0.5">
+                                                <Grid.RenderTransform>
+                                                    <TransformGroup>
+                                                        <RotateTransform Angle="45" />
+                                                        <TranslateTransform X="50" />
+                                                    </TransformGroup>
+                                                </Grid.RenderTransform>
+                                                <TextBlock Foreground="White"
+                                                           HorizontalAlignment="Center"
+                                                           Margin="4"
+                                                           FontSize="12"
+                                                           Text="{Binding TodayEpisode}" />
+                                            </Grid>
+                                        </Grid>
+
                                     </Grid>
                                 </Grid>
 
@@ -214,11 +241,14 @@
                                                HorizontalAlignment="Center"
                                                TextWrapping="WrapWithOverflow" />
 
-                                    <TextBlock Text="{Binding YearWithIndex}"
-                                               HorizontalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding YearWithIndex}" />
 
-                                    <TextBlock Text="{Binding VideoName}"
-                                               HorizontalAlignment="Center" />
+                                        <TextBlock Text="{Binding VideoName}" />
+                                    </StackPanel>
+
+
 
                                 </StackPanel>
 
@@ -228,6 +258,6 @@
                 </ListView>
             </Grid>
         </Grid>
-        
+
     </Grid>
 </Page>

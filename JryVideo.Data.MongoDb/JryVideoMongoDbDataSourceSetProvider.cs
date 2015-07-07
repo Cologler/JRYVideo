@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using MongoDB.Driver;
@@ -37,7 +35,7 @@ namespace JryVideo.Data.MongoDb
             builder.Username = "conanvista";
             builder.Password = "LVpMQhAt31hli8Uiq2Ir";
 
-            this.Client = new MongoDB.Driver.MongoClient(builder.ToMongoUrl());
+            this.Client = new MongoClient(builder.ToMongoUrl());
             //var server = mongoClient.
 
             //try

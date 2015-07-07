@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using JryVideo.Common;
-using JryVideo.Model;
-using JryVideo.Selectors.FlagSelector;
 using JryVideo.Viewer.VideoViewer;
 using MahApps.Metro.Controls;
 

@@ -4,13 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Core;
-using JryVideo.Core.Managers;
 using JryVideo.Model;
 using JryVideo.Properties;
 
 namespace JryVideo.Common
 {
-    public class VideoInfoViewModel : HasCoverViewModel<Model.JryVideoInfo>
+    public class VideoInfoViewModel : HasCoverViewModel<JryVideoInfo>
     {
         private string yearWithIndex;
         private string videoName;
@@ -19,8 +18,10 @@ namespace JryVideo.Common
         private string dayOfWeek;
         private bool isEnterDoubanButtonEnable;
         private string doubanId;
+        private string todayEpisode;
+        private bool isToday;
 
-        public VideoInfoViewModel(JrySeries series, Model.JryVideoInfo source)
+        public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
             : base(source)
         {
             this.SeriesView = new SeriesViewModel(series);
@@ -53,6 +54,18 @@ namespace JryVideo.Common
             set { this.SetPropertyRef(ref this.doubanId, value); }
         }
 
+        public bool IsToday
+        {
+            get { return this.isToday; }
+            private set { this.SetPropertyRef(ref this.isToday, value); }
+        }
+
+        public string TodayEpisode
+        {
+            get { return this.todayEpisode; }
+            private set { this.SetPropertyRef(ref this.todayEpisode, value); }
+        }
+
         public bool IsEnterDoubanButtonEnable
         {
             get { return this.isEnterDoubanButtonEnable; }
@@ -66,12 +79,21 @@ namespace JryVideo.Common
             this.YearWithIndex = String.Format("({0}) {1}", this.Source.Year, this.Source.Index);
             this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
 
-            this.DayOfWeek =
-                this.Source.DayOfWeek == DateTime.Now.DayOfWeek
+            this.IsToday = this.Source.DayOfWeek == DateTime.Now.DayOfWeek;
+
+            this.DayOfWeek = this.IsToday
                 ? String.Format("{0} ({1})",
                     this.Source.DayOfWeek.GetLocalizeString(),
                     Resources.DayOfWeek_Today)
                 : this.Source.DayOfWeek.GetLocalizeString();
+
+            var episode = this.Source.GetTodayEpisode(DateTime.Now);
+
+            this.TodayEpisode = this.IsToday && episode <= this.Source.EpisodesCount
+                ? episode <= this.Source.EpisodesCount 
+                    ? String.Format("today play {0}", episode)
+                    : "done!"
+                : null;
 
             this.IsEnterDoubanButtonEnable = !this.Source.DoubanId.IsNullOrWhiteSpace();
             this.DoubanId = this.Source.DoubanId;

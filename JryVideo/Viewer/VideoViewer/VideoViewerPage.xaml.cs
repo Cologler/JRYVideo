@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
@@ -73,6 +74,7 @@ namespace JryVideo.Viewer.VideoViewer
             if (dlg.ShowDialog() == true)
             {
                 await this.ViewModel.ReloadVideoAsync();
+                this.ViewModel.EntitesView.View.Refresh();
             }
         }
 
@@ -122,21 +124,6 @@ namespace JryVideo.Viewer.VideoViewer
             this.ViewModel.Info.EnterDouban();
         }
 
-        private void EditSeriesButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var seriesViewModel = this.ViewModel.Info.SeriesView;
-
-            if (seriesViewModel != null)
-            {
-                var dlg = new SeriesEditorWindow(seriesViewModel.Source)
-                {
-                    Owner = this.TryFindParent<Window>()
-                };
-                dlg.ShowDialog();
-                seriesViewModel.Reload();
-            }
-        }
-
         private async void DeleteEntityButton_OnClick(object sender, RoutedEventArgs e)
         {
             if ((await this.TryFindParent<MetroWindow>()
@@ -148,6 +135,48 @@ namespace JryVideo.Viewer.VideoViewer
                 {
                     await this.ViewModel.Video.RemoveAsync(entity);
                 }
+            }
+        }
+
+        private void CopyStringMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+
+            if (menuItem != null &&
+                menuItem.ItemsSource != null &&
+                ReferenceEquals(menuItem, e.OriginalSource))
+            {
+                return;
+            }
+
+            var osItem = e.OriginalSource as MenuItem;
+
+            if (osItem != null)
+            {
+                var str = osItem.DataContext as string;
+
+                if (str == null)
+                    str = osItem.Header as string;
+
+                if (str != null)
+                {
+                    Clipboard.SetText(str);
+                }
+            }
+        }
+
+        private void EditSeriesMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var seriesViewModel = this.ViewModel.Info.SeriesView;
+
+            if (seriesViewModel != null)
+            {
+                var dlg = new SeriesEditorWindow(seriesViewModel.Source)
+                {
+                    Owner = this.TryFindParent<Window>()
+                };
+                dlg.ShowDialog();
+                seriesViewModel.Reload();
             }
         }
     }

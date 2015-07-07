@@ -1,13 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using JryVideo.Common;
+using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Viewer.SeriesItemViewer;
 
@@ -185,7 +184,7 @@ namespace JryVideo.Main
 
         private async Task<JrySeries[]> QuerySeriesAsync(int pageIndex, string searchText = null)
         {
-            var manager = Core.JryVideoCore.Current.CurrentDataCenter.SeriesManager;
+            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
 
             if (this.IsOnlyTracking)
                 return await Task.Run(async () => (await manager.ListTrackingAsync()).ToArray());

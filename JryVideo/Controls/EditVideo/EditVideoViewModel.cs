@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Enums;
 using System.Globalization;
 using System.Linq;
@@ -14,13 +12,12 @@ using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Model;
-using JryVideo.Properties;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Controls.EditVideo
 {
-    public class EditVideoViewModel : EditorItemViewModel<Model.JryVideoInfo>
+    public class EditVideoViewModel : EditorItemViewModel<JryVideoInfo>
     {
         private ImageViewModel imageViewModel;
         private string selectedType;
@@ -33,6 +30,7 @@ namespace JryVideo.Controls.EditVideo
         private string episodesCount;
         private bool isTracking;
         private NameValuePair<string, DayOfWeek?>? dayOfWeek;
+        private DateTime? startDate;
 
         public EditVideoViewModel()
         {
@@ -87,6 +85,12 @@ namespace JryVideo.Controls.EditVideo
         {
             get { return this.isTracking; }
             set { this.SetPropertyRef(ref this.isTracking, value); }
+        }
+
+        public DateTime? StartDate
+        {
+            get { return this.startDate; }
+            set { this.SetPropertyRef(ref this.startDate, value); }
         }
 
         public NameValuePair<string, DayOfWeek?>? DayOfWeek
@@ -223,7 +227,7 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
-        public async Task<Model.JryVideoInfo> CommitAsync(MetroWindow window)
+        public async Task<JryVideoInfo> CommitAsync(MetroWindow window)
         {
             var parent = this.Parent.ThrowIfNull("Parent");
 

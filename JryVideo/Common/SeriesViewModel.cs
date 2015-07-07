@@ -79,6 +79,7 @@ namespace JryVideo.Common
             this.HasOtherLine = this.Source.Names.Count > 1;
             this.DisplayNameOtherLines = this.HasOtherLine ? this.Source.Names.Skip(1).Take(3).AsLines() : "";
             this.DisplayFullName = this.Source.Names.AsLines();
+            this.NotifyPropertyChanged<SeriesViewModel>(z => z.Source.Names);
         }
     }
 }

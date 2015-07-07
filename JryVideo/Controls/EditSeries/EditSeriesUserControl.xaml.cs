@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Enums;
 using System.Windows;
 using System.Windows.Controls;
-using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 

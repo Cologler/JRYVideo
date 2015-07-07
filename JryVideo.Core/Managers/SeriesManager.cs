@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;

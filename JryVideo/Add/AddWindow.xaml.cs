@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using JryVideo.Add.VideoCreator;
 using JryVideo.Common;
-using JryVideo.Model;
 using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Viewer.SeriesItemViewer;
 using MahApps.Metro.Controls;

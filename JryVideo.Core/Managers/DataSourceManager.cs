@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using JryVideo.Data;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -59,13 +56,13 @@ namespace JryVideo.Core.Managers
 
         private static IEnumerable<Func<IJryVideoDataEngine>> GetLocalAllSourceSetProviders()
         {
-            var path = System.Environment.GetCommandLineArgs().First();
+            var path = Environment.GetCommandLineArgs().First();
 
-            var dir = System.IO.Path.GetDirectoryName(path);
+            var dir = Path.GetDirectoryName(path);
 
             if (dir == null) yield break;
 
-            var files = System.IO.Directory.GetFiles(dir, "JryVideo.Data.*.dll");
+            var files = Directory.GetFiles(dir, "JryVideo.Data.*.dll");
 
             var @interface = typeof(IJryVideoDataEngine);
 

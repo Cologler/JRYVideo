@@ -201,6 +201,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="34" />
                         <RowDefinition Height="34" />
+                        <RowDefinition Height="34" />
                     </Grid.RowDefinitions>
 
                     <CheckBox IsChecked="{Binding IsTracking, Mode=TwoWay}"
@@ -219,6 +220,16 @@
                               VerticalAlignment="Center" 
                               ItemsSource="{Binding DayOfWeekCollection}"
                               SelectedItem="{Binding DayOfWeek, Mode=TwoWay}"/>
+
+                    <TextBlock Grid.Row="2"
+                               Style="{StaticResource TitleStyle}"
+                               Text="day of week" />
+                    
+                    <DatePicker Grid.Row="2"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                FirstDayOfWeek="Sunday"
+                                SelectedDate="{Binding StartDate}"/>
 
                 </Grid>
                 

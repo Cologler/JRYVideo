@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using JryVideo.Model;
+﻿using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {

@@ -5,7 +5,7 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Height="700"
                       Width="1000"
-                      MinHeight="700"
+                      MinHeight="600"
                       MinWidth="1000"
                       WindowStartupLocation="CenterScreen"
                       BorderBrush="{DynamicResource AccentColorBrush}"

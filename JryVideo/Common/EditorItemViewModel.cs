@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.Editable;
 using System.Diagnostics;
 using System.Enums;
-using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Core.Managers;
 using JryVideo.Model;

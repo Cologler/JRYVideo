@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
 using JryVideo.Data;
-using JryVideo.Model;
 
 namespace JryVideo.Core
 {

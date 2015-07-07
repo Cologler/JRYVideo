@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using JryVideo.Add;
 using JryVideo.Common;
-using JryVideo.Core.Managers;
+using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
 using MahApps.Metro.Controls;
 
@@ -45,7 +35,7 @@ namespace JryVideo.Main
             
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                await JryVideo.Core.JryVideoCore.Current.InitializeAsync();
+                await JryVideoCore.Current.InitializeAsync();
                 this.DataContext = this.ViewModel = new MainViewModel();
                 await this.ViewModel.LoadAsync();
             }

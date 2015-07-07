@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Model;
 
 namespace JryVideo.Viewer.SeriesItemViewer

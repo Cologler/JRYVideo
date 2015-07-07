@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Editable;
 using System.Diagnostics;
-using System.Linq;
 
 namespace JryVideo.Model
 {
@@ -35,8 +34,6 @@ namespace JryVideo.Model
         [EditableField]
         public bool IsTracking { get; set; }
 
-        public DayOfWeek? DayOfWeek { get; set; }
-
         [EditableField]
         public string ImdbId { get; set; }
 
@@ -45,6 +42,25 @@ namespace JryVideo.Model
         public List<string> Tags { get; set; }
 
         public string CoverId { get; set; }
+
+        public DayOfWeek? DayOfWeek { get; set; }
+
+        /// <summary>
+        /// may not DayOfWeek
+        /// </summary>
+        [EditableField]
+        public DateTime? StartDate { get; set; }
+
+        public int GetTodayEpisode(DateTime dt)
+        {
+            if (this.DayOfWeek == null ||
+                this.StartDate == null ||
+                dt.DayOfWeek != this.DayOfWeek ||
+                dt < this.StartDate.Value)
+                return 0;
+
+            return Convert.ToInt32((dt - this.StartDate.Value).TotalDays / 7) + 1;
+        }
 
         protected override bool InnerTestHasError()
         {

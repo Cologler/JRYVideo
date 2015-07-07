@@ -41,30 +41,28 @@
             <Grid Grid.Row="1"
                   ToolTip="{Binding Info.SeriesView.DisplayFullName}"
                   Background="#00000000">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="edit"
+                                  x:Name="EditSeriesMenuItem"
+                                  Click="EditSeriesMenuItem_OnClick"/>
+                        <MenuItem Header="copy"
+                                  ItemsSource="{Binding Info.SeriesView.Source.Names}"
+                                  Click="CopyStringMenuItem_OnClick" />
+                    </ContextMenu>
+                </Grid.ContextMenu>
 
-                <TextBlock Grid.Column="0"
-                           Text="{Binding Info.SeriesView.DisplayNameFirstLine}"
+                <TextBlock Text="{Binding Info.SeriesView.DisplayNameFirstLine}"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Grid.Row="1"
-                           Grid.Column="0"
                            Visibility="{Binding Info.SeriesView.HasOtherLine, Converter={StaticResource BooleanToVisibilityConverter}}"
                            Text="{Binding Info.SeriesView.DisplayNameOtherLines}"
                            Style="{StaticResource LabelTextBlockStyle}" />
-
-                <Button Content="edit"
-                        HorizontalAlignment="Right"
-                        Width="60"
-                        Grid.Column="1"
-                        Click="EditSeriesButton_OnClick"></Button>
             </Grid>
 
             <Grid Grid.Row="2" Height="333"
@@ -222,24 +220,52 @@
 
                                                     <Grid Background="#FF5F5F"
                                                           Margin="0,0,4,0">
+                                                        <Grid.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="copy"
+                                                                          DataContext="{Binding Source.Extension}"
+                                                                          Click="CopyStringMenuItem_OnClick" />
+                                                            </ContextMenu>
+                                                        </Grid.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayExtension}"/>
                                                     </Grid>
 
                                                     <Grid Background="#4E4EFB"
                                                           Margin="0,0,4,0"
                                                           Grid.Column="1">
+                                                        <Grid.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="copy"
+                                                                          ItemsSource="{Binding Source.Fansubs}"
+                                                                          Click="CopyStringMenuItem_OnClick" />
+                                                            </ContextMenu>
+                                                        </Grid.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayFansubs}" />
                                                     </Grid>
 
                                                     <Grid Background="#FF8F42"
                                                           Margin="0,0,4,0"
                                                           Grid.Column="2">
+                                                        <Grid.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="copy"
+                                                                          ItemsSource="{Binding Source.SubTitleLanguages}"
+                                                                          Click="CopyStringMenuItem_OnClick" />
+                                                            </ContextMenu>
+                                                        </Grid.ContextMenu>
                                                         <TextBlock Text="{Binding DisplaySubTitleLanguages}" />
                                                     </Grid>
 
                                                     <Grid Background="#08AE66"
                                                           Margin="0,0,4,0"
                                                           Grid.Column="3">
+                                                        <Grid.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="copy"
+                                                                          ItemsSource="{Binding Source.TrackLanguages}"
+                                                                          Click="CopyStringMenuItem_OnClick" />
+                                                            </ContextMenu>
+                                                        </Grid.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayTrackLanguages}" />
                                                     </Grid>
                                                     

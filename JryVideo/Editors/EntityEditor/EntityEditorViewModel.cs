@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Common;
 using JryVideo.Core;
-using JryVideo.Core.Managers;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -169,10 +168,10 @@ namespace JryVideo.Editors.EntityEditor
         {
             base.WriteToObject(obj);
 
-            obj.Tags = this.Tags.Distinct().ToList();
-            obj.Fansubs = this.Fansubs.Distinct().ToList();
-            obj.SubTitleLanguages = this.SubTitleLanguages.Distinct().ToList();
-            obj.TrackLanguages = this.TrackLanguages.Distinct().ToList();
+            obj.Tags = this.Tags.Distinct().OrderBy(z => z).ToList();
+            obj.Fansubs = this.Fansubs.Distinct().OrderBy(z => z).ToList();
+            obj.SubTitleLanguages = this.SubTitleLanguages.Distinct().OrderBy(z => z).ToList();
+            obj.TrackLanguages = this.TrackLanguages.Distinct().OrderBy(z => z).ToList();
 
             if (!this.Format.IsNullOrWhiteSpace())
             {
