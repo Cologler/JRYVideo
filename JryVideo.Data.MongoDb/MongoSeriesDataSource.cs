@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
@@ -16,7 +17,22 @@ namespace JryVideo.Data.MongoDb
         {
         }
 
-        public async virtual Task<IEnumerable<JrySeries>> QueryByNameAsync(string searchText,
+        public async Task<IEnumerable<JrySeries>> QueryAsync(SearchElement search, int skip, int take)
+        {
+            switch (search.Type)
+            {
+                case SearchElement.ElementType.Text:
+                    return await this.QueryByNameAsync(search.Value, skip, take);
+
+                case SearchElement.ElementType.Id:
+                    return (await this.FindAsync(search.Value)).GetIEnumerable();
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private async Task<IEnumerable<JrySeries>> QueryByNameAsync(string searchText,
             int skip = 0, int take = Int32.MaxValue)
         {
             var builder = Builders<JrySeries>.Filter;

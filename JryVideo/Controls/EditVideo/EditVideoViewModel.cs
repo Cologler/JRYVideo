@@ -214,7 +214,8 @@ namespace JryVideo.Controls.EditVideo
             // type
             var types = (await JryVideoCore.Current.CurrentDataCenter.FlagManager.LoadAsync(JryFlagType.VideoType)).ToArray();
             this.TypeCollection.AddRange(types.Select(z => z.Value));
-            this.Type = this.TypeCollection.FirstOrDefault();
+            if (this.Type.IsNullOrWhiteSpace())
+                this.Type = this.TypeCollection.FirstOrDefault();
 
             // initialize cover
             if (this.Source != null && this.Source.CoverId != null)

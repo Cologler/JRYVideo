@@ -57,7 +57,7 @@ namespace JryVideo.Common
             this.DisplayFormat =
                 this.Source.Format == null
                 ? ""
-                : String.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);
+                : String.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value); 
         }
     }
 }

@@ -22,6 +22,7 @@ namespace JryVideo.Main
         private bool hasNext;
         private bool currentIsOnlyTracking;
         private bool isOnlyTracking;
+        private string filterId;
 
         public MainSeriesItemViewerViewModel()
         {
@@ -211,14 +212,11 @@ namespace JryVideo.Main
 
         protected override bool ItemFilter(VideoInfoViewModel obj)
         {
-            if (this.IsOnlyTracking)
-            {
-                return obj.Source.IsTracking;
-            }
             var text = this.FilterText;
             if (string.IsNullOrWhiteSpace(text)) return true;
             text = text.Trim();
-            return obj.Source.Names.Concat(obj.SeriesView.Source.Names).Any(z => z.Contains(text));
+            return obj.SeriesView.Source.Id == text ||
+                obj.Source.Names.Concat(obj.SeriesView.Source.Names).Any(z => z.Contains(text));
         }
 
         public async override Task RefreshAsync()

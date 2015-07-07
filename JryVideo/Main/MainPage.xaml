@@ -184,17 +184,16 @@
                                 </Grid.RowDefinitions>
                                 <Grid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem x:Name="EditCover"
-                                                  Header="change cover"
+                                        <MenuItem Header="change cover"
                                                   Click="EditCover_OnClick" />
-                                        <MenuItem x:Name="TrackMenuItem"
-                                                  Visibility="{Binding IsTrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        <MenuItem Visibility="{Binding IsTrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Header="track"
                                                   Click="TrackMenuItem_OnClick" />
-                                        <MenuItem x:Name="UntrackMenuItem"
-                                                  Visibility="{Binding IsUntrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        <MenuItem Visibility="{Binding IsUntrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Header="untrack"
                                                   Click="UntrackMenuItem_OnClick" />
+                                        <MenuItem Header="only show this series"
+                                                  Click="FilterSeries_OnClick" />
                                     </ContextMenu>
                                 </Grid.ContextMenu>
 
@@ -242,10 +241,25 @@
                                                TextWrapping="WrapWithOverflow" />
 
                                     <StackPanel Orientation="Horizontal"
-                                                HorizontalAlignment="Center">
-                                        <TextBlock Text="{Binding YearWithIndex}" />
+                                                HorizontalAlignment="Center"
+                                                MaxWidth="200">
+                                        <TextBlock Text="("
+                                                   Margin="2,0,0,0" />
 
-                                        <TextBlock Text="{Binding VideoName}" />
+                                        <TextBlock Text="{Binding Source.Year}" />
+
+                                        <TextBlock Text=")"
+                                                   Margin="0,0,2,0" />
+
+                                        <TextBlock Text="{Binding Source.Type}"
+                                                   Margin="2,0" />
+
+                                        <TextBlock Text="{Binding Source.Index}"
+                                                   Margin="2,0" />
+
+                                        <TextBlock Text="{Binding VideoName}"
+                                                   Margin="2,0"
+                                                   TextTrimming="CharacterEllipsis"/>
                                     </StackPanel>
 
 

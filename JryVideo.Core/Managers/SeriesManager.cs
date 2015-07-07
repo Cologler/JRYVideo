@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Data;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 
@@ -95,14 +96,10 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        public async Task<IEnumerable<JrySeries>> QueryAsync(string searchText)
-        {
-            return await this.Source.QueryByNameAsync(searchText, 0, Int32.MaxValue);
-        }
-
         public async Task<IEnumerable<JrySeries>> QueryAsync(string searchText, int skip, int take)
         {
-            return await this.Source.QueryByNameAsync(searchText, skip, take);
+            return await this.Source.QueryAsync(
+                ParseSearchText(searchText.ThrowIfNullOrEmpty("searchText")), skip, take);
         }
 
         public async Task<IEnumerable<JrySeries>> ListTrackingAsync()
@@ -184,6 +181,22 @@ namespace JryVideo.Core.Managers
                 this.Series.Videos.AddRange(items);
                 return await this.SeriesManager.UpdateAsync(this.Series);
             }
+        }
+
+        private static SearchElement ParseSearchText(string text)
+        {
+            var index = text.IndexOf(':');
+
+            if (index < 1 || index == text.Length - 1)
+                return new SearchElement(SearchElement.ElementType.Text, text);
+
+            switch (text.Substring(0, index).ToLower())
+            {
+                case "series-id":
+                    return new SearchElement(SearchElement.ElementType.Id, text.Substring(index + 1));
+            }
+
+            return new SearchElement(SearchElement.ElementType.Text, text);
         }
     }
 }

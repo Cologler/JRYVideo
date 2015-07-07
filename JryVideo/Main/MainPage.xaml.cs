@@ -137,5 +137,14 @@ namespace JryVideo.Main
                 }
             }
         }
+
+        private void FilterSeries_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            if (vm != null)
+            {
+                this.ViewModel.VideosViewModel.FilterText = vm.SeriesView.Source.Id;
+            }
+        }
     }
 }

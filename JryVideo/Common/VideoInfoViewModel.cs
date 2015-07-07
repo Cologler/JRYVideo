@@ -9,7 +9,7 @@ using JryVideo.Properties;
 
 namespace JryVideo.Common
 {
-    public class VideoInfoViewModel : HasCoverViewModel<JryVideoInfo>
+    public sealed class VideoInfoViewModel : HasCoverViewModel<JryVideoInfo>
     {
         private string yearWithIndex;
         private string videoName;
@@ -75,8 +75,10 @@ namespace JryVideo.Common
         public override void Reload()
         {
             base.Reload();
+
+            this.NotifyPropertyChanged<VideoInfoViewModel>(z => z.Source);
+
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
-            this.YearWithIndex = String.Format("({0}) {1}", this.Source.Year, this.Source.Index);
             this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
 
             this.IsToday = this.Source.DayOfWeek == DateTime.Now.DayOfWeek;
