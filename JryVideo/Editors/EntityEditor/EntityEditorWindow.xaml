@@ -3,7 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  Title="EntityEditorWindow"
-                 Height="500"
+                 Height="560"
                  Width="600"
                  ShowTitleBar="False"
                  ResizeMode="NoResize"

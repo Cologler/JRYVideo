@@ -193,7 +193,11 @@ namespace JryVideo.Core.Managers
             switch (text.Substring(0, index).ToLower())
             {
                 case "series-id":
-                    return new SearchElement(SearchElement.ElementType.Id, text.Substring(index + 1));
+                    return new SearchElement(SearchElement.ElementType.SeriesId, text.Substring(index + 1));
+                case "video-id":
+                    return new SearchElement(SearchElement.ElementType.VideoId, text.Substring(index + 1));
+                case "entity-id":
+                    return new SearchElement(SearchElement.ElementType.EntityId, text.Substring(index + 1));
             }
 
             return new SearchElement(SearchElement.ElementType.Text, text);

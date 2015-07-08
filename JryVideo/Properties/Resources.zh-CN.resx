@@ -183,6 +183,9 @@
   <data name="JryFlagType_EntitySubTitleLanguage" xml:space="preserve">
     <value>字幕语言</value>
   </data>
+  <data name="JryFlagType_EntityTag" xml:space="preserve">
+    <value>标签</value>
+  </data>
   <data name="JryFlagType_EntityTrackLanguage" xml:space="preserve">
     <value>音轨语音</value>
   </data>

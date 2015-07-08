@@ -223,7 +223,7 @@
 
                     <TextBlock Grid.Row="2"
                                Style="{StaticResource TitleStyle}"
-                               Text="day of week" />
+                               Text="start date" />
                     
                     <DatePicker Grid.Row="2"
                                 Grid.Column="1"

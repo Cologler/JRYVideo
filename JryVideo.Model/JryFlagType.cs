@@ -19,5 +19,7 @@
         EntityTrackLanguage = 26,
 
         EntityAudioSource = 27,
+
+        EntityTag = 28,
     }
 }

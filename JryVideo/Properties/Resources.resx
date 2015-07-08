@@ -183,6 +183,9 @@
   <data name="JryFlagType_EntitySubTitleLanguage" xml:space="preserve">
     <value>subtitle language</value>
   </data>
+  <data name="JryFlagType_EntityTag" xml:space="preserve">
+    <value>tag</value>
+  </data>
   <data name="JryFlagType_EntityTrackLanguage" xml:space="preserve">
     <value>track language</value>
   </data>

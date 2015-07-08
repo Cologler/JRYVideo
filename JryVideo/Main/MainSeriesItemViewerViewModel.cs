@@ -213,10 +213,17 @@ namespace JryVideo.Main
         protected override bool ItemFilter(VideoInfoViewModel obj)
         {
             var text = this.FilterText;
-            if (string.IsNullOrWhiteSpace(text)) return true;
+
+            if (string.IsNullOrWhiteSpace(text))
+                return !this.IsOnlyTracking || obj.Source.IsTracking;
+
             text = text.Trim();
-            return obj.SeriesView.Source.Id == text ||
-                obj.Source.Names.Concat(obj.SeriesView.Source.Names).Any(z => z.Contains(text));
+
+            return (!this.IsOnlyTracking || obj.Source.IsTracking) &&
+                   (obj.SeriesView.Source.Id == text ||
+                    obj.Source.Id == text ||
+                    obj.Source.Names.Concat(obj.SeriesView.Source.Names)
+                        .Any(z => z.Contains(text)));
         }
 
         public async override Task RefreshAsync()

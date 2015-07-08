@@ -28,6 +28,8 @@ namespace JryVideo.Common
                     return Resources.JryFlagType_EntityTrackLanguage;
                 case JryFlagType.EntityAudioSource:
                     return Resources.JryFlagType_EntityAudioSource;
+                case JryFlagType.EntityTag:
+                    return Resources.JryFlagType_EntityTag;
                 default:
                     throw new ArgumentOutOfRangeException("flag", flag, null);
             }

@@ -19,27 +19,40 @@ namespace JryVideo.Data.MongoDb
 
         public async Task<IEnumerable<JrySeries>> QueryAsync(SearchElement search, int skip, int take)
         {
+            var builder = Builders<JrySeries>.Filter;
+            FilterDefinition<JrySeries> filter;
+
             switch (search.Type)
             {
                 case SearchElement.ElementType.Text:
-                    return await this.QueryByNameAsync(search.Value, skip, take);
+                    filter = builder.Or(
+                        builder.Regex(z => z.Names, new BsonRegularExpression(new Regex(Regex.Escape(search.Value), RegexOptions.IgnoreCase))),
+                        builder.Regex("Videos.Names", new BsonRegularExpression(new Regex(Regex.Escape(search.Value), RegexOptions.IgnoreCase))));
+                    break;
 
-                case SearchElement.ElementType.Id:
+                case SearchElement.ElementType.SeriesId:
                     return (await this.FindAsync(search.Value)).GetIEnumerable();
+
+                case SearchElement.ElementType.VideoId:
+                    filter = builder.Eq("Videos.Id", search.Value);
+                    break;
+
+                case SearchElement.ElementType.EntityId:
+                    var it = await this.Engine.VideoCollection.FindAsync(Builders<Model.JryVideo>.Filter.Eq("Entities.Id", search.Value));
+                    var en = (await it.ToListAsync()).FirstOrDefault();
+                    if (en == null)
+                    {
+                        return Enumerable.Empty<JrySeries>();
+                    }
+                    else
+                    {
+                        filter = builder.Eq("Videos.Id", en.Id);
+                    }
+                    break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private async Task<IEnumerable<JrySeries>> QueryByNameAsync(string searchText,
-            int skip = 0, int take = Int32.MaxValue)
-        {
-            var builder = Builders<JrySeries>.Filter;
-
-            var filter = builder.Or(
-                builder.Regex(z => z.Names, new BsonRegularExpression(new Regex(Regex.Escape(searchText), RegexOptions.IgnoreCase))),
-                builder.Regex("Videos.Names", new BsonRegularExpression(new Regex(Regex.Escape(searchText), RegexOptions.IgnoreCase))));
 
             return await (await this.Collection.FindAsync(
                 filter,

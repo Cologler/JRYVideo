@@ -42,6 +42,11 @@ namespace JryVideo.Editors.EntityEditor
             this.SelectFlag(JryFlagType.EntityTrackLanguage);
         }
 
+        private void SelectTagButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.SelectFlag(JryFlagType.EntityTag);
+        }
+
         private void SelectFlag(JryFlagType type)
         {
             var flags = this.ViewModel[type];
@@ -68,5 +73,7 @@ namespace JryVideo.Editors.EntityEditor
                 Clipboard.SetText(flag);
             }
         }
+
+        
     }
 }

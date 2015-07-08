@@ -3,8 +3,6 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:main="clr-namespace:JryVideo.Main"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      Height="700"
-                      Width="1000"
                       MinHeight="600"
                       MinWidth="1000"
                       WindowStartupLocation="CenterScreen"
@@ -20,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <Grid Margin="8">
-            <TextBlock Text="main windows"
+            <TextBlock Text="JRY VIDEO"
                        Style="{StaticResource CaptionStyle}" />
         </Grid>
 

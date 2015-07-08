@@ -197,15 +197,12 @@
 
                                                 <Grid VerticalAlignment="Center"
                                                       HorizontalAlignment="Left">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition />
                                                     </Grid.ColumnDefinitions>
                                                     <Grid.Resources>
@@ -268,7 +265,20 @@
                                                         </Grid.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayTrackLanguages}" />
                                                     </Grid>
-                                                    
+
+                                                    <Grid Background="#C90000"
+                                                          Margin="0,0,4,0"
+                                                          Grid.Column="4">
+                                                        <Grid.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="copy"
+                                                                          ItemsSource="{Binding Source.Tags}"
+                                                                          Click="CopyStringMenuItem_OnClick" />
+                                                            </ContextMenu>
+                                                        </Grid.ContextMenu>
+                                                        <TextBlock Text="{Binding DisplayTags}" />
+                                                    </Grid>
+
                                                 </Grid>
 
                                                 <Grid Margin="0,4,0,0"

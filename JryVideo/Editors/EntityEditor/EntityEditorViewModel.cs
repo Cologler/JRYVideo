@@ -55,6 +55,9 @@ namespace JryVideo.Editors.EntityEditor
                     case JryFlagType.EntityTrackLanguage:
                         return this.TrackLanguages;
 
+                    case JryFlagType.EntityTag:
+                        return this.Tags;
+
                     default:
                         throw new ArgumentOutOfRangeException("flagType", flagType, null);
                 }

@@ -36,30 +36,6 @@ namespace JryVideo.Data.MongoDb
             builder.Password = "LVpMQhAt31hli8Uiq2Ir";
 
             this.Client = new MongoClient(builder.ToMongoUrl());
-            //var server = mongoClient.
-
-            //try
-            //{
-            //    server.Connect(TimeSpan.FromSeconds(1));
-            //}
-            //catch (MongoConnectionException)
-            //{
-            //    return null;
-            //}
-
-            //if (!server.DatabaseExists("Video5Db"))
-            //    throw new NullReferenceException();
-
-            //var db = server.GetDatabase("Video5Db");
-
-            //if (!db.CollectionExists(Video5Series.CollectionName))
-            //    db.CreateCollection(Video5Series.CollectionName);
-            //if (!db.CollectionExists(Video5Tag.CollectionName))
-            //    db.CreateCollection(Video5Tag.CollectionName);
-            //if (!db.CollectionExists(Video5Cover.CollectionName))
-            //    db.CreateCollection(Video5Cover.CollectionName);
-
-            //return db;
 
             this.Database = this.Client.GetDatabase("JryVideo_" + mode.ToString());
 
@@ -71,9 +47,14 @@ namespace JryVideo.Data.MongoDb
             return new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
         }
 
+        internal IMongoCollection<Model.JryVideo> VideoCollection
+        {
+            get { return this.Database.GetCollection<Model.JryVideo>("Video"); }
+        }
+
         public IDataSourceProvider<Model.JryVideo> GetVideoDataSourceProvider()
         {
-            return new MongoVideoDataSource(this, this.Database.GetCollection<Model.JryVideo>("Video"));
+            return new MongoVideoDataSource(this, this.VideoCollection);
         }
 
         public IFlagDataSourceProvider GetCounterDataSourceProvider()

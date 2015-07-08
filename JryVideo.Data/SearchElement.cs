@@ -26,7 +26,9 @@ namespace JryVideo.Data
         public enum ElementType
         {
             Text,
-            Id
+            SeriesId,
+            VideoId,
+            EntityId
         }
     }
 }

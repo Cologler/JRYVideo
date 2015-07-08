@@ -97,6 +97,7 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.Resources>
                 <Style TargetType="ListView"
@@ -253,6 +254,44 @@
                 <Button Content="select"
                         x:Name="SelectTrackLanguageButton"
                         Click="SelectTrackLanguageButton_OnClick" />
+
+            </Grid>
+
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="tags"
+                           Style="{StaticResource TitleStyle}" />
+
+                <ListView ItemsSource="{Binding Tags}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Style="{StaticResource ItemGridStyle}">
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="copy"
+                                                  Click="CopyFlagMenuItem_OnClick" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                <TextBlock Text="{Binding}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="6"
+                                           Foreground="White" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Button Content="select"
+                        Click="SelectTagButton_OnClick" />
 
             </Grid>
         </Grid>
