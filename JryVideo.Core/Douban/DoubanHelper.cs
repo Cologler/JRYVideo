@@ -99,11 +99,11 @@ namespace JryVideo.Core.Douban
 
         public static IEnumerable<string> ParseName(DoubanMovie json)
         {
-            if (!String.IsNullOrWhiteSpace(json.OriginalTitle))
-                yield return json.OriginalTitle;
-
             if (!String.IsNullOrWhiteSpace(json.Title))
                 yield return json.Title;
+
+            if (!String.IsNullOrWhiteSpace(json.OriginalTitle))
+                yield return json.OriginalTitle;
 
             if (json.OtherNames != null)
             {
