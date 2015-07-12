@@ -10,7 +10,7 @@ using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoSeriesDataSource : MongoItemDataSource<JrySeries>, ISeriesDataSourceProvider
+    public class MongoSeriesDataSource : MongoJryEntitySet<JrySeries>, ISeriesSet
     {
         public MongoSeriesDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<JrySeries> collection)
             : base(engine, collection)

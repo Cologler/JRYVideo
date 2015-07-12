@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Attributes;
+using System.Data;
 using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public abstract class JryObject : IPrint
+    public abstract class JryObject : IJasilyEntity<string>
     {
         [Cloneable]
         public string Id { get; set; }

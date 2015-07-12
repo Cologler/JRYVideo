@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Data;
@@ -8,7 +9,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class SeriesManager : JryObjectManager<JrySeries, ISeriesDataSourceProvider>
+    public class SeriesManager : JryObjectManager<JrySeries, ISeriesSet>
     {
         public event EventHandler<JrySeries> SeriesCreated;
         public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoCreated;
@@ -17,7 +18,7 @@ namespace JryVideo.Core.Managers
 
         public DataCenter DataCenter { get; private set; }
 
-        public SeriesManager(DataCenter dataCenter, ISeriesDataSourceProvider source)
+        public SeriesManager(DataCenter dataCenter, ISeriesSet source)
             : base(source)
         {
             this.DataCenter = dataCenter;
@@ -126,22 +127,22 @@ namespace JryVideo.Core.Managers
 
         public VideoInfoManager GetVideoInfoManager(JrySeries obj)
         {
-            return new VideoInfoManager(new VideoInfoDataSourceProvider(this, obj));
+            return new VideoInfoManager(new VideoInfoJryEntitySetSet(this, obj));
         }
 
-        private class VideoInfoDataSourceProvider : IDataSourceProvider<JryVideoInfo>
+        private class VideoInfoJryEntitySetSet : IJasilyEntitySetProvider<JryVideoInfo, string>
         {
             public SeriesManager SeriesManager { get; set; }
 
             public JrySeries Series { get; set; }
 
-            public VideoInfoDataSourceProvider(SeriesManager SeriesManager, JrySeries series)
+            public VideoInfoJryEntitySetSet(SeriesManager SeriesManager, JrySeries series)
             {
                 this.SeriesManager = SeriesManager;
                 this.Series = series;
             }
 
-            public async Task<IEnumerable<JryVideoInfo>> QueryAsync(int skip, int take)
+            public async Task<IEnumerable<JryVideoInfo>> ListAsync(int skip, int take)
             {
                 return this.Series.Videos.ToArray();
             }

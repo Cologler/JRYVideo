@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data;
+using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 
@@ -12,14 +13,16 @@ namespace JryVideo.Data
 
         Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode);
 
-        ISeriesDataSourceProvider GetSeriesDataSourceProvider();
+        ISeriesSet GetSeriesDataSourceProvider();
 
-        IDataSourceProvider<Model.JryVideo> GetVideoDataSourceProvider();
+        IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoDataSourceProvider();
 
-        IFlagDataSourceProvider GetCounterDataSourceProvider();
+        IFlagSet GetCounterDataSourceProvider();
 
-        ICoverDataSourceProvider GetCoverDataSourceProvider();
+        ICoverSet GetCoverDataSourceProvider();
 
-        IDataSourceProvider<JryArtist> GetArtistDataSourceProvider();
+        IJasilyEntitySetProvider<JryArtist, string> GetArtistDataSourceProvider();
+
+        IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet();
     }
 }

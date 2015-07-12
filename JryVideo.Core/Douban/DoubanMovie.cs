@@ -16,7 +16,7 @@ namespace JryVideo.Core.Douban
         public string OriginalTitle;
 
         [DataMember(Name = "year")]
-        public int Year;
+        public string Year;
 
         /// <summary>
         /// "movie" or "TV"

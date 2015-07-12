@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data;
+using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using MongoDB.Driver;
@@ -42,7 +43,7 @@ namespace JryVideo.Data.MongoDb
             return true;
         }
 
-        public ISeriesDataSourceProvider GetSeriesDataSourceProvider()
+        public ISeriesSet GetSeriesDataSourceProvider()
         {
             return new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
         }
@@ -52,24 +53,37 @@ namespace JryVideo.Data.MongoDb
             get { return this.Database.GetCollection<Model.JryVideo>("Video"); }
         }
 
-        public IDataSourceProvider<Model.JryVideo> GetVideoDataSourceProvider()
+        public IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoDataSourceProvider()
         {
             return new MongoVideoDataSource(this, this.VideoCollection);
         }
 
-        public IFlagDataSourceProvider GetCounterDataSourceProvider()
+        public IFlagSet GetCounterDataSourceProvider()
         {
             return new MongoFlagDataSource(this, this.Database.GetCollection<JryFlag>("Flag"));
         }
 
-        public ICoverDataSourceProvider GetCoverDataSourceProvider()
+        public ICoverSet GetCoverDataSourceProvider()
         {
             return new MongoCoverDataSource(this, this.Database.GetCollection<JryCover>("Cover"));
         }
 
-        public IDataSourceProvider<JryArtist> GetArtistDataSourceProvider()
+        public IJasilyEntitySetProvider<JryArtist, string> GetArtistDataSourceProvider()
         {
             return new MongoArtistDataSource(this, this.Database.GetCollection<JryArtist>("Artist"));
+        }
+
+        public IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet()
+        {
+            return new SettingSet(this.Database.GetCollection<JrySettingItem>("Setting"));
+        }
+
+        private class SettingSet : MongoEntitySet<JrySettingItem>, IJasilyEntitySetProvider<JrySettingItem, string>
+        {
+            public SettingSet(IMongoCollection<JrySettingItem> collection)
+                : base(collection)
+            {
+            }
         }
 
         public string Name

@@ -7,9 +7,9 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class FlagManager : JryObjectManager<JryFlag, IFlagDataSourceProvider>
+    public class FlagManager : JryObjectManager<JryFlag, IFlagSet>
     {
-        public FlagManager(IFlagDataSourceProvider source)
+        public FlagManager(IFlagSet source)
             : base(source)
         {
         }

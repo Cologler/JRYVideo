@@ -77,6 +77,9 @@
     <Compile Include="Editors\EntityEditor\EntityEditorWindow.xaml.cs">
       <DependentUpon>EntityEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\PasswordEditor\PasswordEditorWindow.xaml.cs">
+      <DependentUpon>PasswordEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\SeriesEditor\SeriesEditorWindow.xaml.cs">
       <DependentUpon>SeriesEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -162,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\EntityEditor\EntityEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\PasswordEditor\PasswordEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

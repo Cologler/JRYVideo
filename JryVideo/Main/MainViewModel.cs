@@ -44,6 +44,11 @@ namespace JryVideo.Main
             }
         }
 
+        private void Switch()
+        {
+            
+        }
+
         private async void BeginUpdateDataSouce()
         {
             await this.VideosViewModel.RefreshAsync();

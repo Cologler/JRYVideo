@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
@@ -7,13 +8,13 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class VideoManager : JryObjectManager<Model.JryVideo, IDataSourceProvider<Model.JryVideo>>
+    public class VideoManager : JryObjectManager<Model.JryVideo, IJasilyEntitySetProvider<Model.JryVideo, string>>
     {
         public event EventHandler<IEnumerable<JryEntity>> EntitiesCreated;
         public event EventHandler<IEnumerable<ChangeEventArgs<JryEntity>>> EntitiesUpdated;
         public event EventHandler<IEnumerable<JryEntity>> EntitiesRemoved;
 
-        public VideoManager(IDataSourceProvider<Model.JryVideo> source)
+        public VideoManager(IJasilyEntitySetProvider<Model.JryVideo, string> source)
             : base(source)
         {
         }
@@ -106,21 +107,21 @@ namespace JryVideo.Core.Managers
 
         public EntityManager GetEntityManager(Model.JryVideo obj)
         {
-            return new EntityManager(new EntityDataSourceProvider(this, obj));
+            return new EntityManager(new EntityJryEntitySetSet(this, obj));
         }
 
-        internal class EntityDataSourceProvider : IDataSourceProvider<JryEntity>
+        internal class EntityJryEntitySetSet : IJasilyEntitySetProvider<JryEntity, string>
         {
             private readonly Model.JryVideo video;
             private readonly VideoManager videoManager;
 
-            public EntityDataSourceProvider(VideoManager videoManager, Model.JryVideo video)
+            public EntityJryEntitySetSet(VideoManager videoManager, Model.JryVideo video)
             {
                 this.videoManager = videoManager;
                 this.video = video;
             }
 
-            public async Task<IEnumerable<JryEntity>> QueryAsync(int skip, int take)
+            public async Task<IEnumerable<JryEntity>> ListAsync(int skip, int take)
             {
                 return this.video.Entities.ToArray();
             }

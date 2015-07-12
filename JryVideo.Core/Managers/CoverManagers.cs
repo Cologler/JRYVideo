@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
 using JryVideo.Core.Douban;
 using JryVideo.Data.DataSources;
@@ -9,16 +10,16 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class CoverManager : JryObjectManager<JryCover, ICoverDataSourceProvider>, IJasilyLoggerObject<CoverManager>
+    public class CoverManager : JryObjectManager<JryCover, ICoverSet>, IJasilyLoggerObject<CoverManager>
     {
         private readonly object _syncRoot = new object();
         private readonly List<string> _writingDoubanId = new List<string>();
-        private readonly Dictionary<string, JryCover> Cache;
+        private readonly MemoryCache MemoryCache;
 
-        public CoverManager(ICoverDataSourceProvider source)
+        public CoverManager(ICoverSet source)
             : base(source)
         {
-            this.Cache = new Dictionary<string, JryCover>();
+            this.MemoryCache = MemoryCache.Default;
         }
 
         public async Task<JryCover> LoadCoverAsync(string coverId)
@@ -29,16 +30,17 @@ namespace JryVideo.Core.Managers
             {
                 JryCover cover;
 
-                if (this.Cache.TryGetValue(coverId, out cover))
-                    return cover;
+                var obj = this.MemoryCache.Get(coverId);
+                if (obj != null) return (JryCover)obj;
 
                 cover = await this.Source.FindAsync(coverId);
 
                 if (cover != null)
                 {
-                    lock (this.Cache)
+                    lock (this.MemoryCache)
                     {
-                        return this.Cache.GetOrSetValue(coverId, cover);
+                        obj = this.MemoryCache.AddOrGetExisting(coverId, cover, DateTimeOffset.UtcNow.AddHours(1));
+                        return obj != null ? (JryCover) obj : cover;
                     }
                 }
 

@@ -6,7 +6,9 @@ using System.Windows.Input;
 using JryVideo.Add;
 using JryVideo.Common;
 using JryVideo.Core;
+using JryVideo.Data;
 using JryVideo.Editors.CoverEditor;
+using JryVideo.Editors.PasswordEditor;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Main
@@ -144,6 +146,20 @@ namespace JryVideo.Main
             if (vm != null)
             {
                 this.ViewModel.VideosViewModel.FilterText = vm.SeriesView.Source.Id;
+            }
+        }
+
+        private void ModeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selected = this.ViewModel.SelectedMode;
+
+            if (selected != null)
+            {
+                if (selected.Source != JryVideoDataSourceProviderManagerMode.Public)
+                {
+                    var dlg = new PasswordEditorWindow();
+                    dlg.ShowDialog();
+                }
             }
         }
     }

@@ -51,16 +51,24 @@
                   Margin="0,8"
                   Width="120">
                 <ComboBox ItemsSource="{Binding ModeCollection}"
-                          DisplayMemberPath="Name"
                           Height="30"
-                          SelectedItem="{Binding SelectedMode, Mode=TwoWay}">
+                          SelectedItem="{Binding SelectedMode, Mode=TwoWay}"
+                          SelectionChanged="ModeSelector_OnSelectionChanged">
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="ComboBoxItem"
                                BasedOn="{StaticResource {x:Type ComboBoxItem}}">
                             <Setter Property="Height"
                                     Value="30" />
+                            <Setter Property="Padding"
+                                    Value="4,6" />
                         </Style>
                     </ComboBox.ItemContainerStyle>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"
+                                       VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
             </Grid>
 

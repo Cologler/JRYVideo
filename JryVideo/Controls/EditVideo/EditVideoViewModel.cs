@@ -177,7 +177,7 @@ namespace JryVideo.Controls.EditVideo
 
             if (String.IsNullOrWhiteSpace(this.Year))
             {
-                this.Year = info.Year.ToString();
+                this.Year = info.Year;
             }
 
             if (String.IsNullOrWhiteSpace(this.Index))

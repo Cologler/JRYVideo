@@ -65,6 +65,7 @@
     <Compile Include="JryInvalidError.cs" />
     <Compile Include="JryObject.cs" />
     <Compile Include="JrySeries.cs" />
+    <Compile Include="JrySettingItem.cs" />
     <Compile Include="JryVideo.cs" />
     <Compile Include="JryVideoArtistInfo.cs" />
     <Compile Include="JryVideoInfo.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
@@ -9,7 +10,7 @@ namespace JryVideo.Core.Managers
 {
     public class JryObjectManager<T, TProvider> : IObjectEditProvider<T>
         where T : JryObject
-        where TProvider : IDataSourceProvider<T>
+        where TProvider : IJasilyEntitySetProvider<T, string>
     {
         protected JryObjectManager(TProvider source)
         {
@@ -20,12 +21,12 @@ namespace JryVideo.Core.Managers
 
         public async virtual Task<IEnumerable<T>> LoadAsync()
         {
-            return await this.Source.QueryAsync(0, Int32.MaxValue);
+            return await this.Source.ListAsync(0, Int32.MaxValue);
         }
 
         public async virtual Task<IEnumerable<T>> LoadAsync(int skip, int take)
         {
-            return await this.Source.QueryAsync(skip, take);
+            return await this.Source.ListAsync(skip, take);
         }
 
         public async virtual Task<T> FindAsync(string id)

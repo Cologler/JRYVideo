@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoFlagDataSource : MongoItemDataSource<JryFlag>, IFlagDataSourceProvider
+    public class MongoFlagDataSource : MongoJryEntitySet<JryFlag>, IFlagSet
     {
         public MongoFlagDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<JryFlag> collection)
             : base(engine, collection)

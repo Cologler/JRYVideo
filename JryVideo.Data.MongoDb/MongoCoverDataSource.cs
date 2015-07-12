@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoCoverDataSource : MongoItemDataSource<JryCover>, ICoverDataSourceProvider
+    public class MongoCoverDataSource : MongoJryEntitySet<JryCover>, ICoverSet
     {
         public MongoCoverDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<JryCover> collection)
             : base(engine, collection)
