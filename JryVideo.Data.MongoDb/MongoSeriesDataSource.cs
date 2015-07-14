@@ -65,6 +65,11 @@ namespace JryVideo.Data.MongoDb
                 .ToListAsync();
         }
 
+        protected override SortDefinition<JrySeries> BuildDefaultSort()
+        {
+            return Builders<JrySeries>.Sort.Descending("Videos.Created");
+        }
+
         public async Task<IEnumerable<JrySeries>> ListTrackingAsync()
         {
             var builder = Builders<JrySeries>.Filter;

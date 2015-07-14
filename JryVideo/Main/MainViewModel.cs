@@ -34,14 +34,7 @@ namespace JryVideo.Main
         public DataModeViewModel SelectedMode
         {
             get { return this.selectedMode; }
-            set
-            {
-                if (this.SetPropertyRef(ref this.selectedMode, value))
-                {
-                    JryVideoCore.Current.Switch(value.Source);
-                    this.BeginUpdateDataSouce();
-                }
-            }
+            set { this.SetPropertyRef(ref this.selectedMode, value); }
         }
 
         private void Switch()

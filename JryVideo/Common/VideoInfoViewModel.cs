@@ -81,21 +81,31 @@ namespace JryVideo.Common
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
             this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
 
-            this.IsToday = this.Source.DayOfWeek == DateTime.Now.DayOfWeek;
+            if (!this.Source.StartDate.HasValue || this.Source.StartDate.Value < DateTime.Now)
+            {
+                this.IsToday = this.Source.DayOfWeek == DateTime.Now.DayOfWeek;
 
-            this.DayOfWeek = this.IsToday
-                ? String.Format("{0} ({1})",
-                    this.Source.DayOfWeek.GetLocalizeString(),
-                    Resources.DayOfWeek_Today)
-                : this.Source.DayOfWeek.GetLocalizeString();
+                this.DayOfWeek = this.IsToday
+                    ? String.Format("{0} ({1})",
+                        this.Source.DayOfWeek.GetLocalizeString(),
+                        Resources.DayOfWeek_Today)
+                    : this.Source.DayOfWeek.GetLocalizeString();
 
-            var episode = this.Source.GetTodayEpisode(DateTime.Now);
+                if (this.IsToday)
+                {
+                    var episode = this.Source.GetTodayEpisode(DateTime.Now);
 
-            this.TodayEpisode = this.IsToday && episode <= this.Source.EpisodesCount
-                ? episode <= this.Source.EpisodesCount 
-                    ? String.Format("today play {0}", episode)
-                    : "done!"
-                : null;
+                    this.TodayEpisode = this.IsToday && episode <= this.Source.EpisodesCount
+                        ? episode <= this.Source.EpisodesCount
+                            ? String.Format("today play {0}", episode)
+                            : "done!"
+                        : null;
+                }
+            }
+            else
+            {
+                this.DayOfWeek = Resources.DateTime_Future;
+            }
 
             this.IsEnterDoubanButtonEnable = !this.Source.DoubanId.IsNullOrWhiteSpace();
             this.DoubanId = this.Source.DoubanId;

@@ -205,8 +205,7 @@
                                     </ContextMenu>
                                 </Grid.ContextMenu>
 
-                                <Grid Height="266"
-                                      Width="200">
+                                <Grid Width="200">
                                     <Grid HorizontalAlignment="Center"
                                           VerticalAlignment="Center">
                                         <Image Source="{Binding Cover.BinaryData}"

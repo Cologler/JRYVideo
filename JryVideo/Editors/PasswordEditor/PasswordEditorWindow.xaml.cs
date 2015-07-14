@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using JryVideo.Common.Dialogs;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Editors.PasswordEditor
@@ -24,5 +25,24 @@ namespace JryVideo.Editors.PasswordEditor
         {
             this.InitializeComponent();
         }
+
+        private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.Password1PasswordBox.Password.IsNullOrWhiteSpace())
+            {
+                this.ShowJryVideoMessage("error", "must input a password.");
+            }
+            else if (this.Password1PasswordBox.Password != this.Password2PasswordBox.Password)
+            {
+                this.ShowJryVideoMessage("error", "two password was not match.");
+            }
+            else
+            {
+                this.PasswordResult = this.Password1PasswordBox.Password;
+                this.DialogResult = true;
+            }
+        }
+
+        internal string PasswordResult { get; private set; }
     }
 }

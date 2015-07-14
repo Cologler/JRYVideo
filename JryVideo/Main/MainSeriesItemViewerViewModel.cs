@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
+using JryVideo.Core.Managers;
 using JryVideo.Model;
 using JryVideo.Viewer.SeriesItemViewer;
 
@@ -23,6 +24,7 @@ namespace JryVideo.Main
         private bool currentIsOnlyTracking;
         private bool isOnlyTracking;
         private string filterId;
+        private DataCenter lastDataCenter;
 
         public MainSeriesItemViewerViewModel()
         {
@@ -72,7 +74,9 @@ namespace JryVideo.Main
 
             var text = (this.SearchText ?? "").Trim();
 
-            if (this.currentPageIndex == this.PageIndex && this.currentIsOnlyTracking == this.IsOnlyTracking)
+            if (this.currentPageIndex == this.PageIndex &&
+                this.currentIsOnlyTracking == this.IsOnlyTracking &&
+                JryVideoCore.Current.CurrentDataCenter == this.lastDataCenter)
             {
                 if (text.IsNullOrWhiteSpace() && this.currentSearchText.IsNullOrWhiteSpace())
                 {
@@ -86,6 +90,7 @@ namespace JryVideo.Main
             }
 
             JrySeries[] sources;
+            this.lastDataCenter = JryVideoCore.Current.CurrentDataCenter;
 
             if (this.IsOnlyTracking && !this.currentIsOnlyTracking) // 从 not tracking 到 tracking
             {
@@ -144,7 +149,7 @@ namespace JryVideo.Main
 
         private class DayOfWeekComparer : Comparer<VideoInfoViewModel>
         {
-            private DayOfWeek DayOfWeek = DateTime.Now.DayOfWeek;
+            private readonly DayOfWeek DayOfWeek = DateTime.Now.DayOfWeek;
 
             /// <summary>
             /// 在派生类中重写时，对同一类型的两个对象执行比较并返回一个值，指示一个对象是小于、等于还是大于另一个对象。
@@ -158,13 +163,41 @@ namespace JryVideo.Main
                 Debug.Assert(x != null, "x != null");
                 Debug.Assert(y != null, "y != null");
 
-                if (x.Source.DayOfWeek != y.Source.DayOfWeek)
+                if (x.Source.StartDate.HasValue && y.Source.StartDate.HasValue &&
+                    (x.Source.StartDate.Value > DateTime.Now || y.Source.StartDate.Value > DateTime.Now))
+                {
+                    return Compare(x.Source.StartDate.Value, y.Source.StartDate.Value);
+                }
+                else if (x.Source.DayOfWeek != y.Source.DayOfWeek)
                 {
                     return this.Compare(x.Source.DayOfWeek, y.Source.DayOfWeek);
                 }
                 else
                 {
                     return y.Source.Created.CompareTo(x.Source.Created);
+                }
+            }
+
+            private static int Compare(DateTime dt1, DateTime dt2)
+            {
+                if (dt1 > DateTime.Now)
+                {
+                    if (dt2 > DateTime.Now)
+                    {
+                        return DateTime.Compare(dt1, dt2);
+                    }
+                    else
+                    {
+                        return 1;
+                    }
+                }
+                else if (dt2 > DateTime.Now)
+                {
+                    return -1;
+                }
+                else
+                {
+                    throw new Exception();
                 }
             }
 

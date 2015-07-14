@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using JryVideo.Data.DataSources;
+﻿using System.Data;
 using JryVideo.Model;
 using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoJryEntitySet<T> : MongoEntitySet<T>, IJasilyEntitySetProvider<T, string>
+    public class MongoJryEntitySet<T> : MongoEntitySet<T>
         where T : JryObject
     {
         public JryVideoMongoDbDataEngine Engine { get; private set; }

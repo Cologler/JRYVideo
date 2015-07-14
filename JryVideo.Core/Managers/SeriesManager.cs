@@ -142,6 +142,17 @@ namespace JryVideo.Core.Managers
                 this.Series = series;
             }
 
+            /// <summary>
+            /// return a entities dictionary where match id.
+            /// </summary>
+            /// <param name="id"></param>
+            /// <returns></returns>
+            public async Task<IDictionary<string, JryVideoInfo>> FindAsync(IEnumerable<string> ids)
+            {
+                var array = ids.ToArray();
+                return this.Series.Videos.Where(z => array.Contains(z.Id)).ToDictionary(z => z.Id);
+            }
+
             public async Task<IEnumerable<JryVideoInfo>> ListAsync(int skip, int take)
             {
                 return this.Series.Videos.ToArray();

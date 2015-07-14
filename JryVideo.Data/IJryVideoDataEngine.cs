@@ -13,15 +13,15 @@ namespace JryVideo.Data
 
         Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode);
 
-        ISeriesSet GetSeriesDataSourceProvider();
+        ISeriesSet GetSeriesSet();
 
-        IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoDataSourceProvider();
+        IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoSet();
 
-        IFlagSet GetCounterDataSourceProvider();
+        IFlagSet GetFlagSet();
 
-        ICoverSet GetCoverDataSourceProvider();
+        ICoverSet GetCoverSet();
 
-        IJasilyEntitySetProvider<JryArtist, string> GetArtistDataSourceProvider();
+        IJasilyEntitySetProvider<JryArtist, string> GetArtistSet();
 
         IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet();
     }

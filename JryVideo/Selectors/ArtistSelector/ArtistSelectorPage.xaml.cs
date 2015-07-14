@@ -7,9 +7,11 @@ namespace JryVideo.Selectors.ArtistSelector
     /// </summary>
     public partial class ArtistSelectorPage : Page
     {
+        public ArtistSelectorViewModel ViewModel { get; private set; }
+
         public ArtistSelectorPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

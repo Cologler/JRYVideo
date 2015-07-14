@@ -61,6 +61,15 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
+        ///   查找类似 future 的本地化字符串。
+        /// </summary>
+        internal static string DateTime_Future {
+            get {
+                return ResourceManager.GetString("DateTime_Future", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 friday 的本地化字符串。
         /// </summary>
         internal static string DayOfWeek_Friday {

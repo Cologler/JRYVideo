@@ -7,11 +7,11 @@ namespace JryVideo.Core.Managers
         public DataCenter(IJryVideoDataEngine dataEngine)
         {
             this.ProviderManager = dataEngine;
-            this.CoverManager = new CoverManager(dataEngine.GetCoverDataSourceProvider());
-            this.SeriesManager = new SeriesManager(this, dataEngine.GetSeriesDataSourceProvider());
-            this.VideoManager = new VideoManager(dataEngine.GetVideoDataSourceProvider());
-            this.FlagManager = new FlagManager(dataEngine.GetCounterDataSourceProvider());
-            this.ArtistManager = new ArtistManager(dataEngine.GetArtistDataSourceProvider());
+            this.CoverManager = new CoverManager(dataEngine.GetCoverSet());
+            this.SeriesManager = new SeriesManager(this, dataEngine.GetSeriesSet());
+            this.VideoManager = new VideoManager(dataEngine.GetVideoSet());
+            this.FlagManager = new FlagManager(dataEngine.GetFlagSet());
+            this.ArtistManager = new ArtistManager(dataEngine.GetArtistSet());
 
             this.SeriesManager.VideoInfoCreated += this.VideoManager.SeriesManager_VideoInfoCreated;
             this.SeriesManager.VideoInfoRemoved += this.VideoManager.SeriesManager_VideoInfoRemoved;

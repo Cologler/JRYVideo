@@ -33,7 +33,7 @@ namespace JryVideo.Model
                 throw new ArgumentException();
             }
 
-            return false;
+            return this.Names.Count == 0;
         }
 
         /// <summary>

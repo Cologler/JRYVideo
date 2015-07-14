@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoEntitySet<TEntity> : IJasilyEntitySetReader<TEntity, string>, IJasilyEntitySetWriter<TEntity, string>, IJasilyLoggerObject<TEntity>
+    public class MongoEntitySet<TEntity> : IJasilyEntitySetProvider<TEntity, string>, IJasilyLoggerObject<TEntity>
         where TEntity : class, IJasilyEntity<string>
     {
         public IMongoCollection<TEntity> Collection { get; private set; }
@@ -25,12 +25,23 @@ namespace JryVideo.Data.MongoDb
         /// <returns></returns>
         public async virtual Task<TEntity> FindAsync(string id)
         {
-            var filter = Builders<TEntity>.Filter;
-
             return (await (await this.Collection.FindAsync(
-                filter.Eq(t => t.Id, id)))
+                Builders<TEntity>.Filter.Eq(t => t.Id, id)))
                 .ToListAsync())
                 .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// return a entities dictionary where match id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IDictionary<string, TEntity>> FindAsync(IEnumerable<string> ids)
+        {
+            return (await (await this.Collection.FindAsync(
+                Builders<TEntity>.Filter.In(t => t.Id, ids.ToArray())))
+                .ToListAsync())
+                .ToDictionary(z => z.Id);
         }
 
         public async virtual Task<IEnumerable<TEntity>> ListAsync(int skip = 0, int take = Int32.MaxValue)

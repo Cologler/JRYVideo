@@ -43,7 +43,7 @@ namespace JryVideo.Data.MongoDb
             return true;
         }
 
-        public ISeriesSet GetSeriesDataSourceProvider()
+        public ISeriesSet GetSeriesSet()
         {
             return new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
         }
@@ -53,37 +53,29 @@ namespace JryVideo.Data.MongoDb
             get { return this.Database.GetCollection<Model.JryVideo>("Video"); }
         }
 
-        public IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoDataSourceProvider()
+        public IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoSet()
         {
-            return new MongoVideoDataSource(this, this.VideoCollection);
+            return new MongoJryEntitySet<Model.JryVideo>(this, this.VideoCollection);
         }
 
-        public IFlagSet GetCounterDataSourceProvider()
+        public IFlagSet GetFlagSet()
         {
             return new MongoFlagDataSource(this, this.Database.GetCollection<JryFlag>("Flag"));
         }
 
-        public ICoverSet GetCoverDataSourceProvider()
+        public ICoverSet GetCoverSet()
         {
             return new MongoCoverDataSource(this, this.Database.GetCollection<JryCover>("Cover"));
         }
 
-        public IJasilyEntitySetProvider<JryArtist, string> GetArtistDataSourceProvider()
+        public IJasilyEntitySetProvider<JryArtist, string> GetArtistSet()
         {
-            return new MongoArtistDataSource(this, this.Database.GetCollection<JryArtist>("Artist"));
+            return new MongoJryEntitySet<JryArtist>(this, this.Database.GetCollection<JryArtist>("Artist"));
         }
 
         public IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet()
         {
-            return new SettingSet(this.Database.GetCollection<JrySettingItem>("Setting"));
-        }
-
-        private class SettingSet : MongoEntitySet<JrySettingItem>, IJasilyEntitySetProvider<JrySettingItem, string>
-        {
-            public SettingSet(IMongoCollection<JrySettingItem> collection)
-                : base(collection)
-            {
-            }
+            return new MongoEntitySet<JrySettingItem>(this.Database.GetCollection<JrySettingItem>("Setting"));
         }
 
         public string Name

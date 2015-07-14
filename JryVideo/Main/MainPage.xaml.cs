@@ -1,14 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using JryVideo.Add;
 using JryVideo.Common;
+using JryVideo.Common.Dialogs;
 using JryVideo.Core;
 using JryVideo.Data;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.PasswordEditor;
+using JryVideo.Model;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Main
@@ -97,11 +101,13 @@ namespace JryVideo.Main
         private async void LastPageButton_OnClick(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.LastPageAsync();
+            this.VideosListView.ScrollIntoView(this.VideosListView.ItemsSource.OfType<object>().FirstOrDefault());
         }
 
         private async void NextPageButton_OnClick(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.NextPageAsync();
+            this.VideosListView.ScrollIntoView(this.VideosListView.ItemsSource.OfType<object>().FirstOrDefault());
         }
 
         private async void IsOnlyTrackingCheckBox_OnChecked(object sender, RoutedEventArgs e)
@@ -149,16 +155,58 @@ namespace JryVideo.Main
             }
         }
 
-        private void ModeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ModeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = this.ViewModel.SelectedMode;
 
             if (selected != null)
             {
-                if (selected.Source != JryVideoDataSourceProviderManagerMode.Public)
+                if (selected.Source == JryVideoDataSourceProviderManagerMode.Public)
                 {
-                    var dlg = new PasswordEditorWindow();
-                    dlg.ShowDialog();
+                    JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Public);
+                    await this.ViewModel.VideosViewModel.RefreshAsync();
+                }
+                else
+                {
+                    var pw = await JryVideoCore.Current.SecureDataCenter.ProviderManager.GetSettingSet()
+                        .FindAsync("password_sha1");
+
+                    if (pw == null)
+                    {
+                        var dlg = new PasswordEditorWindow();
+                        dlg.MessageTextBlock.Text = "first time you must set a password.";
+                        dlg.MessageTextBlock.Visibility = Visibility.Visible;
+                        dlg.Owner = this.TryFindParent<Window>();
+                        if (dlg.ShowDialog() != true)
+                        {
+                            this.ViewModel.SelectedMode = this.ViewModel.ModeCollection.First(
+                                z => z.Source == JryVideoDataSourceProviderManagerMode.Public);
+                            return;
+                        }
+                        var hash = JasilyHash.Create(HashType.SHA1).ComputeHashString(dlg.PasswordResult);
+                        pw = new JrySettingItem("password_sha1", hash);
+                        await JryVideoCore.Current.SecureDataCenter.ProviderManager.GetSettingSet().InsertAsync(pw);
+                    }
+
+                    var pwDlg = new PasswordWindow();
+                    pwDlg.Owner = this.TryFindParent<Window>();
+                    if (pwDlg.ShowDialog() == true)
+                    {
+                        if (pwDlg.PasswordBox.Password.IsNullOrWhiteSpace() ||
+                            JasilyHash.Create(HashType.SHA1).ComputeHashString(pwDlg.PasswordBox.Password) != pw.Value)
+                        {
+                            this.ShowJryVideoMessage("error", "password error.");
+                        }
+                        else
+                        {
+                            JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Private);
+                            await this.ViewModel.VideosViewModel.RefreshAsync();
+                            return;
+                        }
+                    }
+
+                    this.ViewModel.SelectedMode = this.ViewModel.ModeCollection.First(
+                        z => z.Source == JryVideoDataSourceProviderManagerMode.Public);
                 }
             }
         }
