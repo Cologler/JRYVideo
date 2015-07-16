@@ -132,7 +132,6 @@
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Text="{Binding Info.VideoName}"
-                           HorizontalAlignment="Center"
                            Grid.Row="3"
                            Grid.Column="1"
                            Style="{StaticResource LabelTextBlockStyle}" />
