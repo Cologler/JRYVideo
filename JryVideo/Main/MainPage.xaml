@@ -118,6 +118,10 @@
                               HorizontalAlignment="Left"
                               Header="add"
                               Click="AddMenuItem_OnClick" />
+
+                    <MenuItem HorizontalAlignment="Left"
+                              Header="artist"
+                              Click="ArtistManagerMenuItem_OnClick" />
                 </Menu>
 
                 <StackPanel Orientation="Horizontal"
@@ -210,7 +214,8 @@
                                           VerticalAlignment="Center">
                                         <Image Source="{Binding Cover.BinaryData}"
                                                RenderOptions.BitmapScalingMode="Fant"
-                                               RenderOptions.EdgeMode="Aliased" />
+                                               RenderOptions.EdgeMode="Aliased"
+                                               Margin="0,0,0,4"/>
 
                                         <Grid Width="150"
                                               Height="150"
@@ -245,7 +250,8 @@
 
                                     <TextBlock Text="{Binding SeriesView.DisplayNameFirstLine}"
                                                HorizontalAlignment="Center"
-                                               TextWrapping="WrapWithOverflow" />
+                                               TextWrapping="WrapWithOverflow"
+                                               FontSize="14" />
 
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center"

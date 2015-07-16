@@ -7,7 +7,8 @@
                       Height="600"
                       Width="800"
                       GlowBrush="Black"
-                      BorderThickness="1">
+                      BorderThickness="1"
+                      WindowStartupLocation="CenterOwner">
 
     <Grid Margin="8">
         <Grid.RowDefinitions>

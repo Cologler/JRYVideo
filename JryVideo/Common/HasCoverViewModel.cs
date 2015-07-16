@@ -60,7 +60,7 @@ namespace JryVideo.Common
 
         public virtual void Reload()
         {
-            this.Cover = null;
+            this.NotifyPropertyChanged<HasCoverViewModel<T>>(z => z.Cover);
         }
     }
 }
