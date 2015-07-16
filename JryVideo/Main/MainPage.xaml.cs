@@ -95,6 +95,7 @@ namespace JryVideo.Main
         {
             if (e.Key == Key.Enter)
             {
+                this.ViewModel.VideosViewModel.IsOnlyTracking = false;
                 await this.ViewModel.VideosViewModel.RefreshAsync();
             }
         }
