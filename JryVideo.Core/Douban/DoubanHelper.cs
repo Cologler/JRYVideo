@@ -109,7 +109,10 @@ namespace JryVideo.Core.Douban
             {
                 foreach (var originName in json.OtherNames.Where(z => !String.IsNullOrWhiteSpace(z)))
                 {
-                    yield return originName;
+                    if (originName.EndsWith("(港)") || originName.EndsWith("(台)"))
+                        yield return originName.Substring(0, originName.Length - 3);
+                    else
+                        yield return originName;
                 }
             }
         }

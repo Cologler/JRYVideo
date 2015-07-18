@@ -50,6 +50,10 @@ namespace JryVideo.Data.MongoDb
                     }
                     break;
 
+                case SearchElement.ElementType.DoubanId:
+                    filter = builder.Eq("Videos.DoubanId", search.Value);
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

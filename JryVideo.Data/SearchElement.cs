@@ -4,23 +4,13 @@ namespace JryVideo.Data
 {
     public struct SearchElement
     {
-        private readonly ElementType type;
-        private readonly string value;
+        public readonly ElementType Type;
+        public readonly string Value;
 
         public SearchElement(ElementType type, string value)
         {
-            this.type = type;
-            this.value = value.ThrowIfNullOrEmpty("value");
-        }
-
-        public ElementType Type
-        {
-            get { return this.type; }
-        }
-
-        public string Value
-        {
-            get { return this.value; }
+            this.Type = type;
+            this.Value = value.ThrowIfNullOrEmpty("value");
         }
 
         public enum ElementType
@@ -28,7 +18,8 @@ namespace JryVideo.Data
             Text,
             SeriesId,
             VideoId,
-            EntityId
+            EntityId,
+            DoubanId
         }
     }
 }

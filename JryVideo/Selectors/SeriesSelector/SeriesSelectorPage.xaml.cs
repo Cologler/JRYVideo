@@ -62,7 +62,7 @@ namespace JryVideo.Selectors.SeriesSelector
                     Owner = this.TryFindParent<Window>()
                 };
                 dlg.ShowDialog();
-                seriesViewModel.Reload();
+                seriesViewModel.RefreshProperties();
             }
         }
     }

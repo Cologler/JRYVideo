@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using JryVideo.Core;
 using JryVideo.Model;
 

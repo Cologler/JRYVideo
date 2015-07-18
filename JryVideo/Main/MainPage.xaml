@@ -270,7 +270,7 @@
                                         <TextBlock Text="{Binding Source.Index}"
                                                    Margin="2,0" />
 
-                                        <TextBlock Text="{Binding VideoName}"
+                                        <TextBlock Text="{Binding VideoNames}"
                                                    Margin="2,0"
                                                    TextTrimming="CharacterEllipsis"/>
                                     </StackPanel>

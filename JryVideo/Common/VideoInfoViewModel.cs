@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,12 +13,9 @@ namespace JryVideo.Common
     public sealed class VideoInfoViewModel : HasCoverViewModel<JryVideoInfo>
     {
         private string yearWithIndex;
-        private string videoName;
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
         private string dayOfWeek;
-        private bool isEnterDoubanButtonEnable;
-        private string doubanId;
         private string todayEpisode;
         private bool isToday;
 
@@ -36,22 +34,22 @@ namespace JryVideo.Common
             set { this.SetPropertyRef(ref this.yearWithIndex, value); }
         }
 
-        public string VideoName
+        [NotifyPropertyChanged]
+        public string VideoNames
         {
-            get { return this.videoName; }
-            set { this.SetPropertyRef(ref this.videoName, value); }
+            get { return this.Source.Names.FirstOrDefault() ?? ""; }
+        }
+
+        [NotifyPropertyChanged]
+        public string VideoFullNames
+        {
+            get { return this.Source.Names.AsLines(); }
         }
 
         public string DayOfWeek
         {
             get { return this.dayOfWeek; }
             private set { this.SetPropertyRef(ref this.dayOfWeek, value); }
-        }
-
-        public string DoubanId
-        {
-            get { return this.doubanId; }
-            set { this.SetPropertyRef(ref this.doubanId, value); }
         }
 
         public bool IsToday
@@ -66,20 +64,19 @@ namespace JryVideo.Common
             private set { this.SetPropertyRef(ref this.todayEpisode, value); }
         }
 
+        [NotifyPropertyChanged]
         public bool IsEnterDoubanButtonEnable
         {
-            get { return this.isEnterDoubanButtonEnable; }
-            private set { this.SetPropertyRef(ref this.isEnterDoubanButtonEnable, value); }
+            get { return !this.Source.DoubanId.IsNullOrWhiteSpace(); }
         }
 
         public override void Reload()
         {
             base.Reload();
 
-            this.NotifyPropertyChanged<VideoInfoViewModel>(z => z.Source);
+            base.RefreshProperties();
 
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
-            this.VideoName = this.Source.Names.FirstOrDefault() ?? "";
 
             if (!this.Source.StartDate.HasValue || this.Source.StartDate.Value < DateTime.Now)
             {
@@ -106,9 +103,6 @@ namespace JryVideo.Common
             {
                 this.DayOfWeek = Resources.DateTime_Future;
             }
-
-            this.IsEnterDoubanButtonEnable = !this.Source.DoubanId.IsNullOrWhiteSpace();
-            this.DoubanId = this.Source.DoubanId;
         }
 
         public void EnterDouban()

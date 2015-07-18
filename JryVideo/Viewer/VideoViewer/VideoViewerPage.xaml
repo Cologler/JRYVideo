@@ -60,8 +60,8 @@
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Grid.Row="1"
-                           Visibility="{Binding Info.SeriesView.HasOtherLine, Converter={StaticResource BooleanToVisibilityConverter}}"
-                           Text="{Binding Info.SeriesView.DisplayNameOtherLines}"
+                           Visibility="{Binding Info.SeriesView.DisplayNameSecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
+                           Text="{Binding Info.SeriesView.DisplayNameSecondLine}"
                            Style="{StaticResource LabelTextBlockStyle}" />
             </Grid>
 
@@ -131,10 +131,13 @@
                            Text="video"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
-                <TextBlock Text="{Binding Info.VideoName}"
-                           Grid.Row="3"
-                           Grid.Column="1"
-                           Style="{StaticResource LabelTextBlockStyle}" />
+                <Grid Grid.Row="3"
+                      Grid.Column="1"
+                      Background="#00000000"
+                      ToolTip="{Binding Info.VideoFullNames}">
+                    <TextBlock Text="{Binding Info.VideoNames}"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+                </Grid>
 
             </Grid>
             

@@ -44,7 +44,7 @@
                             <TextBlock Text="{Binding YearWithIndex}"
                                        HorizontalAlignment="Center" />
 
-                            <TextBlock Text="{Binding VideoName}"
+                            <TextBlock Text="{Binding VideoNames}"
                                        HorizontalAlignment="Center" />
 
                         </StackPanel>

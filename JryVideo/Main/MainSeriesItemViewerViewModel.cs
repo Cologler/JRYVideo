@@ -31,7 +31,6 @@ namespace JryVideo.Main
             this.isOnlyTracking = true;
             this.PageSize = 50;
             this.currentPageIndex = -1; // then init load.
-            this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription("DayOfWeek"));
         }
 
         public string FilterText
@@ -101,6 +100,8 @@ namespace JryVideo.Main
                 this.HasNext = false;
 
                 this.VideosView.View.CustomSort = new DayOfWeekComparer();
+                this.VideosView.View.GroupDescriptions.Clear();
+                this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription("DayOfWeek"));
             }
             else
             {
@@ -116,6 +117,7 @@ namespace JryVideo.Main
                 this.HasNext = sources.Length == this.PageSize;
 
                 this.VideosView.View.CustomSort = new DefaultComparer();
+                this.VideosView.View.GroupDescriptions.Clear();
             }
 
             this.currentIsOnlyTracking = this.IsOnlyTracking;

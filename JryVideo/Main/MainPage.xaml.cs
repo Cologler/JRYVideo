@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -129,10 +131,17 @@ namespace JryVideo.Main
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             if (vm != null)
             {
-                if (await vm.TrackAsync())
-                {
-                    this.ViewModel.VideosViewModel.VideosView.View.Refresh();
-                }
+                await this.TrackAsync(vm);
+            }
+        }
+
+        private async Task TrackAsync(VideoInfoViewModel vm)
+        {
+            Debug.Assert(vm != null, "vm != null");
+
+            if (await vm.TrackAsync())
+            {
+                this.ViewModel.VideosViewModel.VideosView.View.Refresh();
             }
         }
 
@@ -141,10 +150,17 @@ namespace JryVideo.Main
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             if (vm != null)
             {
-                if (await vm.UntrackAsync())
-                {
-                    this.ViewModel.VideosViewModel.VideosView.View.Refresh();
-                }
+                await this.UntrackAsync(vm);
+            }
+        }
+
+        private async Task UntrackAsync(VideoInfoViewModel vm)
+        {
+            Debug.Assert(vm != null, "vm != null");
+
+            if (await vm.UntrackAsync())
+            {
+                this.ViewModel.VideosViewModel.VideosView.View.Refresh();
             }
         }
 
