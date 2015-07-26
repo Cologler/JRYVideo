@@ -10,7 +10,6 @@ namespace JryVideo.Common
         private string displayFansubs;
         private string displaySubTitleLanguages;
         private string displayTrackLanguages;
-        private string displayFormat;
         private string displayTags;
 
         public EntityViewModel(JryEntity source)
@@ -49,10 +48,15 @@ namespace JryVideo.Common
             private set { this.SetPropertyRef(ref this.displayTags, value); }
         }
 
+        [NotifyPropertyChanged]
         public string DisplayFormat
         {
-            get { return this.displayFormat; }
-            private set { this.SetPropertyRef(ref this.displayFormat, value); }
+            get
+            {
+                return this.Source.Format == null
+                    ? null
+                    : String.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);
+            }
         }
 
         public void Reload()
@@ -62,10 +66,7 @@ namespace JryVideo.Common
             this.DisplaySubTitleLanguages = this.Source.SubTitleLanguages.Count > 0 ? this.Source.SubTitleLanguages.AsLines(" / ") : "[EMPTY]";
             this.DisplayTrackLanguages = this.Source.TrackLanguages.Count > 0 ? this.Source.TrackLanguages.AsLines(" / ") : "[EMPTY]";
             this.DisplayTags = this.Source.Tags.Count > 0 ? this.Source.Tags.AsLines(" / ") : "[EMPTY]";
-            this.DisplayFormat =
-                this.Source.Format == null
-                ? ""
-                : String.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value); 
+            base.RefreshProperties();
         }
     }
 }

@@ -121,7 +121,12 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void GotoDoubanButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.Info.EnterDouban();
+            this.ViewModel.Info.NavigateToDouban();
+        }
+
+        private void GotoImdbButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.Info.NavigateToImdb();
         }
 
         private async void DeleteEntityButton_OnClick(object sender, RoutedEventArgs e)
@@ -179,5 +184,7 @@ namespace JryVideo.Viewer.VideoViewer
                 seriesViewModel.RefreshProperties();
             }
         }
+
+        
     }
 }

@@ -26,7 +26,7 @@ namespace JryVideo.Core.Managers
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        public async void SeriesManager_VideoInfoUpdated(object sender, IEnumerable<ChangeEventArgs<JryVideoInfo>> e)
+        public async void SeriesManager_VideoInfoUpdated(object sender, IEnumerable<ChangingEventArgs<JryVideoInfo>> e)
         {
             var dict = CalcFlagDictionary(BuildFlagDictionary(e.Select(z => z.New)), BuildFlagDictionary(e.Select(z => z.Old)));
 
@@ -148,7 +148,7 @@ namespace JryVideo.Core.Managers
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        public async void VideoManager_EntitiesUpdated(object sender, IEnumerable<ChangeEventArgs<JryEntity>> e)
+        public async void VideoManager_EntitiesUpdated(object sender, IEnumerable<ChangingEventArgs<JryEntity>> e)
         {
             var dict = CalcFlagDictionary(BuildFlagDictionary(e.Select(z => z.New)), BuildFlagDictionary(e.Select(z => z.Old)));
 

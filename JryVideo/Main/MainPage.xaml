@@ -220,7 +220,7 @@
                                         <Grid Width="150"
                                               Height="150"
                                               VerticalAlignment="Top"
-                                              Visibility="{Binding IsToday, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                              Visibility="{Binding TodayEpisode, Converter={StaticResource NullCollapsedValueConverter}}"
                                               HorizontalAlignment="Right">
                                             <Grid.Clip>
                                                 <RectangleGeometry Rect="0,0,150,150" />

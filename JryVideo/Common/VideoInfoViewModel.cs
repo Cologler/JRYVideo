@@ -43,7 +43,7 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public string VideoFullNames
         {
-            get { return this.Source.Names.AsLines(); }
+            get { return this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines(); }
         }
 
         public string DayOfWeek
@@ -52,22 +52,10 @@ namespace JryVideo.Common
             private set { this.SetPropertyRef(ref this.dayOfWeek, value); }
         }
 
-        public bool IsToday
-        {
-            get { return this.isToday; }
-            private set { this.SetPropertyRef(ref this.isToday, value); }
-        }
-
         public string TodayEpisode
         {
             get { return this.todayEpisode; }
             private set { this.SetPropertyRef(ref this.todayEpisode, value); }
-        }
-
-        [NotifyPropertyChanged]
-        public bool IsEnterDoubanButtonEnable
-        {
-            get { return !this.Source.DoubanId.IsNullOrWhiteSpace(); }
         }
 
         public override void Reload()
@@ -78,42 +66,109 @@ namespace JryVideo.Common
 
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
 
-            if (!this.Source.StartDate.HasValue || this.Source.StartDate.Value < DateTime.Now)
+            // only tracking need build group info.
+            if (this.Source.IsTracking)
             {
-                this.IsToday = this.Source.DayOfWeek == DateTime.Now.DayOfWeek;
-
-                this.DayOfWeek = this.IsToday
-                    ? String.Format("{0} ({1})",
-                        this.Source.DayOfWeek.GetLocalizeString(),
-                        Resources.DayOfWeek_Today)
-                    : this.Source.DayOfWeek.GetLocalizeString();
-
-                if (this.IsToday)
+                if (this.Source.StartDate.HasValue)
                 {
-                    var episode = this.Source.GetTodayEpisode(DateTime.Now);
-
-                    this.TodayEpisode = this.IsToday && episode <= this.Source.EpisodesCount
-                        ? episode <= this.Source.EpisodesCount
-                            ? String.Format("today play {0}", episode)
-                            : "done!"
-                        : null;
+                    if (this.Source.StartDate.Value < DateTime.Now)
+                    {
+                        if (this.Source.DayOfWeek == DateTime.Now.DayOfWeek)
+                        {
+                            this.CompareMode = ViewModelCompareMode.Today;
+                            this.DayOfWeek = String.Format("{0} ({1})", this.Source.DayOfWeek.GetLocalizeString(), Resources.DayOfWeek_Today);
+                            var episode = this.Source.GetTodayEpisode(DateTime.Now);
+                            this.TodayEpisode = episode <= this.Source.EpisodesCount
+                                ? String.Format("today play {0}", episode)
+                                : "done!";
+                        }
+                        else
+                        {
+                            this.CompareMode = ViewModelCompareMode.DayOfWeek;
+                            this.DayOfWeek = this.Source.DayOfWeek.GetLocalizeString();
+                            this.TodayEpisode = null;
+                        }
+                    }
+                    else
+                    {
+                        this.CompareMode = ViewModelCompareMode.Future;
+                        this.DayOfWeek = Resources.DateTime_Future;
+                    }
                 }
-            }
-            else
-            {
-                this.DayOfWeek = Resources.DateTime_Future;
+                else
+                {
+                    this.CompareMode = ViewModelCompareMode.Unknown;
+                    this.DayOfWeek = String.Format("{0} ({1})", Resources.DayOfWeek_Unknown, "unknown start");
+                }
             }
         }
 
-        public void EnterDouban()
+        private ViewModelCompareMode CompareMode { get; set; }
+
+        private enum ViewModelCompareMode
         {
-            var douban = this.Source.DoubanId;
-            if (!douban.IsNullOrWhiteSpace())
+            Today,
+
+            DayOfWeek,
+
+            Future,
+
+            Unknown
+        }
+
+        internal sealed class DayOfWeekComparer : Comparer<VideoInfoViewModel>
+        {
+            private readonly DayOfWeek DayOfWeek = DateTime.Now.DayOfWeek;
+
+            public override int Compare(VideoInfoViewModel x, VideoInfoViewModel y)
             {
-                using (Process.Start("http://movie.douban.com/subject/" + douban))
+                Debug.Assert(x != null, "x != null");
+                Debug.Assert(y != null, "y != null");
+
+                if (x.CompareMode != y.CompareMode)
+                    return x.CompareMode.CompareTo(y.CompareMode);
+
+                if (x.CompareMode == ViewModelCompareMode.DayOfWeek && x.Source.DayOfWeek != y.Source.DayOfWeek)
                 {
+                    if (x.Source.DayOfWeek == null) return -1;
+                    if (y.Source.DayOfWeek == null) return 1;
+
+                    var sub1 = ((int)x.Source.DayOfWeek) - ((int)this.DayOfWeek);
+                    var sub2 = ((int)y.Source.DayOfWeek) - ((int)this.DayOfWeek);
+
+                    return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
                 }
+
+                return y.Source.Created.CompareTo(x.Source.Created);
             }
+        }
+
+        internal void NavigateToDouban()
+        {
+            var doubanId = this.Source.DoubanId;
+            Task.Run(() =>
+            {
+                if (!doubanId.IsNullOrWhiteSpace())
+                {
+                    using (Process.Start("http://movie.douban.com/subject/" + doubanId))
+                    {
+                    }
+                }
+            });
+        }
+
+        internal void NavigateToImdb()
+        {
+            var imdnId = this.Source.ImdbId;
+            Task.Run(() =>
+            {
+                if (!imdnId.IsNullOrWhiteSpace())
+                {
+                    using (Process.Start("http://www.imdb.com/title/" + imdnId))
+                    {
+                    }
+                }
+            });
         }
 
         protected override async Task<bool> TryAutoAddCoverAsync()

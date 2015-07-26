@@ -8,7 +8,6 @@ namespace JryVideo.Model
     {
         public JryFlagType Type { get; set; }
 
-        [EditableField]
         public string Value { get; set; }
 
         public int Count { get; set; }

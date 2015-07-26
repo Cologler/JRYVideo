@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -23,7 +24,6 @@ namespace JryVideo.Main
         private bool hasNext;
         private bool currentIsOnlyTracking;
         private bool isOnlyTracking;
-        private string filterId;
         private DataCenter lastDataCenter;
 
         public MainSeriesItemViewerViewModel()
@@ -99,7 +99,8 @@ namespace JryVideo.Main
                 this.HasLast = false;
                 this.HasNext = false;
 
-                this.VideosView.View.CustomSort = new DayOfWeekComparer();
+                this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();//new DayOfWeekComparer();
+                // ReSharper disable once PossibleNullReferenceException
                 this.VideosView.View.GroupDescriptions.Clear();
                 this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription("DayOfWeek"));
             }
@@ -116,7 +117,8 @@ namespace JryVideo.Main
                 this.HasLast = this.PageIndex > 0;
                 this.HasNext = sources.Length == this.PageSize;
 
-                this.VideosView.View.CustomSort = new DefaultComparer();
+                this.VideosView.View.CustomSort = Comparer<VideoInfoViewModel>.Create(this.CompareVideoInfoViewModel);
+                // ReSharper disable once PossibleNullReferenceException
                 this.VideosView.View.GroupDescriptions.Clear();
             }
 
@@ -124,29 +126,14 @@ namespace JryVideo.Main
             return sources.SelectMany(VideoInfoViewModel.Create).ToArray();
         }
 
-        private class DefaultComparer : Comparer<VideoInfoViewModel>
+        private int CompareVideoInfoViewModel(VideoInfoViewModel x, VideoInfoViewModel y)
         {
-            /// <summary>
-            /// 在派生类中重写时，对同一类型的两个对象执行比较并返回一个值，指示一个对象是小于、等于还是大于另一个对象。
-            /// </summary>
-            /// <returns>
-            /// 一个有符号整数，指示 <paramref name="x"/> 与 <paramref name="y"/> 的相对值，如下表所示。 值 含义 小于零 <paramref name="x"/> 小于 <paramref name="y"/>。 零 <paramref name="x"/> 等于 <paramref name="y"/>。 大于零 <paramref name="x"/> 大于 <paramref name="y"/>。
-            /// </returns>
-            /// <param name="x">要比较的第一个对象。</param><param name="y">要比较的第二个对象。</param><exception cref="T:System.ArgumentException">类型 <paramref name="T"/> 没有实现 <see cref="T:System.IComparable`1"/> 泛型接口或 <see cref="T:System.IComparable"/> 接口。</exception>
-            public override int Compare(VideoInfoViewModel x, VideoInfoViewModel y)
-            {
-                Debug.Assert(x != null, "x != null");
-                Debug.Assert(y != null, "y != null");
+            Debug.Assert(x != null, "x != null");
+            Debug.Assert(y != null, "y != null");
 
-                if (x.Source.IsTracking != y.Source.IsTracking)
-                {
-                    return x.Source.IsTracking ? -1 : 1;
-                }
-                else
-                {
-                    return y.Source.Created.CompareTo(x.Source.Created);
-                }
-            }
+            return x.Source.IsTracking != y.Source.IsTracking
+                ? (x.Source.IsTracking ? -1 : 1)
+                : y.Source.Created.CompareTo(x.Source.Created);
         }
 
         private class DayOfWeekComparer : Comparer<VideoInfoViewModel>

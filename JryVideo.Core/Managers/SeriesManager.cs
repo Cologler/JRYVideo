@@ -13,7 +13,7 @@ namespace JryVideo.Core.Managers
     {
         public event EventHandler<JrySeries> SeriesCreated;
         public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoCreated;
-        public event EventHandler<IEnumerable<ChangeEventArgs<JryVideoInfo>>> VideoInfoUpdated;
+        public event EventHandler<IEnumerable<ChangingEventArgs<JryVideoInfo>>> VideoInfoUpdated;
         public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoRemoved;
 
         public DataCenter DataCenter { get; private set; }
@@ -87,7 +87,7 @@ namespace JryVideo.Core.Managers
 
                 if (bothIds.Length > 0)
                 {
-                    var items = bothIds.Select(id => new ChangeEventArgs<JryVideoInfo>(oldVideos[id], newVideos[id])).ToArray();
+                    var items = bothIds.Select(id => new ChangingEventArgs<JryVideoInfo>(oldVideos[id], newVideos[id])).ToArray();
                     this.VideoInfoUpdated.BeginFire(this, items);
                 }
 

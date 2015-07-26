@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Editable;
 using System.Diagnostics;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -14,7 +15,6 @@ namespace JryVideo.Model
             this.ArtistIds = new List<JryVideoArtistInfo>();
         }
 
-        [EditableField]
         public string Type { get; set; }
 
         public int Year { get; set; }
@@ -25,16 +25,13 @@ namespace JryVideo.Model
 
         public List<string> Names { get; set; }
 
-        [EditableField]
         public string DoubanId { get; set; }
 
         /// <summary>
         /// 是否正在追剧
         /// </summary>
-        [EditableField]
         public bool IsTracking { get; set; }
 
-        [EditableField]
         public string ImdbId { get; set; }
 
         public int EpisodesCount { get; set; }
@@ -46,10 +43,16 @@ namespace JryVideo.Model
         public DayOfWeek? DayOfWeek { get; set; }
 
         /// <summary>
-        /// may not DayOfWeek
+        /// may not DayOfWeek (utc)
         /// </summary>
-        [EditableField]
         public DateTime? StartDate { get; set; }
+
+        [BsonIgnore]
+        public DateTime? StartLocalDate
+        {
+            get { return this.StartDate.HasValue ? this.StartDate.Value.ToLocalTime() : (DateTime?) null; }
+            set { this.StartDate = value.HasValue ? value.Value.ToUniversalTime() : (DateTime?)null; }
+        }
 
         public int GetTodayEpisode(DateTime dt)
         {
@@ -105,7 +108,7 @@ namespace JryVideo.Model
 
         public static bool IsIndexValid(int index)
         {
-            return index > 0 && index < 100;
+            return index > 0;
         }
 
         public static bool IsEpisodesCountValid(int episodesCount)

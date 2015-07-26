@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Editable;
 using System.Enums;
 using System.Globalization;
 using System.Linq;
@@ -57,6 +58,7 @@ namespace JryVideo.Controls.EditVideo
 
         public ObservableCollection<NameValuePair<string, DayOfWeek?>> DayOfWeekCollection { get; private set; }
 
+        [EditableField]
         public string Type
         {
             get { return this.selectedType; }
@@ -69,25 +71,29 @@ namespace JryVideo.Controls.EditVideo
             set { this.SetPropertyRef(ref this.year, value); }
         }
 
+        [EditableField]
         public string DoubanId
         {
             get { return this.doubanId; }
             set { this.SetPropertyRef(ref this.doubanId, value); }
         }
 
+        [EditableField]
         public string ImdbId
         {
             get { return this.imdbId; }
             set { this.SetPropertyRef(ref this.imdbId, value); }
         }
 
+        [EditableField]
         public bool IsTracking
         {
             get { return this.isTracking; }
             set { this.SetPropertyRef(ref this.isTracking, value); }
         }
 
-        public DateTime? StartDate
+        [EditableField]
+        public DateTime? StartLocalDate
         {
             get { return this.startDate; }
             set { this.SetPropertyRef(ref this.startDate, value); }

@@ -1,4 +1,5 @@
-﻿using System.Enums;
+﻿using System.ComponentModel.Editable;
+using System.Enums;
 using System.Threading.Tasks;
 using JryVideo.Common;
 using JryVideo.Core;
@@ -10,6 +11,7 @@ namespace JryVideo.Controls.EditFlag
     {
         private string value;
 
+        [EditableField]
         public string Value
         {
             get { return this.value ?? ""; }

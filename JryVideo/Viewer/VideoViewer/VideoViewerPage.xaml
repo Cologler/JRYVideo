@@ -91,6 +91,7 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
@@ -119,19 +120,37 @@
                            Grid.Column="1"
                            Text="{Binding Info.Source.DoubanId}"
                            Style="{StaticResource LabelTextBlockStyle}" />
-                
+
                 <Button Content="douban"
                         Grid.Row="2"
                         Grid.Column="1"
+                        Width="80"
                         HorizontalAlignment="Right"
                         Click="GotoDoubanButton_OnClick"
-                        Visibility="{Binding Info.IsEnterDoubanButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        Visibility="{Binding Info.Source.DoubanId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
 
                 <TextBlock Grid.Row="3"
+                           Text="imdb id"
+                           Style="{StaticResource LabelTextBlockStyle}" />
+
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{Binding Info.Source.ImdbId}"
+                           Style="{StaticResource LabelTextBlockStyle}" />
+
+                <Button Content="imdb"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Width="80"
+                        HorizontalAlignment="Right"
+                        Click="GotoImdbButton_OnClick"
+                        Visibility="{Binding Info.Source.ImdbId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
+
+                <TextBlock Grid.Row="4"
                            Text="video"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
-                <Grid Grid.Row="3"
+                <Grid Grid.Row="4"
                       Grid.Column="1"
                       Background="#00000000"
                       ToolTip="{Binding Info.VideoFullNames}">
@@ -285,7 +304,8 @@
 
                                                 <Grid Margin="0,4,0,0"
                                                       Grid.Row="1"
-                                                      HorizontalAlignment="Left">
+                                                      HorizontalAlignment="Left"
+                                                      Visibility="{Binding DisplayFormat, Converter={StaticResource NullCollapsedValueConverter}}">
                                                     <TextBlock Text="{Binding DisplayFormat}" />
                                                 </Grid>
 

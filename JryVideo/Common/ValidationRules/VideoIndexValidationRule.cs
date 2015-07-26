@@ -32,7 +32,7 @@ namespace JryVideo.Common.ValidationRules
 
             if (!JryVideoInfo.IsIndexValid(index))
             {
-                return new ValidationResult(false, "this is a invalid index ( 0 < index < 100 ).");
+                return new ValidationResult(false, "this is a invalid index ( 0 < index ).");
             }
 
             return ValidationResult.ValidResult;

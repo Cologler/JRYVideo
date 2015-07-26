@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Editable;
 using System.Diagnostics;
 using System.Enums;
 using System.Linq;
@@ -90,24 +91,28 @@ namespace JryVideo.Editors.EntityEditor
             this.Extensions.AddRange((await manager.LoadAsync(JryFlagType.EntityExtension)).Select(z => z.Value));
         }
 
+        [EditableField]
         public string Resolution
         {
             get { return this.resolution; }
             set { this.SetPropertyRef(ref this.resolution, value); }
         }
 
+        [EditableField]
         public string FilmSource
         {
             get { return this.filmSource; }
             set { this.SetPropertyRef(ref this.filmSource, value); }
         }
 
+        [EditableField]
         public string AudioSource
         {
             get { return this.audioSource; }
             set { this.SetPropertyRef(ref this.audioSource, value); }
         }
 
+        [EditableField]
         public string Extension
         {
             get { return this.extension; }

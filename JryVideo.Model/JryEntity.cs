@@ -28,19 +28,15 @@ namespace JryVideo.Model
         /// <summary>
         /// can not empty.
         /// </summary>
-        [EditableField]
         public string Resolution { get; set; }
-
-        [EditableField]
+        
         public string FilmSource { get; set; }
-
-        [EditableField]
+        
         public string AudioSource { get; set; }
 
         /// <summary>
         /// can not empty.
         /// </summary>
-        [EditableField]
         public string Extension { get; set; }
 
         protected override bool InnerTestHasError()

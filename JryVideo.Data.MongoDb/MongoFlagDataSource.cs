@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
@@ -19,9 +20,10 @@ namespace JryVideo.Data.MongoDb
         {
             var filter = Builders<JryFlag>.Filter;
 
-            return await (await this.Collection.FindAsync(
+            return (await (await this.Collection.FindAsync(
                 filter.Eq(t => t.Type, type)))
-                .ToListAsync();
+                .ToListAsync())
+                .OrderByDescending(z => z.Count);
         }
 
         public async Task<bool> RefMathAsync(JryFlagType type, string value, int count)

@@ -6,7 +6,7 @@
                       MinHeight="600"
                       MinWidth="1000"
                       WindowStartupLocation="CenterScreen"
-                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
                       WindowTitleBrush="{DynamicResource AccentColorBrush}"
                       BorderThickness="1"
                       ShowTitleBar="False">

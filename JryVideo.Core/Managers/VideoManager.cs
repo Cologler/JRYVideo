@@ -11,7 +11,7 @@ namespace JryVideo.Core.Managers
     public class VideoManager : JryObjectManager<Model.JryVideo, IJasilyEntitySetProvider<Model.JryVideo, string>>
     {
         public event EventHandler<IEnumerable<JryEntity>> EntitiesCreated;
-        public event EventHandler<IEnumerable<ChangeEventArgs<JryEntity>>> EntitiesUpdated;
+        public event EventHandler<IEnumerable<ChangingEventArgs<JryEntity>>> EntitiesUpdated;
         public event EventHandler<IEnumerable<JryEntity>> EntitiesRemoved;
 
         public VideoManager(IJasilyEntitySetProvider<Model.JryVideo, string> source)
@@ -95,7 +95,7 @@ namespace JryVideo.Core.Managers
 
                 if (bothIds.Length > 0)
                 {
-                    var items = bothIds.Select(id => new ChangeEventArgs<JryEntity>(oldEntities[id], newEntities[id])).ToArray();
+                    var items = bothIds.Select(id => new ChangingEventArgs<JryEntity>(oldEntities[id], newEntities[id])).ToArray();
                     this.EntitiesUpdated.BeginFire(this, items);
                 }
 

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using JryVideo.Common;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Selectors.FlagSelector
 {
@@ -30,8 +31,23 @@ namespace JryVideo.Selectors.FlagSelector
 
             this.DataContext = this.ViewModel = new FlagSelectorViewModel(type, readySelected ?? Enumerable.Empty<string>());
             this.EditFlagUserControl.FlagType = type;
+            this.EditFlagUserControl.ViewModel.Creating += this.EditFlagUserControl_ViewModel_Creating;
             this.EditFlagUserControl.ViewModel.Created += this.ViewModel.EditFlagUserControl_ViewModel_Created;
             this.ViewModel.LoadAsync();
+        }
+
+
+
+        public void EditFlagUserControl_ViewModel_Creating(object sender, RequestActionEventArgs<JryFlag> e)
+        {
+            this.Dispatcher.Invoke(async () =>
+            {
+                if (this.ViewModel.Items.Collection.FirstOrDefault(z => z.Source.Value == e.Arg.Value) != null)
+                {
+                    e.IsAccept = false;
+                    await this.ShowMessageAsync("error", String.Format("the '{0}' was ready in {1}", e.Arg.Value, this.ViewModel.Type.GetLocalizeString()));
+                }
+            });
         }
 
         private void AccetpButton_OnClick(object sender, RoutedEventArgs e)

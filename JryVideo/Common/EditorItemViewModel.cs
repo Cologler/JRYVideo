@@ -11,6 +11,7 @@ namespace JryVideo.Common
     public abstract class EditorItemViewModel<T> : JasilyEditableViewModel<T>
         where T : JryObject, new()
     {
+        public event EventHandler<RequestActionEventArgs<T>> Creating;
         public event EventHandler<T> Created;
         public event EventHandler<T> Updated;
 
@@ -57,7 +58,9 @@ namespace JryVideo.Common
             switch (this.Action)
             {
                 case ObjectChangedAction.Create:
-                    if (await provider.InsertAsync(obj))
+                    var arg = new RequestActionEventArgs<T>(obj) { IsAccept = true };
+                    this.Creating.Fire(this, arg);
+                    if (arg.IsAccept && await provider.InsertAsync(obj))
                     {
                         this.Clear();
                         this.Created.BeginFire(this, obj);

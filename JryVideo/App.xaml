@@ -31,6 +31,8 @@
 
                     <convert:NullCollapsedValueConverter x:Key="NullCollapsedValueConverter" />
 
+                    <convert:EmptyCollapsedValueConverter x:Key="EmptyCollapsedValueConverter" />
+
                     <Style x:Key="TitleStyle"
                            TargetType="TextBlock"
                            BasedOn="{StaticResource {x:Type TextBlock}}">
