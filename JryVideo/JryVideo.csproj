@@ -321,6 +321,10 @@
       <Project>{8442e8e7-d515-4481-8a36-71711b1fbf79}</Project>
       <Name>Jasily.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Jasily\Jasily\Jasily.csproj">
+      <Project>{6adb6547-070b-4518-a2d1-e3bc349730bc}</Project>
+      <Name>Jasily</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JryVideo.Core\JryVideo.Core.csproj">
       <Project>{330D6358-910A-4C5D-8251-E7CF4F456491}</Project>
       <Name>JryVideo.Core</Name>

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
+using Jasily.Net;
 using JryVideo.Core.Douban;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;

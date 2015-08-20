@@ -1,6 +1,7 @@
 ﻿using System.Enums;
 using System.Net;
 using System.Threading.Tasks;
+using Jasily.Net;
 using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Douban;

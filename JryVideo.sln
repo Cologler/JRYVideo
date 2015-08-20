@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo", "JryVideo\JryVideo.csproj", "{B58150EA-B988-4B97-BE29-77FF0ED7493C}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo.Data.MongoDb", "JryVideo.Data.MongoDb\JryVideo.Data.MongoDb.csproj", "{6491FB75-C11F-45B3-AFE1-45CD05E6B382}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo.Data", "JryVideo.Data\JryVideo.Data.csproj", "{5705A29D-D8FE-4243-90AD-D43B83BC809D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily", "Jasily\Jasily\Jasily.csproj", "{6ADB6547-070B-4518-A2D1-E3BC349730BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{5705A29D-D8FE-4243-90AD-D43B83BC809D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5705A29D-D8FE-4243-90AD-D43B83BC809D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5705A29D-D8FE-4243-90AD-D43B83BC809D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ADB6547-070B-4518-A2D1-E3BC349730BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ADB6547-070B-4518-A2D1-E3BC349730BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ADB6547-070B-4518-A2D1-E3BC349730BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ADB6547-070B-4518-A2D1-E3BC349730BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

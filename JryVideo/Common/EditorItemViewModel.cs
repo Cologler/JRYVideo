@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel.Editable;
+using Jasily.ComponentModel;
 using System.Diagnostics;
 using System.Enums;
 using System.Threading.Tasks;

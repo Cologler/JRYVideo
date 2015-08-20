@@ -31,7 +31,7 @@ namespace JryVideo.Data.MongoDb
                     break;
 
                 case SearchElement.ElementType.SeriesId:
-                    return (await this.FindAsync(search.Value)).GetIEnumerable();
+                    return (await this.FindAsync(search.Value)).IntoArray();
 
                 case SearchElement.ElementType.VideoId:
                     filter = builder.Eq("Videos.Id", search.Value);

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Editable;
 using System.Enums;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Common.ValidationRules;
 using JryVideo.Core;

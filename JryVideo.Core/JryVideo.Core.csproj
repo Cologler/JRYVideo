@@ -69,6 +69,10 @@
       <Project>{8442E8E7-D515-4481-8A36-71711B1FBF79}</Project>
       <Name>Jasily.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Jasily\Jasily\Jasily.csproj">
+      <Project>{6adb6547-070b-4518-a2d1-e3bc349730bc}</Project>
+      <Name>Jasily</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JryVideo.Data.MongoDb\JryVideo.Data.MongoDb.csproj">
       <Project>{6491fb75-c11f-45b3-afe1-45cd05e6b382}</Project>
       <Name>JryVideo.Data.MongoDb</Name>

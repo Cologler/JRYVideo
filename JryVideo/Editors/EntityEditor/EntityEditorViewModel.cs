@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Editable;
 using System.Diagnostics;
 using System.Enums;
 using System.Linq;
 using System.Threading.Tasks;
+using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Model;
