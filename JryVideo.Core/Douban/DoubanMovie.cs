@@ -24,6 +24,12 @@ namespace JryVideo.Core.Douban
         [DataMember(Name = "subtype")]
         public string SubType;
 
+        [DataMember(Name = "seasons_count")]
+        public int? SeasonsCount;
+
+        [DataMember(Name = "episodes_count")]
+        public int? EpisodesCount;
+
         public override string GetLargeImageUrl()
         {
             return this.Images.Large.ThrowIfNullOrEmpty("Large");

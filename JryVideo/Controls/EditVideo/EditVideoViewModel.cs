@@ -136,7 +136,7 @@ namespace JryVideo.Controls.EditVideo
 
         public async Task LoadDoubanAsync()
         {
-            if (String.IsNullOrWhiteSpace(this.DoubanId)) return;
+            if (this.DoubanId.IsNullOrWhiteSpace()) return;
 
             var info = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
 
@@ -177,24 +177,36 @@ namespace JryVideo.Controls.EditVideo
         {
             var doubanSecondName = DoubanHelper.ParseSecondName(info).AsLines();
 
-            this.Names = String.IsNullOrWhiteSpace(this.Names)
+            this.Names = this.Names.IsNullOrWhiteSpace()
                 ? doubanSecondName
                 : String.Join("\r\n", this.Names, doubanSecondName);
 
-            if (String.IsNullOrWhiteSpace(this.Year))
+            if (this.Year.IsNullOrWhiteSpace())
             {
                 this.Year = info.Year;
             }
 
-            if (String.IsNullOrWhiteSpace(this.Index))
+            if (this.Index.IsNullOrWhiteSpace())
             {
-                var doubanMainNames = DoubanHelper.ParseMainName(info);
-                var group = doubanMainNames
-                    .Select(z => IndexParse.Match(z))
-                    .Where(z => z.Success)
-                    .Select(z => z.Groups[1])
-                    .FirstOrDefault();
-                if (group != null) this.Index = group.Value;
+                if (info.SeasonsCount.HasValue)
+                {
+                    this.Index = info.SeasonsCount?.ToString();
+                }
+                else
+                {
+                    var doubanMainNames = DoubanHelper.ParseMainName(info);
+                    var group = doubanMainNames
+                        .Select(z => IndexParse.Match(z))
+                        .Where(z => z.Success)
+                        .Select(z => z.Groups[1])
+                        .FirstOrDefault();
+                    if (group != null) this.Index = group.Value;
+                }
+            }
+
+            if (this.EpisodesCount.IsNullOrWhiteSpace())
+            {
+                this.EpisodesCount = info.EpisodesCount?.ToString();
             }
         }
 
@@ -209,7 +221,7 @@ namespace JryVideo.Controls.EditVideo
             this.IndexCollection.AddRange(Enumerable.Range(1, 8).Select(z => z.ToString()));
 
             // episodes count
-            this.EpisodesCountCollection.AddRange(new[] { 1, 8, 10, 12, 13, 24, 25 }.Select(z => z.ToString()));
+            this.EpisodesCountCollection.AddRange(new[] { 1, 8, 10, 11, 12, 13, 22, 24, 25, 26 }.Select(z => z.ToString()));
 
             // day of week
             this.DayOfWeekCollection.Add(new NameValuePair<string, DayOfWeek?>("None", null));
