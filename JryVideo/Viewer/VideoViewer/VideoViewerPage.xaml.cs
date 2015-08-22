@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using JryVideo.Common;
@@ -185,6 +188,44 @@ namespace JryVideo.Viewer.VideoViewer
             }
         }
 
-        
+        private async void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ClickCount > 1 && this.ViewModel.Info.Cover != null)
+            {
+                var buffer = this.ViewModel.Info.Cover.BinaryData;
+                if (buffer.Length > 0)
+                {
+                    string path = null;
+
+                    do
+                    {
+                        path = Path.ChangeExtension(Path.GetTempFileName(), "jpg");
+                    } while (File.Exists(path));
+                    
+                    using (var file = File.Create(path))
+                    {
+                        file.Write(buffer);
+                    }
+
+                    await Task.Run(() =>
+                    {
+                        using (var p = Process.Start(path))
+                        {
+                            p?.WaitForExit();
+                        }
+
+                        try
+                        {
+                            File.Delete(path);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                    });
+                    
+                }
+            }
+        }
     }
 }

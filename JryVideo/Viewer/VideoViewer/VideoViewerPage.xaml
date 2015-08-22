@@ -78,7 +78,8 @@
                 
                 <Image Source="{Binding Info.Cover.BinaryData}"
                        RenderOptions.BitmapScalingMode="Fant"
-                       RenderOptions.EdgeMode="Aliased" />
+                       RenderOptions.EdgeMode="Aliased"
+                       MouseLeftButtonDown="Image_MouseLeftButtonDown" />
             </Grid>
 
             <Grid Grid.Row="3">
