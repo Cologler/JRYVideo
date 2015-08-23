@@ -67,12 +67,16 @@ namespace JryVideo.Main
         {
             this.HasLast = this.HasNext = false;
 
-
             var dataCenter = JryVideoCore.Current.CurrentDataCenter;
             var search = this.searchResultView;
             if (search != null && search.Equals(dataCenter, this.IsOnlyTracking, this.SearchText, this.PageIndex, this.PageSize))
             {
                 return null;
+            }
+
+            if (search == null || !search.IsSearchTextEquals(this.SearchText))
+            {
+                this.PageIndex = 0;
             }
 
             search = this.IsOnlyTracking
@@ -295,6 +299,11 @@ namespace JryVideo.Main
                 if (isOnlyTracking) return this.IsOnlyTracking;
 
                 if (pageIndex != this.PageIndex || pageSize != this.PageSize) return false;
+                return this.IsSearchTextEquals(searchText);
+            }
+
+            public bool IsSearchTextEquals(string searchText)
+            {
                 if (searchText.IsNullOrWhiteSpace()) return this.SearchText.IsNullOrWhiteSpace();
                 return searchText.Trim() == this.SearchText;
             }

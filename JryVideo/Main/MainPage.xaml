@@ -166,7 +166,9 @@
                           BorderThickness="0"
                           ItemsSource="{Binding VideosViewModel.VideosView.View}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          SelectedItem="{Binding VideosViewModel.VideosView.Selected}">
+                          SelectedItem="{Binding VideosViewModel.VideosView.Selected}"
+                          Style="{StaticResource VirtualisedMetroListView}"
+                          ScrollViewer.IsDeferredScrollingEnabled="False">
 
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
