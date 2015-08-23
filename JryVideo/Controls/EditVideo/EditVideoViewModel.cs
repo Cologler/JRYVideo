@@ -284,13 +284,10 @@ namespace JryVideo.Controls.EditVideo
             if (this.Action == ObjectChangedAction.Create)
                 obj.BuildMetaData();
 
-            if (this.Cover != null)
+            if (this.Cover?.Action == ObjectChangedAction.Create)
             {
-                if (this.Cover.Action == ObjectChangedAction.Create)
-                {
-                    var cover = await this.Cover.CommitAsync();
-                    obj.CoverId = cover.Id;
-                }
+                var cover = await this.Cover.CommitAsync();
+                obj.CoverId = cover.Id;
             }
 
             var videoManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(parent);

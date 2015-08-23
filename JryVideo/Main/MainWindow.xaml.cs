@@ -36,7 +36,7 @@ namespace JryVideo.Main
                 this.MainPage = new MainPage();
                 this.MainPage.VideoSelected += this.MainPage_VideoSelected;
                 this.MainFrame.Navigate(this.MainPage);
-                //this.BeginRefresh();
+                this.BeginRefresh();
             }
         }
 
