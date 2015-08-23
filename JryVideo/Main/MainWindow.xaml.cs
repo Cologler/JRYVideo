@@ -35,32 +35,36 @@ namespace JryVideo.Main
             {
                 this.MainPage = new MainPage();
                 this.MainPage.VideoSelected += this.MainPage_VideoSelected;
-
-                this.NavigateToMainPage();
-
-                this.BeginRefresh();
+                this.MainFrame.Navigate(this.MainPage);
+                //this.BeginRefresh();
             }
         }
 
-        private async void BeginRefresh()
+        private void BeginRefresh()
         {
-            while (true)
+            Task.Run(async () =>
             {
-                var bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
-                this.MemoryTextBlock.Text = bs.ToString();
-                if (bs.OriginValue > 1024 * 1024 * 200) GC.Collect();
-                await Task.Delay(1000);
-            }
+                while (true)
+                {
+                    var bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
+                    if (bs.OriginValue > 1024 * 1024 * 200)
+                    {
+                        GC.Collect();
+                        bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
+                    }
+                    await this.Dispatcher.BeginInvoke(() =>
+                    {
+                        this.MemoryTextBlock.Text = bs.ToString();
+                    });
+                    await Task.Delay(1000);
+                }
+            });
+            
         }
 
         void MainPage_VideoSelected(object sender, VideoInfoViewModel e)
         {
             this.NavigateToVideoViewerPage(e);
-        }
-
-        private void NavigateToMainPage()
-        {
-            this.MainFrame.Navigate(this.MainPage);
         }
 
         private async void NavigateToVideoViewerPage(VideoInfoViewModel info)

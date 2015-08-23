@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Jasily.Diagnostics;
 using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Selectors.Common;
@@ -26,10 +28,12 @@ namespace JryVideo.Selectors.SeriesSelector
         {
             var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
 
+            JasilyDebug.Pointer();
             this.Items.Collection.AddRange(
                 await Task.Run(async () =>
                     (await seriesManager.LoadAsync())
                     .Select(z => new SeriesViewModel(z))));
+            JasilyDebug.Pointer();
         }
     }
 }

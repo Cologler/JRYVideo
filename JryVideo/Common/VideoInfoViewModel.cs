@@ -35,16 +35,10 @@ namespace JryVideo.Common
         }
 
         [NotifyPropertyChanged]
-        public string VideoNames
-        {
-            get { return this.Source.Names.FirstOrDefault() ?? ""; }
-        }
+        public string VideoNames => this.Source.Names.FirstOrDefault() ?? "";
 
         [NotifyPropertyChanged]
-        public string VideoFullNames
-        {
-            get { return this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines(); }
-        }
+        public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
 
         public string DayOfWeek
         {

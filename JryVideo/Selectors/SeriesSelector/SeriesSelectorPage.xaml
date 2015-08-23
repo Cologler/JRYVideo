@@ -35,7 +35,9 @@
                           x:Name="SeriesListView"
                           ItemsSource="{Binding Items.View}"
                           BorderThickness="0"
-                          SelectedItem="{Binding Items.Selected, Mode=TwoWay}">
+                          SelectedItem="{Binding Items.Selected, Mode=TwoWay}"
+                          Style="{StaticResource VirtualisedMetroListView}"
+                          ScrollViewer.IsDeferredScrollingEnabled="False">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid d:DataContext="{d:DesignInstance common:SeriesViewModel}">

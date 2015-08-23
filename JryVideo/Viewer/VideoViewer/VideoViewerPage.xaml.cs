@@ -188,14 +188,14 @@ namespace JryVideo.Viewer.VideoViewer
             }
         }
 
-        private async void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.ClickCount > 1 && this.ViewModel.Info.Cover != null)
             {
                 var buffer = this.ViewModel.Info.Cover.BinaryData;
                 if (buffer.Length > 0)
                 {
-                    string path = null;
+                    string path;
 
                     do
                     {
@@ -207,7 +207,7 @@ namespace JryVideo.Viewer.VideoViewer
                         file.Write(buffer);
                     }
 
-                    await Task.Run(() =>
+                    Task.Run(() =>
                     {
                         using (var p = Process.Start(path))
                         {
@@ -223,7 +223,6 @@ namespace JryVideo.Viewer.VideoViewer
                             // ignored
                         }
                     });
-                    
                 }
             }
         }

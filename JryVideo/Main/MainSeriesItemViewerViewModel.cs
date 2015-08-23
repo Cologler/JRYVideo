@@ -16,21 +16,17 @@ namespace JryVideo.Main
 {
     public class MainSeriesItemViewerViewModel : SeriesItemViewerViewModel
     {
-        private string currentSearchText;
-        private int currentPageIndex;
         private string searchText;
         private string filterText;
         private bool hasLast;
         private bool hasNext;
-        private bool currentIsOnlyTracking;
         private bool isOnlyTracking;
-        private DataCenter lastDataCenter;
+        private SearchResult searchResultView;
 
         public MainSeriesItemViewerViewModel()
         {
             this.isOnlyTracking = true;
             this.PageSize = 50;
-            this.currentPageIndex = -1; // then init load.
         }
 
         public string FilterText
@@ -71,59 +67,36 @@ namespace JryVideo.Main
         {
             this.HasLast = this.HasNext = false;
 
-            var text = (this.SearchText ?? "").Trim();
 
-            if (this.currentPageIndex == this.PageIndex &&
-                this.currentIsOnlyTracking == this.IsOnlyTracking &&
-                JryVideoCore.Current.CurrentDataCenter == this.lastDataCenter)
+            var dataCenter = JryVideoCore.Current.CurrentDataCenter;
+            var search = this.searchResultView;
+            if (search != null && search.Equals(dataCenter, this.IsOnlyTracking, this.SearchText, this.PageIndex, this.PageSize))
             {
-                if (text.IsNullOrWhiteSpace() && this.currentSearchText.IsNullOrWhiteSpace())
-                {
-                    return null;
-                }
-
-                if (!text.IsNullOrWhiteSpace() && text == this.currentSearchText)
-                {
-                    return null;
-                }
+                return null;
             }
 
-            JrySeries[] sources;
-            this.lastDataCenter = JryVideoCore.Current.CurrentDataCenter;
+            search = this.IsOnlyTracking
+                ? await SearchResult.OnlyTrackingAsync(dataCenter)
+                : await SearchResult.SearchAsync(dataCenter, this.SearchText, this.PageIndex, this.PageSize);
 
-            if (this.IsOnlyTracking && !this.currentIsOnlyTracking) // 从 not tracking 到 tracking
+            this.searchResultView = search;
+
+            this.HasLast = search.HasLast;
+            this.HasNext = search.HasNext;
+
+            // ReSharper disable once PossibleNullReferenceException
+            this.VideosView.View.GroupDescriptions.Clear();
+            if (search.IsOnlyTracking)
             {
-                var pageIndex = this.PageIndex = 0; // 下次就重新回到第一页
-
-                sources = await this.QuerySeriesAsync(pageIndex);
-                this.HasLast = false;
-                this.HasNext = false;
-
                 this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();//new DayOfWeekComparer();
-                // ReSharper disable once PossibleNullReferenceException
-                this.VideosView.View.GroupDescriptions.Clear();
                 this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription("DayOfWeek"));
             }
             else
             {
-
-                if (text != this.currentSearchText)
-                    this.PageIndex = 0;
-                var pageIndex = this.PageIndex;
-
-                sources = await this.QuerySeriesAsync(pageIndex, text);
-                this.currentSearchText = text;
-                this.currentPageIndex = pageIndex;
-                this.HasLast = this.PageIndex > 0;
-                this.HasNext = sources.Length == this.PageSize;
-
                 this.VideosView.View.CustomSort = Comparer<VideoInfoViewModel>.Create(this.CompareVideoInfoViewModel);
-                // ReSharper disable once PossibleNullReferenceException
-                this.VideosView.View.GroupDescriptions.Clear();
             }
 
-            this.currentIsOnlyTracking = this.IsOnlyTracking;
-            return sources.SelectMany(VideoInfoViewModel.Create).ToArray();
+            return search.Items.SelectMany(VideoInfoViewModel.Create).ToArray();
         }
 
         private int CompareVideoInfoViewModel(VideoInfoViewModel x, VideoInfoViewModel y)
@@ -205,19 +178,6 @@ namespace JryVideo.Main
             }
         }
 
-        private async Task<JrySeries[]> QuerySeriesAsync(int pageIndex, string searchText = null)
-        {
-            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
-
-            if (this.IsOnlyTracking)
-                return await Task.Run(async () => (await manager.ListTrackingAsync()).ToArray());
-
-            if (searchText.IsNullOrWhiteSpace())
-                return await Task.Run(async () => (await manager.LoadAsync(pageIndex * this.PageSize, this.PageSize)).ToArray());
-            else
-                return await Task.Run(async () => (await manager.QueryAsync(searchText, pageIndex * this.PageSize, this.PageSize)).ToArray());
-        }
-
         public int PageSize { get; set; }
 
         public int PageIndex { get; set; }
@@ -256,6 +216,87 @@ namespace JryVideo.Main
             {
                 this.VideosView.Collection.Clear();
                 this.VideosView.Collection.AddRange(source);
+            }
+        }
+
+        private class SearchResult
+        {
+            public string SearchText { get; private set; }
+
+            public bool IsOnlyTracking { get; private set; }
+
+            public int PageIndex { get; private set; }
+
+            public int PageSize { get; private set; }
+
+            public bool HasLast => this.PageIndex > 0;
+
+            public bool HasNext { get; private set; }
+
+            public DataCenter DataCenter { get; private set; }
+
+            public List<JrySeries> Items { get; private set; }
+
+            private SearchResult(DataCenter dataCenter)
+            {
+                this.DataCenter = dataCenter;
+            }
+
+            public static async Task<SearchResult> OnlyTrackingAsync(DataCenter dataCenter)
+            {
+                var result = new SearchResult(dataCenter)
+                {
+                    IsOnlyTracking = true
+                };
+                await result.LoadAsync(dataCenter.SeriesManager);
+                return result;
+            }
+
+            public static async Task<SearchResult> SearchAsync(DataCenter dataCenter, string searchText, int pageIndex, int pageSize)
+            {
+                var result = new SearchResult(dataCenter)
+                {
+                    SearchText = searchText?.Trim() ?? string.Empty,
+                    PageIndex = pageIndex,
+                    PageSize = pageSize
+                };
+                await result.LoadAsync(dataCenter.SeriesManager);
+                return result;
+            }
+
+            public async Task LoadAsync(SeriesManager manager)
+            {
+                var items = await this.QuerySeriesAsync(manager);
+
+                this.HasNext = !this.IsOnlyTracking && items.Count > this.PageSize;
+                if (this.HasNext) items.RemoveAt(items.Count - 1);
+
+                this.Items = items;
+            }
+
+            private async Task<List<JrySeries>> QuerySeriesAsync(SeriesManager manager)
+            {
+                if (this.IsOnlyTracking)
+                    return await Task.Run(async () => (
+                        await manager.ListTrackingAsync()).ToList());
+
+                if (this.SearchText.IsNullOrWhiteSpace())
+                    return await Task.Run(async () => (
+                        await manager.LoadAsync(this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
+                else
+                    return await Task.Run(async () => (
+                        await manager.QueryAsync(this.SearchText, this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
+            }
+
+            public bool Equals(DataCenter dataCenter, bool isOnlyTracking, string searchText, int pageIndex, int pageSize)
+            {
+                if (dataCenter != this.DataCenter) return false;
+
+                if (isOnlyTracking) return this.IsOnlyTracking;
+
+                if (pageIndex != this.PageIndex || pageSize != this.PageSize) return false;
+                if (searchText.IsNullOrWhiteSpace()) return this.SearchText.IsNullOrWhiteSpace();
+                return searchText.Trim() == this.SearchText;
             }
         }
     }

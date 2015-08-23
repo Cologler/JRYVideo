@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using Jasily.Diagnostics;
 using JryVideo.Add.VideoCreator;
 using JryVideo.Common;
 using JryVideo.Selectors.SeriesSelector;
@@ -64,7 +65,9 @@ namespace JryVideo.Add
             this.TitleTextBlock.Text = "select series";
             this.LastButton.Visibility = Visibility.Hidden;
 
+            JasilyDebug.Pointer();
             this.ContentFrame.Navigate(this.seriesSelectorPage);
+            JasilyDebug.Pointer();
         }
 
         private void NavigateToSeriesItemViewerPage(SeriesViewModel series)

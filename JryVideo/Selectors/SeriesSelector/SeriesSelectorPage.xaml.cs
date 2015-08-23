@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using Jasily.Diagnostics;
 using JryVideo.Common;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
@@ -15,12 +17,14 @@ namespace JryVideo.Selectors.SeriesSelector
     {
         public SeriesSelectorPage()
         {
+            JasilyDebug.Pointer();
             this.InitializeComponent();
+            JasilyDebug.Pointer();
 
             this.EditSeriesUserControl.ViewModel.Created += this.EditSeriesUserControl_ViewModel_Created;
         }
 
-        public SeriesSelectorViewModel SelectorViewModel { get; private set; }
+        public SeriesSelectorViewModel SelectorViewModel { get; } = new SeriesSelectorViewModel();
 
         void EditSeriesUserControl_ViewModel_Created(object sender, JrySeries e)
         {
@@ -42,13 +46,14 @@ namespace JryVideo.Selectors.SeriesSelector
         /// <param name="e">包含事件数据的 <see cref="T:System.Windows.RoutedEventArgs"/>。</param>
         protected override async void OnInitialized(EventArgs e)
         {
+            JasilyDebug.Pointer();
             base.OnInitialized(e);
 
             this.EditSeriesUserControl.ViewModel.CreateMode();
-
-            this.DataContext = this.SelectorViewModel = new SeriesSelectorViewModel();
+            this.DataContext = this.SelectorViewModel;
 
             await this.SelectorViewModel.LoadAsync();
+            JasilyDebug.Pointer();
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
