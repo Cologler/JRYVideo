@@ -28,7 +28,7 @@ namespace JryVideo.Core.Douban
         public int? SeasonsCount;
 
         [DataMember(Name = "episodes_count")]
-        public int? EpisodesCount;
+        public string EpisodesCount;
 
         public override string GetLargeImageUrl()
         {
