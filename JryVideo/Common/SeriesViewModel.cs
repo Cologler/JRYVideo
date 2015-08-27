@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using Jasily.ComponentModel;
 using Jasily.Diagnostics;
 using JryVideo.Model;
 

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Jasily.ComponentModel;
+using Jasily.Windows.Data;
 using JryVideo.Core;
 
 namespace JryVideo.Common

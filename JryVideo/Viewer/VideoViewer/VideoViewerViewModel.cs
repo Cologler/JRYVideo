@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using Jasily.ComponentModel;
+using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
 

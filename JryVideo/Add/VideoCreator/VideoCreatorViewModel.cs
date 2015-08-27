@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Model;
 

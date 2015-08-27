@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using Jasily.ComponentModel;
+using Jasily.Windows.Data;
 using JryVideo.Common;
 
 namespace JryVideo.Viewer.SeriesItemViewer
