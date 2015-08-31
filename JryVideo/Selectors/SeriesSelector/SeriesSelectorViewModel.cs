@@ -21,7 +21,9 @@ namespace JryVideo.Selectors.SeriesSelector
 
             var keyword = this.FilterText.Trim().ToLower();
 
-            return obj.Source.Names.Any(z => z.ToLower().Contains(keyword));
+            return
+                obj.Source.Names.Any(z => z.ToLower().Contains(keyword)) ||
+                obj.Source.Videos.Any(z => z.DoubanId == keyword);
         }
 
         public async Task LoadAsync()
