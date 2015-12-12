@@ -1,40 +1,26 @@
 using Jasily.ComponentModel;
 using JryVideo.Model;
 using System;
+using System.Collections.Generic;
 
 namespace JryVideo.Common
 {
     public sealed class EntityViewModel : JasilyViewModel<JryEntity>
     {
-        private string displayExtension;
-        private string displayFansubs;
-        private string displaySubTitleLanguages;
-        private string displayTrackLanguages;
-        private string displayTags;
-
         public EntityViewModel(JryEntity source)
             : base(source)
         {
-            this.Reload();
+            this.RefreshProperties();
         }
 
-        public string DisplayExtension
-        {
-            get { return this.displayExtension; }
-            private set { this.SetPropertyRef(ref this.displayExtension, value); }
-        }
+        [NotifyPropertyChanged]
+        public string DisplayExtension => this.Source.Extension.ToUpper();
 
-        public string DisplayFansubs
-        {
-            get { return this.displayFansubs; }
-            private set { this.SetPropertyRef(ref this.displayFansubs, value); }
-        }
+        [NotifyPropertyChanged]
+        public string DisplayFansubs => ListToLine(this.Source.Fansubs);
 
-        public string DisplaySubTitleLanguages
-        {
-            get { return this.displaySubTitleLanguages; }
-            private set { this.SetPropertyRef(ref this.displaySubTitleLanguages, value); }
-        }
+        [NotifyPropertyChanged]
+        public string DisplaySubTitleLanguages => ListToLine(this.Source.SubTitleLanguages);
 
         [NotifyPropertyChanged]
         public bool HasSubTitleLanguages => this.Source.SubTitleLanguages.Count > 0;
@@ -42,37 +28,17 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public bool DontHasSubTitleLanguages => this.Source.SubTitleLanguages.Count == 0;
 
-        public string DisplayTrackLanguages
-        {
-            get { return this.displayTrackLanguages; }
-            private set { this.SetPropertyRef(ref this.displayTrackLanguages, value); }
-        }
-
-        public string DisplayTags
-        {
-            get { return this.displayTags; }
-            private set { this.SetPropertyRef(ref this.displayTags, value); }
-        }
+        [NotifyPropertyChanged]
+        public string DisplayTrackLanguages => ListToLine(this.Source.TrackLanguages);
 
         [NotifyPropertyChanged]
-        public string DisplayFormat
-        {
-            get
-            {
-                return this.Source.Format == null
-                    ? null
-                    : String.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);
-            }
-        }
+        public string DisplayTags => ListToLine(this.Source.Tags);
 
-        public void Reload()
-        {
-            this.DisplayExtension = this.Source.Extension.ToUpper();
-            this.DisplayFansubs = this.Source.Fansubs.Count > 0 ? this.Source.Fansubs.AsLines(" / ") : "[EMPTY]";
-            this.DisplaySubTitleLanguages = this.Source.SubTitleLanguages.Count > 0 ? this.Source.SubTitleLanguages.AsLines(" / ") : "[EMPTY]";
-            this.DisplayTrackLanguages = this.Source.TrackLanguages.Count > 0 ? this.Source.TrackLanguages.AsLines(" / ") : "[EMPTY]";
-            this.DisplayTags = this.Source.Tags.Count > 0 ? this.Source.Tags.AsLines(" / ") : "[EMPTY]";
-            base.RefreshProperties();
-        }
+        [NotifyPropertyChanged]
+        public string DisplayFormat => this.Source.Format == null
+            ? null
+            : string.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);
+
+        private static string ListToLine(List<string> lines) => lines.Count > 0 ? lines.AsLines(" / ") : "[EMPTY]";
     }
 }

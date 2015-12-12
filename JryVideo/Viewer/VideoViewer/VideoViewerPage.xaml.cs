@@ -1,16 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using JryVideo.Common;
+﻿using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Editors.VideoEditor;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -94,7 +93,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void CopyGuidButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var vm = ((FrameworkElement) sender).DataContext as EntityViewModel;
+            var vm = ((FrameworkElement)sender).DataContext as EntityViewModel;
 
             if (vm != null)
             {
@@ -104,7 +103,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void EditEntityButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var vm = ((FrameworkElement) sender).DataContext as EntityViewModel;
+            var vm = ((FrameworkElement)sender).DataContext as EntityViewModel;
 
             if (vm != null)
             {
@@ -117,7 +116,7 @@ namespace JryVideo.Viewer.VideoViewer
 
                 if (dlg.ShowDialog() == true)
                 {
-                    vm.Reload();
+                    vm.RefreshProperties();
                 }
             }
         }
@@ -138,7 +137,7 @@ namespace JryVideo.Viewer.VideoViewer
                 .ShowMessageAsync("warnning", "are you sure you want to delete it?", MessageDialogStyle.AffirmativeAndNegative))
                 == MessageDialogResult.Affirmative)
             {
-                var entity = ((FrameworkElement) sender).DataContext as EntityViewModel;
+                var entity = ((FrameworkElement)sender).DataContext as EntityViewModel;
                 if (entity != null)
                 {
                     await this.ViewModel.Video.RemoveAsync(entity);
@@ -201,7 +200,7 @@ namespace JryVideo.Viewer.VideoViewer
                     {
                         path = Path.ChangeExtension(Path.GetTempFileName(), "jpg");
                     } while (File.Exists(path));
-                    
+
                     using (var file = File.Create(path))
                     {
                         file.Write(buffer);
