@@ -237,69 +237,87 @@
                                                         </Style>
                                                     </Grid.Resources>
 
-                                                    <Grid Background="#FF5F5F"
-                                                          Margin="0,0,4,0">
-                                                        <Grid.ContextMenu>
+                                                    <Border Background="#FF5F5F"
+                                                            BorderBrush="#FF5F5F"
+                                                            BorderThickness="1"
+                                                            Margin="0,0,4,0">
+                                                        <Border.ContextMenu>
                                                             <ContextMenu>
                                                                 <MenuItem Header="copy"
                                                                           DataContext="{Binding Source.Extension}"
                                                                           Click="CopyStringMenuItem_OnClick" />
                                                             </ContextMenu>
-                                                        </Grid.ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayExtension}"/>
-                                                    </Grid>
+                                                    </Border>
 
-                                                    <Grid Background="#4E4EFB"
-                                                          Margin="0,0,4,0"
-                                                          Grid.Column="1">
-                                                        <Grid.ContextMenu>
+                                                    <Border Background="#4E4EFB"
+                                                            BorderBrush="#4E4EFB"
+                                                            BorderThickness="1"
+                                                            Margin="0,0,4,0"
+                                                            Grid.Column="1">
+                                                        <Border.ContextMenu>
                                                             <ContextMenu>
                                                                 <MenuItem Header="copy"
                                                                           ItemsSource="{Binding Source.Fansubs}"
                                                                           Click="CopyStringMenuItem_OnClick" />
                                                             </ContextMenu>
-                                                        </Grid.ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayFansubs}" />
-                                                    </Grid>
+                                                    </Border>
 
-                                                    <Grid Background="#FF8F42"
-                                                          Margin="0,0,4,0"
+                                                    <Grid Margin="0,0,4,0"
                                                           Grid.Column="2">
-                                                        <Grid.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Header="copy"
-                                                                          ItemsSource="{Binding Source.SubTitleLanguages}"
-                                                                          Click="CopyStringMenuItem_OnClick" />
-                                                            </ContextMenu>
-                                                        </Grid.ContextMenu>
-                                                        <TextBlock Text="{Binding DisplaySubTitleLanguages}" />
+                                                        <Border Background="#FF8F42"
+                                                                BorderThickness="1"
+                                                                BorderBrush="#FF8F42"
+                                                                Visibility="{Binding HasSubTitleLanguages, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <Border.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Header="copy"
+                                                                              ItemsSource="{Binding Source.SubTitleLanguages}"
+                                                                              Click="CopyStringMenuItem_OnClick" />
+                                                                </ContextMenu>
+                                                            </Border.ContextMenu>
+                                                            <TextBlock Text="{Binding DisplaySubTitleLanguages}" />
+                                                        </Border>
+                                                        <Border BorderThickness="1"
+                                                                BorderBrush="#FF8F42"
+                                                                Visibility="{Binding DontHasSubTitleLanguages, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <TextBlock Text="无字幕"
+                                                                       Foreground="#FF8F42" />
+                                                        </Border>
                                                     </Grid>
 
-                                                    <Grid Background="#08AE66"
-                                                          Margin="0,0,4,0"
-                                                          Grid.Column="3">
-                                                        <Grid.ContextMenu>
+                                                    <Border Background="#08AE66"
+                                                            BorderBrush="#08AE66"
+                                                            BorderThickness="1"
+                                                            Margin="0,0,4,0"
+                                                            Grid.Column="3">
+                                                        <Border.ContextMenu>
                                                             <ContextMenu>
                                                                 <MenuItem Header="copy"
                                                                           ItemsSource="{Binding Source.TrackLanguages}"
                                                                           Click="CopyStringMenuItem_OnClick" />
                                                             </ContextMenu>
-                                                        </Grid.ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayTrackLanguages}" />
-                                                    </Grid>
+                                                    </Border>
 
-                                                    <Grid Background="#C90000"
-                                                          Margin="0,0,4,0"
-                                                          Grid.Column="4">
-                                                        <Grid.ContextMenu>
+                                                    <Border Background="#C90000"
+                                                            BorderBrush="#C90000"
+                                                            BorderThickness="1"
+                                                            Margin="0,0,4,0"
+                                                            Grid.Column="4">
+                                                        <Border.ContextMenu>
                                                             <ContextMenu>
                                                                 <MenuItem Header="copy"
                                                                           ItemsSource="{Binding Source.Tags}"
                                                                           Click="CopyStringMenuItem_OnClick" />
                                                             </ContextMenu>
-                                                        </Grid.ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <TextBlock Text="{Binding DisplayTags}" />
-                                                    </Grid>
+                                                    </Border>
 
                                                 </Grid>
 

@@ -1,7 +1,6 @@
-using System;
-using System.ComponentModel;
 using Jasily.ComponentModel;
 using JryVideo.Model;
+using System;
 
 namespace JryVideo.Common
 {
@@ -36,6 +35,12 @@ namespace JryVideo.Common
             get { return this.displaySubTitleLanguages; }
             private set { this.SetPropertyRef(ref this.displaySubTitleLanguages, value); }
         }
+
+        [NotifyPropertyChanged]
+        public bool HasSubTitleLanguages => this.Source.SubTitleLanguages.Count > 0;
+
+        [NotifyPropertyChanged]
+        public bool DontHasSubTitleLanguages => this.Source.SubTitleLanguages.Count == 0;
 
         public string DisplayTrackLanguages
         {
