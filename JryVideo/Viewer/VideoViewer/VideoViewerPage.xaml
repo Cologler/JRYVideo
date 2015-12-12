@@ -248,7 +248,7 @@
                                                                           Click="CopyStringMenuItem_OnClick" />
                                                             </ContextMenu>
                                                         </Border.ContextMenu>
-                                                        <TextBlock Text="{Binding DisplayExtension}"/>
+                                                        <TextBlock Text="{Binding DisplayProperties}"/>
                                                     </Border>
 
                                                     <Border Background="#4E4EFB"
@@ -281,7 +281,8 @@
                                                             </Border.ContextMenu>
                                                             <TextBlock Text="{Binding DisplaySubTitleLanguages}" />
                                                         </Border>
-                                                        <Border BorderThickness="1"
+                                                        <Border Background="#F0FFFFFF"
+                                                                BorderThickness="1"
                                                                 BorderBrush="#FF8F42"
                                                                 Visibility="{Binding DontHasSubTitleLanguages, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <TextBlock Text="无字幕"

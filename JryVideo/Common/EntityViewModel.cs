@@ -14,7 +14,8 @@ namespace JryVideo.Common
         }
 
         [NotifyPropertyChanged]
-        public string DisplayExtension => this.Source.Extension.ToUpper();
+        public string DisplayProperties => this.Source.Extension.ToUpper() +
+            (this.Source.FilmSource == null ? string.Empty : ("-" + this.Source.FilmSource));
 
         [NotifyPropertyChanged]
         public string DisplayFansubs => ListToLine(this.Source.Fansubs);
