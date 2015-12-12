@@ -1,6 +1,6 @@
-﻿using System.Windows;
-using JryVideo.Model;
+﻿using JryVideo.Model;
 using MahApps.Metro.Controls;
+using System.Windows;
 
 namespace JryVideo.Editors.SeriesEditor
 {
@@ -23,7 +23,7 @@ namespace JryVideo.Editors.SeriesEditor
 
         void ViewModel_Updated(object sender, JrySeries e)
         {
-            if (this.Dispatcher.CheckAccessOrBeginInvoke(this.ViewModel_Updated, sender, e))
+            if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.ViewModel_Updated, sender, e))
             {
                 this.DialogResult = true;
             }

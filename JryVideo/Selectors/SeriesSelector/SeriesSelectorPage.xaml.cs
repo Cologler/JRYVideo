@@ -1,12 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
-using Jasily.Diagnostics;
+﻿using Jasily.Diagnostics;
 using JryVideo.Common;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
+using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace JryVideo.Selectors.SeriesSelector
 {
@@ -28,7 +27,7 @@ namespace JryVideo.Selectors.SeriesSelector
 
         void EditSeriesUserControl_ViewModel_Created(object sender, JrySeries e)
         {
-            if (this.Dispatcher.CheckAccessOrBeginInvoke(this.EditSeriesUserControl_ViewModel_Created, sender, e))
+            if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.EditSeriesUserControl_ViewModel_Created, sender, e))
             {
                 if (this.SelectorViewModel != null)
                 {
@@ -58,7 +57,7 @@ namespace JryVideo.Selectors.SeriesSelector
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var seriesViewModel = ((FrameworkElement) sender).DataContext as SeriesViewModel;
+            var seriesViewModel = ((FrameworkElement)sender).DataContext as SeriesViewModel;
 
             if (seriesViewModel != null)
             {

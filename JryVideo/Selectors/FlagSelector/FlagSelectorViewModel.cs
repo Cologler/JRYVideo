@@ -1,12 +1,12 @@
-﻿using System;
+﻿using JryVideo.Core;
+using JryVideo.Model;
+using JryVideo.Selectors.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using JryVideo.Core;
-using JryVideo.Model;
-using JryVideo.Selectors.Common;
 
 namespace JryVideo.Selectors.FlagSelector
 {
@@ -50,7 +50,7 @@ namespace JryVideo.Selectors.FlagSelector
         public async Task LoadAsync()
         {
             var manager = JryVideoCore.Current.CurrentDataCenter.FlagManager;
-            
+
             var items = (await manager.LoadAsync(this.Type)).ToArray();
 
             this.Items.Collection.Clear();
@@ -58,7 +58,7 @@ namespace JryVideo.Selectors.FlagSelector
             {
                 if (this.readySelected.Contains(item.Source.Value))
                     this.SelectedItems.Add(item);
-                
+
                 this.Items.Collection.Add(item);
             }
         }
@@ -84,7 +84,7 @@ namespace JryVideo.Selectors.FlagSelector
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(
                 this.EditFlagUserControl_ViewModel_Created, sender, e))
             {
-                this.Items.Collection.Add(this.SelectedItems.AddAndReturn(new FlagViewModel(e)));
+                new FlagViewModel(e).BeAdd(this.SelectedItems).BeAdd(this.Items.Collection);
             }
         }
     }

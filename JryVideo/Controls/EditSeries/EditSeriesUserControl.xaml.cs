@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Controls.EditSeries
 {
@@ -22,7 +22,7 @@ namespace JryVideo.Controls.EditSeries
 
         void ViewModel_FindErrorMessages(object sender, object e)
         {
-            if (this.Dispatcher.CheckAccessOrBeginInvoke(this.ViewModel_FindErrorMessages, sender, e))
+            if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.ViewModel_FindErrorMessages, sender, e))
             {
                 this.TryFindParent<MetroWindow>().ShowMessageAsync(Properties.Resources.EditSeries_InvalidInput_Title, "");
             }
@@ -38,7 +38,7 @@ namespace JryVideo.Controls.EditSeries
 
             if (await this.ViewModel.CommitAsync() != null)
             {
-                
+
             }
         }
 
