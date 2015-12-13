@@ -1,7 +1,6 @@
 ﻿using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -30,14 +29,8 @@ namespace JryVideo.Selectors.FlagSelector
 
         private bool FilterByText(FlagViewModel obj)
         {
-            if (String.IsNullOrWhiteSpace(this.FilterText))
-            {
-                return true;
-            }
-            else
-            {
-                return obj.Source.Value.ToLower().Contains(this.FilterText.Trim().ToLower());
-            }
+            return string.IsNullOrWhiteSpace(this.FilterText) ||
+                obj.Source.Value.ToLower().Contains(this.FilterText.Trim().ToLower());
         }
 
         private bool FilterBySelected(FlagViewModel obj)

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Media;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using JryVideo.Core;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
 
 namespace JryVideo.Common
 {
@@ -28,14 +22,10 @@ namespace JryVideo.Common
         public async Task<bool> RemoveAsync(EntityViewModel entity)
         {
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager.GetEntityManager(this.Source);
-
-            if (await manager.RemoveAsync(entity.Source.Id))
-            {
-                this.EntityViews.Collection.Remove(entity);
-
-                return true;
-            }
-            return false;
+            Log.BeginWrite($"DELETE {entity.Source.ObjectToJson()} FROM {this.Source.Id}");
+            if (!await manager.RemoveAsync(entity.Source.Id)) return false;
+            this.EntityViews.Collection.Remove(entity);
+            return true;
         }
     }
 }
