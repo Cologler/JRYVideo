@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using JryVideo.Common;
+﻿using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JryVideo.Controls.EditSeries
 {
@@ -56,7 +56,7 @@ namespace JryVideo.Controls.EditSeries
 
             if (movie != null)
             {
-                var doubanName = DoubanHelper.ParseMainName(movie).AsLines();
+                var doubanName = DoubanMovieParser.Parse(movie).SeriesNames.AsLines();
 
                 this.Names = String.IsNullOrWhiteSpace(this.Names)
                     ? doubanName

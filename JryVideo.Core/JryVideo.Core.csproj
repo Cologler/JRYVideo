@@ -46,6 +46,7 @@
     <Compile Include="Douban\DoubanHelper.cs" />
     <Compile Include="Douban\DoubanImagesJson.cs" />
     <Compile Include="Douban\DoubanMovie.cs" />
+    <Compile Include="Douban\DoubanMovieParser.cs" />
     <Compile Include="JryVideoCore.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Managers\ArtistManager.cs" />

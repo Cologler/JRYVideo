@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Jasily.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Jasily.Net;
 
 namespace JryVideo.Core.Douban
 {
-    public class DoubanHelper
+    public static class DoubanHelper
     {
         private const string ApiUrl = "http://api.douban.com/v2/movie/subject/";
 
@@ -98,7 +98,7 @@ namespace JryVideo.Core.Douban
             }
         }
 
-        public static IEnumerable<string> ParseName(DoubanMovie json)
+        public static IEnumerable<string> ParseName(this DoubanMovie json)
         {
             if (!String.IsNullOrWhiteSpace(json.Title))
                 yield return json.Title;
@@ -116,24 +116,6 @@ namespace JryVideo.Core.Douban
                         yield return originName;
                 }
             }
-        }
-
-        public static IEnumerable<string> ParseSecondName(DoubanMovie json)
-        {
-            return ParseName(json)
-                .Select(z => z.Split(new string[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries))
-                .Where(z => z.Length > 1)
-                .Select(z => z[1])
-                .ToArray();
-        }
-
-        public static IEnumerable<string> ParseMainName(DoubanMovie json)
-        {
-            return ParseName(json)
-                .Select(z => z.Split(new string[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries))
-                .Where(z => z.Length > 0)
-                .Select(z => z[0])
-                .ToArray();
         }
     }
 }

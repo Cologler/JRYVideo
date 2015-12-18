@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Enums;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Common.ValidationRules;
 using JryVideo.Core;
@@ -15,6 +7,14 @@ using JryVideo.Editors.CoverEditor;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Enums;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -175,7 +175,8 @@ namespace JryVideo.Controls.EditVideo
 
         public void LoadDouban(DoubanMovie info)
         {
-            var doubanSecondName = DoubanHelper.ParseSecondName(info).AsLines();
+            var parser = DoubanMovieParser.Parse(info);
+            var doubanSecondName = parser.EntityNames.AsLines();
 
             this.Names = this.Names.IsNullOrWhiteSpace()
                 ? doubanSecondName
@@ -188,20 +189,7 @@ namespace JryVideo.Controls.EditVideo
 
             if (this.Index.IsNullOrWhiteSpace())
             {
-                if (info.SeasonsCount.HasValue)
-                {
-                    this.Index = info.SeasonsCount?.ToString();
-                }
-                else
-                {
-                    var doubanMainNames = DoubanHelper.ParseMainName(info);
-                    var group = doubanMainNames
-                        .Select(z => IndexParse.Match(z))
-                        .Where(z => z.Success)
-                        .Select(z => z.Groups[1])
-                        .FirstOrDefault();
-                    if (group != null) this.Index = group.Value;
-                }
+                this.Index = info.SeasonsCount.HasValue ? info.SeasonsCount?.ToString() : parser.Index;
             }
 
             if (this.EpisodesCount.IsNullOrWhiteSpace())
