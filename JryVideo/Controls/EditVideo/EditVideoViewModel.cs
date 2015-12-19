@@ -189,12 +189,12 @@ namespace JryVideo.Controls.EditVideo
 
             if (this.Index.IsNullOrWhiteSpace())
             {
-                this.Index = info.SeasonsCount.HasValue ? info.SeasonsCount?.ToString() : parser.Index;
+                this.Index = info.SeasonsCount?.ToString() ?? parser.Index;
             }
 
             if (this.EpisodesCount.IsNullOrWhiteSpace())
             {
-                this.EpisodesCount = info.EpisodesCount?.ToString();
+                this.EpisodesCount = parser.EpisodesCount ?? string.Empty;
             }
         }
 
