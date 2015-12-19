@@ -1,0 +1,49 @@
+﻿<controls:MetroWindow x:Class="JryVideo.Viewer.FilesViewer.FilesViewerWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:local="clr-namespace:JryVideo.Viewer.FilesViewer"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      mc:Ignorable="d"
+                      Title="FilesViewerWindow"
+                      Height="500"
+                      Width="800"
+                      ResizeMode="NoResize"
+                      d:DataContext="{d:DesignInstance local:FilesViewerViewModel}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      WindowTitleBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1"
+                      ShowTitleBar="False"
+                      WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid Margin="8,30,8,8">
+            <ListView ItemsSource="{Binding FilesView.View}"
+                      BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid d:DataContext="{d:DesignInstance local:FileItemViewModel}"
+                              Background="Transparent"
+                              MouseLeftButtonDown="UIElement_OnMouseLeftButtonUp">
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="open container folder"
+                                              Click="OpenContainerFolder_OnClick" />
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <TextBlock Text="{Binding Source}"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Grid>
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Visibility="{Binding Empty, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           Text="empty"
+                           FontSize="24" />
+            </Grid>
+        </Grid>
+    </Grid>
+</controls:MetroWindow>

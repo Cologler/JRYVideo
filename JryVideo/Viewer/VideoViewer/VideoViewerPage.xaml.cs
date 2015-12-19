@@ -1,4 +1,5 @@
-﻿using JryVideo.Common;
+﻿using System.Collections.Generic;
+using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.Editors.SeriesEditor;
@@ -7,9 +8,11 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using JryVideo.Viewer.FilesViewer;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -224,6 +227,16 @@ namespace JryVideo.Viewer.VideoViewer
                     });
                 }
             }
+        }
+
+        private async void SearchOnEverything_OnClick(object sender, RoutedEventArgs e)
+        {
+            var entity = ((FrameworkElement)sender).DataContext as EntityViewModel;
+            if (entity == null || entity.Source.Format == null) return;
+            var items = await entity.SearchByEveryThingAsync();
+            var dlg = new FilesViewerWindow(new FilesViewerViewModel());
+            dlg.ViewModel.FilesView.Collection.AddRange(items.Select(z => new FileItemViewModel(z)));
+            dlg.ShowDialog();
         }
     }
 }

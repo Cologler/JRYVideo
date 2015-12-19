@@ -1,3 +1,6 @@
 [submodule "Jasily"]
 	path = Jasily
 	url = https://github.com/Cologler/jasily.cologler.git
+[submodule "EverythingSDK"]
+	path = EverythingSDK
+	url = https://github.com/Cologler/everything.sdk.jasily.cologler.git

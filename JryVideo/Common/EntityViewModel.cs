@@ -1,7 +1,10 @@
 using Jasily.ComponentModel;
+using Jasily.EverythingSDK;
 using JryVideo.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JryVideo.Common
 {
@@ -41,5 +44,33 @@ namespace JryVideo.Common
             : string.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);
 
         private static string ListToLine(List<string> lines) => lines.Count > 0 ? lines.AsLines(" / ") : "[EMPTY]";
+
+        public async Task<IEnumerable<string>> SearchByEveryThingAsync()
+        {
+            var format = this.Source.Format;
+            if (format == null) return Enumerable.Empty<string>();
+
+            return await Task.Run(() =>
+            {
+                var search = new EverythingSearch();
+                search.Parameters.IsMatchPath = false;
+                search.Parameters.IsMatchWholeWord = false;
+                search.Parameters.IsMatchCase = false;
+                switch (format.Type)
+                {
+                    case JryFormatType.Regex:
+                        search.Parameters.IsRegex = true;
+                        break;
+
+                    case JryFormatType.Wildcard:
+                        search.Parameters.IsRegex = false;
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                return search.SearchAll(format.Value, 100).SelectMany(z => z).ToArray();
+            });
+        }
     }
 }

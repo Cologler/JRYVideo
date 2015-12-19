@@ -153,6 +153,12 @@
     <Compile Include="Add\AddWindow.xaml.cs">
       <DependentUpon>AddWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Viewer\FilesViewer\FileItemViewModel.cs" />
+    <Compile Include="Viewer\FilesViewer\FilesViewerViewModel.cs" />
+    <Compile Include="Viewer\FilesViewer\FilesViewerWindow.xaml.cs">
+      <DependentUpon>FilesViewerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Viewer\FilesViewer\PathItemViewModel.cs" />
     <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml.cs">
       <DependentUpon>SeriesItemViewerPage.xaml</DependentUpon>
     </Compile>
@@ -268,6 +274,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Viewer\FilesViewer\FilesViewerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -313,6 +323,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK.csproj">
+      <Project>{54757096-eb16-40d7-9eb7-833293d2daf7}</Project>
+      <Name>Jasily.EverythingSDK</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily.Core.Desktop\Jasily.Core.Desktop.csproj">
       <Project>{e90943e3-39c3-4649-9fe7-17096cbcd95e}</Project>
       <Name>Jasily.Core.Desktop</Name>
