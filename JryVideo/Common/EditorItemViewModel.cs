@@ -1,10 +1,10 @@
-﻿using System;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
+using JryVideo.Core.Managers;
+using JryVideo.Model;
+using System;
 using System.Diagnostics;
 using System.Enums;
 using System.Threading.Tasks;
-using JryVideo.Core.Managers;
-using JryVideo.Model;
 
 namespace JryVideo.Common
 {
@@ -30,6 +30,14 @@ namespace JryVideo.Common
         {
             this.Source = source.ThrowIfNull("source");
             this.Action = ObjectChangedAction.Modify;
+
+            this.ReadFromObject(source);
+        }
+
+        public virtual void CloneMode(T source)
+        {
+            this.Source = new T();
+            this.Action = ObjectChangedAction.Create;
 
             this.ReadFromObject(source);
         }
@@ -89,7 +97,7 @@ namespace JryVideo.Common
 
         public virtual void Clear()
         {
-            
+
         }
     }
 }

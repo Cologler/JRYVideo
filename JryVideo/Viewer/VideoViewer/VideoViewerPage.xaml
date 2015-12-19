@@ -355,22 +355,28 @@
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
 
                                                         <Button Content="edit"
                                                                 Click="EditEntityButton_OnClick" />
 
-                                                        <Button Grid.Column="1"
+                                                        <Button Content="clone"
+                                                                Grid.Column="1"
+                                                                Margin="4,0,0,0"
+                                                                Click="CloneEntityButton_OnClick" />
+
+                                                        <Button Grid.Column="2"
                                                                 Content="delete"
                                                                 Margin="4,0,0,0"
                                                                 Click="DeleteEntityButton_OnClick" />
 
-                                                        <Button Grid.Column="2"
+                                                        <Button Grid.Column="3"
                                                                 Content="copy guid"
                                                                 Click="CopyGuidButton_OnClick"
                                                                 Margin="4,0,0,0" />
 
-                                                        <Button Grid.Column="3"
+                                                        <Button Grid.Column="4"
                                                                 Content="search on Everything"
                                                                 Click="SearchOnEverything_OnClick"
                                                                 Margin="4,0,0,0" />

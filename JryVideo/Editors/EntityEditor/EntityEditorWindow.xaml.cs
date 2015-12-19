@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows;
-using JryVideo.Model;
+﻿using JryVideo.Model;
 using MahApps.Metro.Controls;
+using System;
+using System.Windows;
 
 namespace JryVideo.Editors.EntityEditor
 {
@@ -10,37 +10,47 @@ namespace JryVideo.Editors.EntityEditor
     /// </summary>
     public partial class EntityEditorWindow : MetroWindow
     {
-        public EntityEditorPage Page { get; private set; }
+        public EntityEditorPage Page { get; private set; } = new EntityEditorPage();
 
         public EntityEditorWindow()
         {
             this.InitializeComponent();
         }
 
-        public EntityEditorWindow(Model.JryVideo video)
-            : this()
+        public EntityEditorWindow CreateOrCloneMode(Model.JryVideo video, JryEntity entity = null)
         {
-            this.Page = new EntityEditorPage(video);
-            this.Page.ViewModel.CreateMode();
+            this.Page.ViewModel.Initialize(video);
+            if (entity == null)
+            {
+                this.Page.ViewModel.CreateMode();
+            }
+            else
+            {
+                this.Page.ViewModel.CloneMode(entity);
+            }
             this.TitleTextBlock.Text = "creator";
+            return this;
         }
 
-        public EntityEditorWindow(Model.JryVideo video, JryEntity entity)
-            : this(video)
+        public EntityEditorWindow ModifyMode(Model.JryVideo video, JryEntity entity)
         {
+            this.Page.ViewModel.Initialize(video);
             this.Page.ViewModel.ModifyMode(entity);
             this.TitleTextBlock.Text = "editor";
+            return this;
         }
 
         /// <summary>
         /// 引发 <see cref="E:System.Windows.Window.SourceInitialized"/> 事件。
         /// </summary>
         /// <param name="e">一个 <see cref="T:System.EventArgs"/>，其中包含事件数据。</param>
-        protected override void OnSourceInitialized(EventArgs e)
+        protected override async void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
 
             this.MainFrame.Navigate(this.Page);
+
+            await this.Page.ViewModel.LoadAsync();
         }
 
         private async void AcceptButton_OnClick(object sender, RoutedEventArgs e)

@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using JryVideo.Model;
+using JryVideo.Selectors.FlagSelector;
+using MahApps.Metro.Controls;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using JryVideo.Model;
-using JryVideo.Selectors.FlagSelector;
-using MahApps.Metro.Controls;
 
 namespace JryVideo.Editors.EntityEditor
 {
@@ -14,18 +13,12 @@ namespace JryVideo.Editors.EntityEditor
     /// </summary>
     public partial class EntityEditorPage : Page
     {
-        public EntityEditorViewModel ViewModel { get; private set; }
+        public EntityEditorViewModel ViewModel { get; private set; } = new EntityEditorViewModel();
 
         public EntityEditorPage()
         {
             this.InitializeComponent();
-        }
-
-        public EntityEditorPage(Model.JryVideo video)
-            : this()
-        {
-            this.DataContext = this.ViewModel = new EntityEditorViewModel(video);
-            this.ViewModel.LoadAsync();
+            this.DataContext = this.ViewModel;
         }
 
         private void SelectFansubButton_OnClick(object sender, RoutedEventArgs e)
@@ -64,17 +57,14 @@ namespace JryVideo.Editors.EntityEditor
             }
         }
 
-
         private void CopyFlagMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var flag = ((FrameworkElement) sender).DataContext as string;
+            var flag = ((FrameworkElement)sender).DataContext as string;
 
             if (flag != null)
             {
                 Clipboard.SetText(flag);
             }
         }
-
-        
     }
 }

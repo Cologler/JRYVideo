@@ -24,9 +24,8 @@ namespace JryVideo.Editors.EntityEditor
         private bool isRegexChecked;
         private string format;
 
-        public EntityEditorViewModel(Model.JryVideo video)
+        public EntityEditorViewModel()
         {
-            this.Video = video;
             this.Tags = new ObservableCollection<string>();
             this.Fansubs = new ObservableCollection<string>();
             this.SubTitleLanguages = new ObservableCollection<string>();
@@ -40,6 +39,11 @@ namespace JryVideo.Editors.EntityEditor
         }
 
         public Model.JryVideo Video { get; private set; }
+
+        public void Initialize(Model.JryVideo video)
+        {
+            this.Video = video;
+        }
         
         public ObservableCollection<string> this[JryFlagType flagType]
         {

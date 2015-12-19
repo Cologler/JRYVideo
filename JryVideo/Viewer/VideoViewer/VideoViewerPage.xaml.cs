@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using JryVideo.Common;
+﻿using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Editors.VideoEditor;
+using JryVideo.Viewer.FilesViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using JryVideo.Viewer.FilesViewer;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -71,10 +71,10 @@ namespace JryVideo.Viewer.VideoViewer
         {
             var w = this.TryFindParent<MetroWindow>();
 
-            var dlg = new EntityEditorWindow(this.ViewModel.Video.Source)
+            var dlg = new EntityEditorWindow()
             {
                 Owner = w
-            };
+            }.CreateOrCloneMode(this.ViewModel.Video.Source);
 
             if (dlg.ShowDialog() == true)
             {
@@ -112,10 +112,10 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 var w = this.TryFindParent<MetroWindow>();
 
-                var dlg = new EntityEditorWindow(this.ViewModel.Video.Source, vm.Source)
+                var dlg = new EntityEditorWindow()
                 {
                     Owner = w
-                };
+                }.ModifyMode(this.ViewModel.Video.Source, vm.Source);
 
                 if (dlg.ShowDialog() == true)
                 {
@@ -237,6 +237,27 @@ namespace JryVideo.Viewer.VideoViewer
             var dlg = new FilesViewerWindow(new FilesViewerViewModel());
             dlg.ViewModel.FilesView.Collection.AddRange(items.Select(z => new FileItemViewModel(z)));
             dlg.ShowDialog();
+        }
+
+        private async void CloneEntityButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as EntityViewModel;
+
+            if (vm != null)
+            {
+                var w = this.TryFindParent<MetroWindow>();
+
+                var dlg = new EntityEditorWindow()
+                {
+                    Owner = w
+                }.CreateOrCloneMode(this.ViewModel.Video.Source, vm.Source);
+
+                if (dlg.ShowDialog() == true)
+                {
+                    await this.ViewModel.ReloadVideoAsync();
+                    this.ViewModel.EntitesView.View.Refresh();
+                }
+            }
         }
     }
 }
