@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -49,8 +49,8 @@ namespace JryVideo.Model
         [BsonIgnore]
         public DateTime? StartLocalDate
         {
-            get { return this.StartDate.HasValue ? this.StartDate.Value.ToLocalTime() : (DateTime?) null; }
-            set { this.StartDate = value.HasValue ? value.Value.ToUniversalTime() : (DateTime?)null; }
+            get { return this.StartDate?.ToLocalTime(); }
+            set { this.StartDate = value?.ToUniversalTime(); }
         }
 
         public int GetTodayEpisode(DateTime dt)

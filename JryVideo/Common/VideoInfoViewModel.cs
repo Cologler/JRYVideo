@@ -67,7 +67,7 @@ namespace JryVideo.Common
                     {
                         if (this.Source.DayOfWeek == today.DayOfWeek)
                         {
-                            this.CompareMode = ViewModelCompareMode.Today;
+                            this.compareMode = ViewModelCompareMode.Today;
                             this.DayOfWeek = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
                             var episode = this.Source.GetTodayEpisode(today);
                             this.TodayEpisode = episode <= this.Source.EpisodesCount
@@ -76,26 +76,26 @@ namespace JryVideo.Common
                         }
                         else
                         {
-                            this.CompareMode = ViewModelCompareMode.DayOfWeek;
+                            this.compareMode = ViewModelCompareMode.DayOfWeek;
                             this.DayOfWeek = this.Source.DayOfWeek.GetLocalizeString();
                             this.TodayEpisode = null;
                         }
                     }
                     else
                     {
-                        this.CompareMode = ViewModelCompareMode.Future;
+                        this.compareMode = ViewModelCompareMode.Future;
                         this.DayOfWeek = Resources.DateTime_Future;
                     }
                 }
                 else
                 {
-                    this.CompareMode = ViewModelCompareMode.Unknown;
+                    this.compareMode = ViewModelCompareMode.Unknown;
                     this.DayOfWeek = $"{Resources.DayOfWeek_Unknown} (unknown start)";
                 }
             }
         }
 
-        private ViewModelCompareMode CompareMode { get; set; }
+        private ViewModelCompareMode compareMode;
 
         private enum ViewModelCompareMode
         {
@@ -117,10 +117,10 @@ namespace JryVideo.Common
                 Debug.Assert(x != null, "x != null");
                 Debug.Assert(y != null, "y != null");
 
-                if (x.CompareMode != y.CompareMode)
-                    return x.CompareMode.CompareTo(y.CompareMode);
+                if (x.compareMode != y.compareMode)
+                    return x.compareMode.CompareTo(y.compareMode);
 
-                if (x.CompareMode == ViewModelCompareMode.DayOfWeek && x.Source.DayOfWeek != y.Source.DayOfWeek)
+                if (x.compareMode == ViewModelCompareMode.DayOfWeek && x.Source.DayOfWeek != y.Source.DayOfWeek)
                 {
                     if (x.Source.DayOfWeek == null) return -1;
                     if (y.Source.DayOfWeek == null) return 1;
@@ -129,6 +129,14 @@ namespace JryVideo.Common
                     var sub2 = ((int)y.Source.DayOfWeek) - ((int)this.DayOfWeek);
 
                     return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
+                }
+
+                if (x.compareMode == ViewModelCompareMode.Future && x.Source.StartDate != y.Source.StartDate)
+                {
+                    if (x.Source.StartDate == null) return -1;
+                    if (y.Source.StartDate == null) return 1;
+
+                    return x.Source.StartDate.Value.CompareTo(y.Source.StartDate.Value);
                 }
 
                 return y.Source.Created.CompareTo(x.Source.Created);
