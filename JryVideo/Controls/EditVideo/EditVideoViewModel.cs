@@ -13,7 +13,6 @@ using System.Collections.ObjectModel;
 using System.Enums;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace JryVideo.Controls.EditVideo
@@ -205,8 +204,6 @@ namespace JryVideo.Controls.EditVideo
                 this.EpisodesCount = parser.EpisodesCount ?? string.Empty;
             }
         }
-
-        private static readonly Regex IndexParse = new Regex("(\\d)+$");
 
         public async Task LoadAsync()
         {

@@ -13,7 +13,6 @@ namespace JryVideo.Common
 {
     public sealed class VideoInfoViewModel : HasCoverViewModel<JryVideoInfo>
     {
-        private string yearWithIndex;
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
         private string dayOfWeek;
@@ -29,11 +28,8 @@ namespace JryVideo.Common
 
         public SeriesViewModel SeriesView { get; private set; }
 
-        public string YearWithIndex
-        {
-            get { return this.yearWithIndex; }
-            set { this.SetPropertyRef(ref this.yearWithIndex, value); }
-        }
+        [NotifyPropertyChanged]
+        public string YearWithIndex => $"({this.Source.Year}) {this.Source.Index}";
 
         [NotifyPropertyChanged]
         public string VideoNames => this.Source.Names.FirstOrDefault() ?? "";
