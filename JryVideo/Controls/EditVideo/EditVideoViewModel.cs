@@ -82,7 +82,15 @@ namespace JryVideo.Controls.EditVideo
         public string ImdbId
         {
             get { return this.imdbId; }
-            set { this.SetPropertyRef(ref this.imdbId, value); }
+            set
+            {
+                if (value != null && !value.StartsWith("tt"))
+                {
+                    var index = value.IndexOf("tt", StringComparison.Ordinal);
+                    if (index > -1) value = value.Substring(index);
+                }
+                this.SetPropertyRef(ref this.imdbId, value);
+            }
         }
 
         [EditableField]
@@ -158,7 +166,7 @@ namespace JryVideo.Controls.EditVideo
             {
                 obj.Names.AddRange(this.Names.AsLines().Select(z => z.Trim()).Where(z => !z.IsNullOrWhiteSpace()).Distinct());
             }
-            obj.DayOfWeek = this.DayOfWeek == null ? null : this.DayOfWeek.Value.Value;
+            obj.DayOfWeek = this.DayOfWeek?.Value;
         }
 
         public override void ReadFromObject(JryVideoInfo obj)
@@ -189,7 +197,7 @@ namespace JryVideo.Controls.EditVideo
 
             if (this.Index.IsNullOrWhiteSpace())
             {
-                this.Index = info.SeasonsCount?.ToString() ?? parser.Index;
+                this.Index = info.CurrentSeason ?? parser.Index;
             }
 
             if (this.EpisodesCount.IsNullOrWhiteSpace())
