@@ -30,6 +30,9 @@ namespace JryVideo.Core.Douban
         [DataMember(Name = "episodes_count")]
         public string EpisodesCount;
 
+        [DataMember(Name = "current_season")]
+        public string CurrentSeason;
+
         public override string GetLargeImageUrl()
         {
             return this.Images.Large.ThrowIfNullOrEmpty("Large");
