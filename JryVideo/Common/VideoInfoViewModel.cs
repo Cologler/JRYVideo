@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Properties;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using static System.String;
 
 namespace JryVideo.Common
 {
@@ -32,7 +32,7 @@ namespace JryVideo.Common
         public string YearWithIndex => $"({this.Source.Year}) {this.Source.Index}";
 
         [NotifyPropertyChanged]
-        public string VideoNames => this.Source.Names.FirstOrDefault() ?? "";
+        public string VideoNames => this.Source.Names.FirstOrDefault() ?? Empty;
 
         [NotifyPropertyChanged]
         public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
@@ -60,17 +60,18 @@ namespace JryVideo.Common
             // only tracking need build group info.
             if (this.Source.IsTracking)
             {
+                var today = DateTime.Now;
                 if (this.Source.StartDate.HasValue)
                 {
-                    if (this.Source.StartDate.Value < DateTime.Now)
+                    if (this.Source.StartDate.Value < today)
                     {
-                        if (this.Source.DayOfWeek == DateTime.Now.DayOfWeek)
+                        if (this.Source.DayOfWeek == today.DayOfWeek)
                         {
                             this.CompareMode = ViewModelCompareMode.Today;
-                            this.DayOfWeek = String.Format("{0} ({1})", this.Source.DayOfWeek.GetLocalizeString(), Resources.DayOfWeek_Today);
-                            var episode = this.Source.GetTodayEpisode(DateTime.Now);
+                            this.DayOfWeek = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
+                            var episode = this.Source.GetTodayEpisode(today);
                             this.TodayEpisode = episode <= this.Source.EpisodesCount
-                                ? String.Format("today play {0}", episode)
+                                ? $"today play {episode}"
                                 : "done!";
                         }
                         else
@@ -89,7 +90,7 @@ namespace JryVideo.Common
                 else
                 {
                     this.CompareMode = ViewModelCompareMode.Unknown;
-                    this.DayOfWeek = String.Format("{0} ({1})", Resources.DayOfWeek_Unknown, "unknown start");
+                    this.DayOfWeek = $"{Resources.DayOfWeek_Unknown} (unknown start)";
                 }
             }
         }
