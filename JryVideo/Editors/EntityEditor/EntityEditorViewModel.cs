@@ -100,28 +100,28 @@ namespace JryVideo.Editors.EntityEditor
         public string Resolution
         {
             get { return this.resolution; }
-            set { this.SetPropertyRef(ref this.resolution, value); }
+            set { this.SetPropertyRef(ref this.resolution, value.IsNullOrWhiteSpace() ? null : value.Trim()); }
         }
 
         [EditableField]
         public string FilmSource
         {
             get { return this.filmSource; }
-            set { this.SetPropertyRef(ref this.filmSource, value); }
+            set { this.SetPropertyRef(ref this.filmSource, value.IsNullOrWhiteSpace() ? null : value.Trim()); }
         }
 
         [EditableField]
         public string AudioSource
         {
             get { return this.audioSource; }
-            set { this.SetPropertyRef(ref this.audioSource, value); }
+            set { this.SetPropertyRef(ref this.audioSource, value.IsNullOrWhiteSpace() ? null : value.Trim()); }
         }
 
         [EditableField]
         public string Extension
         {
             get { return this.extension; }
-            set { this.SetPropertyRef(ref this.extension, value); }
+            set { this.SetPropertyRef(ref this.extension, value.IsNullOrWhiteSpace() ? null : value.Trim()); }
         }
 
         public bool IsWildcardChecked

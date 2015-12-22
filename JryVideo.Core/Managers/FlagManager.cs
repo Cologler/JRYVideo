@@ -83,11 +83,11 @@ namespace JryVideo.Core.Managers
                 },
                 {
                     JryFlagType.EntityFilmSource,
-                    infos.Where(z => z.FilmSource != null).Select(z => z.FilmSource).ToList()
+                    infos.Where(z => !string.IsNullOrEmpty(z.FilmSource)).Select(z => z.FilmSource).ToList()
                 },
                 {
                     JryFlagType.EntityAudioSource,
-                    infos.Where(z => z.AudioSource != null).Select(z => z.AudioSource).ToList()
+                    infos.Where(z => !string.IsNullOrEmpty(z.AudioSource)).Select(z => z.AudioSource).ToList()
                 },
 
                 // muilt in entity

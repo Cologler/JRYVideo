@@ -144,6 +144,8 @@ namespace JryVideo.Viewer.VideoViewer
                 if (entity != null)
                 {
                     await this.ViewModel.Video.RemoveAsync(entity);
+                    await this.ViewModel.ReloadVideoAsync();
+                    this.ViewModel.EntitesView.View.Refresh();
                 }
             }
         }
