@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Enums;
-using System.Linq;
-using System.Threading.Tasks;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Enums;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JryVideo.Editors.EntityEditor
 {
@@ -44,7 +45,7 @@ namespace JryVideo.Editors.EntityEditor
         {
             this.Video = video;
         }
-        
+
         public ObservableCollection<string> this[JryFlagType flagType]
         {
             get
@@ -64,7 +65,7 @@ namespace JryVideo.Editors.EntityEditor
                         return this.Tags;
 
                     default:
-                        throw new ArgumentOutOfRangeException("flagType", flagType, null);
+                        throw new ArgumentOutOfRangeException(nameof(flagType), flagType, null);
                 }
             }
         }
@@ -229,6 +230,61 @@ namespace JryVideo.Editors.EntityEditor
             }
 
             return await base.CommitAsync(provider, entity);
+        }
+
+        public void ParseFiles(string[] files)
+        {
+            if (files == null) throw new ArgumentNullException(nameof(files));
+
+            files = files.Where(File.Exists).Select(Path.GetFileName).ToArray();
+            if (files.Length == 0) return;
+            this.Format = files.Length == 1 ? files[0] : ParseCommonString(files);
+            if (this.Format == null) return;
+            var str = this.Format.ToLower();
+            if (this.Resolution.IsNullOrWhiteSpace())
+            {
+                this.Resolution = this.Resolutions.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+            }
+            if (this.FilmSource.IsNullOrWhiteSpace())
+            {
+                this.FilmSource = this.FilmSources.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+            }
+            if (this.AudioSource.IsNullOrWhiteSpace())
+            {
+                this.AudioSource = this.AudioSources.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+            }
+            if (this.Extension.IsNullOrWhiteSpace())
+            {
+                this.Extension = this.Extensions.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+            }
+        }
+
+        private static string ParseCommonString(string[] source)
+        {
+            var len = source.Select(z => z.Length).Min();
+            var first = source[0];
+            var start = len - 1;
+            var end = 0;
+            foreach (var compare in source.Skip(1))
+            {
+                for (var i = 0; i < len; i++)
+                {
+                    if (first[i] != compare[i])
+                    {
+                        start = Math.Min(i, start);
+                        break;
+                    }
+                }
+                for (var i = 0; i < len; i++)
+                {
+                    if (first[first.Length - i - 1] != compare[compare.Length - i - 1])
+                    {
+                        end = Math.Max(first.Length - i, end);
+                        break;
+                    }
+                }
+            }
+            return first.Substring(0, start) + "*" + first.Substring(end);
         }
     }
 }

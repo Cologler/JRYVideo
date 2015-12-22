@@ -9,7 +9,9 @@
       Title="EntityCreatorPage"
       d:DataContext="{d:DesignInstance local:EntityEditorViewModel}">
 
-    <Grid>
+    <Grid Drop="Grid_Drop"
+          AllowDrop="True"
+          Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />

@@ -66,5 +66,14 @@ namespace JryVideo.Editors.EntityEditor
                 Clipboard.SetText(flag);
             }
         }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                this.ViewModel.ParseFiles(files);
+            }
+        }
     }
 }
