@@ -253,7 +253,7 @@ namespace JryVideo.Editors.EntityEditor
             var str = this.Format.ToLower();
             if (this.Resolution.IsNullOrWhiteSpace())
             {
-                this.Resolution = this.Resolutions.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+                this.Resolution = this.Resolutions.FirstOrDefault(z => str.Contains(z.Replace("P", "").ToLower())) ?? string.Empty;
             }
             if (this.FilmSource.IsNullOrWhiteSpace())
             {
