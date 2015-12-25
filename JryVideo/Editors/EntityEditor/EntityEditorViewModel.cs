@@ -139,7 +139,11 @@ namespace JryVideo.Editors.EntityEditor
         public string Format
         {
             get { return this.format; }
-            set { this.SetPropertyRef(ref this.format, value); }
+            set
+            {
+                this.SetPropertyRef(ref this.format, value);
+                this.TryParseFromFormatString();
+            }
         }
 
         public override void ReadFromObject(JryEntity obj)
@@ -240,6 +244,12 @@ namespace JryVideo.Editors.EntityEditor
             if (files.Length == 0) return;
             this.Format = files.Length == 1 ? files[0] : ParseCommonString(files);
             if (this.Format == null) return;
+            this.TryParseFromFormatString();
+        }
+
+        private void TryParseFromFormatString()
+        {
+            if (this.Format.IsNullOrWhiteSpace() || this.Action != ObjectChangedAction.Create) return;
             var str = this.Format.ToLower();
             if (this.Resolution.IsNullOrWhiteSpace())
             {
