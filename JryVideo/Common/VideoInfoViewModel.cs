@@ -17,7 +17,6 @@ namespace JryVideo.Common
         private bool isUntrackButtonEnable;
         private string dayOfWeek;
         private string todayEpisode;
-        private bool isToday;
 
         public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
             : base(source)
@@ -137,6 +136,48 @@ namespace JryVideo.Common
                     if (y.Source.StartDate == null) return 1;
 
                     return x.Source.StartDate.Value.CompareTo(y.Source.StartDate.Value);
+                }
+
+                return y.Source.Created.CompareTo(x.Source.Created);
+            }
+        }
+
+        internal sealed class DefaultComparer : Comparer<VideoInfoViewModel>
+        {
+            public override int Compare(VideoInfoViewModel x, VideoInfoViewModel y)
+            {
+                Debug.Assert(x != null, "x != null");
+                Debug.Assert(y != null, "y != null");
+
+                if (x.SeriesView.DisplayNameFirstLine == "火星救援")
+                {
+                    
+                }
+
+                if (x.SeriesView.Source.Id != y.SeriesView.Source.Id)
+                {
+                    return y.SeriesView.Source.Created.CompareTo(x.SeriesView.Source.Created);
+                }
+
+                // in same video: 1. date 1. year 1. type 1. index
+                if (x.Source.StartDate.HasValue && y.Source.StartDate.HasValue)
+                {
+                    return y.Source.StartDate.Value.CompareTo(x.Source.StartDate.Value);
+                }
+
+                if (x.Source.Year != y.Source.Year)
+                {
+                    return y.Source.Year - x.Source.Year;
+                }
+
+                if (x.Source.Type != y.Source.Type)
+                {
+                    return CompareOrdinal(x.Source.Type, y.Source.Type);
+                }
+
+                if (x.Source.Index != y.Source.Index)
+                {
+                    return x.Source.Index - y.Source.Index;
                 }
 
                 return y.Source.Created.CompareTo(x.Source.Created);

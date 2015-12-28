@@ -1,16 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
 using JryVideo.Viewer.SeriesItemViewer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace JryVideo.Main
 {
@@ -92,94 +89,15 @@ namespace JryVideo.Main
             this.VideosView.View.GroupDescriptions.Clear();
             if (search.IsOnlyTracking)
             {
-                this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();//new DayOfWeekComparer();
+                this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();
                 this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription("DayOfWeek"));
             }
             else
             {
-                this.VideosView.View.CustomSort = Comparer<VideoInfoViewModel>.Create(this.CompareVideoInfoViewModel);
+                this.VideosView.View.CustomSort = new VideoInfoViewModel.DefaultComparer();
             }
 
             return search.Items.SelectMany(VideoInfoViewModel.Create).ToArray();
-        }
-
-        private int CompareVideoInfoViewModel(VideoInfoViewModel x, VideoInfoViewModel y)
-        {
-            Debug.Assert(x != null, "x != null");
-            Debug.Assert(y != null, "y != null");
-
-            return x.Source.IsTracking != y.Source.IsTracking
-                ? (x.Source.IsTracking ? -1 : 1)
-                : y.Source.Created.CompareTo(x.Source.Created);
-        }
-
-        private class DayOfWeekComparer : Comparer<VideoInfoViewModel>
-        {
-            private readonly DayOfWeek DayOfWeek = DateTime.Now.DayOfWeek;
-
-            /// <summary>
-            /// 在派生类中重写时，对同一类型的两个对象执行比较并返回一个值，指示一个对象是小于、等于还是大于另一个对象。
-            /// </summary>
-            /// <returns>
-            /// 一个有符号整数，指示 <paramref name="x"/> 与 <paramref name="y"/> 的相对值，如下表所示。 值 含义 小于零 <paramref name="x"/> 小于 <paramref name="y"/>。 零 <paramref name="x"/> 等于 <paramref name="y"/>。 大于零 <paramref name="x"/> 大于 <paramref name="y"/>。
-            /// </returns>
-            /// <param name="x">要比较的第一个对象。</param><param name="y">要比较的第二个对象。</param><exception cref="T:System.ArgumentException">类型 <paramref name="T"/> 没有实现 <see cref="T:System.IComparable`1"/> 泛型接口或 <see cref="T:System.IComparable"/> 接口。</exception>
-            public override int Compare(VideoInfoViewModel x, VideoInfoViewModel y)
-            {
-                Debug.Assert(x != null, "x != null");
-                Debug.Assert(y != null, "y != null");
-
-                if (x.Source.StartDate.HasValue && y.Source.StartDate.HasValue &&
-                    (x.Source.StartDate.Value > DateTime.Now || y.Source.StartDate.Value > DateTime.Now))
-                {
-                    return Compare(x.Source.StartDate.Value, y.Source.StartDate.Value);
-                }
-                else if (x.Source.DayOfWeek != y.Source.DayOfWeek)
-                {
-                    return this.Compare(x.Source.DayOfWeek, y.Source.DayOfWeek);
-                }
-                else
-                {
-                    return y.Source.Created.CompareTo(x.Source.Created);
-                }
-            }
-
-            private static int Compare(DateTime dt1, DateTime dt2)
-            {
-                if (dt1 > DateTime.Now)
-                {
-                    if (dt2 > DateTime.Now)
-                    {
-                        return DateTime.Compare(dt1, dt2);
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-                else if (dt2 > DateTime.Now)
-                {
-                    return -1;
-                }
-                else
-                {
-                    throw new Exception();
-                }
-            }
-
-            private int Compare(DayOfWeek? d1, DayOfWeek? d2)
-            {
-                if (d1 == this.DayOfWeek) return -1;
-                if (d2 == this.DayOfWeek) return 1;
-
-                if (d1 == null) return -1;
-                if (d2 == null) return 1;
-
-                var sub1 = ((int) d1) - ((int) this.DayOfWeek);
-                var sub2 = ((int) d2) - ((int) this.DayOfWeek);
-
-                return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
-            }
         }
 
         public int PageSize { get; set; }
