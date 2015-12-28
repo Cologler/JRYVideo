@@ -8,10 +8,12 @@ namespace JryVideo.Core.Douban
     {
         private static readonly Regex Name1 = new Regex(@"^(.*)(?:Season(?: ?)(\d+))$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex Name2 = new Regex(@"^(.*)(?:第(?:.){1,2}季)$",
+        private static readonly Regex Name2 = new Regex(@"^(.*)(?:第(.){1,2}季)$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex Name3 = new Regex(@"^(\D*)(\d+)$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly List<char> Numbers =
+            new List<char>(new[] { '零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十' });
 
         private readonly List<string> seriesNames = new List<string>();
         private readonly List<string> entityNames = new List<string>();
@@ -79,6 +81,40 @@ namespace JryVideo.Core.Douban
             if (match.Success)
             {
                 this.seriesNames.Add(match.Groups[1].Value);
+                var index = match.Groups[2].Value;
+                if (index.Length > 0)
+                {
+                    var n1 = Numbers.FindIndex(z => z == index[0]);
+                    if (n1 >= 0)
+                    {
+                        if (index.Length < 2) // 1
+                        {
+                            this.Index = n1.ToString();
+                        }
+                        else // > 1
+                        {
+                            var n2 = Numbers.FindIndex(z => z == index[1]);
+                            if (n2 == 10)
+                            {
+                                switch (index.Length)
+                                {
+                                    case 2:
+                                        this.Index = (n1 + 10).ToString();
+                                        break;
+                                    case 3:
+                                        var n3 = Numbers.FindIndex(z => z == index[2]);
+                                        if (n3 > -1 && n3 < 10)
+                                        {
+                                            this.Index = (n3 * 10 + n1).ToString();
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
                 return true;
             }
 
