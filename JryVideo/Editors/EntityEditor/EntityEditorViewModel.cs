@@ -301,31 +301,6 @@ namespace JryVideo.Editors.EntityEditor
         }
 
         private static string ParseCommonString(string[] source)
-        {
-            var len = source.Select(z => z.Length).Min();
-            var first = source[0];
-            var start = len - 1;
-            var end = 0;
-            foreach (var compare in source.Skip(1))
-            {
-                for (var i = 0; i < len; i++)
-                {
-                    if (first[i] != compare[i])
-                    {
-                        start = Math.Min(i, start);
-                        break;
-                    }
-                }
-                for (var i = 0; i < len; i++)
-                {
-                    if (first[first.Length - i - 1] != compare[compare.Length - i - 1])
-                    {
-                        end = Math.Max(first.Length - i, end);
-                        break;
-                    }
-                }
-            }
-            return first.Substring(0, start) + "*" + first.Substring(end);
-        }
+            => source.CommonStart() + "*" + source.CommonEnd();
     }
 }

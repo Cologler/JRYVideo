@@ -66,10 +66,10 @@ namespace JryVideo.Main
 
             var dataCenter = JryVideoCore.Current.CurrentDataCenter;
             var search = this.searchResultView;
-            if (search != null && search.Equals(dataCenter, this.IsOnlyTracking, this.SearchText, this.PageIndex, this.PageSize))
-            {
-                return null;
-            }
+            //if (search != null && search.Equals(dataCenter, this.IsOnlyTracking, this.SearchText, this.PageIndex, this.PageSize))
+            //{
+            //    return null;
+            //}
 
             if (search == null || !search.IsSearchTextEquals(this.SearchText))
             {
