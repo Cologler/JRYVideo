@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Enums;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace JryVideo.Editors.EntityEditor
@@ -242,7 +243,7 @@ namespace JryVideo.Editors.EntityEditor
 
             files = files.Where(File.Exists).Select(Path.GetFileName).ToArray();
             if (files.Length == 0) return;
-            this.Format = files.Length == 1 ? files[0] : ParseCommonString(files);
+            this.Format = files.Length == 1 ? files[0] : ParseCommonFileName(files);
             if (this.Format == null) return;
             this.TryParseFromFormatString();
         }
@@ -267,6 +268,36 @@ namespace JryVideo.Editors.EntityEditor
             {
                 this.Extension = this.Extensions.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
             }
+        }
+
+        private static readonly Regex Crc32 = new Regex(@"(.*)(\[[a-f0-9]{7,8}\]|\([a-f0-9]{7,8}\))$", RegexOptions.IgnoreCase);
+
+        private static string ParseCommonFileName(string[] source)
+        {
+            if (source.Length == 0 || source.Length == 1) throw new ArgumentOutOfRangeException();
+
+            var exts = source.Select(Path.GetExtension).ToArray();
+            var ext = exts[0];
+            if (exts.Skip(1).All(z => z == ext))
+            {
+                var names = source.Select(Path.GetFileNameWithoutExtension).ToArray();
+                var matchs = names.Select(z => Crc32.Match(z)).ToArray();
+                if (matchs.All(z => z.Success))
+                {
+                    var left = matchs[0].Groups[2].Value[0];
+                    if (matchs.All(z => z.Groups[2].Value[0] == left))
+                    {
+                        var strsL = matchs.Select(z => z.Groups[1].Value).ToArray();
+                        return ParseCommonString(strsL) +
+                            matchs[0].Groups[2].Value[0] +
+                            "*" +
+                            matchs[0].Groups[2].Value.Last() +
+                            ext;
+                    }
+                }
+            }
+
+            return ParseCommonString(source);
         }
 
         private static string ParseCommonString(string[] source)
