@@ -36,7 +36,7 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
 
-        public string DayOfWeek
+        public string GroupTitle
         {
             get { return this.dayOfWeek; }
             private set { this.SetPropertyRef(ref this.dayOfWeek, value); }
@@ -67,7 +67,7 @@ namespace JryVideo.Common
                         if (this.Source.DayOfWeek == today.DayOfWeek)
                         {
                             this.compareMode = ViewModelCompareMode.Today;
-                            this.DayOfWeek = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
+                            this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
                             var episode = this.Source.GetTodayEpisode(today);
                             this.TodayEpisode = episode <= this.Source.EpisodesCount
                                 ? $"today play {episode}"
@@ -76,20 +76,20 @@ namespace JryVideo.Common
                         else
                         {
                             this.compareMode = ViewModelCompareMode.DayOfWeek;
-                            this.DayOfWeek = this.Source.DayOfWeek.GetLocalizeString();
+                            this.GroupTitle = this.Source.DayOfWeek.GetLocalizeString();
                             this.TodayEpisode = null;
                         }
                     }
                     else
                     {
                         this.compareMode = ViewModelCompareMode.Future;
-                        this.DayOfWeek = Resources.DateTime_Future;
+                        this.GroupTitle = Resources.DateTime_Future;
                     }
                 }
                 else
                 {
                     this.compareMode = ViewModelCompareMode.Unknown;
-                    this.DayOfWeek = $"{Resources.DayOfWeek_Unknown} (unknown start)";
+                    this.GroupTitle = $"{Resources.DayOfWeek_Unknown} (unknown start)";
                 }
             }
         }

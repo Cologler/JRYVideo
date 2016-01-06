@@ -90,7 +90,7 @@ namespace JryVideo.Main
             if (search.IsOnlyTracking)
             {
                 this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();
-                this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription("DayOfWeek"));
+                this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription(nameof(VideoInfoViewModel.GroupTitle)));
             }
             else
             {
