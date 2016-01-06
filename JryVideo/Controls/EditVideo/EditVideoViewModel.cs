@@ -105,9 +105,17 @@ namespace JryVideo.Controls.EditVideo
             get { return this.startDate; }
             set
             {
-                if (value.HasValue && value.Value >= DateTime.Now)
+                if (value.HasValue)
                 {
-                    this.IsTracking = true;
+                    if (this.DayOfWeek == null)
+                    {
+                        this.DayOfWeek = this.GetDayOfWeekValue(value.Value.DayOfWeek);
+                    }
+                    var today = DateTime.Today;
+                    if (value.Value >= today.AddDays(-(int)today.DayOfWeek)) // this week
+                    {
+                        this.IsTracking = true;
+                    }
                 }
                 this.SetPropertyRef(ref this.startDate, value);
             }
@@ -160,6 +168,9 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
+        private NameValuePair<string, DayOfWeek?> GetDayOfWeekValue(DayOfWeek? dow)
+            => this.DayOfWeekCollection.First(z => z.Value == dow);
+
         public override void WriteToObject(JryVideoInfo obj)
         {
             base.WriteToObject(obj);
@@ -184,7 +195,7 @@ namespace JryVideo.Controls.EditVideo
             this.Names = obj.Names.AsLines();
             this.EpisodesCount = obj.EpisodesCount.ToString();
 
-            this.DayOfWeek = this.DayOfWeekCollection.First(z => z.Value == obj.DayOfWeek);
+            this.DayOfWeek = this.GetDayOfWeekValue(obj.DayOfWeek);
         }
 
         public void LoadDouban(DoubanMovie info)
