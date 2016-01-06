@@ -1,13 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using JryVideo.Add;
+﻿using JryVideo.Add;
 using JryVideo.Common;
 using JryVideo.Common.Dialogs;
 using JryVideo.Core;
@@ -17,6 +8,15 @@ using JryVideo.Editors.PasswordEditor;
 using JryVideo.Managers.ArtistManager;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace JryVideo.Main
 {
@@ -41,7 +41,7 @@ namespace JryVideo.Main
         protected override async void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            
+
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 await JryVideoCore.Current.InitializeAsync();
@@ -117,7 +117,7 @@ namespace JryVideo.Main
         private async void IsOnlyTrackingCheckBox_OnChecked(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.SetOnlyTrackingAsync();
-            this.VideosListView.GroupStyle.Add(this.Resources["TrackingGroupStyle"] as GroupStyle); 
+            this.VideosListView.GroupStyle.Add(this.Resources["TrackingGroupStyle"] as GroupStyle);
         }
 
         private async void IsOnlyTrackingCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
@@ -141,8 +141,13 @@ namespace JryVideo.Main
 
             if (await vm.TrackAsync())
             {
-                this.ViewModel.VideosViewModel.VideosView.View.Refresh();
+                this.Refresh();
             }
+        }
+
+        public void Refresh()
+        {
+            this.ViewModel?.VideosViewModel.VideosView.View.Refresh();
         }
 
         private async void UntrackMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -160,7 +165,7 @@ namespace JryVideo.Main
 
             if (await vm.UntrackAsync())
             {
-                this.ViewModel.VideosViewModel.VideosView.View.Refresh();
+                this.Refresh();
             }
         }
 

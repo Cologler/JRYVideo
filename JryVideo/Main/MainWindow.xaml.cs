@@ -1,13 +1,13 @@
-﻿using System;
+﻿using JryVideo.Common;
+using JryVideo.Viewer.VideoViewer;
+using MahApps.Metro.Controls;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Enums;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using JryVideo.Common;
-using JryVideo.Viewer.VideoViewer;
-using MahApps.Metro.Controls;
 
 namespace JryVideo.Main
 {
@@ -44,6 +44,7 @@ namespace JryVideo.Main
         {
             Task.Run(async () =>
             {
+                var lastDay = DateTime.Now;
                 while (true)
                 {
                     var bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
@@ -56,10 +57,15 @@ namespace JryVideo.Main
                     {
                         this.MemoryTextBlock.Text = bs.ToString();
                     });
+                    var now = DateTime.Now;
+                    if (now.Day != lastDay.Day)
+                    {
+                        lastDay = now;
+                        this.MainPage?.Refresh();
+                    }
                     await Task.Delay(1000);
                 }
             });
-            
         }
 
         void MainPage_VideoSelected(object sender, VideoInfoViewModel e)
@@ -77,7 +83,7 @@ namespace JryVideo.Main
 
         void VideoViewerPage_GoBackButton_Click(object sender, RoutedEventArgs e)
         {
-            ((Button) sender).Click -= this.VideoViewerPage_GoBackButton_Click;
+            ((Button)sender).Click -= this.VideoViewerPage_GoBackButton_Click;
 
             if (this.MainFrame.CanGoBack)
             {
