@@ -1,4 +1,5 @@
-﻿using JryVideo.Common;
+﻿using System;
+using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.Editors.SeriesEditor;
@@ -154,9 +155,7 @@ namespace JryVideo.Viewer.VideoViewer
         {
             var menuItem = sender as MenuItem;
 
-            if (menuItem != null &&
-                menuItem.ItemsSource != null &&
-                ReferenceEquals(menuItem, e.OriginalSource))
+            if (menuItem?.ItemsSource != null && ReferenceEquals(menuItem, e.OriginalSource))
             {
                 return;
             }
@@ -165,14 +164,43 @@ namespace JryVideo.Viewer.VideoViewer
 
             if (osItem != null)
             {
-                var str = osItem.DataContext as string;
-
-                if (str == null)
-                    str = osItem.Header as string;
+                var str = osItem.DataContext as string ?? osItem.Header as string;
 
                 if (str != null)
                 {
                     Clipboard.SetText(str);
+                }
+            }
+        }
+
+        private void SearchStringOnDoubanMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+
+            if (menuItem?.ItemsSource != null && ReferenceEquals(menuItem, e.OriginalSource))
+            {
+                return;
+            }
+
+            var osItem = e.OriginalSource as MenuItem;
+
+            if (osItem != null)
+            {
+                var str = osItem.DataContext as string ?? osItem.Header as string;
+
+                if (str != null)
+                {
+                    try
+                    {
+                        using (Process.Start($"http://movie.douban.com/subject_search?search_text={str}&cat=1002"))
+                        {
+
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
         }
