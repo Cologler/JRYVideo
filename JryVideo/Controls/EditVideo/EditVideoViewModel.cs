@@ -103,7 +103,14 @@ namespace JryVideo.Controls.EditVideo
         public DateTime? StartLocalDate
         {
             get { return this.startDate; }
-            set { this.SetPropertyRef(ref this.startDate, value); }
+            set
+            {
+                if (value.HasValue && value.Value >= DateTime.Now)
+                {
+                    this.IsTracking = true;
+                }
+                this.SetPropertyRef(ref this.startDate, value);
+            }
         }
 
         public NameValuePair<string, DayOfWeek?>? DayOfWeek
