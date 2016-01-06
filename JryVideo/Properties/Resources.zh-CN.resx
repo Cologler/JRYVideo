@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DateTime_AfterMonth" xml:space="preserve">
+    <value>{0} 月以后</value>
+  </data>
+  <data name="DateTime_AfterWeek" xml:space="preserve">
+    <value>{0} 周以后</value>
+  </data>
+  <data name="DateTime_AfterYear" xml:space="preserve">
+    <value>{0} 年以后</value>
+  </data>
   <data name="DateTime_Future" xml:space="preserve">
     <value>未来</value>
+  </data>
+  <data name="DateTime_Next" xml:space="preserve">
+    <value>下{0}</value>
   </data>
   <data name="DayOfWeek_Friday" xml:space="preserve">
     <value>周五</value>

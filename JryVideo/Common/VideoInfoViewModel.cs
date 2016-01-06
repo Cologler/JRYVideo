@@ -56,42 +56,84 @@ namespace JryVideo.Common
 
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
 
+            this.UpdateGroup();
+        }
+
+        private void UpdateGroup()
+        {
             // only tracking need build group info.
-            if (this.Source.IsTracking)
+            if (!this.Source.IsTracking) return;
+
+            this.TodayEpisode = null;
+            var today = DateTime.Now.Date;
+            var sunday = today.AddDays(-(int) today.DayOfWeek); // sunday
+            var startDate = this.Source.StartDate;
+
+            if (startDate.HasValue)
             {
-                var today = DateTime.Now;
-                if (this.Source.StartDate.HasValue)
+                if (startDate.Value < today)
                 {
-                    if (this.Source.StartDate.Value < today)
+                    if (this.Source.DayOfWeek == today.DayOfWeek)
                     {
-                        if (this.Source.DayOfWeek == today.DayOfWeek)
-                        {
-                            this.compareMode = ViewModelCompareMode.Today;
-                            this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
-                            var episode = this.Source.GetTodayEpisode(today);
-                            this.TodayEpisode = episode <= this.Source.EpisodesCount
-                                ? $"today play {episode}"
-                                : "done!";
-                        }
-                        else
-                        {
-                            this.compareMode = ViewModelCompareMode.DayOfWeek;
-                            this.GroupTitle = this.Source.DayOfWeek.GetLocalizeString();
-                            this.TodayEpisode = null;
-                        }
+                        this.compareMode = ViewModelCompareMode.Today;
+                        this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
+                        var episode = this.Source.GetTodayEpisode(today);
+                        this.TodayEpisode = episode <= this.Source.EpisodesCount
+                            ? $"today play {episode}"
+                            : "done!";
                     }
                     else
                     {
-                        this.compareMode = ViewModelCompareMode.Future;
-                        this.GroupTitle = Resources.DateTime_Future;
+                        this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
+                            this.Source.DayOfWeek.GetLocalizeString());
                     }
                 }
                 else
                 {
-                    this.compareMode = ViewModelCompareMode.Unknown;
-                    this.GroupTitle = $"{Resources.DayOfWeek_Unknown} (unknown start)";
+                    if ((startDate.Value - sunday).Days < 7) // this week
+                    {
+                        this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
+                            this.Source.DayOfWeek.GetLocalizeString());
+                    }
+                    else
+                    {
+                        var compared = startDate.Value.DayOfYear - today.DayOfYear;
+                        if (compared <= 7) // next week
+                        {
+                            this.SetCompareMode(ViewModelCompareMode.NextWeek,
+                                string.Format(Resources.DateTime_Next, startDate.Value.DayOfWeek.GetLocalizeString()));
+                        }
+                        else if (startDate.Value.Month == today.Month) // in one month
+                        {
+                            var week = (compared / 7) + (compared % 7 == 0 ? 0 : 1);
+                            this.SetCompareMode(ViewModelCompareMode.FewWeek,
+                                string.Format(Resources.DateTime_AfterWeek, week));
+                        }
+                        else
+                        {
+                            if (startDate.Value.Year == today.Year)
+                            {
+                                this.SetCompareMode(ViewModelCompareMode.FewMonth,
+                                string.Format(Resources.DateTime_AfterMonth, startDate.Value.Month - today.Month));
+                            }
+                            else
+                            {
+                                this.SetCompareMode(ViewModelCompareMode.Future, Resources.DateTime_Future);
+                            }
+                        }
+                    }
                 }
             }
+            else
+            {
+                this.SetCompareMode(ViewModelCompareMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
+            }
+        }
+
+        private void SetCompareMode(ViewModelCompareMode mode, string groupTitle)
+        {
+            this.compareMode = mode;
+            this.GroupTitle = groupTitle;
         }
 
         private ViewModelCompareMode compareMode;
@@ -101,6 +143,14 @@ namespace JryVideo.Common
             Today,
 
             DayOfWeek,
+
+            NextWeek,
+
+            FewWeek,
+
+            FewMonth,
+
+            FewYear,
 
             Future,
 
@@ -119,15 +169,39 @@ namespace JryVideo.Common
                 if (x.compareMode != y.compareMode)
                     return x.compareMode.CompareTo(y.compareMode);
 
-                if (x.compareMode == ViewModelCompareMode.DayOfWeek && x.Source.DayOfWeek != y.Source.DayOfWeek)
+                switch (x.compareMode)
                 {
-                    if (x.Source.DayOfWeek == null) return -1;
-                    if (y.Source.DayOfWeek == null) return 1;
+                    case ViewModelCompareMode.Today:
+                        break;
+                    case ViewModelCompareMode.DayOfWeek:
+                        if (x.Source.DayOfWeek != y.Source.DayOfWeek)
+                        {
+                            if (x.Source.DayOfWeek == null) return -1;
+                            if (y.Source.DayOfWeek == null) return 1;
 
-                    var sub1 = ((int)x.Source.DayOfWeek) - ((int)this.DayOfWeek);
-                    var sub2 = ((int)y.Source.DayOfWeek) - ((int)this.DayOfWeek);
+                            var sub1 = ((int)x.Source.DayOfWeek) - ((int)this.DayOfWeek);
+                            var sub2 = ((int)y.Source.DayOfWeek) - ((int)this.DayOfWeek);
 
-                    return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
+                            return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
+                        }
+                        break;
+
+                    case ViewModelCompareMode.NextWeek:
+                    case ViewModelCompareMode.FewWeek:
+                    case ViewModelCompareMode.FewMonth:
+                    case ViewModelCompareMode.FewYear:
+                        Debug.Assert(x.Source.StartDate != null, "x.Source.StartDate != null");
+                        Debug.Assert(y.Source.StartDate != null, "y.Source.StartDate != null");
+                        if (y.Source.StartDate.Value != x.Source.StartDate.Value)
+                        {
+                            return DateTime.Compare(x.Source.StartDate.Value, y.Source.StartDate.Value);
+                        }
+                        break;
+
+                    case ViewModelCompareMode.Future:
+                        break;
+                    case ViewModelCompareMode.Unknown:
+                        break;
                 }
 
                 if (x.compareMode == ViewModelCompareMode.Future && x.Source.StartDate != y.Source.StartDate)
@@ -151,7 +225,6 @@ namespace JryVideo.Common
 
                 if (x.SeriesView.DisplayNameFirstLine == "火星救援")
                 {
-                    
                 }
 
                 if (x.SeriesView.Source.Id != y.SeriesView.Source.Id)
@@ -236,8 +309,7 @@ namespace JryVideo.Common
         public async Task<bool> TrackAsync()
         {
             this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;
-            var manager =
-                JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
             this.Source.IsTracking = true;
 
             if (await manager.UpdateAsync(this.Source))
@@ -252,8 +324,7 @@ namespace JryVideo.Common
         public async Task<bool> UntrackAsync()
         {
             this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;
-            var manager =
-                JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
             this.Source.IsTracking = false;
 
             if (await manager.UpdateAsync(this.Source))

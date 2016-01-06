@@ -61,11 +61,47 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
+        ///   查找类似 after {0} month 的本地化字符串。
+        /// </summary>
+        internal static string DateTime_AfterMonth {
+            get {
+                return ResourceManager.GetString("DateTime_AfterMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 after {0} week 的本地化字符串。
+        /// </summary>
+        internal static string DateTime_AfterWeek {
+            get {
+                return ResourceManager.GetString("DateTime_AfterWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 after {0} year 的本地化字符串。
+        /// </summary>
+        internal static string DateTime_AfterYear {
+            get {
+                return ResourceManager.GetString("DateTime_AfterYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 future 的本地化字符串。
         /// </summary>
         internal static string DateTime_Future {
             get {
                 return ResourceManager.GetString("DateTime_Future", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 next {0} 的本地化字符串。
+        /// </summary>
+        internal static string DateTime_Next {
+            get {
+                return ResourceManager.GetString("DateTime_Next", resourceCulture);
             }
         }
         

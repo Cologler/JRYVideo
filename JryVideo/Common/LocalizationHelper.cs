@@ -1,6 +1,6 @@
-﻿using System;
-using JryVideo.Model;
+﻿using JryVideo.Model;
 using JryVideo.Properties;
+using System;
 
 namespace JryVideo.Common
 {
@@ -54,7 +54,7 @@ namespace JryVideo.Common
                 case DayOfWeek.Saturday:
                     return Resources.DayOfWeek_Saturday;
                 default:
-                    throw new ArgumentOutOfRangeException("dayOfWeek", dayOfWeek, null);
+                    throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek, null);
             }
         }
 
