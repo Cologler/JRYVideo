@@ -31,7 +31,8 @@ namespace JryVideo
                 {
                     using (var reader = File.OpenText(path))
                     {
-                        this.UserConfig = reader.ReadToEnd().JsonToObject<UserConfig>();
+                        var text = reader.ReadToEnd();
+                        this.UserConfig = text.JsonToObject<UserConfig>();
                     }
                 }
                 catch { /* ignored */ }

@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JryVideo.Editors.EntityEditor
 {
@@ -244,14 +245,14 @@ namespace JryVideo.Editors.EntityEditor
             files = files.Where(File.Exists).Select(Path.GetFileName).ToArray();
             if (files.Length == 0) return;
             this.Format = files.Length == 1 ? files[0] : ParseCommonFileName(files);
-            if (this.Format == null) return;
-            this.TryParseFromFormatString();
         }
 
-        private void TryParseFromFormatString()
+        private async void TryParseFromFormatString()
         {
-            if (this.Format.IsNullOrWhiteSpace() || this.Action != ObjectChangedAction.Create) return;
-            var str = this.Format.ToLower();
+            var format = this.Format;
+            if (format.IsNullOrWhiteSpace() || this.Action != ObjectChangedAction.Create) return;
+
+            var str = format.ToLower();
             if (this.Resolution.IsNullOrWhiteSpace())
             {
                 this.Resolution = this.Resolutions.FirstOrDefault(z => str.Contains(z.Replace("P", "").ToLower())) ?? string.Empty;
@@ -267,6 +268,24 @@ namespace JryVideo.Editors.EntityEditor
             if (this.Extension.IsNullOrWhiteSpace())
             {
                 this.Extension = this.Extensions.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+            }
+
+            var mapper = ((App)Application.Current).UserConfig?.Mapper;
+            if (mapper != null)
+            {
+                var filter = new Func<string, bool>(z => !z.IsNullOrWhiteSpace());
+                if (this.Fansubs.Count == 0)
+                {
+                    this.Fansubs.AddRange(await mapper.TryFireAsync(JryFlagType.EntityFansub, format, filter));
+                }
+                if (this.SubTitleLanguages.Count == 0)
+                {
+                    this.SubTitleLanguages.AddRange(await mapper.TryFireAsync(JryFlagType.EntitySubTitleLanguage, format, filter));
+                }
+                if (this.TrackLanguages.Count == 0)
+                {
+                    this.TrackLanguages.AddRange(await mapper.TryFireAsync(JryFlagType.EntityTrackLanguage, format, filter));
+                }
             }
         }
 
