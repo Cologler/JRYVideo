@@ -14,6 +14,7 @@ using System.Enums;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -206,6 +207,25 @@ namespace JryVideo.Controls.EditVideo
             this.Names = this.Names.IsNullOrWhiteSpace()
                 ? doubanSecondName
                 : String.Join("\r\n", this.Names, doubanSecondName);
+
+            var defaultValue = (Application.Current as App)?.UserConfig?.DefaultValue;
+            if (defaultValue != null)
+            {
+                if (parser.IsMovie)
+                {
+                    if (!defaultValue.MovieType.IsNullOrWhiteSpace())
+                    {
+                        this.Type = defaultValue.MovieType;
+                    }
+                }
+                else
+                {
+                    if (!defaultValue.SeasonType.IsNullOrWhiteSpace())
+                    {
+                        this.Type = defaultValue.SeasonType;
+                    }
+                }
+            }
 
             if (this.Year.IsNullOrWhiteSpace())
             {
