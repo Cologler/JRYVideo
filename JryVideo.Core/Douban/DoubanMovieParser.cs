@@ -31,14 +31,18 @@ namespace JryVideo.Core.Douban
 
         public string EpisodesCount { get; private set; }
 
+        public bool IsMovie { get; set; }
+
         private void Load(DoubanMovie json)
         {
             this.LoadName(json);
 
+            this.IsMovie = json.SubType == "movie";
+
             // EpisodesCount
             if (json.EpisodesCount.IsNullOrWhiteSpace())
             {
-                if (json.SubType == "movie") this.EpisodesCount = "1";
+                if (this.IsMovie) this.EpisodesCount = "1";
             }
             else
             {
