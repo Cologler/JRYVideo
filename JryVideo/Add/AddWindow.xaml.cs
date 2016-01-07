@@ -98,10 +98,19 @@ namespace JryVideo.Add
             await this.videoCreatorPage.CreatorViewModel.LoadAsync();
         }
 
-        private async void LastButton_OnClick(object sender, RoutedEventArgs e)
+        private void LastButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (this.ContentFrame.CanGoBack)
             {
+                if (this.ContentFrame.Content is VideoCreatorPage)
+                {
+                    this.TitleTextBlock.Text = "sure video was not exists";
+                }
+                else if (this.ContentFrame.Content is SeriesItemViewerPage)
+                {
+                    this.TitleTextBlock.Text = "select series";
+                }
+
                 this.ContentFrame.GoBack();
             }
 
