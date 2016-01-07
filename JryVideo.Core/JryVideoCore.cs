@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using JryVideo.Core.Managers;
+﻿using JryVideo.Core.Managers;
 using JryVideo.Data;
-using System.Collections;
-using System.Collections.ObjectModel;
+using System;
+using System.Threading.Tasks;
 
 namespace JryVideo.Core
 {
@@ -64,7 +61,7 @@ namespace JryVideo.Core
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("mode", mode, null);
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
         }
     }
