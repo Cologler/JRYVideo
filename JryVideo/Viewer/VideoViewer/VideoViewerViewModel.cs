@@ -49,15 +49,17 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 this.Video = new VideoViewModel(video);
 
-                this.Watcheds.Reset(Enumerable.Range(1, this.Info.Source.EpisodesCount)
-                    .Select(z => new WatchedEpisodeChecker(z)));
+                var watcheds = Enumerable.Range(1, this.Info.Source.EpisodesCount)
+                    .Select(z => new WatchedEpisodeChecker(z))
+                    .ToArray();
                 if (video.Watcheds != null)
                 {
-                    foreach (var ep in video.Watcheds?.Where(z => z <= this.Info.Source.EpisodesCount))
+                    foreach (var ep in video.Watcheds.Where(z => z <= this.Info.Source.EpisodesCount))
                     {
-                        this.Watcheds[ep - 1].IsWatched = true;
+                        watcheds[ep - 1].IsWatched = true;
                     }
                 }
+                this.Watcheds.Reset(watcheds);
 
                 this.EntitesView.Collection.Clear();
                 this.EntitesView.Collection.AddRange(video.Entities
@@ -87,6 +89,23 @@ namespace JryVideo.Viewer.VideoViewer
                 return Comparer<string>.Default.Compare(x.Source.Extension, y.Source.Extension);
 
             return -1;
+        }
+
+        public async void Flush()
+        {
+            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
+
+            var video = await manager.FindAsync(this.Info.Source.Id);
+
+            if (video != null)
+            {
+                var watched = this.Watcheds.Where(z => z.IsWatched)
+                    .Select(z => z.Episode)
+                    .OrderBy(z => z)
+                    .ToList();
+                video.Watcheds = watched.Count == 0 ? null : watched;
+                await manager.UpdateAsync(video);
+            }
         }
     }
 }

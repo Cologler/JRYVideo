@@ -4,8 +4,11 @@ namespace JryVideo.Common
     {
         public WatchedEpisodeChecker(int episode)
         {
+            this.Episode = episode;
             this.EpisodeName = $"ep {episode}";
         }
+
+        public int Episode { get; }
 
         public string EpisodeName { get; }
 

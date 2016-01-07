@@ -85,6 +85,8 @@ namespace JryVideo.Main
         {
             ((Button)sender).Click -= this.VideoViewerPage_GoBackButton_Click;
 
+            (this.MainFrame.Content as VideoViewerPage)?.ViewModel.Flush();
+
             if (this.MainFrame.CanGoBack)
             {
                 this.MainFrame.GoBack();

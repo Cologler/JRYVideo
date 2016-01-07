@@ -407,7 +407,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="watched Episodes"
+                <TextBlock Text="watched episodes"
                            Margin="0,0,0,4"/>
                 
                 <ListView Grid.Row="1"
@@ -426,7 +426,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 
-                                <CheckBox IsChecked="{Binding IsWatched, Mode=OneWayToSource}" />
+                                <CheckBox IsChecked="{Binding IsWatched, Mode=TwoWay}" />
                                 
                                 <TextBlock Grid.Column="1"
                                            Text="{Binding EpisodeName}"
