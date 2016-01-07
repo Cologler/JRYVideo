@@ -64,69 +64,68 @@ namespace JryVideo.Common
             // only tracking need build group info.
             if (!this.Source.IsTracking) return;
 
+            if (!this.Source.StartDate.HasValue)
+            {
+                this.SetCompareMode(ViewModelCompareMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
+                return;
+            }
+
             this.TodayEpisode = null;
             var today = DateTime.Now.Date;
             var sunday = today.AddDays(-(int) today.DayOfWeek); // sunday
-            var startDate = this.Source.StartDate;
+            var startDate = this.Source.StartDate.Value.ToLocalTime();
 
-            if (startDate.HasValue)
+            if (startDate < today)
             {
-                if (startDate.Value < today)
+                if (this.Source.DayOfWeek == today.DayOfWeek)
                 {
-                    if (this.Source.DayOfWeek == today.DayOfWeek)
-                    {
-                        this.compareMode = ViewModelCompareMode.Today;
-                        this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
-                        var episode = this.Source.GetTodayEpisode(today);
-                        this.TodayEpisode = episode <= this.Source.EpisodesCount
-                            ? $"today play {episode}"
-                            : "done!";
-                    }
-                    else
-                    {
-                        this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
-                            this.Source.DayOfWeek.GetLocalizeString());
-                    }
+                    this.compareMode = ViewModelCompareMode.Today;
+                    this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
+                    var episode = this.Source.GetTodayEpisode(today);
+                    this.TodayEpisode = episode <= this.Source.EpisodesCount
+                        ? $"today play {episode}"
+                        : "done!";
                 }
                 else
                 {
-                    if ((startDate.Value - sunday).Days < 7) // this week
-                    {
-                        this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
-                            this.Source.DayOfWeek.GetLocalizeString());
-                    }
-                    else
-                    {
-                        var compared = startDate.Value.DayOfYear - today.DayOfYear;
-                        if (compared <= 7) // next week
-                        {
-                            this.SetCompareMode(ViewModelCompareMode.NextWeek,
-                                string.Format(Resources.DateTime_Next, startDate.Value.DayOfWeek.GetLocalizeString()));
-                        }
-                        else if (startDate.Value.Month == today.Month) // in one month
-                        {
-                            var week = (compared / 7) + (compared % 7 == 0 ? 0 : 1);
-                            this.SetCompareMode(ViewModelCompareMode.FewWeek,
-                                string.Format(Resources.DateTime_AfterWeek, week));
-                        }
-                        else
-                        {
-                            if (startDate.Value.Year == today.Year)
-                            {
-                                this.SetCompareMode(ViewModelCompareMode.FewMonth,
-                                string.Format(Resources.DateTime_AfterMonth, startDate.Value.Month - today.Month));
-                            }
-                            else
-                            {
-                                this.SetCompareMode(ViewModelCompareMode.Future, Resources.DateTime_Future);
-                            }
-                        }
-                    }
+                    this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
+                        this.Source.DayOfWeek.GetLocalizeString());
                 }
             }
             else
             {
-                this.SetCompareMode(ViewModelCompareMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
+                if ((startDate - sunday).Days < 7) // this week
+                {
+                    this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
+                        this.Source.DayOfWeek.GetLocalizeString());
+                }
+                else
+                {
+                    var compared = startDate.DayOfYear - today.DayOfYear;
+                    if (compared <= 7) // next week
+                    {
+                        this.SetCompareMode(ViewModelCompareMode.NextWeek,
+                            string.Format(Resources.DateTime_Next, startDate.DayOfWeek.GetLocalizeString()));
+                    }
+                    else if (startDate.Month == today.Month) // in one month
+                    {
+                        var week = (compared / 7) + (compared % 7 == 0 ? 0 : 1);
+                        this.SetCompareMode(ViewModelCompareMode.FewWeek,
+                            string.Format(Resources.DateTime_AfterWeek, week));
+                    }
+                    else
+                    {
+                        if (startDate.Year == today.Year)
+                        {
+                            this.SetCompareMode(ViewModelCompareMode.FewMonth,
+                                string.Format(Resources.DateTime_AfterMonth, startDate.Month - today.Month));
+                        }
+                        else
+                        {
+                            this.SetCompareMode(ViewModelCompareMode.Future, Resources.DateTime_Future);
+                        }
+                    }
+                }
             }
         }
 
