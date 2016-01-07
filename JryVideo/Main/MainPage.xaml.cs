@@ -46,7 +46,7 @@ namespace JryVideo.Main
             {
                 await JryVideoCore.Current.InitializeAsync();
                 this.DataContext = this.ViewModel = new MainViewModel();
-                await this.ViewModel.LoadAsync();
+                this.ViewModel.LoadAsync();
             }
         }
 
@@ -77,14 +77,14 @@ namespace JryVideo.Main
             }
         }
 
-        private async void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             if (new AddWindow()
             {
                 Owner = this.TryFindParent<Window>()
             }.ShowDialog() == true)
             {
-                await this.ViewModel.LoadAsync();
+                this.ViewModel.LoadAsync();
             }
         }
 

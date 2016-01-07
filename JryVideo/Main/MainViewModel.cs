@@ -1,10 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Jasily.ComponentModel;
-using JryVideo.Core;
+﻿using Jasily.ComponentModel;
 using JryVideo.Data;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace JryVideo.Main
 {
@@ -25,10 +22,7 @@ namespace JryVideo.Main
 
         public MainSeriesItemViewerViewModel VideosViewModel { get; private set; }
 
-        public async Task LoadAsync()
-        {
-            this.BeginUpdateDataSouce();
-        }
+        public void LoadAsync() => this.BeginUpdateDataSouce();
 
         public ObservableCollection<DataModeViewModel> ModeCollection { get; private set; }
 
@@ -40,7 +34,7 @@ namespace JryVideo.Main
 
         private void Switch()
         {
-            
+
         }
 
         private async void BeginUpdateDataSouce()
