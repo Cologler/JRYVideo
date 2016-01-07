@@ -79,12 +79,13 @@ namespace JryVideo.Main
 
         private async void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var selectSeriesWindow = new AddWindow()
+            if (new AddWindow()
             {
                 Owner = this.TryFindParent<Window>()
-            };
-            selectSeriesWindow.ShowDialog();
-            await this.ViewModel.LoadAsync();
+            }.ShowDialog() == true)
+            {
+                await this.ViewModel.LoadAsync();
+            }
         }
 
         private void VideoPanel_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
