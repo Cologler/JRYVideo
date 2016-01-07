@@ -179,6 +179,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             
             <Grid>
@@ -395,6 +396,46 @@
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>
+            </Grid>
+
+            <Grid Name="WatchedEpisodes"
+                  Grid.Row="2"
+                  Height="140"
+                  Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="watched Episodes"
+                           Margin="0,0,0,4"/>
+                
+                <ListView Grid.Row="1"
+                          ItemsSource="{Binding Watcheds}"
+                          BorderThickness="0">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="60">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                
+                                <CheckBox IsChecked="{Binding IsWatched, Mode=OneWayToSource}" />
+                                
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding EpisodeName}"
+                                           VerticalAlignment="Center"
+                                           Margin="2" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
             
         </Grid>

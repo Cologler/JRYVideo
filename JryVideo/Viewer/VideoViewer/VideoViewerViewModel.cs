@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -44,10 +42,22 @@ namespace JryVideo.Viewer.VideoViewer
             if (video == null)
             {
                 this.Video = null;
+
+                this.Watcheds.Clear();
             }
             else
             {
                 this.Video = new VideoViewModel(video);
+
+                this.Watcheds.Reset(Enumerable.Range(1, this.Info.Source.EpisodesCount)
+                    .Select(z => new WatchedEpisodeChecker(z)));
+                if (video.Watcheds != null)
+                {
+                    foreach (var ep in video.Watcheds?.Where(z => z <= this.Info.Source.EpisodesCount))
+                    {
+                        this.Watcheds[ep - 1].IsWatched = true;
+                    }
+                }
 
                 this.EntitesView.Collection.Clear();
                 this.EntitesView.Collection.AddRange(video.Entities
@@ -57,6 +67,9 @@ namespace JryVideo.Viewer.VideoViewer
                     .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g.OrderBy(this.CompareEntityViewModel))));
             }
         }
+
+        public ObservableCollection<WatchedEpisodeChecker> Watcheds { get; }
+            = new ObservableCollection<WatchedEpisodeChecker>();
 
         public JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>> EntitesView { get; private set; }
 

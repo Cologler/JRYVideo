@@ -12,6 +12,8 @@ namespace JryVideo.Model
 
         public List<JryEntity> Entities { get; set; }
 
+        public List<int> Watcheds { get; set; }
+
         protected override bool InnerTestHasError()
         {
             if (base.InnerTestHasError()) return true;
