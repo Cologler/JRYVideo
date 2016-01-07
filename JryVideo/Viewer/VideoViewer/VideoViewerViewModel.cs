@@ -1,4 +1,5 @@
-﻿using Jasily.ComponentModel;
+﻿using System;
+using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
@@ -97,14 +98,28 @@ namespace JryVideo.Viewer.VideoViewer
 
             var video = await manager.FindAsync(this.Info.Source.Id);
 
-            if (video != null)
+            if (video == null) return;
+
+            var watched = this.Watcheds.Where(z => z.IsWatched)
+                .Select(z => z.Episode)
+                .OrderBy(z => z)
+                .ToList();
+            if (watched.Count == 0)
             {
-                var watched = this.Watcheds.Where(z => z.IsWatched)
-                    .Select(z => z.Episode)
-                    .OrderBy(z => z)
-                    .ToList();
-                video.Watcheds = watched.Count == 0 ? null : watched;
-                await manager.UpdateAsync(video);
+                if (video.Watcheds != null)
+                {
+                    video.Watcheds = null;
+                    await manager.UpdateAsync(video);
+                }
+            }
+            else
+            {
+                if (video.Watcheds?.Count != watched.Count ||
+                    watched.Where((t, i) => video.Watcheds[i] != t).Any())
+                {
+                    video.Watcheds = watched;
+                    await manager.UpdateAsync(video);
+                }
             }
         }
     }
