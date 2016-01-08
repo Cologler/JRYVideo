@@ -1,5 +1,4 @@
-﻿using System;
-using JryVideo.Common;
+﻿using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.Editors.SeriesEditor;
@@ -91,8 +90,10 @@ namespace JryVideo.Viewer.VideoViewer
                 Owner = this.TryFindParent<Window>()
             };
 
-            dlg.ShowDialog();
-            this.ViewModel.Info.Reload();
+            if (dlg.ShowDialog() == true)
+            {
+                this.ViewModel.Info.RefreshProperties();
+            }
         }
 
         private void CopyGuidButton_OnClick(object sender, RoutedEventArgs e)

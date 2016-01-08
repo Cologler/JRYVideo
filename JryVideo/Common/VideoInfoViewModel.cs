@@ -22,7 +22,7 @@ namespace JryVideo.Common
             : base(source)
         {
             this.SeriesView = new SeriesViewModel(series);
-            this.Reload();
+            this.RefreshProperties();
         }
 
         public SeriesViewModel SeriesView { get; private set; }
@@ -48,10 +48,8 @@ namespace JryVideo.Common
             private set { this.SetPropertyRef(ref this.todayEpisode, value); }
         }
 
-        public override void Reload()
+        public override void RefreshProperties()
         {
-            base.Reload();
-
             base.RefreshProperties();
 
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);

@@ -16,6 +16,7 @@ namespace JryVideo.Common
         {
         }
 
+        [NotifyPropertyChanged]
         public JryCover Cover
         {
             get
@@ -57,11 +58,6 @@ namespace JryVideo.Common
                 var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
                 this.Cover = await coverManager.LoadCoverAsync(this.Source.CoverId);
             }
-        }
-
-        public virtual void Reload()
-        {
-            this.NotifyPropertyChanged<HasCoverViewModel<T>>(z => z.Cover);
         }
     }
 }
