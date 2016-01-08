@@ -1,12 +1,12 @@
-﻿using System;
+﻿using JryVideo.Data;
+using JryVideo.Data.DataSources;
+using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
-using JryVideo.Data;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -41,7 +41,7 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        public override async Task<bool> InsertAsync(IEnumerable<JrySeries> objs)
+        protected override async Task<bool> InsertAsync(IEnumerable<JrySeries> objs)
         {
             if (await base.InsertAsync(objs))
             {

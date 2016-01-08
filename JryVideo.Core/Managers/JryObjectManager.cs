@@ -1,10 +1,9 @@
+using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -19,43 +18,43 @@ namespace JryVideo.Core.Managers
 
         protected TProvider Source { get; private set; }
 
-        public async virtual Task<IEnumerable<T>> LoadAsync()
+        public async Task<IEnumerable<T>> LoadAsync()
         {
             return await this.Source.ListAsync(0, Int32.MaxValue);
         }
 
-        public async virtual Task<IEnumerable<T>> LoadAsync(int skip, int take)
+        public async Task<IEnumerable<T>> LoadAsync(int skip, int take)
         {
             return await this.Source.ListAsync(skip, take);
         }
 
-        public async virtual Task<T> FindAsync(string id)
+        public async Task<T> FindAsync(string id)
         {
             return await this.Source.FindAsync(id);
         }
 
-        public async virtual Task<bool> InsertAsync(T obj)
+        public virtual async Task<bool> InsertAsync(T obj)
         {
             if (obj.HasError()) return false;
 
             return await this.Source.InsertAsync(obj);
         }
 
-        public async virtual Task<bool> InsertAsync(IEnumerable<T> objs)
+        protected virtual async Task<bool> InsertAsync(IEnumerable<T> objs)
         {
             if (objs.Any(obj => obj.HasError())) return false;
 
             return await this.Source.InsertAsync(objs);
         }
 
-        public async virtual Task<bool> UpdateAsync(T obj)
+        public virtual async Task<bool> UpdateAsync(T obj)
         {
             if (obj.HasError()) return false;
 
             return await this.Source.UpdateAsync(obj);
         }
 
-        public async virtual Task<bool> RemoveAsync(string id)
+        public async Task<bool> RemoveAsync(string id)
         {
             return await this.Source.RemoveAsync(id);
         }

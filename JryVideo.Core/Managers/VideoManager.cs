@@ -1,11 +1,10 @@
-﻿using System;
+﻿using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -22,7 +21,7 @@ namespace JryVideo.Core.Managers
 
         public async void SeriesManager_VideoInfoCreated(object sender, IEnumerable<JryVideoInfo> e)
         {
-            await this.InsertAsync(e.Select(i => 
+            await this.InsertAsync(e.Select(i =>
             {
                 var v = Model.JryVideo.Build(i);
                 v.BuildMetaData(true);
@@ -51,7 +50,7 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        public override async Task<bool> InsertAsync(IEnumerable<Model.JryVideo> objs)
+        protected override async Task<bool> InsertAsync(IEnumerable<Model.JryVideo> objs)
         {
             if (await base.InsertAsync(objs))
             {
@@ -191,6 +190,6 @@ namespace JryVideo.Core.Managers
             }
         }
 
-        
+
     }
 }
