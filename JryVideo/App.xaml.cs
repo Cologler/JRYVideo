@@ -51,12 +51,11 @@ namespace JryVideo
         }
 
         private DateTime? lastTryRead;
-        private void BeginLoadUserConfig(int tryCount = 3)
+        private void BeginLoadUserConfig()
         {
-            if (tryCount < 1) return;
             this.lastTryRead = DateTime.UtcNow;
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 if (File.Exists(UserConfigPath))
                 {
@@ -73,7 +72,8 @@ namespace JryVideo
                     {
                         if (e.HResult == -2147024864)
                         {
-                            this.BeginLoadUserConfig(tryCount - 1);
+                            await Task.Delay(200);
+                            this.BeginLoadUserConfig();
                         }
                     }
                     catch
