@@ -43,13 +43,31 @@ namespace JryVideo.Viewer.VideoViewer
             if (video == null)
             {
                 this.Video = null;
-
-                this.Watcheds.Clear();
             }
             else
             {
                 this.Video = new VideoViewModel(video);
 
+                this.EntitesView.Collection.Clear();
+                this.EntitesView.Collection.AddRange(video.Entities
+                    .Select(z => new EntityViewModel(z))
+                    .GroupBy(v => v.Source.Resolution ?? "unknown")
+                    .OrderBy(z => z.Key)
+                    .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g.OrderBy(this.CompareEntityViewModel))));
+            }
+
+            this.ReloadEpisodes();
+        }
+
+        public void ReloadEpisodes()
+        {
+            var video = this.Video?.Source;
+            if (video == null)
+            {
+                this.Watcheds.Clear();
+            }
+            else
+            {
                 var watcheds = Enumerable.Range(1, this.Info.Source.EpisodesCount)
                     .Select(z => new WatchedEpisodeChecker(z))
                     .ToArray();
@@ -61,13 +79,6 @@ namespace JryVideo.Viewer.VideoViewer
                     }
                 }
                 this.Watcheds.Reset(watcheds);
-
-                this.EntitesView.Collection.Clear();
-                this.EntitesView.Collection.AddRange(video.Entities
-                    .Select(z => new EntityViewModel(z))
-                    .GroupBy(v => v.Source.Resolution ?? "unknown")
-                    .OrderBy(z => z.Key)
-                    .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g.OrderBy(this.CompareEntityViewModel))));
             }
         }
 

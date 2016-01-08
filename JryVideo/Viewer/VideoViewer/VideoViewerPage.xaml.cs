@@ -93,6 +93,7 @@ namespace JryVideo.Viewer.VideoViewer
             if (dlg.ShowDialog() == true)
             {
                 this.ViewModel.Info.RefreshProperties();
+                this.ViewModel.ReloadEpisodes();
             }
         }
 
