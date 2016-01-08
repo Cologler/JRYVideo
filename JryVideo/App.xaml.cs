@@ -1,4 +1,6 @@
 ﻿using JryVideo.Configs;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
@@ -39,14 +41,21 @@ namespace JryVideo
                     e.ChangeType == WatcherChangeTypes.Created ||
                     e.ChangeType == WatcherChangeTypes.Changed)
                 {
-                    this.BeginLoadUserConfig();
+                    if (!this.lastTryRead.HasValue || this.lastTryRead.Value + TimeSpan.FromSeconds(0.5) < DateTime.UtcNow)
+                    {
+                        this.BeginLoadUserConfig();
+                    }
                 }
             }
 
         }
 
-        private void BeginLoadUserConfig()
+        private DateTime? lastTryRead;
+        private void BeginLoadUserConfig(int tryCount = 3)
         {
+            if (tryCount < 1) return;
+            this.lastTryRead = DateTime.UtcNow;
+
             Task.Run(() =>
             {
                 if (File.Exists(UserConfigPath))
@@ -57,11 +66,19 @@ namespace JryVideo
                         {
                             var text = reader.ReadToEnd();
                             this.UserConfig = text.JsonToObject<UserConfig>();
+                            Debug.WriteLine("read user config successd");
+                        }
+                    }
+                    catch (IOException e)
+                    {
+                        if (e.HResult == -2147024864)
+                        {
+                            this.BeginLoadUserConfig(tryCount - 1);
                         }
                     }
                     catch
                     {
-                        /* ignored */
+                        // ignored
                     }
                 }
                 else
