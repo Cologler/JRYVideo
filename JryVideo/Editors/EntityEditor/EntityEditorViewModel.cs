@@ -238,13 +238,13 @@ namespace JryVideo.Editors.EntityEditor
             return await base.CommitAsync(provider, entity);
         }
 
-        public void ParseFiles(string[] files)
+        public async void ParseFiles(string[] files)
         {
             if (files == null) throw new ArgumentNullException(nameof(files));
 
             files = files.Where(File.Exists).Select(Path.GetFileName).ToArray();
             if (files.Length == 0) return;
-            this.Format = files.Length == 1 ? files[0] : ParseCommonFileName(files);
+            this.Format = files.Length == 1 ? files[0] : await Task.Run(() => ParseCommonFileName(files));
         }
 
         private async void TryParseFromFormatString()
@@ -274,30 +274,68 @@ namespace JryVideo.Editors.EntityEditor
             if (mapper != null)
             {
                 var filter = new Func<string, bool>(z => !z.IsNullOrWhiteSpace());
-                if (this.Fansubs.Count == 0)
-                {
-                    this.Fansubs.AddRange(await mapper.TryFireAsync(JryFlagType.EntityFansub, format, filter));
-                }
-                if (this.SubTitleLanguages.Count == 0)
-                {
-                    this.SubTitleLanguages.AddRange(await mapper.TryFireAsync(JryFlagType.EntitySubTitleLanguage, format, filter));
-                }
-                if (this.TrackLanguages.Count == 0)
-                {
-                    this.TrackLanguages.AddRange(await mapper.TryFireAsync(JryFlagType.EntityTrackLanguage, format, filter));
-                }
-                if (this.Tags.Count == 0)
-                {
-                    this.Tags.AddRange(await mapper.TryFireAsync(JryFlagType.EntityTag, format, filter));
-                }
+                this.Fansubs.Reset(this.Fansubs.ToArray()
+                    .Concat(await mapper.TryFireAsync(JryFlagType.EntityFansub, format, filter))
+                    .Distinct());
+                this.SubTitleLanguages.Reset(this.SubTitleLanguages.ToArray()
+                    .Concat(await mapper.TryFireAsync(JryFlagType.EntitySubTitleLanguage, format, filter))
+                    .Distinct());
+                this.TrackLanguages.Reset(this.TrackLanguages.ToArray()
+                    .Concat(await mapper.TryFireAsync(JryFlagType.EntityTrackLanguage, format, filter))
+                    .Distinct());
+                this.Tags.Reset(this.Tags.ToArray()
+                    .Concat(await mapper.TryFireAsync(JryFlagType.EntityTag, format, filter))
+                    .Distinct());
             }
         }
 
         private static readonly Regex Crc32 = new Regex(@"(.*)(\[[a-f0-9]{7,8}\]|\([a-f0-9]{7,8}\))$", RegexOptions.IgnoreCase);
 
-        private static string ParseCommonFileName(string[] source)
+        private string ParseCommonFileName(string[] source)
         {
             if (source.Length == 0 || source.Length == 1) throw new ArgumentOutOfRangeException();
+
+            var configExtensions = ((App)Application.Current).UserConfig?.SubTitleExtensions;
+            if (configExtensions != null)
+            {
+                var es = configExtensions
+                    .Select(z => (z.StartsWith(".") ? z : "." + z).ToLower())
+                    .ToArray();
+                var subTitles = new List<string>();
+                source = source.Where(z =>
+                {
+                    if (es.Any(x => z.ToLower().EndsWith(x)))
+                    {
+                        subTitles.Add(Path.GetFileNameWithoutExtension(z));
+                        return false;
+                    }
+                    return true;
+                }).ToArray();
+
+                var mapper = ((App)Application.Current).UserConfig?.Mapper;
+                if (mapper != null && subTitles.Count > 0)
+                {
+                    var filter = new Func<string, bool>(z => !z.IsNullOrWhiteSpace());
+                    var sttags = subTitles.Select(Path.GetExtension).Distinct().ToArray();
+                    var langs = sttags
+                        .SelectMany(z => mapper.TryFire(mapper.ExtendSubTitleLanguages, z, filter))
+                        .Distinct()
+                        .ToArray();
+                    var fansubs = sttags
+                        .SelectMany(z => mapper.TryFire(mapper.Fansubs, z, filter))
+                        .Distinct()
+                        .ToArray();
+                    JasilyDispatcher.GetUIDispatcher().BeginInvoke(() =>
+                    {
+                        this.Fansubs.Reset(this.Fansubs.ToArray()
+                           .Concat(fansubs)
+                           .Distinct());
+                        this.SubTitleLanguages.Reset(this.SubTitleLanguages.ToArray()
+                            .Concat(langs)
+                            .Distinct());
+                    });
+                }
+            }
 
             var exts = source.Select(Path.GetExtension).ToArray();
             var ext = exts[0];

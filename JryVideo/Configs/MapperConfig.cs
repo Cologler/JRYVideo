@@ -16,6 +16,8 @@ namespace JryVideo.Configs
 
         public List<MapperValue> TrackLanguages { get; set; }
 
+        public List<MapperValue> ExtendSubTitleLanguages { get; set; }
+
         private IEnumerable<MapperValue> GetSource(JryFlagType type)
         {
             switch (type)
@@ -34,20 +36,20 @@ namespace JryVideo.Configs
         }
 
         public async Task<string[]> TryFireAsync(JryFlagType type, string name, Func<string, bool> filter = null)
+            => await Task.Run(() => this.TryFire(this.GetSource(type), name, filter));
+
+        public string[] TryFire(IEnumerable<MapperValue> mapper, string name, Func<string, bool> filter = null)
         {
-            return await Task.Run(() =>
-            {
-                var source = this.GetSource(type)?
+            var source = mapper?
                     .Where(z => z.From != null && z.To != null)
                     .Where(item => item.From.FirstOrDefault(name.Contains) != null)
                     .Select(item => item.To);
-                if (source == null) return new string[0];
-                if (filter != null)
-                {
-                    source = source.Where(filter);
-                }
-                return source.ToArray();
-            });
+            if (source == null) return new string[0];
+            if (filter != null)
+            {
+                source = source.Where(filter);
+            }
+            return source.ToArray();
         }
     }
 }
