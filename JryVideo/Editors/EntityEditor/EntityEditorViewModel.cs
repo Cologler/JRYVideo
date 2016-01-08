@@ -286,6 +286,10 @@ namespace JryVideo.Editors.EntityEditor
                 {
                     this.TrackLanguages.AddRange(await mapper.TryFireAsync(JryFlagType.EntityTrackLanguage, format, filter));
                 }
+                if (this.Tags.Count == 0)
+                {
+                    this.Tags.AddRange(await mapper.TryFireAsync(JryFlagType.EntityTag, format, filter));
+                }
             }
         }
 
