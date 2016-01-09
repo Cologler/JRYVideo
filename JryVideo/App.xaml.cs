@@ -13,6 +13,16 @@ namespace JryVideo
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            JryVideo.Core.Log.Write(e.ToString());
+        }
+
         private const string UserConfigPath = @"UserConfig.json";
 
         public UserConfig UserConfig { get; private set; }
