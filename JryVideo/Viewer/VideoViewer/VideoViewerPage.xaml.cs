@@ -298,6 +298,8 @@ namespace JryVideo.Viewer.VideoViewer
             if (selected != null)
             {
                 this.WatchedsListView.SelectedItem = null;
+                var box = (VideoViewerViewModel.WatchedEpisodeChecker) selected;
+                box.SetIsWatchedAndNotify(!box.IsWatched);
             }
         }
     }

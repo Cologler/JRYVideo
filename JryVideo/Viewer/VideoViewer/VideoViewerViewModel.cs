@@ -1,5 +1,4 @@
-﻿using System;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
@@ -131,6 +130,28 @@ namespace JryVideo.Viewer.VideoViewer
                     video.Watcheds = watched;
                     await manager.UpdateAsync(video);
                 }
+            }
+        }
+
+        public sealed class WatchedEpisodeChecker : NotifyPropertyChangedObject
+        {
+            public WatchedEpisodeChecker(int episode)
+            {
+                this.Episode = episode;
+                this.EpisodeName = $"ep {episode}";
+            }
+
+            public int Episode { get; }
+
+            public string EpisodeName { get; }
+
+            public bool IsWatched { get; set; }
+
+            public void SetIsWatchedAndNotify(bool value)
+            {
+                if (this.IsWatched == value) return;
+                this.IsWatched = value;
+                this.NotifyPropertyChanged(nameof(this.IsWatched));
             }
         }
     }

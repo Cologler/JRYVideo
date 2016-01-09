@@ -74,7 +74,6 @@
     <Compile Include="Common\SeriesViewModel.cs" />
     <Compile Include="Common\ValidationRules\FlagValueValidationRule.cs" />
     <Compile Include="Common\VideoViewModel.cs" />
-    <Compile Include="Common\WatchedEpisodeChecker.cs" />
     <Compile Include="Configs\MapperConfig.cs" />
     <Compile Include="Configs\MapperValue.cs" />
     <Compile Include="Configs\UserConfig.cs" />
