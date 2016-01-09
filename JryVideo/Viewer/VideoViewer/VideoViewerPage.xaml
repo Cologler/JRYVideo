@@ -414,7 +414,8 @@
                           Grid.Row="1"
                           ItemsSource="{Binding Watcheds}"
                           BorderThickness="0"
-                          SelectionChanged="WatchedsListView_SelectionChanged">
+                          SelectionChanged="WatchedsListView_SelectionChanged"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
