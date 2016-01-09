@@ -37,6 +37,8 @@ namespace JryVideo.Model
 
         public List<string> Tags { get; set; }
 
+        public int? EpisodeOffset { get; set; }
+
         public string CoverId { get; set; }
 
         public DayOfWeek? DayOfWeek { get; set; }

@@ -30,6 +30,7 @@ namespace JryVideo.Controls.EditVideo
         private string names;
         private string episodesCount;
         private bool isTracking;
+        private int episodeOffset;
         private NameValuePair<string, DayOfWeek?>? dayOfWeek;
         private DateTime? startDate;
 
@@ -157,6 +158,12 @@ namespace JryVideo.Controls.EditVideo
             set { this.SetPropertyRef(ref this.episodesCount, value); }
         }
 
+        public int EpisodeOffset
+        {
+            get { return this.episodeOffset; }
+            set { this.SetPropertyRef(ref this.episodeOffset, value); }
+        }
+
         public async Task LoadDoubanAsync()
         {
             if (this.DoubanId.IsNullOrWhiteSpace()) return;
@@ -185,6 +192,7 @@ namespace JryVideo.Controls.EditVideo
                 obj.Names.AddRange(this.Names.AsLines().Select(z => z.Trim()).Where(z => !z.IsNullOrWhiteSpace()).Distinct());
             }
             obj.DayOfWeek = this.DayOfWeek?.Value;
+            obj.EpisodeOffset = this.EpisodeOffset == 0 ? (int?)null : this.EpisodeOffset;
         }
 
         public override void ReadFromObject(JryVideoInfo obj)
@@ -197,6 +205,7 @@ namespace JryVideo.Controls.EditVideo
             this.EpisodesCount = obj.EpisodesCount.ToString();
 
             this.DayOfWeek = this.GetDayOfWeekValue(obj.DayOfWeek);
+            this.EpisodeOffset = obj.EpisodeOffset ?? 0;
         }
 
         public void LoadDouban(DoubanMovie info)
