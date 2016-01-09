@@ -78,7 +78,7 @@ namespace JryVideo.Common
                 {
                     this.compareMode = ViewModelCompareMode.Today;
                     this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
-                    var episode = this.Source.GetTodayEpisode(today);
+                    var episode = this.Source.GetTodayEpisode(today) + (this.Source.EpisodeOffset ?? 0);
                     this.isDone = episode > this.Source.EpisodesCount;
                     this.TodayEpisode = this.isDone ? "done!" : $"today play {episode}";
                 }
