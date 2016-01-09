@@ -1,14 +1,13 @@
-﻿using System;
-using System.ComponentModel;
-using System.Enums;
-using System.Windows;
-using System.Windows.Controls;
-using JryVideo.Core;
+﻿using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Managers.FlagManager;
 using JryVideo.Selectors.ArtistSelector;
 using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
+using System;
+using System.ComponentModel;
+using System.Enums;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -101,11 +100,7 @@ namespace JryVideo.Controls.EditVideo
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
         {
             var window = this.TryFindParent<MetroWindow>();
-
-            if (await this.ViewModel.CommitAsync(window) == null)
-            {
-                await window.ShowMessageAsync("error", "commit failed.");
-            }
+            await this.ViewModel.CommitAsync(window);
         }
 
         private void SelectArtistButton_OnClick(object sender, RoutedEventArgs e)
@@ -114,7 +109,7 @@ namespace JryVideo.Controls.EditVideo
 
             if (dlg.ShowDialog() == true)
             {
-                
+
             }
         }
 

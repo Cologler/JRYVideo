@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -289,35 +290,29 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
-        public async Task<JryVideoInfo> CommitAsync(MetroWindow window)
+        private static async Task<bool> IsInvalid<T>(MetroWindow window, object obj, string fieldName) where T : ValidationRule, new()
         {
-            var parent = this.Parent.ThrowIfNull("Parent");
+            var error = new T().Validate(obj, CultureInfo.CurrentCulture);
+            if (error.IsValid) return false;
+            await window.ShowMessageAsync("error", $"error {fieldName} :\r\n {error.ErrorContent}");
+            return true;
+        }
+
+        public async Task CommitAsync(MetroWindow window)
+        {
+            var parent = this.Parent.ThrowIfNull(nameof(this.Parent));
 
             if (this.Type.IsNullOrWhiteSpace())
             {
                 await window.ShowMessageAsync("error", "must set a type.");
-                return null;
+                return;
             }
 
-            var error = new VideoYearValidationRule().Validate(this.Year, CultureInfo.CurrentCulture);
-            if (!error.IsValid)
+            if (await IsInvalid<VideoYearValidationRule>(window, this.Year, "year") ||
+                await IsInvalid<VideoYearValidationRule>(window, this.Index, "index") ||
+                await IsInvalid<VideoYearValidationRule>(window, this.EpisodesCount, "episodes count"))
             {
-                await window.ShowMessageAsync("error", String.Format("error {0} :\r\n {1}", "year", error.ErrorContent.ToString()));
-                return null;
-            }
-
-            error = new VideoIndexValidationRule().Validate(this.Index, CultureInfo.CurrentCulture);
-            if (!error.IsValid)
-            {
-                await window.ShowMessageAsync("error", String.Format("error {0} :\r\n {1}", "index", error.ErrorContent.ToString()));
-                return null;
-            }
-
-            error = new VideoEpisodesCountValidationRule().Validate(this.EpisodesCount, CultureInfo.CurrentCulture);
-            if (!error.IsValid)
-            {
-                await window.ShowMessageAsync("error", String.Format("error {0} :\r\n {1}", "episodes count", error.ErrorContent.ToString()));
-                return null;
+                return;
             }
 
             var obj = this.GetCommitObject();
@@ -335,7 +330,10 @@ namespace JryVideo.Controls.EditVideo
 
             var videoManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(parent);
 
-            return await base.CommitAsync(videoManager, obj);
+            if (await base.CommitAsync(videoManager, obj) == null)
+            {
+                await window.ShowMessageAsync("error", "commit failed.");
+            }
         }
     }
 }
