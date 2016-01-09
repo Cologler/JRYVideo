@@ -17,11 +17,11 @@ namespace JryVideo.Viewer.VideoViewer
 
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
-            this.Info = info;
+            this.InfoView = info;
             this.EntitesView = new JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>>();
         }
 
-        public VideoInfoViewModel Info { get; private set; }
+        public VideoInfoViewModel InfoView { get; }
 
         public VideoViewModel Video
         {
@@ -38,7 +38,7 @@ namespace JryVideo.Viewer.VideoViewer
         {
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
 
-            var video = await manager.FindAsync(this.Info.Source.Id);
+            var video = await manager.FindAsync(this.InfoView.Source.Id);
 
             if (video == null)
             {
@@ -68,12 +68,12 @@ namespace JryVideo.Viewer.VideoViewer
             }
             else
             {
-                var watcheds = Enumerable.Range(1, this.Info.Source.EpisodesCount)
+                var watcheds = Enumerable.Range(1, this.InfoView.Source.EpisodesCount)
                     .Select(z => new WatchedEpisodeChecker(z))
                     .ToArray();
                 if (video.Watcheds != null)
                 {
-                    foreach (var ep in video.Watcheds.Where(z => z <= this.Info.Source.EpisodesCount))
+                    foreach (var ep in video.Watcheds.Where(z => z <= this.InfoView.Source.EpisodesCount))
                     {
                         watcheds[ep - 1].IsWatched = true;
                     }
@@ -107,7 +107,7 @@ namespace JryVideo.Viewer.VideoViewer
         {
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
 
-            var video = await manager.FindAsync(this.Info.Source.Id);
+            var video = await manager.FindAsync(this.InfoView.Source.Id);
 
             if (video == null) return;
 

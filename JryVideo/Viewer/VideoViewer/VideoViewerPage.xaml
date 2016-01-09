@@ -39,7 +39,7 @@
             </Grid>
             
             <Grid Grid.Row="1"
-                  ToolTip="{Binding Info.SeriesView.DisplayFullName}"
+                  ToolTip="{Binding InfoView.SeriesView.DisplayFullName}"
                   Background="#00000000">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -51,20 +51,20 @@
                                   x:Name="EditSeriesMenuItem"
                                   Click="EditSeriesMenuItem_OnClick"/>
                         <MenuItem Header="copy"
-                                  ItemsSource="{Binding Info.SeriesView.Source.Names}"
+                                  ItemsSource="{Binding InfoView.SeriesView.Source.Names}"
                                   Click="CopyStringMenuItem_OnClick" />
                         <MenuItem Header="search on douban"
-                                  ItemsSource="{Binding Info.SeriesView.Source.Names}"
+                                  ItemsSource="{Binding InfoView.SeriesView.Source.Names}"
                                   Click="SearchStringOnDoubanMenuItem_OnClick" />
                     </ContextMenu>
                 </Grid.ContextMenu>
 
-                <TextBlock Text="{Binding Info.SeriesView.DisplayNameFirstLine}"
+                <TextBlock Text="{Binding InfoView.SeriesView.DisplayNameFirstLine}"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Grid.Row="1"
-                           Visibility="{Binding Info.SeriesView.DisplayNameSecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
-                           Text="{Binding Info.SeriesView.DisplayNameSecondLine}"
+                           Visibility="{Binding InfoView.SeriesView.DisplayNameSecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
+                           Text="{Binding InfoView.SeriesView.DisplayNameSecondLine}"
                            Style="{StaticResource LabelTextBlockStyle}" />
             </Grid>
 
@@ -79,7 +79,7 @@
                     </ContextMenu>
                 </Grid.ContextMenu>
                 
-                <Image Source="{Binding Info.Cover.BinaryData}"
+                <Image Source="{Binding InfoView.Cover.BinaryData}"
                        RenderOptions.BitmapScalingMode="Fant"
                        RenderOptions.EdgeMode="Aliased"
                        MouseLeftButtonDown="Image_MouseLeftButtonDown" />
@@ -102,7 +102,7 @@
                            Text="index"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
-                <TextBlock Text="{Binding Info.YearWithIndex}"
+                <TextBlock Text="{Binding InfoView.YearWithIndex}"
                            Grid.Row="0"
                            Grid.Column="1"
                            Style="{StaticResource LabelTextBlockStyle}" />
@@ -113,7 +113,7 @@
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="1"
-                           Text="{Binding Info.Source.EpisodesCount}"
+                           Text="{Binding InfoView.Source.EpisodesCount}"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <TextBlock Grid.Row="2"
@@ -122,7 +122,7 @@
 
                 <TextBlock Grid.Row="2"
                            Grid.Column="1"
-                           Text="{Binding Info.Source.DoubanId}"
+                           Text="{Binding InfoView.Source.DoubanId}"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <Button Content="douban"
@@ -131,7 +131,7 @@
                         Width="80"
                         HorizontalAlignment="Right"
                         Click="GotoDoubanButton_OnClick"
-                        Visibility="{Binding Info.Source.DoubanId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
+                        Visibility="{Binding InfoView.Source.DoubanId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
 
                 <TextBlock Grid.Row="3"
                            Text="imdb id"
@@ -139,7 +139,7 @@
 
                 <TextBlock Grid.Row="3"
                            Grid.Column="1"
-                           Text="{Binding Info.Source.ImdbId}"
+                           Text="{Binding InfoView.Source.ImdbId}"
                            Style="{StaticResource LabelTextBlockStyle}" />
 
                 <Button Content="imdb"
@@ -148,7 +148,7 @@
                         Width="80"
                         HorizontalAlignment="Right"
                         Click="GotoImdbButton_OnClick"
-                        Visibility="{Binding Info.Source.ImdbId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
+                        Visibility="{Binding InfoView.Source.ImdbId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
 
                 <TextBlock Grid.Row="4"
                            Text="video"
@@ -157,8 +157,8 @@
                 <Grid Grid.Row="4"
                       Grid.Column="1"
                       Background="#00000000"
-                      ToolTip="{Binding Info.VideoFullNames}">
-                    <TextBlock Text="{Binding Info.VideoNames}"
+                      ToolTip="{Binding InfoView.VideoFullNames}">
+                    <TextBlock Text="{Binding InfoView.VideoNames}"
                                Style="{StaticResource LabelTextBlockStyle}" />
                 </Grid>
 

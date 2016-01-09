@@ -46,7 +46,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
         {
-            var vm = this.ViewModel.Info;
+            var vm = this.ViewModel.InfoView;
 
             var dlg = new CoverEditorWindow();
             var cover = await vm.TryGetCoverAsync();
@@ -85,14 +85,14 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void EditVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var dlg = new VideoEditorWindow(this.ViewModel.Info.SeriesView.Source, this.ViewModel.Info.Source)
+            var dlg = new VideoEditorWindow(this.ViewModel.InfoView.SeriesView.Source, this.ViewModel.InfoView.Source)
             {
                 Owner = this.TryFindParent<Window>()
             };
 
             if (dlg.ShowDialog() == true)
             {
-                this.ViewModel.Info.RefreshProperties();
+                this.ViewModel.InfoView.RefreshProperties();
                 this.ViewModel.ReloadEpisodes();
             }
         }
@@ -129,12 +129,12 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void GotoDoubanButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.Info.NavigateToDouban();
+            this.ViewModel.InfoView.NavigateToDouban();
         }
 
         private void GotoImdbButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.Info.NavigateToImdb();
+            this.ViewModel.InfoView.NavigateToImdb();
         }
 
         private async void DeleteEntityButton_OnClick(object sender, RoutedEventArgs e)
@@ -209,7 +209,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void EditSeriesMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var seriesViewModel = this.ViewModel.Info.SeriesView;
+            var seriesViewModel = this.ViewModel.InfoView.SeriesView;
 
             if (seriesViewModel != null)
             {
@@ -224,9 +224,9 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.ClickCount > 1 && this.ViewModel.Info.Cover != null)
+            if (e.ClickCount > 1 && this.ViewModel.InfoView.Cover != null)
             {
-                var buffer = this.ViewModel.Info.Cover.BinaryData;
+                var buffer = this.ViewModel.InfoView.Cover.BinaryData;
                 if (buffer.Length > 0)
                 {
                     string path;
