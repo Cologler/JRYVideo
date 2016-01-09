@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:editVideo="clr-namespace:JryVideo.Controls.EditVideo"
+             xmlns:numberEditer="clr-namespace:JryVideo.Controls.NumberEditerControl"
              xmlns:validationRules="clr-namespace:JryVideo.Common.ValidationRules"
              mc:Ignorable="d"
              d:DesignHeight="400"
@@ -59,6 +60,7 @@
 
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -184,6 +186,14 @@
                         </Binding>
                     </ComboBox.Text>
                 </ComboBox>
+
+                <TextBlock Grid.Row="6"
+                           Text="offset"
+                           Style="{StaticResource TitleStyle}" />
+
+                <numberEditer:NumberEditerControl Grid.Row="6"
+                                                  Grid.Column="1"
+                                                  Number="{Binding EpisodeOffset, Mode=TwoWay}"/>
 
             </Grid>
             
