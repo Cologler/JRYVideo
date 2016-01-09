@@ -415,7 +415,7 @@
                           ItemsSource="{Binding Watcheds}"
                           BorderThickness="0"
                           SelectionChanged="WatchedsListView_SelectionChanged"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
@@ -423,7 +423,7 @@
                     </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="60">
+                            <Grid Width="72">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition />
