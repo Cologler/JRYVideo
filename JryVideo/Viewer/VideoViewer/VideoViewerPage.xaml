@@ -409,10 +409,12 @@
 
                 <TextBlock Text="watched episodes"
                            Margin="0,0,0,4"/>
-                
-                <ListView Grid.Row="1"
+
+                <ListView x:Name="WatchedsListView"
+                          Grid.Row="1"
                           ItemsSource="{Binding Watcheds}"
-                          BorderThickness="0">
+                          BorderThickness="0"
+                          SelectionChanged="WatchedsListView_SelectionChanged">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />

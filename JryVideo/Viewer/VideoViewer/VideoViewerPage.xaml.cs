@@ -291,5 +291,14 @@ namespace JryVideo.Viewer.VideoViewer
                 }
             }
         }
+
+        private void WatchedsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selected = this.WatchedsListView.SelectedItem;
+            if (selected != null)
+            {
+                this.WatchedsListView.SelectedItem = null;
+            }
+        }
     }
 }
