@@ -17,6 +17,7 @@ namespace JryVideo.Common
         private bool isUntrackButtonEnable;
         private string dayOfWeek;
         private string todayEpisode;
+        private bool isDone;
 
         public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
             : base(source)
@@ -51,9 +52,7 @@ namespace JryVideo.Common
         public override void RefreshProperties()
         {
             base.RefreshProperties();
-
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
-
             this.UpdateGroup();
         }
 
@@ -80,9 +79,8 @@ namespace JryVideo.Common
                     this.compareMode = ViewModelCompareMode.Today;
                     this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
                     var episode = this.Source.GetTodayEpisode(today);
-                    this.TodayEpisode = episode <= this.Source.EpisodesCount
-                        ? $"today play {episode}"
-                        : "done!";
+                    this.isDone = episode > this.Source.EpisodesCount;
+                    this.TodayEpisode = this.isDone ? "done!" : $"today play {episode}";
                 }
                 else
                 {
@@ -166,22 +164,26 @@ namespace JryVideo.Common
                 if (x.compareMode != y.compareMode)
                     return x.compareMode.CompareTo(y.compareMode);
 
+                var ret = this.CompareOnMode(x, y);
+                return ret == 0 ? y.Source.Created.CompareTo(x.Source.Created) : ret;
+            }
+
+            private int CompareOnMode(VideoInfoViewModel x, VideoInfoViewModel y)
+            {
                 switch (x.compareMode)
                 {
                     case ViewModelCompareMode.Today:
-                        break;
+                        return (x.isDone ? 1 : -1).CompareTo(y.isDone ? 1 : -1);
+
                     case ViewModelCompareMode.DayOfWeek:
-                        if (x.Source.DayOfWeek != y.Source.DayOfWeek)
-                        {
-                            if (x.Source.DayOfWeek == null) return -1;
-                            if (y.Source.DayOfWeek == null) return 1;
+                        if (x.Source.DayOfWeek == y.Source.DayOfWeek) return 0;
+                        if (x.Source.DayOfWeek == null) return -1;
+                        if (y.Source.DayOfWeek == null) return 1;
 
-                            var sub1 = ((int)x.Source.DayOfWeek) - ((int)this.DayOfWeek);
-                            var sub2 = ((int)y.Source.DayOfWeek) - ((int)this.DayOfWeek);
+                        var sub1 = ((int)x.Source.DayOfWeek) - ((int)this.DayOfWeek);
+                        var sub2 = ((int)y.Source.DayOfWeek) - ((int)this.DayOfWeek);
 
-                            return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
-                        }
-                        break;
+                        return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
 
                     case ViewModelCompareMode.NextWeek:
                     case ViewModelCompareMode.FewWeek:
@@ -189,27 +191,17 @@ namespace JryVideo.Common
                     case ViewModelCompareMode.FewYear:
                         Debug.Assert(x.Source.StartDate != null, "x.Source.StartDate != null");
                         Debug.Assert(y.Source.StartDate != null, "y.Source.StartDate != null");
-                        if (y.Source.StartDate.Value != x.Source.StartDate.Value)
-                        {
-                            return DateTime.Compare(x.Source.StartDate.Value, y.Source.StartDate.Value);
-                        }
-                        break;
+                        if (y.Source.StartDate.Value == x.Source.StartDate.Value) return 0;
+                        return DateTime.Compare(x.Source.StartDate.Value, y.Source.StartDate.Value);
 
                     case ViewModelCompareMode.Future:
-                        break;
-                    case ViewModelCompareMode.Unknown:
-                        break;
+                        if (x.Source.StartDate == y.Source.StartDate) return 0;
+                        if (x.Source.StartDate == null) return -1;
+                        if (y.Source.StartDate == null) return 1;
+                        return x.Source.StartDate.Value.CompareTo(y.Source.StartDate.Value);
                 }
 
-                if (x.compareMode == ViewModelCompareMode.Future && x.Source.StartDate != y.Source.StartDate)
-                {
-                    if (x.Source.StartDate == null) return -1;
-                    if (y.Source.StartDate == null) return 1;
-
-                    return x.Source.StartDate.Value.CompareTo(y.Source.StartDate.Value);
-                }
-
-                return y.Source.Created.CompareTo(x.Source.Created);
+                return 0;
             }
         }
 
