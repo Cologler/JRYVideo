@@ -111,7 +111,10 @@ namespace JryVideo.Controls.EditVideo
                 {
                     if (this.DayOfWeek == null)
                     {
-                        this.DayOfWeek = this.GetDayOfWeekValue(value.Value.DayOfWeek);
+                        var offset = ((App)Application.Current).UserConfig?.AutoDayOfWeekOffset ?? 1;
+                        this.DayOfWeek = this.GetDayOfWeekValue(offset == 0
+                            ? value.Value.DayOfWeek
+                            : (DayOfWeek)(((int)value.Value.DayOfWeek + offset) % 7));
                     }
                     var today = DateTime.Today;
                     if (value.Value >= today.AddDays(-(int)today.DayOfWeek)) // this week

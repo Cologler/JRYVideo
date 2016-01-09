@@ -9,5 +9,7 @@ namespace JryVideo.Configs
         public MapperConfig Mapper { get; set; }
 
         public List<string> SubTitleExtensions { get; set; }
+
+        public int AutoDayOfWeekOffset { get; set; }
     }
 }
