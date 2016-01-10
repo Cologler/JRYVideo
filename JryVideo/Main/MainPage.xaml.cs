@@ -115,16 +115,28 @@ namespace JryVideo.Main
             this.VideosListView.ScrollIntoView(this.VideosListView.ItemsSource.OfType<object>().FirstOrDefault());
         }
 
+        private void RefreshGroupStyle()
+        {
+            if (this.ViewModel.VideosViewModel.IsOnlyTracking)
+            {
+                this.VideosListView.GroupStyle.Add(this.Resources["TrackingGroupStyle"] as GroupStyle);
+            }
+            else
+            {
+                this.VideosListView.GroupStyle.Clear();
+            }
+        }
+
         private async void IsOnlyTrackingCheckBox_OnChecked(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.SetOnlyTrackingAsync();
-            this.VideosListView.GroupStyle.Add(this.Resources["TrackingGroupStyle"] as GroupStyle);
+            this.RefreshGroupStyle();
         }
 
         private async void IsOnlyTrackingCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.UnsetOnlyTrackingAsync();
-            this.VideosListView.GroupStyle.Clear();
+            this.RefreshGroupStyle();
         }
 
         private async void TrackMenuItem_OnClick(object sender, RoutedEventArgs e)
