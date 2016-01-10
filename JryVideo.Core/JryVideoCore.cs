@@ -20,22 +20,22 @@ namespace JryVideo.Core
             dataSourceManager.Scan();
 
             var normal = dataSourceManager.GetDefault();
-            foreach (var initializeParameter in normal.InitializeParametersInfo.GetRequiredParameters())
-            {
-                var para = initializeParameter;
-                para.ParameterValue = "";
-                normal.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
-            }
+            //foreach (var initializeParameter in normal.InitializeParametersInfo.GetRequiredParameters())
+            //{
+            //    var para = initializeParameter;
+            //    para.ParameterValue = "";
+            //    normal.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
+            //}
             await normal.Initialize(JryVideoDataSourceProviderManagerMode.Public);
             this.NormalDataCenter = new DataCenter(normal);
 
             var secure = dataSourceManager.GetDefault();
-            foreach (var initializeParameter in secure.InitializeParametersInfo.GetRequiredParameters())
-            {
-                var para = initializeParameter;
-                para.ParameterValue = "";
-                secure.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
-            }
+            //foreach (var initializeParameter in secure.InitializeParametersInfo.GetRequiredParameters())
+            //{
+            //    var para = initializeParameter;
+            //    para.ParameterValue = "";
+            //    secure.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
+            //}
             await secure.Initialize(JryVideoDataSourceProviderManagerMode.Private);
             this.SecureDataCenter = new DataCenter(secure);
 

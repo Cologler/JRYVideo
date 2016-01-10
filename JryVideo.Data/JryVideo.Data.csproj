@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\OptionalParameterAttribute.cs" />
+    <Compile Include="Attributes\RequiredParameterAttribute.cs" />
     <Compile Include="DataSources\IFlagSet.cs" />
     <Compile Include="DataSources\ICoverSet.cs" />
     <Compile Include="DataSources\ISeriesSet.cs" />

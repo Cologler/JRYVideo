@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JryVideoMongoDbDataSourceProviderManagerInitializeParameters.cs" />
     <Compile Include="JryVideoMongoDbDataSourceSetProvider.cs" />
     <Compile Include="MongoEntitySet.cs" />
     <Compile Include="MongoFlagDataSource.cs" />

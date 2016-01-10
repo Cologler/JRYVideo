@@ -1,6 +1,8 @@
-﻿using JryVideo.Data.DataSources;
+﻿using JryVideo.Data.Attributes;
+using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using MongoDB.Driver;
+using System;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -16,6 +18,26 @@ namespace JryVideo.Data.MongoDb
         }
 
         public IJryVideoDataEngineInitializeParameters InitializeParametersInfo { get; }
+
+        private sealed class JryVideoMongoDbJryVideoDataEngineInitializeParameters : IJryVideoDataEngineInitializeParameters
+        {
+            [RequiredParameter]
+            public string Server { get; set; }
+
+            [RequiredParameter]
+            public string DatabaseName { get; set; }
+
+            [RequiredParameter]
+            public string Username { get; set; }
+
+            [RequiredParameter]
+            public string Password { get; set; }
+
+            public bool IsVaild(string fieldName, object value)
+            {
+                return !(value as string).IsNullOrWhiteSpace();
+            }
+        }
 
         public MongoClient Client { get; private set; }
 
