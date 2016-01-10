@@ -309,8 +309,8 @@ namespace JryVideo.Controls.EditVideo
             }
 
             if (await IsInvalid<VideoYearValidationRule>(window, this.Year, "year") ||
-                await IsInvalid<VideoYearValidationRule>(window, this.Index, "index") ||
-                await IsInvalid<VideoYearValidationRule>(window, this.EpisodesCount, "episodes count"))
+                await IsInvalid<VideoIndexValidationRule>(window, this.Index, "index") ||
+                await IsInvalid<VideoEpisodesCountValidationRule>(window, this.EpisodesCount, "episodes count"))
             {
                 return;
             }
