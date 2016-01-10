@@ -1,6 +1,9 @@
 ﻿using JryVideo.Core.Managers;
 using JryVideo.Data;
+using JryVideo.Data.Attributes;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace JryVideo.Core
@@ -9,9 +12,16 @@ namespace JryVideo.Core
     {
         public static JryVideoCore Current { get; private set; }
 
+        public event EventHandler<string> Failed;
+
         static JryVideoCore()
         {
             Current = new JryVideoCore();
+        }
+
+        private void Error_EngineNotFound()
+        {
+            this.Failed?.Invoke(this, "cannot found any data engine");
         }
 
         public async Task InitializeAsync()
@@ -20,6 +30,11 @@ namespace JryVideo.Core
             dataSourceManager.Scan();
 
             var normal = dataSourceManager.GetDefault();
+            if (normal == null)
+            {
+                this.Error_EngineNotFound();
+                return;
+            }
             //foreach (var initializeParameter in normal.InitializeParametersInfo.GetRequiredParameters())
             //{
             //    var para = initializeParameter;
@@ -30,6 +45,11 @@ namespace JryVideo.Core
             this.NormalDataCenter = new DataCenter(normal);
 
             var secure = dataSourceManager.GetDefault();
+            if (secure == null)
+            {
+                this.Error_EngineNotFound();
+                return;
+            }
             //foreach (var initializeParameter in secure.InitializeParametersInfo.GetRequiredParameters())
             //{
             //    var para = initializeParameter;
@@ -40,6 +60,25 @@ namespace JryVideo.Core
             this.SecureDataCenter = new DataCenter(secure);
 
             this.Switch(JryVideoDataSourceProviderManagerMode.Public);
+        }
+
+        private void InitializeEngine(IJryVideoDataEngine engine)
+        {
+            var mapper = engine.GetType().GetProperties().Select(z => new
+            {
+                Attr = z.GetCustomAttribute<ParameterAttribute>(),
+                Property = z
+            }).Where(z => z.Attr != null)
+            .ToArray()
+            .Split(z => z.Attr.IsOptional);
+            foreach (var item in mapper.Item2)
+            {
+
+            }
+            foreach (var item in mapper.Item1) // optional
+            {
+
+            }
         }
 
         public DataCenter NormalDataCenter { get; private set; }

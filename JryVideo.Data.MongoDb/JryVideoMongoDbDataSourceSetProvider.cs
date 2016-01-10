@@ -21,16 +21,16 @@ namespace JryVideo.Data.MongoDb
 
         private sealed class JryVideoMongoDbJryVideoDataEngineInitializeParameters : IJryVideoDataEngineInitializeParameters
         {
-            [RequiredParameter]
+            [Parameter]
             public string Server { get; set; }
 
-            [RequiredParameter]
+            [Parameter]
             public string DatabaseName { get; set; }
 
-            [RequiredParameter]
+            [Parameter]
             public string Username { get; set; }
 
-            [RequiredParameter]
+            [Parameter]
             public string Password { get; set; }
 
             public bool IsVaild(string fieldName, object value)

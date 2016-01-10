@@ -33,6 +33,8 @@ namespace JryVideo
         {
             base.OnStartup(e);
 
+            JryVideo.Core.JryVideoCore.Current.Failed += this.JryVideoCore_Failed;
+
             this.configWatcher = new FileSystemWatcher(".", "*.json");
             this.configWatcher.Created += this.ConfigWatcher_Changed;
             this.configWatcher.Changed += this.ConfigWatcher_Changed;
@@ -41,6 +43,12 @@ namespace JryVideo
 
 
             this.BeginLoadUserConfig();
+        }
+
+        private void JryVideoCore_Failed(object sender, string e)
+        {
+            MessageBox.Show(e, "load error");
+            this.Shutdown();
         }
 
         private void ConfigWatcher_Changed(object sender, FileSystemEventArgs e)
