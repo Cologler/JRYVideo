@@ -60,6 +60,8 @@
                                         <ContextMenu>
                                             <MenuItem Header="edit"
                                                       Click="EditFlagMenuItem_OnClick"></MenuItem>
+                                            <MenuItem Header="delete"
+                                                      Click="DeleteFlagMenuItem_OnClick"></MenuItem>
                                         </ContextMenu>
                                     </Grid.ContextMenu>
                                     <TextBlock Text="{Binding Source.Value}"

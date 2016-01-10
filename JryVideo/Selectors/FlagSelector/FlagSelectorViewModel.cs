@@ -1,6 +1,7 @@
 ﻿using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -78,6 +79,17 @@ namespace JryVideo.Selectors.FlagSelector
                 this.EditFlagUserControl_ViewModel_Created, sender, e))
             {
                 new FlagViewModel(e).BeAdd(this.SelectedItems).BeAdd(this.Items.Collection);
+            }
+        }
+
+        public async Task DeleteItemAsync(FlagViewModel item)
+        {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
+            var manager = JryVideoCore.Current.CurrentDataCenter.FlagManager;
+            if (await manager.RemoveAsync(item.Source.Id))
+            {
+                this.Items.Collection.Remove(item);
             }
         }
     }

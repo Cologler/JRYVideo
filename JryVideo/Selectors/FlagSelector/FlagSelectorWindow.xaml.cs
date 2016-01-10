@@ -75,5 +75,19 @@ namespace JryVideo.Selectors.FlagSelector
                 await this.ViewModel.LoadAsync();
             }
         }
+
+        private async void DeleteFlagMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (await this.ShowMessageAsync("warnning", "are you sure you want to delete it?\r\n(whitout delete entity)",
+                MessageDialogStyle.AffirmativeAndNegative)
+                == MessageDialogResult.Affirmative)
+            {
+                var flagViewModel = ((FrameworkElement)sender).DataContext as FlagViewModel;
+                if (flagViewModel != null)
+                {
+                    await this.ViewModel.DeleteItemAsync(flagViewModel);
+                }
+            }
+        }
     }
 }
