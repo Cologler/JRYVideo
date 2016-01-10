@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:JryVideo.Editors.EntityEditor"
+      xmlns:properties="clr-namespace:JryVideo.Properties"
       mc:Ignorable="d" 
       d:DesignHeight="370" d:DesignWidth="500"
       Title="EntityCreatorPage"
@@ -175,7 +176,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Button Content="select"
+                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
                         x:Name="SelectFansubButton"
                         Click="SelectFansubButton_OnClick" />
 
@@ -214,7 +215,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Button Content="select"
+                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
                         x:Name="SelectSubTitleLanguageButton"
                         Click="SelectSubTitleLanguageButton_OnClick" />
 
@@ -253,7 +254,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Button Content="select"
+                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
                         x:Name="SelectTrackLanguageButton"
                         Click="SelectTrackLanguageButton_OnClick" />
 
@@ -292,7 +293,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Button Content="select"
+                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
                         Click="SelectTagButton_OnClick" />
 
             </Grid>

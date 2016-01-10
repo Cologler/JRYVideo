@@ -85,6 +85,13 @@
                                 Value="0,8" />
                     </Style>
                     
+                    <Style x:Key="CommintButtonStyle"
+                           TargetType="Button"
+                           BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="MinWidth"
+                                Value="70" />
+                    </Style>
+                    
                     <Style x:Key="ListViewItemSingleLineTextStyle"
                            TargetType="TextBlock">
                         <Setter Property="VerticalAlignment"

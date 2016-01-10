@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:JryVideo.Controls.EditFlag"
              xmlns:validationRules="clr-namespace:JryVideo.Common.ValidationRules"
+             xmlns:properties="clr-namespace:JryVideo.Properties"
+             xmlns:root="clr-namespace:JryVideo"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -27,11 +29,12 @@
         </TextBox>
 
         <Button x:Name="CommitButton"
-                Content="commit"
+                Content="{x:Static properties:Resources.Button_Commit_Text}"
                 HorizontalAlignment="Right"
                 Grid.Row="1"
                 Margin="0,8,0,0"
-                Click="CommitButton_OnClick" />
+                Click="CommitButton_OnClick"
+                Style="{StaticResource CommintButtonStyle}"/>
 
     </Grid>
 </UserControl>

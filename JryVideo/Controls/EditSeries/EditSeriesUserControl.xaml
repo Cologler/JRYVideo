@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
+             xmlns:properties="clr-namespace:JryVideo.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="400"
              d:DesignWidth="400">
@@ -54,17 +55,18 @@
 
                 <Button x:Name="LoadFromDoubanButton"
                         Grid.Column="1"
-                        Content="load"
+                        Content="{x:Static properties:Resources.Button_Load_Text}"
                         HorizontalAlignment="Left"
                         Click="LoadFromDoubanButton_OnClick"/>
 
             </Grid>
 
             <Button x:Name="CommitButton"
-                    Content="commit"
+                    Content="{x:Static properties:Resources.Button_Commit_Text}"
                     HorizontalAlignment="Right"
                     Grid.Row="4"
                     Margin="0,8,0,0"
+                    Style="{StaticResource CommintButtonStyle}"
                     Click="CommitButton_OnClick"/>
 
         </Grid>
