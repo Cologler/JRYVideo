@@ -163,8 +163,12 @@ namespace JryVideo.Core.Managers
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        public async Task UpdateNameAsync(JryFlagType type, string oldName, string newName)
+        public async Task<bool> UpdateNameAsync(JryFlagType type, string oldName, string newName)
         {
+            if (oldName == null) throw new ArgumentNullException(nameof(oldName));
+            if (newName == null) throw new ArgumentNullException(nameof(newName));
+            if (oldName == newName) return true;
+
             switch (type)
             {
                 // can not change
@@ -173,7 +177,7 @@ namespace JryVideo.Core.Managers
                 case JryFlagType.EntityAudioSource:
                 case JryFlagType.EntityFilmSource:
                 case JryFlagType.VideoYear:
-                    return;
+                    return true;
 
                 case JryFlagType.VideoType:
                 case JryFlagType.EntityFansub:
@@ -198,9 +202,10 @@ namespace JryVideo.Core.Managers
             // new
             var newId = JryFlag.BuildCounterId(type, newName);
             var flag = await this.FindAsync(newId);
+            bool ret;
             if (flag != null)
             {
-                await this.Source.RefMathAsync(type, newName, count);
+                ret = await this.Source.RefMathAsync(type, newName, count);
             }
             else
             {
@@ -209,11 +214,15 @@ namespace JryVideo.Core.Managers
                 flag.Value = newName;
                 flag.Count = count;
                 flag.BuildMetaData(true);
-                await this.Source.InsertAsync(flag);
+                ret = await this.Source.InsertAsync(flag);
             }
 
             // exist
-            this.FlagChanged?.Invoke(this, new EventArgs<JryFlagType, string, string>(type, oldName, newName));
+            if (ret)
+            {
+                this.FlagChanged.BeginFire(this, new EventArgs<JryFlagType, string, string>(type, oldName, newName));
+            }
+            return ret;
         }
 
         public event EventHandler<EventArgs<JryFlagType, string, string>> FlagChanged;

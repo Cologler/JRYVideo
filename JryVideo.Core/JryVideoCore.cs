@@ -2,7 +2,6 @@
 using JryVideo.Data;
 using System;
 using System.Threading.Tasks;
-using JryVideo.Model;
 
 namespace JryVideo.Core
 {
@@ -41,8 +40,6 @@ namespace JryVideo.Core
             this.SecureDataCenter = new DataCenter(secure);
 
             this.Switch(JryVideoDataSourceProviderManagerMode.Public);
-
-            await this.NormalDataCenter.FlagManager.UpdateNameAsync(JryFlagType.EntityFansub, "DmzJ", "DmzJ动漫之家");
         }
 
         public DataCenter NormalDataCenter { get; private set; }
