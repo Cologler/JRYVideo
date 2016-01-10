@@ -1,26 +1,21 @@
-﻿using System.Data;
-using System.Threading.Tasks;
-using JryVideo.Data.DataSources;
+﻿using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using MongoDB.Driver;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace JryVideo.Data.MongoDb
 {
     public class JryVideoMongoDbDataEngine : IJryVideoDataEngine
     {
-        public const string DataSourceProviderName = "MongoDb";
-
-        private readonly JryVideoMongoDbJryVideoDataEngineInitializeParameters _initializeParameters;
+        private const string DataSourceProviderName = "MongoDb";
 
         public JryVideoMongoDbDataEngine()
         {
-            this._initializeParameters = new JryVideoMongoDbJryVideoDataEngineInitializeParameters();
+            this.InitializeParametersInfo = new JryVideoMongoDbJryVideoDataEngineInitializeParameters();
         }
 
-        public IJryVideoDataEngineInitializeParameters InitializeParametersInfo
-        {
-            get { return this._initializeParameters; }
-        }
+        public IJryVideoDataEngineInitializeParameters InitializeParametersInfo { get; }
 
         public MongoClient Client { get; private set; }
 
@@ -29,7 +24,7 @@ namespace JryVideo.Data.MongoDb
         public async Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode)
         {
             var builder = new MongoUrlBuilder();
-            
+
             builder.Server = MongoServerAddress.Parse("127.0.0.1:50710");
             builder.DatabaseName = "admin";
 
@@ -78,9 +73,6 @@ namespace JryVideo.Data.MongoDb
             return new MongoEntitySet<JrySettingItem>(this.Database.GetCollection<JrySettingItem>("Setting"));
         }
 
-        public string Name
-        {
-            get { return DataSourceProviderName; }
-        }
+        public string Name => DataSourceProviderName;
     }
 }
