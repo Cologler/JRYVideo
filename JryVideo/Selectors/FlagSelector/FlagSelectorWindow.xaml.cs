@@ -1,12 +1,13 @@
-﻿using System;
+﻿using JryVideo.Common;
+using JryVideo.Editors.FlagEditor;
+using JryVideo.Model;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using JryVideo.Common;
-using JryVideo.Model;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Selectors.FlagSelector
 {
@@ -36,8 +37,6 @@ namespace JryVideo.Selectors.FlagSelector
             this.ViewModel.LoadAsync();
         }
 
-
-
         public void EditFlagUserControl_ViewModel_Creating(object sender, RequestActionEventArgs<JryFlag> e)
         {
             this.Dispatcher.Invoke(async () =>
@@ -63,6 +62,18 @@ namespace JryVideo.Selectors.FlagSelector
         private void SelectedItemPanel_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             this.ViewModel.UnselectItem(((FrameworkElement)sender).DataContext as FlagViewModel);
+        }
+
+        private async void EditFlagMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var flagViewModel = ((FrameworkElement)sender).DataContext as FlagViewModel;
+            if (flagViewModel == null) return;
+            var win = new FlagEditorWindow() { Owner = this };
+            win.InitializeEditor(flagViewModel.Source);
+            if (win.ShowDialog() == true)
+            {
+                await this.ViewModel.LoadAsync();
+            }
         }
     }
 }

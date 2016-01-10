@@ -80,7 +80,7 @@ namespace JryVideo.Common
                     }
 
                 case ObjectChangedAction.Modify:
-                    if (await provider.UpdateAsync(obj))
+                    if (await this.OnUpdateAsync(provider, obj))
                     {
                         this.Updated.BeginFire(this, obj);
                         return obj;
@@ -94,6 +94,9 @@ namespace JryVideo.Common
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        protected virtual async Task<bool> OnUpdateAsync(IObjectEditProvider<T> provider, T obj)
+            => await provider.UpdateAsync(obj);
 
         public virtual void Clear()
         {

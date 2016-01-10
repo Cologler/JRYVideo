@@ -56,6 +56,12 @@
                                 <Grid d:DataContext="{d:DesignInstance local:FlagViewModel}"
                                       x:Name="SourceItemPanel"
                                       MouseLeftButtonUp="SourceItemPanel_OnMouseLeftButtonUp">
+                                    <Grid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="edit"
+                                                      Click="EditFlagMenuItem_OnClick"></MenuItem>
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
                                     <TextBlock Text="{Binding Source.Value}"
                                                Style="{StaticResource ListViewItemSingleLineTextStyle}"/>
                                 </Grid>

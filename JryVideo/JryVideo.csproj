@@ -92,6 +92,9 @@
     <Compile Include="Editors\EntityEditor\EntityEditorWindow.xaml.cs">
       <DependentUpon>EntityEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\FlagEditor\FlagEditorWindow.xaml.cs">
+      <DependentUpon>FlagEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\PasswordEditor\PasswordEditorWindow.xaml.cs">
       <DependentUpon>PasswordEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -198,6 +201,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\EntityEditor\EntityEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\FlagEditor\FlagEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

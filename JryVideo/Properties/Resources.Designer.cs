@@ -196,6 +196,15 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
+        ///   查找类似 edit {0} tag 的本地化字符串。
+        /// </summary>
+        internal static string FlagEditorWindow_Title_Format {
+            get {
+                return ResourceManager.GetString("FlagEditorWindow_Title_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 {0} selector 的本地化字符串。
         /// </summary>
         internal static string FlagSelectorWindow_Title_Format {

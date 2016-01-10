@@ -1,0 +1,49 @@
+﻿<mah:MetroWindow xmlns:EditFlag="clr-namespace:JryVideo.Controls.EditFlag"
+                 x:Class="JryVideo.Editors.FlagEditor.FlagEditorWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:local="clr-namespace:JryVideo.Editors.FlagEditor"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 mc:Ignorable="d"
+                 Title="FlagEditorWindow"
+                 Height="300"
+                 Width="300"
+                 ShowTitleBar="False"
+                 ResizeMode="NoResize"
+                 WindowStartupLocation="CenterOwner"
+                 BorderThickness="1"
+                 GlowBrush="{DynamicResource AccentColorBrush}"
+                 FontFamily="Microsoft YaHei Light"
+                 SizeToContent="WidthAndHeight">
+    <Grid>
+        <Grid Style="{StaticResource ParentPanelStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <TextBlock Style="{StaticResource CaptionStyle}"
+                           Text="edit"
+                           x:Name="TitleTextBlock" />
+            </Grid>
+            
+            <Grid Grid.Row="1"
+                  Margin="0,0,0,0">
+                <TextBlock Text="origin value"
+                           Margin="6"
+                           x:Name="OriginValueTextBlock"/>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <EditFlag:EditFlagUserControl x:Name="EditFlagUserControl"
+                                              Width="250"/>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</mah:MetroWindow>

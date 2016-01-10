@@ -3,6 +3,7 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Diagnostics;
+using System.Enums;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -34,6 +35,12 @@ namespace JryVideo.Controls.EditFlag
             }
 
             this.ViewModel.Value = this.ViewModel.Value.Trim();
+
+            if (this.ViewModel.Action == ObjectChangedAction.Modify && this.ViewModel.Value == this.ViewModel.OldValue)
+            {
+                await this.TryFindParent<MetroWindow>().ShowMessageAsync("error", "old name was same with new name.");
+                return;
+            }
 
             await this.ViewModel.CommitAsync(this.FlagType.Value);
         }

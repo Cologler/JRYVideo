@@ -162,6 +162,9 @@
   <data name="EditSeries_InvalidInput_Title" xml:space="preserve">
     <value>无效输入</value>
   </data>
+  <data name="FlagEditorWindow_Title_Format" xml:space="preserve">
+    <value>编辑 {0} 标签</value>
+  </data>
   <data name="FlagSelectorWindow_Title_Format" xml:space="preserve">
     <value>{0} 选择器</value>
   </data>
