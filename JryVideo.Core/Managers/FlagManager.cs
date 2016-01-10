@@ -1,10 +1,10 @@
-﻿using System;
+﻿using JryVideo.Data.DataSources;
+using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -162,5 +162,60 @@ namespace JryVideo.Core.Managers
 
             await this.ApplyFlagDictionaryAsync(dict);
         }
+
+        public async Task UpdateNameAsync(JryFlagType type, string oldName, string newName)
+        {
+            switch (type)
+            {
+                // can not change
+                case JryFlagType.EntityResolution:
+                case JryFlagType.EntityExtension:
+                case JryFlagType.EntityAudioSource:
+                case JryFlagType.EntityFilmSource:
+                case JryFlagType.VideoYear:
+                    return;
+
+                case JryFlagType.VideoType:
+                case JryFlagType.EntityFansub:
+                case JryFlagType.EntitySubTitleLanguage:
+                case JryFlagType.EntityTrackLanguage:
+                case JryFlagType.EntityTag:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+            // old
+            var oldId = JryFlag.BuildCounterId(type, oldName);
+            var oldFlag = await this.FindAsync(oldId);
+            var count = oldFlag?.Count ?? 0;
+            if (oldFlag != null)
+            {
+                await this.Source.RemoveAsync(oldId);
+            }
+
+            // new
+            var newId = JryFlag.BuildCounterId(type, newName);
+            var flag = await this.FindAsync(newId);
+            if (flag != null)
+            {
+                await this.Source.RefMathAsync(type, newName, count);
+            }
+            else
+            {
+                flag = new JryFlag();
+                flag.Type = type;
+                flag.Value = newName;
+                flag.Count = count;
+                flag.BuildMetaData(true);
+                await this.Source.InsertAsync(flag);
+            }
+
+            // exist
+            this.FlagChanged?.Invoke(this, new EventArgs<JryFlagType, string, string>(type, oldName, newName));
+        }
+
+        public event EventHandler<EventArgs<JryFlagType, string, string>> FlagChanged;
     }
 }

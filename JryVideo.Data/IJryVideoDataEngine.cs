@@ -1,7 +1,7 @@
-﻿using System.Data;
-using System.Threading.Tasks;
-using JryVideo.Data.DataSources;
+﻿using JryVideo.Data.DataSources;
 using JryVideo.Model;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace JryVideo.Data
 {
@@ -15,7 +15,7 @@ namespace JryVideo.Data
 
         ISeriesSet GetSeriesSet();
 
-        IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoSet();
+        IFlagableSet<Model.JryVideo> GetVideoSet();
 
         IFlagSet GetFlagSet();
 

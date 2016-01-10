@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using JryVideo.Model;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {

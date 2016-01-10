@@ -1,4 +1,5 @@
-﻿using JryVideo.Model;
+﻿using JryVideo.Data.DataSources;
+using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace JryVideo.Core.Managers
 {
-    public class VideoManager : JryObjectManager<Model.JryVideo, IJasilyEntitySetProvider<Model.JryVideo, string>>
+    public class VideoManager : JryObjectManager<Model.JryVideo, IFlagableSet<Model.JryVideo>>
     {
         public event EventHandler<IEnumerable<JryEntity>> EntitiesCreated;
         public event EventHandler<IEnumerable<ChangingEventArgs<JryEntity>>> EntitiesUpdated;
         public event EventHandler<IEnumerable<JryEntity>> EntitiesRemoved;
 
-        public VideoManager(IJasilyEntitySetProvider<Model.JryVideo, string> source)
+        public VideoManager(IFlagableSet<Model.JryVideo> source)
             : base(source)
         {
         }
@@ -190,6 +191,74 @@ namespace JryVideo.Core.Managers
             }
         }
 
+        public async void FlagManager_FlagChanged(object sender, EventArgs<JryFlagType, string, string> e)
+        {
+            var type = e.Value1;
+            switch (type)
+            {
+                // can not change
+                case JryFlagType.EntityResolution:
+                case JryFlagType.EntityExtension:
+                case JryFlagType.EntityAudioSource:
+                case JryFlagType.EntityFilmSource:
+                case JryFlagType.VideoYear:
+                    throw new NotSupportedException();
 
+                case JryFlagType.VideoType:
+                    return;
+
+                case JryFlagType.EntityFansub:
+                case JryFlagType.EntitySubTitleLanguage:
+                case JryFlagType.EntityTrackLanguage:
+                case JryFlagType.EntityTag:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var oldValue = e.Value2;
+            var newValue = e.Value3;
+            var videos = await this.Source.QueryAsync(type, e.Value2);
+            Action<List<string>> changeValue = (z) =>
+            {
+                var a = z.ToArray();
+                for (var i = 0; i < a.Length; i++)
+                {
+                    if (a[i] == oldValue)
+                    {
+                        z[i] = newValue;
+                        return;
+                    }
+                }
+            };
+            Action<Model.JryEntity> changing;
+            switch (type)
+            {
+                case JryFlagType.EntityFansub:
+                    changing = z => changeValue(z.Fansubs);
+                    break;
+
+                case JryFlagType.EntitySubTitleLanguage:
+                    changing = z => changeValue(z.SubTitleLanguages);
+                    break;
+
+                case JryFlagType.EntityTrackLanguage:
+                    changing = z => changeValue(z.TrackLanguages);
+                    break;
+
+                case JryFlagType.EntityTag:
+                    changing = z => changeValue(z.Tags);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            foreach (var video in videos)
+            {
+                video.Entities?.ForEach(changing);
+                await this.Source.UpdateAsync(video);
+            }
+        }
     }
 }

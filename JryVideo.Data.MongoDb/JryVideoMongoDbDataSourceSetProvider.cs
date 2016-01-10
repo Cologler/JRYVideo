@@ -70,10 +70,7 @@ namespace JryVideo.Data.MongoDb
             get { return this.Database.GetCollection<Model.JryVideo>("Video"); }
         }
 
-        public IJasilyEntitySetProvider<Model.JryVideo, string> GetVideoSet()
-        {
-            return new MongoJryEntitySet<Model.JryVideo>(this, this.VideoCollection);
-        }
+        public IFlagableSet<Model.JryVideo> GetVideoSet() => new MongoVideoDataSource(this, this.VideoCollection);
 
         public IFlagSet GetFlagSet()
         {
