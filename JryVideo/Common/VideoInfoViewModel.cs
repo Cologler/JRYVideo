@@ -190,7 +190,7 @@ namespace JryVideo.Common
                 switch (x.compareMode)
                 {
                     case ViewModelCompareMode.Today:
-                        return (x.isDone ? 1 : -1).CompareTo(y.isDone ? 1 : -1);
+                        return x.TodayPlaying.CompareTo(y.TodayPlaying);
 
                     case ViewModelCompareMode.DayOfWeek:
                         if (x.Source.DayOfWeek == y.Source.DayOfWeek) return 0;
@@ -354,7 +354,7 @@ namespace JryVideo.Common
             set { this.SetPropertyRef(ref this.isUntrackButtonEnable, value); }
         }
 
-        public sealed class Playing : NotifyPropertyChangedObject
+        public sealed class Playing : NotifyPropertyChangedObject, IComparable<Playing>
         {
             private bool isWatched;
             public int? Episode { get; }
@@ -372,6 +372,16 @@ namespace JryVideo.Common
             {
                 get { return this.isWatched; }
                 set { this.SetPropertyRef(ref this.isWatched, value); }
+            }
+
+            public int CompareTo(Playing other)
+            {
+                var ret = (this.Episode.HasValue ? -1 : 1).CompareTo(other.Episode.HasValue ? -1 : 1);
+                if (ret == 0)
+                {
+                    ret = (this.IsWatched ? 1 : -1).CompareTo(other.IsWatched ? 1 : -1);
+                }
+                return ret;
             }
         }
 
