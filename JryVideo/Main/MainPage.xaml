@@ -222,7 +222,7 @@
                                         <Grid Width="150"
                                               Height="150"
                                               VerticalAlignment="Top"
-                                              Visibility="{Binding TodayEpisode, Converter={StaticResource NullCollapsedValueConverter}}"
+                                              Visibility="{Binding TodayPlaying, Converter={StaticResource NullCollapsedValueConverter}}"
                                               HorizontalAlignment="Right">
                                             <Grid.Clip>
                                                 <RectangleGeometry Rect="0,0,150,150" />
@@ -241,7 +241,7 @@
                                                            HorizontalAlignment="Center"
                                                            Margin="4"
                                                            FontSize="12"
-                                                           Text="{Binding TodayEpisode}" />
+                                                           Text="{Binding TodayPlaying.Text}" />
                                             </Grid>
                                         </Grid>
 

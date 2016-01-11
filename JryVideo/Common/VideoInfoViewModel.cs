@@ -16,8 +16,9 @@ namespace JryVideo.Common
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
         private string dayOfWeek;
-        private string todayEpisode;
         private bool isDone;
+        private ViewModelCompareMode compareMode;
+        private Playing todayPlaying;
 
         public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
             : base(source)
@@ -37,16 +38,16 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
 
+        public Playing TodayPlaying
+        {
+            get { return this.todayPlaying; }
+            set { this.SetPropertyRef(ref this.todayPlaying, value); }
+        }
+
         public string GroupTitle
         {
             get { return this.dayOfWeek; }
             private set { this.SetPropertyRef(ref this.dayOfWeek, value); }
-        }
-
-        public string TodayEpisode
-        {
-            get { return this.todayEpisode; }
-            private set { this.SetPropertyRef(ref this.todayEpisode, value); }
         }
 
         public override void RefreshProperties()
@@ -67,9 +68,9 @@ namespace JryVideo.Common
                 return;
             }
 
-            this.TodayEpisode = null;
+            this.TodayPlaying = null;
             var today = DateTime.Now.Date;
-            var sunday = today.AddDays(-(int) today.DayOfWeek); // sunday
+            var sunday = today.AddDays(-(int)today.DayOfWeek); // sunday
             var startDate = this.Source.StartDate.Value.ToLocalTime();
 
             if (startDate < today)
@@ -80,7 +81,7 @@ namespace JryVideo.Common
                     this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
                     var episode = this.Source.GetTodayEpisode(today) + (this.Source.EpisodeOffset ?? 0);
                     this.isDone = episode > this.Source.EpisodesCount;
-                    this.TodayEpisode = this.isDone ? "done!" : $"today play {episode}";
+                    this.TodayPlaying = new Playing(this.isDone ? 0 : episode);
                 }
                 else
                 {
@@ -130,8 +131,6 @@ namespace JryVideo.Common
             this.compareMode = mode;
             this.GroupTitle = groupTitle;
         }
-
-        private ViewModelCompareMode compareMode;
 
         private enum ViewModelCompareMode
         {
@@ -335,6 +334,18 @@ namespace JryVideo.Common
         {
             get { return this.isUntrackButtonEnable; }
             set { this.SetPropertyRef(ref this.isUntrackButtonEnable, value); }
+        }
+
+        public sealed class Playing
+        {
+            private readonly int episode;
+
+            public Playing(int episode)
+            {
+                this.episode = episode;
+            }
+
+            public string Text => this.episode > 0 ? $"today play {this.episode}" : "done!";
         }
     }
 }
