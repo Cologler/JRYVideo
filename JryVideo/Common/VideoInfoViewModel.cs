@@ -29,7 +29,7 @@ namespace JryVideo.Common
             this.RefreshProperties();
         }
 
-        public SeriesViewModel SeriesView { get; private set; }
+        public SeriesViewModel SeriesView { get; }
 
         [NotifyPropertyChanged]
         public string YearWithIndex => $"({this.Source.Year}) {this.Source.Index}";
@@ -190,6 +190,8 @@ namespace JryVideo.Common
                 switch (x.compareMode)
                 {
                     case ViewModelCompareMode.Today:
+                        Debug.Assert(x.TodayPlaying != null, "x.TodayPlaying != null");
+                        Debug.Assert(y.TodayPlaying != null, "y.TodayPlaying != null");
                         return x.TodayPlaying.CompareTo(y.TodayPlaying);
 
                     case ViewModelCompareMode.DayOfWeek:
@@ -375,14 +377,9 @@ namespace JryVideo.Common
             }
 
             public int CompareTo(Playing other)
-            {
-                var ret = (this.Episode.HasValue ? -1 : 1).CompareTo(other.Episode.HasValue ? -1 : 1);
-                if (ret == 0)
-                {
-                    ret = (this.IsWatched ? 1 : -1).CompareTo(other.IsWatched ? 1 : -1);
-                }
-                return ret;
-            }
+                => this.GetOrderHash().CompareTo(other.GetOrderHash());
+
+            private int GetOrderHash() => this.Episode.HasValue ? (this.IsWatched ? 2 : 0) : 1;
         }
 
         public async void Watch()
