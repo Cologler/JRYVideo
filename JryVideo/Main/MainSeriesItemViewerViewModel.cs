@@ -67,10 +67,6 @@ namespace JryVideo.Main
 
             var dataCenter = JryVideoCore.Current.CurrentDataCenter;
             var search = this.searchResultView;
-            //if (search != null && search.Equals(dataCenter, this.IsOnlyTracking, this.SearchText, this.PageIndex, this.PageSize))
-            //{
-            //    return null;
-            //}
 
             if (search == null || !search.IsSearchTextEquals(this.SearchText))
             {
@@ -85,18 +81,6 @@ namespace JryVideo.Main
 
             this.HasLast = search.HasLast;
             this.HasNext = search.HasNext;
-
-            // ReSharper disable once PossibleNullReferenceException
-            this.VideosView.View.GroupDescriptions.Clear();
-            if (search.IsOnlyTracking)
-            {
-                this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();
-                this.VideosView.View.GroupDescriptions.Add(new PropertyGroupDescription(nameof(VideoInfoViewModel.GroupTitle)));
-            }
-            else
-            {
-                this.VideosView.View.CustomSort = new VideoInfoViewModel.DefaultComparer();
-            }
 
             return search.Items.SelectMany(VideoInfoViewModel.Create).ToArray();
         }
@@ -125,7 +109,18 @@ namespace JryVideo.Main
             if (source != null)
             {
                 this.filter = new FilterInfo(this.IsOnlyTracking, this.FilterText);
+                this.VideosView.View.CustomSort = null;
+                this.VideosView.View.GroupDescriptions?.Clear();
                 this.VideosView.Collection.Reset(source);
+                if (this.IsOnlyTracking)
+                {
+                    this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();
+                    this.VideosView.View.GroupDescriptions?.Add(new PropertyGroupDescription(nameof(VideoInfoViewModel.GroupTitle)));
+                }
+                else
+                {
+                    this.VideosView.View.CustomSort = new VideoInfoViewModel.DefaultComparer();
+                }
             }
         }
 
