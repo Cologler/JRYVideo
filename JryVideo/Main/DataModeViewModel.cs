@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Jasily.ComponentModel;
 using JryVideo.Data;
 
@@ -11,9 +10,6 @@ namespace JryVideo.Main
         {
         }
 
-        public string Name
-        {
-            get { return this.Source.ToString(); }
-        }
+        public string Name => this.Source.ToString();
     }
 }

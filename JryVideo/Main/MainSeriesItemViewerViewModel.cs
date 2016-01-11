@@ -19,6 +19,7 @@ namespace JryVideo.Main
         private bool hasNext;
         private bool isOnlyTracking;
         private SearchResult searchResultView;
+        private FilterInfo filter;
 
         public MainSeriesItemViewerViewModel()
         {
@@ -110,34 +111,47 @@ namespace JryVideo.Main
             await Task.Delay(400);
             if (text == this.filterText)
             {
+                this.filter = new FilterInfo(this.IsOnlyTracking, this.FilterText);
                 this.VideosView.View.Refresh();
             }
         }
 
-        protected override bool ItemFilter(VideoInfoViewModel obj)
-        {
-            var text = this.FilterText;
+        protected override bool ItemFilter(VideoInfoViewModel obj) => this.filter.Where(obj);
 
-            if (string.IsNullOrWhiteSpace(text))
-                return !this.IsOnlyTracking || obj.Source.IsTracking;
-
-            text = text.Trim();
-
-            return (!this.IsOnlyTracking || obj.Source.IsTracking) &&
-                   (obj.SeriesView.Source.Id == text ||
-                    obj.Source.Id == text ||
-                    obj.Source.Names.Concat(obj.SeriesView.Source.Names)
-                        .Any(z => z.Contains(text)));
-        }
-
-        public async override Task RefreshAsync()
+        public override async Task RefreshAsync()
         {
             var source = await this.GetSourceAsync();
 
             if (source != null)
             {
-                this.VideosView.Collection.Clear();
-                this.VideosView.Collection.AddRange(source);
+                this.filter = new FilterInfo(this.IsOnlyTracking, this.FilterText);
+                this.VideosView.Collection.Reset(source);
+            }
+        }
+
+        private class FilterInfo
+        {
+            private readonly bool isOnlyTracking;
+            private readonly string filterText;
+
+            public FilterInfo(bool isOnlyTracking, string text)
+            {
+                this.isOnlyTracking = isOnlyTracking;
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    this.filterText = text.Trim();
+                }
+            }
+
+            public bool Where(VideoInfoViewModel obj)
+            {
+                if (this.isOnlyTracking && !obj.Source.IsTracking) return false;
+                if (this.filterText == null) return true;
+
+                return obj.SeriesView.Source.Id == this.filterText ||
+                       obj.Source.Id == this.filterText ||
+                       obj.Source.Names.Concat(obj.SeriesView.Source.Names)
+                       .Any(z => z.Contains(this.filterText));
             }
         }
 
