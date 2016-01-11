@@ -198,6 +198,9 @@
                                 </Grid.RowDefinitions>
                                 <Grid.ContextMenu>
                                     <ContextMenu>
+                                        <MenuItem Header="{Binding TodayPlaying.WatchedText}"
+                                                  Visibility="{Binding IsTodayPlayAndNotEnd, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                  Click="WatchedEpisode_OnClick" />
                                         <MenuItem Header="edit series"
                                                   Click="EditSeries_OnClick" />
                                         <MenuItem Header="edit video"
@@ -212,9 +215,6 @@
                                                   Click="UntrackMenuItem_OnClick" />
                                         <MenuItem Header="only show this series"
                                                   Click="FilterSeries_OnClick" />
-                                        <MenuItem Header="{Binding TodayPlaying.WatchedText}"
-                                                  Visibility="{Binding IsTodayPlayAndNotEnd, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                  Click="WatchedEpisode_OnClick"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
 
