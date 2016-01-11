@@ -53,9 +53,6 @@
                         <MenuItem Header="copy"
                                   ItemsSource="{Binding InfoView.SeriesView.Source.Names}"
                                   Click="CopyStringMenuItem_OnClick" />
-                        <MenuItem Header="search on douban"
-                                  ItemsSource="{Binding InfoView.SeriesView.Source.Names}"
-                                  Click="SearchStringOnDoubanMenuItem_OnClick" />
                     </ContextMenu>
                 </Grid.ContextMenu>
 

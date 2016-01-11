@@ -1,20 +1,19 @@
-﻿using System;
-using JryVideo.Common;
+﻿using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
+using JryVideo.SearchEngine;
 using JryVideo.Viewer.FilesViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using JryVideo.SearchEngine;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -32,6 +31,7 @@ namespace JryVideo.Viewer.VideoViewer
                 .Where(z => @interface.IsAssignableFrom(z))
                 .Where(z => z.IsSealed)
                 .Select(z => (ISearchEngine)Activator.CreateInstance(z))
+                .OrderBy(z => z.Order)
                 .ToArray();
         }
 
@@ -52,19 +52,20 @@ namespace JryVideo.Viewer.VideoViewer
                 DataContext = vm
             };
 
-            var menu = page.SeriesContextMenu;
-            foreach (var engine in Engines)
-            {
-                var item = new MenuItem()
-                {
-                    Header = "search on " + engine.Name,
-                    Tag = engine
-                };
-                item.Click += SearchStringOnEngine_OnClick;
-                item.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("InfoView.SeriesView.Source.Names"));
-                menu.Items.Add(item);
-            }
+            Engines.ForEach(z => AppendToContextMenu(page.SeriesContextMenu, z));
             return page;
+        }
+
+        private static void AppendToContextMenu(ContextMenu menu, ISearchEngine engine)
+        {
+            var item = new MenuItem()
+            {
+                Header = "search on " + engine.Name,
+                Tag = engine
+            };
+            item.Click += SearchStringOnEngine_OnClick;
+            item.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("InfoView.SeriesView.Source.Names"));
+            menu.Items.Add(item);
         }
 
         private static void SearchStringOnEngine_OnClick(object sender, RoutedEventArgs e)
@@ -77,7 +78,7 @@ namespace JryVideo.Viewer.VideoViewer
             }
 
             var osItem = e.OriginalSource as MenuItem;
-            
+
             if (osItem != null)
             {
                 var str = osItem.DataContext as string ?? osItem.Header as string;
@@ -210,38 +211,6 @@ namespace JryVideo.Viewer.VideoViewer
                 if (str != null)
                 {
                     Clipboard.SetText(str);
-                }
-            }
-        }
-
-        private void SearchStringOnDoubanMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            var menuItem = sender as MenuItem;
-
-            if (menuItem?.ItemsSource != null && ReferenceEquals(menuItem, e.OriginalSource))
-            {
-                return;
-            }
-
-            var osItem = e.OriginalSource as MenuItem;
-
-            if (osItem != null)
-            {
-                var str = osItem.DataContext as string ?? osItem.Header as string;
-
-                if (str != null)
-                {
-                    try
-                    {
-                        using (Process.Start($"http://movie.douban.com/subject_search?search_text={str}&cat=1002"))
-                        {
-
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
                 }
             }
         }

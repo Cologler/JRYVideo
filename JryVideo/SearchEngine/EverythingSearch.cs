@@ -9,6 +9,8 @@ namespace JryVideo.SearchEngine
     {
         public string Name => nameof(EverythingSearch).Replace("Search", "").ToLower();
 
+        public int Order => 1;
+
         public async void SearchText(string text)
         {
             var items = await this.SearchByEveryThingAsync(text);

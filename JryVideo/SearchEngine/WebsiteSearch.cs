@@ -21,6 +21,8 @@ namespace JryVideo.SearchEngine
 
         public abstract string Name { get; }
 
+        public int Order => 2;
+
         protected abstract string BuildUrl(string keyword);
     }
 }
