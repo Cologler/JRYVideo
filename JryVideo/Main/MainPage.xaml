@@ -208,6 +208,9 @@
                                                   Click="UntrackMenuItem_OnClick" />
                                         <MenuItem Header="only show this series"
                                                   Click="FilterSeries_OnClick" />
+                                        <MenuItem Header="{Binding TodayPlaying.WatchedText}"
+                                                  Visibility="{Binding IsTodayPlayAndNotEnd, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                  Click="WatchedEpisode_OnClick"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
 

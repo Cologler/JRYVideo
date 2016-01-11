@@ -41,6 +41,9 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public Playing TodayPlaying => this.todayPlaying;
 
+        [NotifyPropertyChanged]
+        public bool IsTodayPlayAndNotEnd => this.TodayPlaying != null && this.TodayPlaying.Episode.HasValue;
+
         public string GroupTitle
         {
             get { return this.dayOfWeek; }
@@ -78,7 +81,7 @@ namespace JryVideo.Common
                     this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
                     var episode = this.Source.GetTodayEpisode(today) + (this.Source.EpisodeOffset ?? 0);
                     this.isDone = episode > this.Source.EpisodesCount;
-                    this.todayPlaying = new Playing(this.isDone ? 0 : episode);
+                    this.todayPlaying = new Playing(this.isDone ? (int?)null : episode);
                 }
                 else
                 {
@@ -335,14 +338,16 @@ namespace JryVideo.Common
 
         public sealed class Playing
         {
-            private readonly int episode;
+            public int? Episode { get; }
 
-            public Playing(int episode)
+            public Playing(int? episode)
             {
-                this.episode = episode;
+                this.Episode = episode;
             }
 
-            public string Text => this.episode > 0 ? $"today play {this.episode}" : "done!";
+            public string Text => this.Episode.HasValue ? $"today play {this.Episode.Value}" : "done!";
+
+            public string WatchedText => $"watched ep {this.Episode}";
         }
     }
 }

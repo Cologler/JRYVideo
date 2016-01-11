@@ -9,6 +9,7 @@ using JryVideo.Managers.ArtistManager;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -252,6 +253,20 @@ namespace JryVideo.Main
             var manager = new ArtistManagerWindow();
             manager.Owner = this.TryFindParent<Window>();
             manager.ShowDialog();
+        }
+
+        private async void WatchedEpisode_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            var ep = vm?.TodayPlaying?.Episode;
+            if (ep == null) return;
+            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
+            var video = await manager.FindAsync(vm.Source.Id);
+            if (video == null) return;
+            if (video.Watcheds == null) video.Watcheds = new List<int>();
+            if (video.Watcheds.Contains(ep.Value)) return;
+            video.Watcheds.Add(ep.Value);
+            await manager.UpdateAsync(video);
         }
     }
 }
