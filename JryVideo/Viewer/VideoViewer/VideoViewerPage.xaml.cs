@@ -217,8 +217,10 @@ namespace JryVideo.Viewer.VideoViewer
                 {
                     Owner = this.TryFindParent<Window>()
                 };
-                dlg.ShowDialog();
-                seriesViewModel.RefreshProperties();
+                if (dlg.ShowDialog() == true)
+                {
+                    seriesViewModel.RefreshProperties();
+                }
             }
         }
 
