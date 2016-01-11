@@ -38,11 +38,8 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
 
-        public Playing TodayPlaying
-        {
-            get { return this.todayPlaying; }
-            set { this.SetPropertyRef(ref this.todayPlaying, value); }
-        }
+        [NotifyPropertyChanged]
+        public Playing TodayPlaying => this.todayPlaying;
 
         public string GroupTitle
         {
@@ -52,9 +49,9 @@ namespace JryVideo.Common
 
         public override void RefreshProperties()
         {
-            base.RefreshProperties();
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
             this.UpdateGroup();
+            base.RefreshProperties();
         }
 
         private void UpdateGroup()
@@ -68,7 +65,7 @@ namespace JryVideo.Common
                 return;
             }
 
-            this.TodayPlaying = null;
+            this.todayPlaying = null;
             var today = DateTime.Now.Date;
             var sunday = today.AddDays(-(int)today.DayOfWeek); // sunday
             var startDate = this.Source.StartDate.Value.ToLocalTime();
@@ -81,7 +78,7 @@ namespace JryVideo.Common
                     this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
                     var episode = this.Source.GetTodayEpisode(today) + (this.Source.EpisodeOffset ?? 0);
                     this.isDone = episode > this.Source.EpisodesCount;
-                    this.TodayPlaying = new Playing(this.isDone ? 0 : episode);
+                    this.todayPlaying = new Playing(this.isDone ? 0 : episode);
                 }
                 else
                 {
