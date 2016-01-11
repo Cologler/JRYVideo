@@ -1,8 +1,6 @@
 ﻿using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
-using JryVideo.Editors.SeriesEditor;
-using JryVideo.Editors.VideoEditor;
 using JryVideo.Viewer.FilesViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -21,18 +19,12 @@ namespace JryVideo.Viewer.VideoViewer
     /// </summary>
     public partial class VideoViewerPage : Page
     {
-        private VideoViewerViewModel viewModel;
-
         public VideoViewerPage()
         {
             this.InitializeComponent();
         }
 
-        public VideoViewerViewModel ViewModel
-        {
-            get { return this.viewModel; }
-            set { this.DataContext = this.viewModel = value; }
-        }
+        public VideoViewerViewModel ViewModel { get; private set; }
 
         internal static VideoViewerPage BuildPage(VideoInfoViewModel info)
         {
@@ -40,7 +32,8 @@ namespace JryVideo.Viewer.VideoViewer
 
             return new VideoViewerPage()
             {
-                ViewModel = vm
+                ViewModel = vm,
+                DataContext = vm
             };
         }
 
@@ -85,14 +78,8 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void EditVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var dlg = new VideoEditorWindow(this.ViewModel.InfoView.SeriesView.Source, this.ViewModel.InfoView.Source)
+            if (this.ViewModel.InfoView.OpenEditorWindows(this.TryFindParent<Window>()))
             {
-                Owner = this.TryFindParent<Window>()
-            };
-
-            if (dlg.ShowDialog() == true)
-            {
-                this.ViewModel.InfoView.RefreshProperties();
                 this.ViewModel.ReloadEpisodes();
             }
         }
@@ -210,18 +197,7 @@ namespace JryVideo.Viewer.VideoViewer
         private void EditSeriesMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var seriesViewModel = this.ViewModel.InfoView.SeriesView;
-
-            if (seriesViewModel != null)
-            {
-                var dlg = new SeriesEditorWindow(seriesViewModel.Source)
-                {
-                    Owner = this.TryFindParent<Window>()
-                };
-                if (dlg.ShowDialog() == true)
-                {
-                    seriesViewModel.RefreshProperties();
-                }
-            }
+            seriesViewModel?.OpenEditorWindows(this.TryFindParent<Window>());
         }
 
         private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -300,7 +276,7 @@ namespace JryVideo.Viewer.VideoViewer
             if (selected != null)
             {
                 this.WatchedsListView.SelectedItem = null;
-                var box = (VideoViewerViewModel.WatchedEpisodeChecker) selected;
+                var box = (VideoViewerViewModel.WatchedEpisodeChecker)selected;
                 box.SetIsWatchedAndNotify(!box.IsWatched);
             }
         }

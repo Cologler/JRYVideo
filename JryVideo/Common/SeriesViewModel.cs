@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using Jasily.ComponentModel;
-using Jasily.Diagnostics;
+﻿using Jasily.ComponentModel;
+using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
+using System;
+using System.Windows;
 
 namespace JryVideo.Common
 {
@@ -36,6 +35,20 @@ namespace JryVideo.Common
         /// like ({0} videos) this.DisplayName
         /// </summary>
         [NotifyPropertyChanged]
-        public string DisplayNameInfo => $"({this.Source.Videos.Count.ToString()} videos) {string.Join(" / ", this.Source.Names)}";
+        public string DisplayNameInfo => $"({this.Source.Videos.Count} videos) {string.Join(" / ", this.Source.Names)}";
+
+        public bool OpenEditorWindows(Window parent)
+        {
+            var dlg = new SeriesEditorWindow(this.Source)
+            {
+                Owner = parent
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                this.RefreshProperties();
+                return true;
+            }
+            return false;
+        }
     }
 }

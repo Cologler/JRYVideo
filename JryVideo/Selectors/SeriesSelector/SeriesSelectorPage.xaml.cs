@@ -1,6 +1,5 @@
 ﻿using Jasily.Diagnostics;
 using JryVideo.Common;
-using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using System;
@@ -58,16 +57,7 @@ namespace JryVideo.Selectors.SeriesSelector
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var seriesViewModel = ((FrameworkElement)sender).DataContext as SeriesViewModel;
-
-            if (seriesViewModel != null)
-            {
-                var dlg = new SeriesEditorWindow(seriesViewModel.Source)
-                {
-                    Owner = this.TryFindParent<Window>()
-                };
-                dlg.ShowDialog();
-                seriesViewModel.RefreshProperties();
-            }
+            seriesViewModel?.OpenEditorWindows(this.TryFindParent<Window>());
         }
     }
 }

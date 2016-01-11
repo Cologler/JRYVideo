@@ -9,7 +9,6 @@ using JryVideo.Managers.ArtistManager;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -18,8 +17,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using JryVideo.Editors.SeriesEditor;
-using JryVideo.Editors.VideoEditor;
 
 namespace JryVideo.Main
 {
@@ -266,32 +263,13 @@ namespace JryVideo.Main
         private void EditVideoInfo_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            if (vm == null) return;
-            var dlg = new VideoEditorWindow(vm.SeriesView.Source, vm.Source)
-            {
-                Owner = this.TryFindParent<Window>()
-            };
-
-            if (dlg.ShowDialog() == true)
-            {
-                vm.RefreshProperties();
-            }
+            vm?.OpenEditorWindows(this.TryFindParent<Window>());
         }
 
         private void EditSeries_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            if (vm?.SeriesView != null)
-            {
-                var dlg = new SeriesEditorWindow(vm.SeriesView.Source)
-                {
-                    Owner = this.TryFindParent<Window>()
-                };
-                if (dlg.ShowDialog() == true)
-                {
-                    vm.SeriesView.RefreshProperties();
-                }
-            }
+            vm?.SeriesView?.OpenEditorWindows(this.TryFindParent<Window>());
         }
     }
 }

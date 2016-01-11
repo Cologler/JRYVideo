@@ -1,5 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Core;
+using JryVideo.Editors.VideoEditor;
 using JryVideo.Model;
 using JryVideo.Properties;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using static System.String;
 
 namespace JryVideo.Common
@@ -90,7 +92,7 @@ namespace JryVideo.Common
                             var video = await manager.FindAsync(this.Source.Id);
                             return video?.Watcheds?.Contains(playing.Episode.Value);
                         });
-                        
+
                         if (isWatched != null && playing.IsWatched != isWatched.Value)
                         {
                             playing.IsWatched = !playing.IsWatched;
@@ -386,6 +388,20 @@ namespace JryVideo.Common
             await manager.UpdateAsync(video);
             this.TodayPlaying.IsWatched = true;
             this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
+        }
+
+        public bool OpenEditorWindows(Window parent)
+        {
+            var dlg = new VideoEditorWindow(this.SeriesView.Source, this.Source)
+            {
+                Owner = parent
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                this.RefreshProperties();
+                return true;
+            }
+            return false;
         }
     }
 }
