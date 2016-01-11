@@ -120,6 +120,7 @@ namespace JryVideo.Viewer.VideoViewer
                 {
                     video.Watcheds = null;
                     await manager.UpdateAsync(video);
+                    this.InfoView.RefreshProperties();
                 }
             }
             else
@@ -129,6 +130,7 @@ namespace JryVideo.Viewer.VideoViewer
                 {
                     video.Watcheds = watched;
                     await manager.UpdateAsync(video);
+                    this.InfoView.RefreshProperties();
                 }
             }
         }

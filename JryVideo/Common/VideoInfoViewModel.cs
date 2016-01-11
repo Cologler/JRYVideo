@@ -42,7 +42,7 @@ namespace JryVideo.Common
         public Playing TodayPlaying => this.todayPlaying;
 
         [NotifyPropertyChanged]
-        public bool IsTodayPlayAndNotEnd => this.TodayPlaying != null && this.TodayPlaying.Episode.HasValue;
+        public bool IsTodayPlayAndNotEnd => this.TodayPlaying?.Episode != null && !this.TodayPlaying.IsWatched;
 
         public string GroupTitle
         {
@@ -57,7 +57,7 @@ namespace JryVideo.Common
             base.RefreshProperties();
         }
 
-        private void UpdateGroup()
+        private async void UpdateGroup()
         {
             // only tracking need build group info.
             if (!this.Source.IsTracking) return;
@@ -81,7 +81,23 @@ namespace JryVideo.Common
                     this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
                     var episode = this.Source.GetTodayEpisode(today) + (this.Source.EpisodeOffset ?? 0);
                     this.isDone = episode > this.Source.EpisodesCount;
-                    this.todayPlaying = new Playing(this.isDone ? (int?)null : episode);
+                    var playing = this.todayPlaying = new Playing(this.isDone ? (int?)null : episode);
+                    if (playing.Episode.HasValue)
+                    {
+                        var isWatched = await Task.Run(async () =>
+                        {
+                            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
+                            var video = await manager.FindAsync(this.Source.Id);
+                            return video?.Watcheds?.Contains(playing.Episode.Value);
+                        });
+                        
+                        if (isWatched != null && playing.IsWatched != isWatched.Value)
+                        {
+                            playing.IsWatched = !playing.IsWatched;
+                            //this.NotifyPropertyChanged(nameof(this.TodayPlaying));
+                            this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
+                        }
+                    }
                 }
                 else
                 {
@@ -336,8 +352,9 @@ namespace JryVideo.Common
             set { this.SetPropertyRef(ref this.isUntrackButtonEnable, value); }
         }
 
-        public sealed class Playing
+        public sealed class Playing : NotifyPropertyChangedObject
         {
+            private bool isWatched;
             public int? Episode { get; }
 
             public Playing(int? episode)
@@ -348,6 +365,27 @@ namespace JryVideo.Common
             public string Text => this.Episode.HasValue ? $"today play {this.Episode.Value}" : "done!";
 
             public string WatchedText => $"watched ep {this.Episode}";
+
+            public bool IsWatched
+            {
+                get { return this.isWatched; }
+                set { this.SetPropertyRef(ref this.isWatched, value); }
+            }
+        }
+
+        public async void Watch()
+        {
+            var ep = this.TodayPlaying?.Episode;
+            if (ep == null) return;
+            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
+            var video = await manager.FindAsync(this.Source.Id);
+            if (video == null) return;
+            if (video.Watcheds == null) video.Watcheds = new List<int>();
+            if (video.Watcheds.Contains(ep.Value)) return;
+            video.Watcheds.Add(ep.Value);
+            await manager.UpdateAsync(video);
+            this.TodayPlaying.IsWatched = true;
+            this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
         }
     }
 }

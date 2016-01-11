@@ -12,6 +12,9 @@ namespace JryVideo.Model
 
         public List<JryEntity> Entities { get; set; }
 
+        /// <summary>
+        /// 尽量排序，但是不一定排序
+        /// </summary>
         public List<int> Watcheds { get; set; }
 
         protected override bool InnerTestHasError()
