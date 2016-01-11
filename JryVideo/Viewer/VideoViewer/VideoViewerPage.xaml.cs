@@ -1,4 +1,5 @@
-﻿using JryVideo.Common;
+﻿using System;
+using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.Viewer.FilesViewer;
@@ -8,9 +9,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using JryVideo.SearchEngine;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -19,6 +23,18 @@ namespace JryVideo.Viewer.VideoViewer
     /// </summary>
     public partial class VideoViewerPage : Page
     {
+        private static readonly ISearchEngine[] Engines;
+
+        static VideoViewerPage()
+        {
+            var @interface = typeof(ISearchEngine);
+            Engines = typeof(VideoViewerPage).Assembly.DefinedTypes
+                .Where(z => @interface.IsAssignableFrom(z))
+                .Where(z => z.IsSealed)
+                .Select(z => (ISearchEngine)Activator.CreateInstance(z))
+                .ToArray();
+        }
+
         public VideoViewerPage()
         {
             this.InitializeComponent();
@@ -30,11 +46,47 @@ namespace JryVideo.Viewer.VideoViewer
         {
             var vm = new VideoViewerViewModel(info);
 
-            return new VideoViewerPage()
+            var page = new VideoViewerPage()
             {
                 ViewModel = vm,
                 DataContext = vm
             };
+
+            var menu = page.SeriesContextMenu;
+            foreach (var engine in Engines)
+            {
+                var item = new MenuItem()
+                {
+                    Header = "search on " + engine.Name,
+                    Tag = engine
+                };
+                item.Click += SearchStringOnEngine_OnClick;
+                item.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("InfoView.SeriesView.Source.Names"));
+                menu.Items.Add(item);
+            }
+            return page;
+        }
+
+        private static void SearchStringOnEngine_OnClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+
+            if (menuItem?.ItemsSource != null && ReferenceEquals(menuItem, e.OriginalSource))
+            {
+                return;
+            }
+
+            var osItem = e.OriginalSource as MenuItem;
+            
+            if (osItem != null)
+            {
+                var str = osItem.DataContext as string ?? osItem.Header as string;
+
+                if (str != null)
+                {
+                    ((ISearchEngine)menuItem?.Tag)?.SearchText(str);
+                }
+            }
         }
 
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)

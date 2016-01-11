@@ -46,7 +46,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ContextMenu>
-                    <ContextMenu>
+                    <ContextMenu x:Name="SeriesContextMenu">
                         <MenuItem Header="edit"
                                   x:Name="EditSeriesMenuItem"
                                   Click="EditSeriesMenuItem_OnClick"/>

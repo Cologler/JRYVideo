@@ -110,6 +110,7 @@
     <Compile Include="SearchEngine\ImdbSearch.cs" />
     <Compile Include="SearchEngine\ISearchEngine.cs" />
     <Compile Include="SearchEngine\WebsiteSearch.cs" />
+    <Compile Include="SearchEngine\WikiSearch.cs" />
     <Compile Include="Selectors\ArtistSelector\ArtistSelectorPage.xaml.cs">
       <DependentUpon>ArtistSelectorPage.xaml</DependentUpon>
     </Compile>

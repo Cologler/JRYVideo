@@ -1,6 +1,5 @@
 ﻿using JryVideo.Common;
 using JryVideo.Viewer.VideoViewer;
-using MahApps.Metro.Controls;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -14,7 +13,7 @@ namespace JryVideo.Main
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow
     {
         private MainPage MainPage;
 
