@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.Core.Linq", "Jasily\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.EverythingSDK", "EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK.csproj", "{54757096-EB16-40D7-9EB7-833293D2DAF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.SDK.Douban", "Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban.csproj", "{933CFBAA-C105-4C1F-92C9-11FCC5CB157E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{54757096-EB16-40D7-9EB7-833293D2DAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54757096-EB16-40D7-9EB7-833293D2DAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54757096-EB16-40D7-9EB7-833293D2DAF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{933CFBAA-C105-4C1F-92C9-11FCC5CB157E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{933CFBAA-C105-4C1F-92C9-11FCC5CB157E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{933CFBAA-C105-4C1F-92C9-11FCC5CB157E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{933CFBAA-C105-4C1F-92C9-11FCC5CB157E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

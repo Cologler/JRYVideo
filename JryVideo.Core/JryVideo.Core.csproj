@@ -41,11 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Douban\DoubanArtist.cs" />
-    <Compile Include="Douban\DoubanEntity.cs" />
     <Compile Include="Douban\DoubanHelper.cs" />
-    <Compile Include="Douban\DoubanImagesJson.cs" />
-    <Compile Include="Douban\DoubanMovie.cs" />
     <Compile Include="Douban\DoubanMovieParser.cs" />
     <Compile Include="JryVideoCore.cs" />
     <Compile Include="Log.cs" />
@@ -63,6 +59,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban.csproj">
+      <Project>{933cfbaa-c105-4c1f-92c9-11fcc5cb157e}</Project>
+      <Name>Jasily.SDK.Douban</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily.Core.Desktop\Jasily.Core.Desktop.csproj">
       <Project>{e90943e3-39c3-4649-9fe7-17096cbcd95e}</Project>
       <Name>Jasily.Core.Desktop</Name>

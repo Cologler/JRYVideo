@@ -110,24 +110,19 @@ namespace JryVideo.Core.Managers
 
         private async Task<string> TryGetCoverUrlFromDoubanIdAsync(JryCoverType type, string doubanId)
         {
-            DoubanEntity json = null;
+            Jasily.SDK.Douban.Entities.BaseEntity json = null;
 
             switch (type)
             {
                 case JryCoverType.Video:
-                    json = await DoubanHelper.TryGetMovieInfoAsync(doubanId);
-                    break;
+                    return (await DoubanHelper.TryGetMovieInfoAsync(doubanId))?.GetLargeImageUrl();
 
                 case JryCoverType.Artist:
-                    json = await DoubanHelper.TryGetArtistInfoAsync(doubanId);
-                    break;
+                    return (await DoubanHelper.TryGetArtistInfoAsync(doubanId))?.GetLargeImageUrl();
 
                 default:
-                    throw new ArgumentOutOfRangeException("type", type, null);
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-
-
-            return json != null ? json.GetLargeImageUrl() : null;
         }
     }
 }

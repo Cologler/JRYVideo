@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Jasily.SDK.Douban.Entities;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -212,7 +213,7 @@ namespace JryVideo.Controls.EditVideo
             this.EpisodeOffset = obj.EpisodeOffset ?? 0;
         }
 
-        public void LoadDouban(DoubanMovie info)
+        public void LoadDouban(Movie info)
         {
             var parser = DoubanMovieParser.Parse(info);
             var doubanSecondName = parser.EntityNames.AsLines();

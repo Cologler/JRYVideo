@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Jasily.SDK.Douban.Entities;
 
 namespace JryVideo.Core.Douban
 {
@@ -18,7 +19,7 @@ namespace JryVideo.Core.Douban
         private readonly List<string> seriesNames = new List<string>();
         private readonly List<string> entityNames = new List<string>();
 
-        private DoubanMovieParser(DoubanMovie json)
+        private DoubanMovieParser(Movie json)
         {
             this.Load(json);
         }
@@ -33,7 +34,7 @@ namespace JryVideo.Core.Douban
 
         public bool IsMovie { get; set; }
 
-        private void Load(DoubanMovie json)
+        private void Load(Movie json)
         {
             this.LoadName(json);
 
@@ -50,7 +51,7 @@ namespace JryVideo.Core.Douban
             }
         }
 
-        private void LoadName(DoubanMovie json)
+        private void LoadName(Movie json)
         {
             foreach (var name in json.ParseName())
             {
@@ -133,7 +134,7 @@ namespace JryVideo.Core.Douban
             return false;
         }
 
-        public static DoubanMovieParser Parse(DoubanMovie json)
+        public static DoubanMovieParser Parse(Movie json)
             => new DoubanMovieParser(json);
     }
 }
