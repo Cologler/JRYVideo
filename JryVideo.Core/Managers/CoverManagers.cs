@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Jasily.Net;
+using JryVideo.Core.Douban;
+using JryVideo.Data.DataSources;
+using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
-using Jasily.Net;
-using JryVideo.Core.Douban;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -27,21 +27,19 @@ namespace JryVideo.Core.Managers
         {
             if (coverId == null) return null;
 
-            return await Task.Run(async() =>
+            return await Task.Run(async () =>
             {
-                JryCover cover;
-
                 var obj = this.MemoryCache.Get(coverId);
                 if (obj != null) return (JryCover)obj;
 
-                cover = await this.Source.FindAsync(coverId);
+                var cover = await this.Source.FindAsync(coverId);
 
                 if (cover != null)
                 {
                     lock (this.MemoryCache)
                     {
                         obj = this.MemoryCache.AddOrGetExisting(coverId, cover, DateTimeOffset.UtcNow.AddHours(1));
-                        return obj != null ? (JryCover) obj : cover;
+                        return obj != null ? (JryCover)obj : cover;
                     }
                 }
 

@@ -46,10 +46,12 @@ namespace JryVideo.Core
 
             this.Switch(JryVideoDataSourceProviderManagerMode.Public);
 
-            this.TheTVDBClient = await new TheTVDBHost().CreateAsync("2C8DAFF32B0E08A7", null);
-            var z = (await this.TheTVDBClient.GetSeriesByImdbIdAsync("tt1051220")).ToArray();
-            var x = (await z.First().GetBannersAsync(this.TheTVDBClient)).ToArray();
+            this.BeginLazyInitialize();
+        }
 
+        private async void BeginLazyInitialize()
+        {
+            this.TheTVDBClient = await new TheTVDBHost().CreateAsync("2C8DAFF32B0E08A7", null);
         }
 
         public DataCenter NormalDataCenter { get; private set; }

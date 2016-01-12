@@ -172,6 +172,10 @@
     <Compile Include="Add\AddWindow.xaml.cs">
       <DependentUpon>AddWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Selectors\WebImageSelector\WebImageSelectorViewModel.cs" />
+    <Compile Include="Selectors\WebImageSelector\WebImageSelectorWindow.xaml.cs">
+      <DependentUpon>WebImageSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Viewer\FilesViewer\FileItemViewModel.cs" />
     <Compile Include="Viewer\FilesViewer\FilesViewerViewModel.cs" />
     <Compile Include="Viewer\FilesViewer\FilesViewerWindow.xaml.cs">
@@ -298,6 +302,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Managers\FlagManager\FlagManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Selectors\WebImageSelector\WebImageSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
