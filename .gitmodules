@@ -4,3 +4,6 @@
 [submodule "EverythingSDK"]
 	path = EverythingSDK
 	url = https://github.com/Cologler/everything.sdk.jasily.cologler.git
+[submodule "Jasily.SDK.Douban"]
+	path = Jasily.SDK.Douban
+	url = https://github.com/Cologler/Jasily.SDK.Douban.git
