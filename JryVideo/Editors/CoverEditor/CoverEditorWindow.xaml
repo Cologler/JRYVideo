@@ -42,6 +42,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70" />
@@ -60,7 +62,7 @@
                   VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -78,9 +80,42 @@
                 <Button x:Name="LoadFromDoubanButton"
                         Grid.Row="1"
                         Grid.Column="1"
-                        Content="load from douban"
+                        Content="load"
                         VerticalAlignment="Center" 
                         Click="LoadFromDoubanButton_OnClick"/>
+            </Grid>
+
+            <RadioButton Grid.Column="2"
+                         x:Name="ImdbRadioButton"
+                         Content="imdb"
+                         VerticalAlignment="Top"
+                         Margin="6"
+                         Checked="ImdbRadioButton_OnChecked" />
+
+            <Grid Grid.Column="3"
+                  VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="60" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Margin="5"
+                           Text="Imdb Id" />
+
+                <TextBox Grid.Row="1"
+                         Text="{Binding ImdbId}"
+                         VerticalAlignment="Center"
+                         Margin="0,0,5,0" />
+
+                <Button Grid.Row="1"
+                        Grid.Column="1"
+                        Content="load"
+                        VerticalAlignment="Center"
+                        Click="LoadFromImdbButton_OnClick" />
             </Grid>
 
             <RadioButton x:Name="UrlRadioButton"
@@ -93,10 +128,11 @@
 
             <Grid Grid.Row="1"
                   Grid.Column="1"
+                  Grid.ColumnSpan="3"
                   VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -114,7 +150,7 @@
                 <Button x:Name="LoadFromUrlButton"
                         Grid.Row="1"
                         Grid.Column="1"
-                        Content="load from url"
+                        Content="load"
                         VerticalAlignment="Center"
                         Click="LoadFromUrlButton_OnClick"/>
             </Grid>
@@ -140,7 +176,7 @@
             
             <Button x:Name="AcceptButton"
                     Grid.Row="3"
-                    Grid.Column="1"
+                    Grid.Column="3"
                     Content="accept"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"

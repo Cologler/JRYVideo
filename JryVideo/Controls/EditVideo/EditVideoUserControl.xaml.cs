@@ -57,7 +57,6 @@ namespace JryVideo.Controls.EditVideo
                 else
                 {
                     var cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.FindAsync(this.ViewModel.Source.CoverId);
-
                     if (cover == null) // database error ?
                     {
                         this.ShowJryVideoMessage("error", "get cover fail");
@@ -68,6 +67,16 @@ namespace JryVideo.Controls.EditVideo
                         dlg.ViewModel.ModifyMode(cover);
                     }
                 }
+            }
+
+            if (dlg.ViewModel.DoubanId.IsNullOrWhiteSpace() && !this.ViewModel.DoubanId.IsNullOrWhiteSpace())
+            {
+                dlg.ViewModel.DoubanId = this.ViewModel.DoubanId;
+            }
+
+            if (dlg.ViewModel.ImdbId.IsNullOrWhiteSpace() && !this.ViewModel.ImdbId.IsNullOrWhiteSpace())
+            {
+                dlg.ViewModel.ImdbId = this.ViewModel.ImdbId;
             }
 
             dlg.UpdateRadioButtonCheckedStatus();

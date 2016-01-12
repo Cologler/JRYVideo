@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;
+using JryVideo.Common.Dialogs;
 
 namespace JryVideo.Editors.CoverEditor
 {
@@ -41,6 +42,10 @@ namespace JryVideo.Editors.CoverEditor
 
                 case JryCoverSourceType.Douban:
                     this.DoubanRadioButton.IsChecked = true;
+                    break;
+
+                case JryCoverSourceType.Imdb:
+                    this.ImdbRadioButton.IsChecked = true;
                     break;
 
                 default:
@@ -86,7 +91,7 @@ namespace JryVideo.Editors.CoverEditor
         {
             if (!await this.ViewModel.LoadFromUrlAsync())
             {
-                MessageBox.Show("load failed.");
+                this.ShowJryVideoMessage("error", "load failed");
             }
             else
             {
@@ -98,7 +103,7 @@ namespace JryVideo.Editors.CoverEditor
         {
             if (!await this.ViewModel.LoadFromDoubanAsync())
             {
-                MessageBox.Show("load failed.");
+                this.ShowJryVideoMessage("error", "load failed");
             }
             else
             {
@@ -116,6 +121,24 @@ namespace JryVideo.Editors.CoverEditor
             {
                 await this.ShowMessageAsync("error", "don't have image.");
             }
+        }
+
+        private async void LoadFromImdbButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var result = await this.ViewModel.LoadFromImdbIdAsync(this);
+            if (result == false)
+            {
+                this.ShowJryVideoMessage("error", "load failed");
+            }
+            else if (result == true)
+            {
+                this.ImdbRadioButton.IsChecked = true;
+            }
+        }
+
+        private void ImdbRadioButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.CoverSourceType = JryCoverSourceType.Imdb;
         }
     }
 }

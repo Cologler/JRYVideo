@@ -47,7 +47,7 @@ namespace JryVideo.Core.Managers
             });
         }
 
-        public async Task<string> GetCoverFromDoubanIdAsync(JryCoverType type, string doubanId)
+        public async Task<string> AutoGenerateCoverAsync(JryCoverType type, string doubanId, string imdbId = null)
         {
             if (String.IsNullOrWhiteSpace(doubanId))
                 throw new ArgumentException();
@@ -84,6 +84,7 @@ namespace JryVideo.Core.Managers
                     cover.DoubanId = doubanId;
                     cover.Uri = url;
                     cover.BinaryData = result.Result;
+                    cover.ImdbId = imdbId;
                     await this.InsertAsync(cover);
 
                     lock (this._syncRoot)

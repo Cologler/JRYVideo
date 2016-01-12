@@ -16,6 +16,9 @@ namespace JryVideo.Model
         public string DoubanId { get; set; }
 
         [Cloneable]
+        public string ImdbId { get; set; }
+
+        [Cloneable]
         public string Uri { get; set; }
 
         [Cloneable]

@@ -50,7 +50,7 @@ namespace JryVideo.Common
 
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
 
-            var guid = await coverManager.GetCoverFromDoubanIdAsync(JryCoverType.Artist, this.Source.DoubanId);
+            var guid = await coverManager.AutoGenerateCoverAsync(JryCoverType.Artist, this.Source.DoubanId);
 
             if (guid == null) return false;
 

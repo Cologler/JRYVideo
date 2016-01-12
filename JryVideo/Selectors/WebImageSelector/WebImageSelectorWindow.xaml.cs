@@ -1,6 +1,7 @@
 ﻿using JryVideo.Core;
 using System.Collections.Generic;
 using System.Windows;
+using JryVideo.Common.Dialogs;
 
 namespace JryVideo.Selectors.WebImageSelector
 {
@@ -32,7 +33,11 @@ namespace JryVideo.Selectors.WebImageSelector
         public static string StartSelectByImdbId(Window parent, string imdbId)
         {
             var client = JryVideoCore.Current.TheTVDBClient;
-            if (client == null) return null;
+            if (client == null)
+            {
+                parent.ShowJryVideoMessage("error", "TheTVDB init failed, try again.");
+                return null;
+            }
             var dlg = new WebImageSelectorWindow() { Owner = parent };
             dlg.ViewModel.BeginLoadPosterByImdbId(client, imdbId);
             return dlg.ShowDialog() == true ? dlg.ImagesListView.SelectedItem as string : null;

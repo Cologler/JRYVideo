@@ -6,6 +6,9 @@
 
         Uri = 1,
 
-        Douban = 2
+        Douban = 2,
+
+        Imdb = 3
+
     }
 }
