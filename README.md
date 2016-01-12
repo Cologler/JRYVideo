@@ -97,6 +97,16 @@ next step。
 
 ![video-main-with-add](http://i.imgur.com/DwU6hUu.png)
 
+## imdb
+
+填入 imdb 自动生成背景，美爆了：
+
+![video-main-bg1](http://i.imgur.com/IJ1mTFf.png)
+
+![video-main-bg2](http://i.imgur.com/E29SZb2.png)
+
+![video-main-bg3](http://i.imgur.com/DPguV1W.png)
+
 ## 多语言
 
 支持中文或英文，部分没有中文（因为我先写的英文），不支持选择语言，目前依赖系统设置。
