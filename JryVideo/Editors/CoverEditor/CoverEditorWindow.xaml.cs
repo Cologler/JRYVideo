@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Windows;
-using JryVideo.Model;
+﻿using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
+using System;
+using System.IO;
+using System.Windows;
 
 namespace JryVideo.Editors.CoverEditor
 {
@@ -21,9 +21,15 @@ namespace JryVideo.Editors.CoverEditor
             this.DataContext = this.ViewModel = new CoverEditorViewModel();
         }
 
+        public CoverEditorWindow(CoverEditorViewModel viewModel)
+        {
+            this.InitializeComponent();
+            this.DataContext = this.ViewModel = viewModel;
+        }
+
         public void UpdateRadioButtonCheckedStatus()
         {
-            switch (this.ViewModel.Source.CoverSourceType)
+            switch (this.ViewModel.CoverSourceType)
             {
                 case JryCoverSourceType.Local:
                     this.ChooseRadioButton.IsChecked = true;

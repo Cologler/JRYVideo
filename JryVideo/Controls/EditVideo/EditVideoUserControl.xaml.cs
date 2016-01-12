@@ -1,4 +1,5 @@
-﻿using JryVideo.Core;
+﻿using JryVideo.Common.Dialogs;
+using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Managers.FlagManager;
 using JryVideo.Selectors.ArtistSelector;
@@ -40,27 +41,14 @@ namespace JryVideo.Controls.EditVideo
 
         private async void EditCoverButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var dlg = new CoverEditorWindow();
-
+            CoverEditorWindow dlg;
             if (this.ViewModel.Cover != null)
             {
-                if (this.ViewModel.Cover.Action == ObjectChangedAction.Create)
-                {
-                    dlg.ViewModel.CreateMode();
-                }
-                else
-                {
-                    dlg.ViewModel.ModifyMode(this.ViewModel.Cover.Source);
-                }
-
-                dlg.ViewModel.DoubanId = this.ViewModel.Cover.DoubanId;
-                dlg.ViewModel.CoverSourceType = this.ViewModel.Cover.CoverSourceType;
-                dlg.ViewModel.Uri = this.ViewModel.Cover.Uri;
-                dlg.ViewModel.BinaryData = this.ViewModel.Cover.BinaryData;
-                dlg.ViewModel.SaveToObject(dlg.ViewModel.Source);
+                dlg = new CoverEditorWindow(this.ViewModel.Cover);
             }
             else
             {
+                dlg = new CoverEditorWindow();
                 if (this.ViewModel.Action == ObjectChangedAction.Create /* create a video */ ||
                     this.ViewModel.Source.CoverId == null /* video has not cover */)
                 {
@@ -72,7 +60,8 @@ namespace JryVideo.Controls.EditVideo
 
                     if (cover == null) // database error ?
                     {
-                        dlg.ViewModel.CreateMode();
+                        this.ShowJryVideoMessage("error", "get cover fail");
+                        return;
                     }
                     else
                     {

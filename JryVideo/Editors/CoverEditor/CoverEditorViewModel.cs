@@ -1,6 +1,7 @@
 ﻿using System.Enums;
 using System.Net;
 using System.Threading.Tasks;
+using Jasily.ComponentModel;
 using Jasily.Net;
 using JryVideo.Common;
 using JryVideo.Core;
@@ -15,31 +16,16 @@ namespace JryVideo.Editors.CoverEditor
         private string uri;
         private byte[] binaryData;
         private ImageViewModel imageViewModel;
-        private bool isChanged = false;
+        private bool isChanged;
 
-        public override void CreateMode()
-        {
-            this.DoubanId = this.Uri = null;
-            this.BinaryData = null;
-
-            base.CreateMode();
-        }
-
-        public override void ModifyMode(JryCover source)
-        {
-            this.DoubanId = source.DoubanId;
-            this.Uri = source.Uri;
-            this.BinaryData = source.BinaryData;
-
-            base.ModifyMode(source);
-        }
-
+        [EditableField]
         public string DoubanId
         {
             get { return this.doubanId; }
             set { this.SetPropertyRef(ref this.doubanId, value); }
         }
 
+        [EditableField]
         public string Uri
         {
             get { return this.uri; }
@@ -49,6 +35,7 @@ namespace JryVideo.Editors.CoverEditor
         /// <summary>
         /// can be null.
         /// </summary>
+        [EditableField]
         public byte[] BinaryData
         {
             get { return this.binaryData; }
@@ -62,6 +49,7 @@ namespace JryVideo.Editors.CoverEditor
             }
         }
 
+        [EditableField]
         public JryCoverSourceType CoverSourceType { get; set; }
 
         public ImageViewModel ImageViewModel
@@ -109,14 +97,6 @@ namespace JryVideo.Editors.CoverEditor
             return this.BinaryData != null;
         }
 
-        public void SaveToObject(JryCover commitObject)
-        {
-            commitObject.CoverSourceType = this.CoverSourceType;
-            commitObject.DoubanId = this.DoubanId;
-            commitObject.Uri = this.Uri;
-            commitObject.BinaryData = this.BinaryData;
-        }
-
         public async Task<JryCover> CommitAsync()
         {
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
@@ -128,7 +108,7 @@ namespace JryVideo.Editors.CoverEditor
                 return obj;
             }
 
-            this.SaveToObject(obj);
+            this.WriteToObject(obj);
 
             if (this.Action == ObjectChangedAction.Create)
                 obj.BuildMetaData();
