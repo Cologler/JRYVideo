@@ -66,19 +66,10 @@ namespace JryVideo.Model
         /// <returns>
         /// 当前 <see cref="T:System.Object"/> 的哈希代码。
         /// </returns>
-        public override int GetHashCode()
-        {
-            return (this.Id != null ? this.Id.GetHashCode() : 0);
-        }
+        public override int GetHashCode() => this.Id?.GetHashCode() ?? 0;
 
-        public static bool operator ==(JryArtist left, JryArtist right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(JryArtist left, JryArtist right) => Equals(left, right);
 
-        public static bool operator !=(JryArtist left, JryArtist right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(JryArtist left, JryArtist right) => !Equals(left, right);
     }
 }

@@ -11,7 +11,7 @@ namespace JryVideo.Model
         {
             this.Names = new List<string>();
             this.Tags = new List<string>();
-            this.ArtistIds = new List<JryVideoArtistInfo>();
+            this.Roles = new List<JryVideoRole>();
         }
 
         public string Type { get; set; }
@@ -20,7 +20,8 @@ namespace JryVideo.Model
 
         public int Index { get; set; }
 
-        public List<JryVideoArtistInfo> ArtistIds { get; set; }
+        [BsonElement("ArtistIds")]
+        public List<JryVideoRole> Roles { get; set; }
 
         public List<string> Names { get; set; }
 
@@ -70,7 +71,7 @@ namespace JryVideo.Model
         {
             if (base.InnerTestHasError()) return true;
 
-            if (this.Names == null || this.Tags == null || this.ArtistIds == null)
+            if (this.Names == null || this.Tags == null || this.Roles == null)
             {
                 throw new ArgumentException();
             }
