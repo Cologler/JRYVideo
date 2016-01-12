@@ -8,7 +8,7 @@ namespace JryVideo.Core.TheTVDB
     public class Series
     {
         [XmlElement("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [XmlElement("seriesid")]
         public int SeriesId { get; set; }
@@ -42,5 +42,8 @@ namespace JryVideo.Core.TheTVDB
 
         public async Task<IEnumerable<Banner>> GetBannersAsync(TheTVDBClient client)
             => await client.GetBannersBySeriesIdAsync(this.Id);
+
+        public async Task<IEnumerable<Actor>> GetActorsAsync(TheTVDBClient client)
+            => await client.GetActorsBySeriesIdAsync(this.Id);
     }
 }

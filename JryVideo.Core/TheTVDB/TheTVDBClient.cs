@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace JryVideo.Core.TheTVDB
 {
@@ -60,7 +59,7 @@ namespace JryVideo.Core.TheTVDB
             return $"{this.bannerMirror.Random().MirrorPath}/banners/{banner}";
         }
 
-        public async Task<IEnumerable<Banner>> GetBannersBySeriesIdAsync(int seriesId)
+        public async Task<IEnumerable<Banner>> GetBannersBySeriesIdAsync(string seriesId)
         {
             if (seriesId == null) throw new ArgumentNullException(nameof(seriesId));
 
@@ -70,6 +69,18 @@ namespace JryVideo.Core.TheTVDB
             return result.IsSuccess && result.Result.Banners != null
                 ? result.Result.Banners
                 : Enumerable.Empty<Banner>();
+        }
+
+        public async Task<IEnumerable<Actor>> GetActorsBySeriesIdAsync(string seriesId)
+        {
+            if (seriesId == null) throw new ArgumentNullException(nameof(seriesId));
+
+            var url = $"{this.allMirror.Random().MirrorPath}/api/{this.apiKey}/series/{seriesId}/actors.xml";
+            var request = WebRequest.CreateHttp(url);
+            var result = (await request.GetResultAsBytesAsync()).AsXml<ActorArray>();
+            return result.IsSuccess && result.Result.Actors != null
+                ? result.Result.Actors
+                : Enumerable.Empty<Actor>();
         }
     }
 }
