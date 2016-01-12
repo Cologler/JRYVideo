@@ -180,6 +180,7 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 var imdbId = this.Source.ImdbId;
                 if (imdbId.IsNullOrWhiteSpace()) return false;
+                if (!imdbId.StartsWith("tt")) return false;
 
                 var client = JryVideoCore.Current.TheTVDBClient;
                 if (client == null) return false;
