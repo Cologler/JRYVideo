@@ -323,7 +323,7 @@ namespace JryVideo.Controls.EditVideo
             if (this.Action == ObjectChangedAction.Create)
                 obj.BuildMetaData();
 
-            if (this.Cover?.Action == ObjectChangedAction.Create)
+            if (this.Cover != null)
             {
                 var cover = await this.Cover.CommitAsync();
                 obj.CoverId = cover.Id;

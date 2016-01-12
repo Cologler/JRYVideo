@@ -15,6 +15,7 @@ namespace JryVideo.Editors.CoverEditor
         private string uri;
         private byte[] binaryData;
         private ImageViewModel imageViewModel;
+        private bool isChanged = false;
 
         public override void CreateMode()
         {
@@ -54,7 +55,10 @@ namespace JryVideo.Editors.CoverEditor
             set
             {
                 if (this.SetPropertyRef(ref this.binaryData, value))
+                {
+                    this.isChanged = true;
                     this.OnUpdatedBinaryData();
+                }
             }
         }
 
@@ -98,10 +102,8 @@ namespace JryVideo.Editors.CoverEditor
                 return false;
             }
 
-            this.Uri = DoubanHelper.GetLargeImageUrl(json);
-
+            this.Uri = json.GetLargeImageUrl();
             var request = WebRequest.CreateHttp(this.Uri);
-
             this.BinaryData = (await request.GetResultAsBytesAsync()).Result;
 
             return this.BinaryData != null;
@@ -120,6 +122,11 @@ namespace JryVideo.Editors.CoverEditor
             var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
 
             var obj = this.GetCommitObject();
+
+            if (this.Action == ObjectChangedAction.Modify && !this.isChanged)
+            {
+                return obj;
+            }
 
             this.SaveToObject(obj);
 

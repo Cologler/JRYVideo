@@ -54,7 +54,7 @@ namespace JryVideo.Core.Managers
             return await this.Source.UpdateAsync(obj);
         }
 
-        public async Task<bool> RemoveAsync(string id)
+        public virtual async Task<bool> RemoveAsync(string id)
         {
             return await this.Source.RemoveAsync(id);
         }

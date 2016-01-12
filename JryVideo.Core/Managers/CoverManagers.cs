@@ -124,5 +124,19 @@ namespace JryVideo.Core.Managers
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
+
+        public override async Task<bool> UpdateAsync(JryCover obj)
+        {
+            var result = await base.UpdateAsync(obj);
+            this.MemoryCache.Remove(obj.Id);
+            return result;
+        }
+
+        public override async Task<bool> RemoveAsync(string id)
+        {
+            var result = await base.RemoveAsync(id);
+            this.MemoryCache.Remove(id);
+            return result;
+        }
     }
 }

@@ -406,6 +406,7 @@ namespace JryVideo.Common
             if (dlg.ShowDialog() == true)
             {
                 this.RefreshProperties();
+                this.BeginUpdateCover();
                 return true;
             }
             return false;
