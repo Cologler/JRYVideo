@@ -1,6 +1,9 @@
 ﻿using JryVideo.Core.Managers;
+using JryVideo.Core.TheTVDB;
 using JryVideo.Data;
 using System;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace JryVideo.Core
@@ -8,6 +11,8 @@ namespace JryVideo.Core
     public class JryVideoCore
     {
         public static JryVideoCore Current { get; private set; }
+
+        public TheTVDBClient TheTVDBClient { get; private set; }
 
         static JryVideoCore()
         {
@@ -40,6 +45,11 @@ namespace JryVideo.Core
             this.SecureDataCenter = new DataCenter(secure);
 
             this.Switch(JryVideoDataSourceProviderManagerMode.Public);
+
+            this.TheTVDBClient = await new TheTVDBHost().CreateAsync("2C8DAFF32B0E08A7", null);
+            var z = (await this.TheTVDBClient.GetSeriesByImdbIdAsync("tt1051220")).ToArray();
+            var x = (await z.First().GetBannersAsync(this.TheTVDBClient)).ToArray();
+
         }
 
         public DataCenter NormalDataCenter { get; private set; }

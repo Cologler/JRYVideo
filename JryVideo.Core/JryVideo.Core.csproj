@@ -57,6 +57,16 @@
     <Compile Include="Managers\VideoInfoManager.cs" />
     <Compile Include="Managers\VideoManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TheTVDB\Banner.cs" />
+    <Compile Include="TheTVDB\BannerArray.cs" />
+    <Compile Include="TheTVDB\BannerType.cs" />
+    <Compile Include="TheTVDB\TheTVDBClient.cs" />
+    <Compile Include="TheTVDB\Mirror.cs" />
+    <Compile Include="TheTVDB\MirrorArray.cs" />
+    <Compile Include="TheTVDB\MirrorType.cs" />
+    <Compile Include="TheTVDB\Series.cs" />
+    <Compile Include="TheTVDB\SeriesArray.cs" />
+    <Compile Include="TheTVDB\TheTVDBHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban.csproj">
