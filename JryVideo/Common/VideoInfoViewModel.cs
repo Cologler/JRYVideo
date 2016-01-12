@@ -1,5 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Core;
+using JryVideo.Core.Douban;
 using JryVideo.Editors.VideoEditor;
 using JryVideo.Model;
 using JryVideo.Properties;
@@ -297,16 +298,35 @@ namespace JryVideo.Common
         {
             if (this.Source.DoubanId == null) return false;
 
-            var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
-
-            var guid = await coverManager.AutoGenerateCoverAsync(JryCoverType.Video, this.Source.DoubanId);
-
+            var guid = await this.AutoGenerateCoverAsync();
             if (guid == null) return false;
-
             this.Source.CoverId = guid;
-
             var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
             return await manager.UpdateAsync(this.Source);
+        }
+
+        private async Task<string> AutoGenerateCoverAsync()
+        {
+            return await Task.Run(async () =>
+            {
+                var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
+                var doubanId = this.Source.DoubanId;
+                foreach (var z in await coverManager.Source.QueryByDoubanIdAsync(JryCoverType.Video, doubanId))
+                {
+                    return z.Id;
+                }
+                if (this.Source.DoubanId == null) return null;
+                var url = (await DoubanHelper.TryGetMovieInfoAsync(doubanId))?.GetLargeImageUrl();
+                if (url == null) return null;
+                var cover = new JryCover();
+                cover.CoverSourceType = JryCoverSourceType.Douban;
+                cover.CoverType = JryCoverType.Video;
+                cover.DoubanId = this.Source.DoubanId;
+                cover.Uri = url;
+                cover.ImdbId = this.Source.ImdbId;
+
+                return await coverManager.DownloadCoverAsync(cover);
+            });
         }
 
         public static IEnumerable<VideoInfoViewModel> Create(JrySeries series)

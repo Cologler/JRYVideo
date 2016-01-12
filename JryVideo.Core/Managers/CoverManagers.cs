@@ -1,5 +1,4 @@
 ﻿using Jasily.Net;
-using JryVideo.Core.Douban;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using System;
@@ -13,8 +12,8 @@ namespace JryVideo.Core.Managers
 {
     public class CoverManager : JryObjectManager<JryCover, ICoverSet>, IJasilyLoggerObject<CoverManager>
     {
-        private readonly object _syncRoot = new object();
-        private readonly List<string> _writingDoubanId = new List<string>();
+        private readonly object syncRoot = new object();
+        private readonly List<string> downloadingIds = new List<string>();
         private readonly MemoryCache MemoryCache;
 
         public CoverManager(ICoverSet source)
@@ -47,81 +46,46 @@ namespace JryVideo.Core.Managers
             });
         }
 
-        public async Task<string> AutoGenerateCoverAsync(JryCoverType type, string doubanId, string imdbId = null)
+        public async Task<string> DownloadCoverAsync(JryCover cover)
         {
-            if (String.IsNullOrWhiteSpace(doubanId))
+            if (cover == null) throw new ArgumentNullException(nameof(cover));
+
+            var url = cover.Uri;
+            if (string.IsNullOrWhiteSpace(cover.Uri))
                 throw new ArgumentException();
 
             return await Task.Run(async () =>
             {
-                foreach (var jryCover in await this.Source.QueryByDoubanIdAsync(type, doubanId))
+                lock (this.syncRoot)
                 {
-                    return jryCover.Id;
+                    if (this.downloadingIds.Contains(url)) return null;
+                    this.downloadingIds.Add(url);
                 }
 
-                var url = await this.TryGetCoverUrlFromDoubanIdAsync(type, doubanId);
-
-                if (url == null) return null;
-
-                lock (this._syncRoot)
+                try
                 {
-                    if (this._writingDoubanId.Contains(doubanId)) return null;
-
-                    this._writingDoubanId.Add(doubanId);
-                    this.Log(JasilyLogger.LoggerMode.Debug, String.Format("added thread for cover. total [{0}].", this._writingDoubanId.Count));
-                }
-
-                var request = WebRequest.CreateHttp(url);
-
-                var result = await request.GetResultAsBytesAsync();
-
-                if (result.IsSuccess)
-                {
-                    var cover = new JryCover();
-                    cover.BuildMetaData();
-                    cover.CoverSourceType = JryCoverSourceType.Douban;
-                    cover.CoverType = JryCoverType.Video;
-                    cover.DoubanId = doubanId;
-                    cover.Uri = url;
-                    cover.BinaryData = result.Result;
-                    cover.ImdbId = imdbId;
-                    await this.InsertAsync(cover);
-
-                    lock (this._syncRoot)
+                    var request = WebRequest.CreateHttp(url);
+                    var result = await request.GetResultAsBytesAsync();
+                    if (result.IsSuccess)
                     {
-                        this._writingDoubanId.Remove(doubanId);
+                        cover.BuildMetaData();
+                        cover.BinaryData = result.Result;
+                        if (await this.InsertAsync(cover))
+                        {
+                            return cover.Id;
+                        }
                     }
-
-                    return cover.Id;
                 }
-                else
+                finally
                 {
-                    lock (this._syncRoot)
+                    lock (this.syncRoot)
                     {
-                        this._writingDoubanId.Remove(doubanId);
-                        this.Log(JasilyLogger.LoggerMode.Debug, String.Format("finish thread for cover. total [{0}].", this._writingDoubanId.Count));
+                        this.downloadingIds.Remove(url);
                     }
-
-                    return null;
                 }
+
+                return null;
             });
-        }
-
-        private async Task<string> TryGetCoverUrlFromDoubanIdAsync(JryCoverType type, string doubanId)
-        {
-            Jasily.SDK.Douban.Entities.BaseEntity json = null;
-
-            switch (type)
-            {
-                case JryCoverType.Video:
-                    return (await DoubanHelper.TryGetMovieInfoAsync(doubanId))?.GetLargeImageUrl();
-
-                case JryCoverType.Artist:
-                    return (await DoubanHelper.TryGetArtistInfoAsync(doubanId))?.GetLargeImageUrl();
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
         }
 
         public override async Task<bool> UpdateAsync(JryCover obj)

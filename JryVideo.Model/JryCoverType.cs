@@ -4,6 +4,10 @@
     {
         Artist = 0,
 
-        Video = 1
+        Video = 1,
+
+        Background = 2,
+
+        Role = 3
     }
 }

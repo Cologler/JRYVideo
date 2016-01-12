@@ -42,6 +42,8 @@ namespace JryVideo.Model
 
         public string CoverId { get; set; }
 
+        public string BackgroundImageId { get; set; }
+
         public DayOfWeek? DayOfWeek { get; set; }
 
         /// <summary>

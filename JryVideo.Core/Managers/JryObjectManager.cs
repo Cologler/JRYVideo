@@ -16,7 +16,7 @@ namespace JryVideo.Core.Managers
             this.Source = source;
         }
 
-        protected TProvider Source { get; private set; }
+        public TProvider Source { get; }
 
         public async Task<IEnumerable<T>> LoadAsync()
         {

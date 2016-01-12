@@ -11,7 +11,7 @@ namespace JryVideo.Core.TheTVDB
         public string Id { get; set; }
 
         [XmlElement("seriesid")]
-        public int SeriesId { get; set; }
+        public string SeriesId { get; set; }
 
         [XmlElement("language")]
         public string Language { get; set; }
@@ -26,7 +26,7 @@ namespace JryVideo.Core.TheTVDB
         public string Overview { get; set; }
 
         [XmlIgnore]
-        public System.DateTime FirstAired => DateTime.Parse(this.FirstAiredString);
+        public DateTime FirstAired => DateTime.Parse(this.FirstAiredString);
 
         [XmlElement("FirstAired")]
         public string FirstAiredString { get; set; }

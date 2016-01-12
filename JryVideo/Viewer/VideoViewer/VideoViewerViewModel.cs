@@ -2,6 +2,9 @@
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
+using JryVideo.Core.TheTVDB;
+using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -13,6 +16,7 @@ namespace JryVideo.Viewer.VideoViewer
     public sealed class VideoViewerViewModel : JasilyViewModel
     {
         private VideoViewModel video;
+        private BackgroundViewModel background;
 
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
@@ -28,8 +32,16 @@ namespace JryVideo.Viewer.VideoViewer
             private set { this.SetPropertyRef(ref this.video, value); }
         }
 
+        public BackgroundViewModel Background
+        {
+            get { return this.background; }
+            set { this.SetPropertyRef(ref this.background, value); }
+        }
+
         public async Task LoadAsync()
         {
+            this.Background = new BackgroundViewModel(new BackgroundCover(this));
+
             await this.ReloadVideoAsync();
         }
 
@@ -154,6 +166,90 @@ namespace JryVideo.Viewer.VideoViewer
                 if (this.IsWatched == value) return;
                 this.IsWatched = value;
                 this.NotifyPropertyChanged(nameof(this.IsWatched));
+            }
+        }
+
+        public sealed class BackgroundViewModel : HasCoverViewModel<BackgroundCover>
+        {
+            public BackgroundViewModel(BackgroundCover source)
+                : base(source)
+            {
+            }
+
+            protected override async Task<bool> TryAutoAddCoverAsync()
+            {
+                var imdbId = this.Source.ImdbId;
+                if (imdbId.IsNullOrWhiteSpace()) return false;
+
+                var client = JryVideoCore.Current.TheTVDBClient;
+                if (client == null) return false;
+
+                var guid = await this.AutoGenerateCoverAsync(client, imdbId);
+                if (guid != null)
+                {
+                    return await this.Source.UpdateImageIfEmptyAsync(guid);
+                }
+                return false;
+            }
+
+            private async Task<string> AutoGenerateCoverAsync(TheTVDBClient client, string imdbId)
+            {
+                return await Task.Run(async () =>
+                {
+                    var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
+                    foreach (var z in await coverManager.Source.QueryByDoubanIdAsync(JryCoverType.Background, imdbId))
+                    {
+                        return z.Id;
+                    }
+                    foreach (var video in await client.GetSeriesByImdbIdAsync(imdbId))
+                    {
+                        foreach (var banner in await video.GetBannersAsync(client))
+                        {
+                            if (banner.BannerType == BannerType.Fanart)
+                            {
+                                var url = banner.BuildUrl(client);
+                                var cover = new JryCover();
+                                cover.CoverSourceType = JryCoverSourceType.Imdb;
+                                cover.CoverType = JryCoverType.Background;
+                                cover.DoubanId = this.Source.DoubanId;
+                                cover.Uri = url;
+                                cover.ImdbId = this.Source.ImdbId;
+
+                                var guid = await coverManager.DownloadCoverAsync(cover);
+                                if (guid != null) return guid;
+                            }
+                        }
+                    }
+                    return null;
+                });
+            }
+        }
+
+        public sealed class BackgroundCover : IJryCoverParent
+        {
+            private readonly VideoViewerViewModel source;
+
+            public BackgroundCover(VideoViewerViewModel source)
+            {
+                this.source = source;
+            }
+
+            public string CoverId
+            {
+                get { return this.source.InfoView.Source.BackgroundImageId; }
+                set { this.source.InfoView.Source.BackgroundImageId = value; }
+            }
+
+            public string ImdbId => this.source.InfoView.Source.ImdbId;
+
+            public string DoubanId => this.source.InfoView.Source.DoubanId;
+
+            public async Task<bool> UpdateImageIfEmptyAsync(string guid)
+            {
+                this.source.InfoView.Source.BackgroundImageId = guid;
+                var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(
+                    this.source.InfoView.SeriesView.Source);
+                return await manager.UpdateAsync(this.source.InfoView.Source);
             }
         }
     }

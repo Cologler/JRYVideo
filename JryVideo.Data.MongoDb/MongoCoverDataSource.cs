@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using JryVideo.Data.DataSources;
+﻿using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JryVideo.Data.MongoDb
 {
@@ -21,6 +21,18 @@ namespace JryVideo.Data.MongoDb
                 filter.And(
                     filter.Eq(t => t.CoverType, coverType),
                     filter.Eq(t => t.DoubanId, doubanId))
+                ))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<JryCover>> QueryByImdbIdAsync(JryCoverType coverType, string imdbId)
+        {
+            var filter = Builders<JryCover>.Filter;
+
+            return await (await this.Collection.FindAsync(
+                filter.And(
+                    filter.Eq(t => t.CoverType, coverType),
+                    filter.Eq(t => t.ImdbId, imdbId))
                 ))
                 .ToListAsync();
         }

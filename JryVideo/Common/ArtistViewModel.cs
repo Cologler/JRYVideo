@@ -1,8 +1,6 @@
-﻿using System;
+﻿using JryVideo.Model;
+using System;
 using System.Threading.Tasks;
-using System.Windows.Data;
-using JryVideo.Core;
-using JryVideo.Model;
 
 namespace JryVideo.Common
 {
@@ -48,16 +46,16 @@ namespace JryVideo.Common
         {
             if (this.Source.DoubanId == null) return false;
 
-            var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
+            //var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
 
-            var guid = await coverManager.AutoGenerateCoverAsync(JryCoverType.Artist, this.Source.DoubanId);
+            //var guid = await coverManager.AutoGenerateCoverAsync(JryCoverType.Artist, this.Source.DoubanId);
 
-            if (guid == null) return false;
+            //if (guid == null) return false;
 
-            this.Source.CoverId = guid;
+            //this.Source.CoverId = guid;
 
-            var artistManager = JryVideoCore.Current.CurrentDataCenter.ArtistManager;
-            await artistManager.UpdateAsync(this.Source);
+            //var artistManager = JryVideoCore.Current.CurrentDataCenter.ArtistManager;
+            //await artistManager.UpdateAsync(this.Source);
             return true;
         }
     }

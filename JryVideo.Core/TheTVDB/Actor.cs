@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace JryVideo.Core.TheTVDB
@@ -18,5 +20,11 @@ namespace JryVideo.Core.TheTVDB
 
         [XmlElement("SortOrder")]
         public int SortOrder { get; set; }
+
+        public async Task<byte[]> GetBannerAsync(TheTVDBClient client)
+        {
+            if (this.Image.IsNullOrWhiteSpace()) return null;
+            return await client.GetBannerByBannerPathAsync(this.Image);
+        }
     }
 }

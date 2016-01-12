@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideoRole : JryInfo, IJasilyLoggerObject<JryVideoRole>, IEquatable<JryVideoRole>
+    public sealed class JryVideoRole : JryInfo, IJasilyLoggerObject<JryVideoRole>, IEquatable<JryVideoRole>, IJryCoverParent
     {
         [BsonIgnore]
         public string ArtistId => this.Id;
@@ -35,5 +35,7 @@ namespace JryVideo.Model
             if (other == null) return false;
             return this.ArtistId == other.ArtistId;
         }
+
+        public string CoverId { get; set; }
     }
 }

@@ -11,434 +11,448 @@
       Title="VideoViewerPage"
       d:DataContext="{d:DesignInstance local:VideoViewerViewModel}">
 
-    <Grid Margin="8">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+    <Grid>
 
-        <Grid MaxWidth="280">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            
-            <Grid>
-                <Button Content="go back"
-                        FontSize="16"
-                        MinHeight="35"
-                        Margin="-8,-8,0,8"
-                        HorizontalAlignment="Left"
-                        x:Name="GoBackButton"
-                        Foreground="White"
-                        Background="{DynamicResource AccentColorBrush}">
-                </Button>
-            </Grid>
-            
-            <Grid Grid.Row="1"
-                  ToolTip="{Binding InfoView.SeriesView.DisplayFullName}"
-                  Background="#00000000">
+        <Image Stretch="UniformToFill" 
+               Opacity="0.2"
+               IsHitTestVisible="False"
+               Margin="0,-56,0,0"
+               x:Name="BackgroundImage"
+               Source="{Binding Background.Cover.BinaryData}"/>
+
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid MaxWidth="280">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ContextMenu>
-                    <ContextMenu x:Name="SeriesContextMenu">
-                        <MenuItem Header="edit"
-                                  x:Name="EditSeriesMenuItem"
-                                  Click="EditSeriesMenuItem_OnClick"/>
-                        <MenuItem Header="copy"
-                                  ItemsSource="{Binding InfoView.SeriesView.Source.Names}"
-                                  Click="CopyStringMenuItem_OnClick" />
-                    </ContextMenu>
-                </Grid.ContextMenu>
-
-                <TextBlock Text="{Binding InfoView.SeriesView.DisplayNameFirstLine}"
-                           Style="{StaticResource LabelTextBlockStyle}" />
-
-                <TextBlock Grid.Row="1"
-                           Visibility="{Binding InfoView.SeriesView.DisplayNameSecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
-                           Text="{Binding InfoView.SeriesView.DisplayNameSecondLine}"
-                           Style="{StaticResource LabelTextBlockStyle}" />
-            </Grid>
-
-            <Grid Grid.Row="2" Height="333"
-                  Width="250"
-                  Background="#00000000">
-                <Grid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem x:Name="EditCover"
-                                  Header="change cover"
-                                  Click="EditCover_OnClick" />
-                    </ContextMenu>
-                </Grid.ContextMenu>
-                
-                <Image Source="{Binding InfoView.Cover.BinaryData}"
-                       RenderOptions.BitmapScalingMode="Fant"
-                       RenderOptions.EdgeMode="Aliased"
-                       MouseLeftButtonDown="Image_MouseLeftButtonDown" />
-            </Grid>
-
-            <Grid Grid.Row="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-                           Text="index"
-                           Style="{StaticResource LabelTextBlockStyle}" />
+                <Grid>
+                    <Button Content="go back"
+                            FontSize="16"
+                            MinHeight="35"
+                            Margin="-8,-8,0,8"
+                            HorizontalAlignment="Left"
+                            x:Name="GoBackButton"
+                            Foreground="White"
+                            Background="{DynamicResource AccentColorBrush}">
+                    </Button>
+                </Grid>
 
-                <TextBlock Text="{Binding InfoView.YearWithIndex}"
-                           Grid.Row="0"
-                           Grid.Column="1"
-                           Style="{StaticResource LabelTextBlockStyle}" />
+                <Grid Grid.Row="1"
+                      ToolTip="{Binding InfoView.SeriesView.DisplayFullName}"
+                      Background="#00000000">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ContextMenu>
+                        <ContextMenu x:Name="SeriesContextMenu">
+                            <MenuItem Header="edit"
+                                      x:Name="EditSeriesMenuItem"
+                                      Click="EditSeriesMenuItem_OnClick" />
+                            <MenuItem Header="copy"
+                                      ItemsSource="{Binding InfoView.SeriesView.Source.Names}"
+                                      Click="CopyStringMenuItem_OnClick" />
+                        </ContextMenu>
+                    </Grid.ContextMenu>
 
-                <TextBlock Grid.Row="1"
-                           Text="episodes"
-                           Style="{StaticResource LabelTextBlockStyle}" />
+                    <TextBlock Text="{Binding InfoView.SeriesView.DisplayNameFirstLine}"
+                               Style="{StaticResource LabelTextBlockStyle}" />
 
-                <TextBlock Grid.Row="1"
-                           Grid.Column="1"
-                           Text="{Binding InfoView.Source.EpisodesCount}"
-                           Style="{StaticResource LabelTextBlockStyle}" />
-
-                <TextBlock Grid.Row="2"
-                           Text="douban id"
-                           Style="{StaticResource LabelTextBlockStyle}"/>
-
-                <TextBlock Grid.Row="2"
-                           Grid.Column="1"
-                           Text="{Binding InfoView.Source.DoubanId}"
-                           Style="{StaticResource LabelTextBlockStyle}" />
-
-                <Button Content="douban"
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Width="80"
-                        HorizontalAlignment="Right"
-                        Click="GotoDoubanButton_OnClick"
-                        Visibility="{Binding InfoView.Source.DoubanId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
-
-                <TextBlock Grid.Row="3"
-                           Text="imdb id"
-                           Style="{StaticResource LabelTextBlockStyle}" />
-
-                <TextBlock Grid.Row="3"
-                           Grid.Column="1"
-                           Text="{Binding InfoView.Source.ImdbId}"
-                           Style="{StaticResource LabelTextBlockStyle}" />
-
-                <Button Content="imdb"
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Width="80"
-                        HorizontalAlignment="Right"
-                        Click="GotoImdbButton_OnClick"
-                        Visibility="{Binding InfoView.Source.ImdbId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
-
-                <TextBlock Grid.Row="4"
-                           Text="video"
-                           Style="{StaticResource LabelTextBlockStyle}" />
-
-                <Grid Grid.Row="4"
-                      Grid.Column="1"
-                      Background="#00000000"
-                      ToolTip="{Binding InfoView.VideoFullNames}">
-                    <TextBlock Text="{Binding InfoView.VideoNames}"
+                    <TextBlock Grid.Row="1"
+                               Visibility="{Binding InfoView.SeriesView.DisplayNameSecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
+                               Text="{Binding InfoView.SeriesView.DisplayNameSecondLine}"
                                Style="{StaticResource LabelTextBlockStyle}" />
                 </Grid>
 
+                <Grid Grid.Row="2"
+                      Height="333"
+                      Width="250"
+                      Background="#00000000">
+                    <Grid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem x:Name="EditCover"
+                                      Header="change cover"
+                                      Click="EditCover_OnClick" />
+                        </ContextMenu>
+                    </Grid.ContextMenu>
+
+                    <Image Source="{Binding InfoView.Cover.BinaryData}"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           RenderOptions.EdgeMode="Aliased"
+                           MouseLeftButtonDown="Image_MouseLeftButtonDown" />
+                </Grid>
+
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="index"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <TextBlock Text="{Binding InfoView.YearWithIndex}"
+                               Grid.Row="0"
+                               Grid.Column="1"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Text="episodes"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding InfoView.Source.EpisodesCount}"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <TextBlock Grid.Row="2"
+                               Text="douban id"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding InfoView.Source.DoubanId}"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <Button Content="douban"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Width="80"
+                            HorizontalAlignment="Right"
+                            Click="GotoDoubanButton_OnClick"
+                            Visibility="{Binding InfoView.Source.DoubanId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
+
+                    <TextBlock Grid.Row="3"
+                               Text="imdb id"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Text="{Binding InfoView.Source.ImdbId}"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <Button Content="imdb"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Width="80"
+                            HorizontalAlignment="Right"
+                            Click="GotoImdbButton_OnClick"
+                            Visibility="{Binding InfoView.Source.ImdbId, Converter={StaticResource EmptyCollapsedValueConverter}}" />
+
+                    <TextBlock Grid.Row="4"
+                               Text="video"
+                               Style="{StaticResource LabelTextBlockStyle}" />
+
+                    <Grid Grid.Row="4"
+                          Grid.Column="1"
+                          Background="#00000000"
+                          ToolTip="{Binding InfoView.VideoFullNames}">
+                        <TextBlock Text="{Binding InfoView.VideoNames}"
+                                   Style="{StaticResource LabelTextBlockStyle}" />
+                    </Grid>
+
+                </Grid>
+
+                <Grid Grid.Row="4"
+                      Margin="0,4,0,0">
+                    <Button Content="edit"
+                            HorizontalAlignment="Right"
+                            Width="60"
+                            x:Name="EditVideoButton"
+                            Click="EditVideoButton_OnClick"></Button>
+                </Grid>
+
             </Grid>
-            
-            <Grid Grid.Row="4"
-                  Margin="0,4,0,0">
-                <Button Content="edit"
-                        HorizontalAlignment="Right"
-                        Width="60"
-                        x:Name="EditVideoButton"
-                        Click="EditVideoButton_OnClick"></Button>
-            </Grid>
 
-        </Grid>
-        
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            
-            <Grid>
-                <Menu>
-                    <MenuItem Header="add"
-                              x:Name="AddEntityMenuItem"
-                              Click="AddEntityMenuItem_OnClick"/>
-                </Menu>
-            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <Grid Grid.Row="1">
-                <Grid.Resources>
-                    <Style TargetType="TextBlock"
-                           x:Key="FieldLabelTextBlockStyle">
-                        <Setter Property="Foreground"
-                                Value="#A91BB6"/>
-                    </Style>
-                </Grid.Resources>
-                
-                <TabControl ItemsSource="{Binding EntitesView.View}">
-                    <TabControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding Key}"></TextBlock>
-                            </Grid>
-                        </DataTemplate>
-                    </TabControl.ItemTemplate>
-                    <TabControl.ContentTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <ListView ItemsSource="{Binding}">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid d:DataContext="{d:DesignInstance common:EntityViewModel}"
-                                                  Margin="4">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
+                <Grid>
+                    <Menu Background="Transparent">
+                        <MenuItem Header="add"
+                                  x:Name="AddEntityMenuItem"
+                                  Click="AddEntityMenuItem_OnClick" />
+                    </Menu>
+                </Grid>
 
-                                                <Grid VerticalAlignment="Center"
-                                                      HorizontalAlignment="Left">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.Resources>
-                                                        <Style TargetType="TextBlock"
-                                                               BasedOn="{StaticResource {x:Type TextBlock}}">
-                                                            <Setter Property="Foreground"
-                                                                    Value="White" />
-                                                            <Setter Property="Margin"
-                                                                    Value="4,3" />
-                                                        </Style>
-                                                    </Grid.Resources>
+                <Grid Grid.Row="1">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock"
+                               x:Key="FieldLabelTextBlockStyle">
+                            <Setter Property="Foreground"
+                                    Value="#A91BB6" />
+                        </Style>
+                    </Grid.Resources>
 
-                                                    <Border Background="#FF5F5F"
-                                                            BorderBrush="#FF5F5F"
-                                                            BorderThickness="1"
-                                                            Margin="0,0,4,0">
-                                                        <Border.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Header="copy"
-                                                                          DataContext="{Binding Source.Extension}"
-                                                                          Click="CopyStringMenuItem_OnClick" />
-                                                            </ContextMenu>
-                                                        </Border.ContextMenu>
-                                                        <TextBlock Text="{Binding DisplayProperties}"/>
-                                                    </Border>
-
-                                                    <Border Background="#4E4EFB"
-                                                            BorderBrush="#4E4EFB"
-                                                            BorderThickness="1"
-                                                            Margin="0,0,4,0"
-                                                            Grid.Column="1">
-                                                        <Border.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Header="copy"
-                                                                          ItemsSource="{Binding Source.Fansubs}"
-                                                                          Click="CopyStringMenuItem_OnClick" />
-                                                            </ContextMenu>
-                                                        </Border.ContextMenu>
-                                                        <TextBlock Text="{Binding DisplayFansubs}" />
-                                                    </Border>
-
-                                                    <Grid Margin="0,0,4,0"
-                                                          Grid.Column="2">
-                                                        <Border Background="#FF8F42"
-                                                                BorderThickness="1"
-                                                                BorderBrush="#FF8F42"
-                                                                Visibility="{Binding HasSubTitleLanguages, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                            <Border.ContextMenu>
-                                                                <ContextMenu>
-                                                                    <MenuItem Header="copy"
-                                                                              ItemsSource="{Binding Source.SubTitleLanguages}"
-                                                                              Click="CopyStringMenuItem_OnClick" />
-                                                                </ContextMenu>
-                                                            </Border.ContextMenu>
-                                                            <TextBlock Text="{Binding DisplaySubTitleLanguages}" />
-                                                        </Border>
-                                                        <Border Background="#F0FFFFFF"
-                                                                BorderThickness="1"
-                                                                BorderBrush="#FF8F42"
-                                                                Visibility="{Binding DontHasSubTitleLanguages, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                            <TextBlock Text="无字幕"
-                                                                       Foreground="#FF8F42" />
-                                                        </Border>
-                                                    </Grid>
-
-                                                    <Border Background="#08AE66"
-                                                            BorderBrush="#08AE66"
-                                                            BorderThickness="1"
-                                                            Margin="0,0,4,0"
-                                                            Grid.Column="3">
-                                                        <Border.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Header="copy"
-                                                                          ItemsSource="{Binding Source.TrackLanguages}"
-                                                                          Click="CopyStringMenuItem_OnClick" />
-                                                            </ContextMenu>
-                                                        </Border.ContextMenu>
-                                                        <TextBlock Text="{Binding DisplayTrackLanguages}" />
-                                                    </Border>
-
-                                                    <Border Background="#C90000"
-                                                            BorderBrush="#C90000"
-                                                            BorderThickness="1"
-                                                            Margin="0,0,4,0"
-                                                            Grid.Column="4">
-                                                        <Border.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Header="copy"
-                                                                          ItemsSource="{Binding Source.Tags}"
-                                                                          Click="CopyStringMenuItem_OnClick" />
-                                                            </ContextMenu>
-                                                        </Border.ContextMenu>
-                                                        <TextBlock Text="{Binding DisplayTags}" />
-                                                    </Border>
-
-                                                </Grid>
-
-                                                <Grid Margin="0,4,0,0"
-                                                      Grid.Row="1"
-                                                      HorizontalAlignment="Left"
-                                                      Visibility="{Binding DisplayFormat, Converter={StaticResource NullCollapsedValueConverter}}">
-                                                    <TextBlock Text="{Binding DisplayFormat}" />
-                                                </Grid>
-
-                                                <Grid Grid.Row="2"
-                                                      Margin="0,4,0,0"
-                                                      Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}">
+                    <TabControl ItemsSource="{Binding EntitesView.View}">
+                        <TabControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding Key}"></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </TabControl.ItemTemplate>
+                        <TabControl.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <ListView ItemsSource="{Binding}"
+                                              Background="Transparent">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid d:DataContext="{d:DesignInstance common:EntityViewModel}"
+                                                      Margin="4">
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
                                                     </Grid.RowDefinitions>
 
-                                                    <StackPanel Grid.ColumnSpan="3"
-                                                                Orientation="Horizontal"
-                                                                Margin="0,0,0,4">
-                                                        
-                                                        <TextBlock Text="ID"
-                                                                   Style="{StaticResource FieldLabelTextBlockStyle}"
-                                                                   Margin="0,0,8,0"/>
-                                                        
-                                                        <TextBlock Text="{Binding Source.Id}" />
-                                                        
-                                                    </StackPanel>
-
-                                                    <Grid Grid.Row="1">
+                                                    <Grid VerticalAlignment="Center"
+                                                          HorizontalAlignment="Left">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition />
                                                         </Grid.ColumnDefinitions>
+                                                        <Grid.Resources>
+                                                            <Style TargetType="TextBlock"
+                                                                   BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                                <Setter Property="Foreground"
+                                                                        Value="White" />
+                                                                <Setter Property="Margin"
+                                                                        Value="4,3" />
+                                                            </Style>
+                                                        </Grid.Resources>
 
-                                                        <Button Content="edit"
-                                                                Click="EditEntityButton_OnClick" />
+                                                        <Border Background="#FF5F5F"
+                                                                BorderBrush="#FF5F5F"
+                                                                BorderThickness="1"
+                                                                Margin="0,0,4,0">
+                                                            <Border.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Header="copy"
+                                                                              DataContext="{Binding Source.Extension}"
+                                                                              Click="CopyStringMenuItem_OnClick" />
+                                                                </ContextMenu>
+                                                            </Border.ContextMenu>
+                                                            <TextBlock Text="{Binding DisplayProperties}" />
+                                                        </Border>
 
-                                                        <Button Content="clone"
-                                                                Grid.Column="1"
-                                                                Margin="4,0,0,0"
-                                                                Click="CloneEntityButton_OnClick" />
+                                                        <Border Background="#4E4EFB"
+                                                                BorderBrush="#4E4EFB"
+                                                                BorderThickness="1"
+                                                                Margin="0,0,4,0"
+                                                                Grid.Column="1">
+                                                            <Border.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Header="copy"
+                                                                              ItemsSource="{Binding Source.Fansubs}"
+                                                                              Click="CopyStringMenuItem_OnClick" />
+                                                                </ContextMenu>
+                                                            </Border.ContextMenu>
+                                                            <TextBlock Text="{Binding DisplayFansubs}" />
+                                                        </Border>
 
-                                                        <Button Grid.Column="2"
-                                                                Content="delete"
-                                                                Margin="4,0,0,0"
-                                                                Click="DeleteEntityButton_OnClick" />
+                                                        <Grid Margin="0,0,4,0"
+                                                              Grid.Column="2">
+                                                            <Border Background="#FF8F42"
+                                                                    BorderThickness="1"
+                                                                    BorderBrush="#FF8F42"
+                                                                    Visibility="{Binding HasSubTitleLanguages, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                                <Border.ContextMenu>
+                                                                    <ContextMenu>
+                                                                        <MenuItem Header="copy"
+                                                                                  ItemsSource="{Binding Source.SubTitleLanguages}"
+                                                                                  Click="CopyStringMenuItem_OnClick" />
+                                                                    </ContextMenu>
+                                                                </Border.ContextMenu>
+                                                                <TextBlock Text="{Binding DisplaySubTitleLanguages}" />
+                                                            </Border>
+                                                            <Border Background="#F0FFFFFF"
+                                                                    BorderThickness="1"
+                                                                    BorderBrush="#FF8F42"
+                                                                    Visibility="{Binding DontHasSubTitleLanguages, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                                <TextBlock Text="无字幕"
+                                                                           Foreground="#FF8F42" />
+                                                            </Border>
+                                                        </Grid>
 
-                                                        <Button Grid.Column="3"
-                                                                Content="copy guid"
-                                                                Click="CopyGuidButton_OnClick"
-                                                                Margin="4,0,0,0" />
+                                                        <Border Background="#08AE66"
+                                                                BorderBrush="#08AE66"
+                                                                BorderThickness="1"
+                                                                Margin="0,0,4,0"
+                                                                Grid.Column="3">
+                                                            <Border.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Header="copy"
+                                                                              ItemsSource="{Binding Source.TrackLanguages}"
+                                                                              Click="CopyStringMenuItem_OnClick" />
+                                                                </ContextMenu>
+                                                            </Border.ContextMenu>
+                                                            <TextBlock Text="{Binding DisplayTrackLanguages}" />
+                                                        </Border>
 
-                                                        <Button Grid.Column="4"
-                                                                Content="search on Everything"
-                                                                Click="SearchOnEverything_OnClick"
-                                                                Margin="4,0,0,0" />
+                                                        <Border Background="#C90000"
+                                                                BorderBrush="#C90000"
+                                                                BorderThickness="1"
+                                                                Margin="0,0,4,0"
+                                                                Grid.Column="4">
+                                                            <Border.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Header="copy"
+                                                                              ItemsSource="{Binding Source.Tags}"
+                                                                              Click="CopyStringMenuItem_OnClick" />
+                                                                </ContextMenu>
+                                                            </Border.ContextMenu>
+                                                            <TextBlock Text="{Binding DisplayTags}" />
+                                                        </Border>
 
                                                     </Grid>
 
+                                                    <Grid Margin="0,4,0,0"
+                                                          Grid.Row="1"
+                                                          HorizontalAlignment="Left"
+                                                          Visibility="{Binding DisplayFormat, Converter={StaticResource NullCollapsedValueConverter}}">
+                                                        <TextBlock Text="{Binding DisplayFormat}" />
+                                                    </Grid>
+
+                                                    <Grid Grid.Row="2"
+                                                          Margin="0,4,0,0"
+                                                          Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <StackPanel Grid.ColumnSpan="3"
+                                                                    Orientation="Horizontal"
+                                                                    Margin="0,0,0,4">
+
+                                                            <TextBlock Text="ID"
+                                                                       Style="{StaticResource FieldLabelTextBlockStyle}"
+                                                                       Margin="0,0,8,0" />
+
+                                                            <TextBlock Text="{Binding Source.Id}" />
+
+                                                        </StackPanel>
+
+                                                        <Grid Grid.Row="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Button Content="edit"
+                                                                    Click="EditEntityButton_OnClick" />
+
+                                                            <Button Content="clone"
+                                                                    Grid.Column="1"
+                                                                    Margin="4,0,0,0"
+                                                                    Click="CloneEntityButton_OnClick" />
+
+                                                            <Button Grid.Column="2"
+                                                                    Content="delete"
+                                                                    Margin="4,0,0,0"
+                                                                    Click="DeleteEntityButton_OnClick" />
+
+                                                            <Button Grid.Column="3"
+                                                                    Content="copy guid"
+                                                                    Click="CopyGuidButton_OnClick"
+                                                                    Margin="4,0,0,0" />
+
+                                                            <Button Grid.Column="4"
+                                                                    Content="search on Everything"
+                                                                    Click="SearchOnEverything_OnClick"
+                                                                    Margin="4,0,0,0" />
+
+                                                        </Grid>
+
+                                                    </Grid>
                                                 </Grid>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </Grid>
-                        </DataTemplate>
-                    </TabControl.ContentTemplate>
-                </TabControl>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </TabControl.ContentTemplate>
+                    </TabControl>
+                </Grid>
+
+                <Grid Name="WatchedEpisodes"
+                      Grid.Row="2"
+                      Height="140"
+                      Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="watched episodes"
+                               Margin="0,0,0,4" />
+
+                    <ListView x:Name="WatchedsListView"
+                              Grid.Row="1"
+                              Background="Transparent"
+                              ItemsSource="{Binding Watcheds}"
+                              BorderThickness="0"
+                              SelectionChanged="WatchedsListView_SelectionChanged"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="72">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <CheckBox IsChecked="{Binding IsWatched, Mode=TwoWay}" />
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding EpisodeName}"
+                                               VerticalAlignment="Center"
+                                               Margin="2" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+
             </Grid>
 
-            <Grid Name="WatchedEpisodes"
-                  Grid.Row="2"
-                  Height="140"
-                  Margin="4">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <TextBlock Text="watched episodes"
-                           Margin="0,0,0,4"/>
-
-                <ListView x:Name="WatchedsListView"
-                          Grid.Row="1"
-                          ItemsSource="{Binding Watcheds}"
-                          BorderThickness="0"
-                          SelectionChanged="WatchedsListView_SelectionChanged"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Width="72">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                
-                                <CheckBox IsChecked="{Binding IsWatched, Mode=TwoWay}" />
-                                
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding EpisodeName}"
-                                           VerticalAlignment="Center"
-                                           Margin="2" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-            
         </Grid>
-        
+
     </Grid>
 </Page>

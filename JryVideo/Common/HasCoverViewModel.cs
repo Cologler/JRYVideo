@@ -1,15 +1,14 @@
-using System.ComponentModel;
-using System.Threading.Tasks;
 using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Model;
+using System.Threading.Tasks;
 
 namespace JryVideo.Common
 {
     public abstract class HasCoverViewModel<T> : JasilyViewModel<T>
         where T : IJryCoverParent
     {
-        private JryCover _cover;
+        private JryCover cover;
 
         protected HasCoverViewModel(T source)
             : base(source)
@@ -21,7 +20,7 @@ namespace JryVideo.Common
         {
             get
             {
-                var cover = this._cover;
+                var cover = this.cover;
 
                 if (cover == null)
                 {
@@ -35,7 +34,7 @@ namespace JryVideo.Common
             }
             set
             {
-                this.SetPropertyRef(ref this._cover, value);
+                this.SetPropertyRef(ref this.cover, value);
             }
         }
 
