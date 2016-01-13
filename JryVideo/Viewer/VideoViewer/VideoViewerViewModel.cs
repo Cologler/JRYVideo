@@ -178,14 +178,19 @@ namespace JryVideo.Viewer.VideoViewer
 
             protected override async Task<bool> TryAutoAddCoverAsync()
             {
-                var imdbId = this.Source.ImdbId;
+                return await this.InternalTryAutoAddCoverAsync(this.Source.ImdbId) ||
+                       await this.InternalTryAutoAddCoverAsync(this.Source.SeriesImdbId);
+            }
+
+            private async Task<bool> InternalTryAutoAddCoverAsync(string imdbId)
+            {
                 if (imdbId.IsNullOrWhiteSpace()) return false;
                 if (!imdbId.StartsWith("tt")) return false;
 
                 var client = JryVideoCore.Current.TheTVDBClient;
                 if (client == null) return false;
 
-                var guid = await this.AutoGenerateCoverAsync(client, imdbId);
+                var guid = await this.AutoGenerateCoverAsync(client, imdbId, this.Source.Index.ToString());
                 if (guid != null)
                 {
                     return await this.Source.UpdateImageIfEmptyAsync(guid);
@@ -193,7 +198,7 @@ namespace JryVideo.Viewer.VideoViewer
                 return false;
             }
 
-            private async Task<string> AutoGenerateCoverAsync(TheTVDBClient client, string imdbId)
+            private async Task<string> AutoGenerateCoverAsync(TheTVDBClient client, string imdbId, string index)
             {
                 return await Task.Run(async () =>
                 {
@@ -204,7 +209,10 @@ namespace JryVideo.Viewer.VideoViewer
                     }
                     foreach (var video in await client.GetSeriesByImdbIdAsync(imdbId))
                     {
-                        foreach (var banner in await video.GetBannersAsync(client))
+                        var array = (await video.GetBannersAsync(client)).ToArray();
+                        foreach (var banner in array.Where(z => z.Season == index)
+                            .RandomSort()
+                            .Concat(array.Where(z => z.Season != index).RandomSort()))
                         {
                             if (banner.BannerType == BannerType.Fanart)
                             {
@@ -243,7 +251,11 @@ namespace JryVideo.Viewer.VideoViewer
 
             public string ImdbId => this.source.InfoView.Source.ImdbId;
 
+            public string SeriesImdbId => this.source.InfoView.SeriesView.Source.ImdbId;
+
             public string DoubanId => this.source.InfoView.Source.DoubanId;
+
+            public int Index => this.source.InfoView.Source.Index;
 
             public async Task<bool> UpdateImageIfEmptyAsync(string guid)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -16,6 +17,12 @@ namespace JryVideo.Model
 
         public List<JryVideoInfo> Videos { get; set; }
 
+        [BsonIgnoreIfDefault]
+        public string ImdbId { get; set; }
+
+        [BsonIgnoreIfDefault]
+        public string TheTVDBId { get; set; }
+
         protected override bool InnerTestHasError()
         {
             if (base.InnerTestHasError()) return true;
@@ -24,7 +31,7 @@ namespace JryVideo.Model
             {
                 throw new ArgumentException();
             }
-            
+
             if (this.Names.Count == 0)
             {
                 JasilyLogger.Current.WriteLine<JrySeries>(JasilyLogger.LoggerMode.Debug, "series name can not be empty.");

@@ -7,7 +7,7 @@
                       xmlns:editSeries="clr-namespace:JryVideo.Controls.EditSeries"
                       xmlns:seriesSelector="clr-namespace:JryVideo.Selectors.SeriesSelector"
                       mc:Ignorable="d"
-                      Height="510"
+                      Height="540"
                       Width="700"
                       ResizeMode="NoResize"
                       WindowStartupLocation="CenterOwner"

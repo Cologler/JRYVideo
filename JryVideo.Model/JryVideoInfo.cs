@@ -25,30 +25,39 @@ namespace JryVideo.Model
 
         public List<string> Names { get; set; }
 
+        [BsonIgnoreIfDefault]
         public string DoubanId { get; set; }
 
         /// <summary>
         /// 是否正在追剧
         /// </summary>
+        [BsonIgnoreIfDefault]
         public bool IsTracking { get; set; }
 
+        [BsonIgnoreIfDefault]
         public string ImdbId { get; set; }
 
+        [BsonIgnoreIfDefault]
         public int EpisodesCount { get; set; }
 
         public List<string> Tags { get; set; }
 
+        [BsonIgnoreIfDefault]
         public int? EpisodeOffset { get; set; }
 
+        [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 
+        [BsonIgnoreIfDefault]
         public string BackgroundImageId { get; set; }
 
+        [BsonIgnoreIfDefault]
         public DayOfWeek? DayOfWeek { get; set; }
 
         /// <summary>
         /// may not DayOfWeek (utc)
         /// </summary>
+        [BsonIgnoreIfDefault]
         public DateTime? StartDate { get; set; }
 
         [BsonIgnore]

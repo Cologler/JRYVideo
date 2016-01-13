@@ -1,4 +1,5 @@
-﻿using JryVideo.Common;
+﻿using Jasily.ComponentModel;
+using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
@@ -13,11 +14,8 @@ namespace JryVideo.Controls.EditSeries
     {
         private string names;
         private string doubanId;
-
-        public EditSeriesViewModel()
-        {
-            this.UpdateNames();
-        }
+        private string imdbId;
+        private string theTVDBId;
 
         public string Names
         {
@@ -25,27 +23,58 @@ namespace JryVideo.Controls.EditSeries
             set { this.SetPropertyRef(ref this.names, value); }
         }
 
-        public override void CreateMode()
+        public override void ReadFromObject(JrySeries obj)
         {
-            base.CreateMode();
-            this.UpdateNames();
-        }
+            base.ReadFromObject(obj);
 
-        public override void ModifyMode(JrySeries source)
-        {
-            base.ModifyMode(source);
-            this.UpdateNames();
-        }
-
-        public void UpdateNames()
-        {
             this.Names = this.Source == null ? "" : this.Source.Names.AsLines();
+        }
+
+        public override void WriteToObject(JrySeries obj)
+        {
+            base.WriteToObject(obj);
+
+            obj.Names.Clear();
+
+            if (!String.IsNullOrWhiteSpace(this.Names))
+            {
+                obj.Names.AddRange(
+                    this.Names.AsLines()
+                        .Select(z => z.Trim())
+                        .Where(z => !String.IsNullOrWhiteSpace(z)));
+                obj.Names = obj.Names.Distinct().ToList();
+            }
+
+            obj.ImdbId = obj.ImdbId.IsNullOrWhiteSpace() ? null : obj.ImdbId.Trim();
+            obj.TheTVDBId = obj.TheTVDBId.IsNullOrWhiteSpace() ? null : obj.TheTVDBId.Trim();
         }
 
         public string DoubanId
         {
             get { return this.doubanId; }
             set { this.SetPropertyRef(ref this.doubanId, value); }
+        }
+
+        [EditableField]
+        public string ImdbId
+        {
+            get { return this.imdbId; }
+            set
+            {
+                if (value != null && !value.StartsWith("tt"))
+                {
+                    var index = value.IndexOf("tt", StringComparison.Ordinal);
+                    if (index > -1) value = value.Substring(index);
+                }
+                this.SetPropertyRef(ref this.imdbId, value);
+            }
+        }
+
+        [EditableField]
+        public string TheTVDBId
+        {
+            get { return this.theTVDBId; }
+            set { this.SetPropertyRef(ref this.theTVDBId, value); }
         }
 
         public async Task LoadDoubanAsync()
@@ -68,16 +97,7 @@ namespace JryVideo.Controls.EditSeries
         {
             var series = this.GetCommitObject().ThrowIfNull("series");
 
-            series.Names.Clear();
-
-            if (!String.IsNullOrWhiteSpace(this.Names))
-            {
-                series.Names.AddRange(
-                    this.Names.AsLines()
-                        .Select(z => z.Trim())
-                        .Where(z => !String.IsNullOrWhiteSpace(z)));
-                series.Names = series.Names.Distinct().ToList();
-            }
+            this.WriteToObject(series);
 
             SeriesManager.BuildSeriesMetaData(series);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Attributes;
 using System.Diagnostics;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -13,9 +14,11 @@ namespace JryVideo.Model
         public JryCoverSourceType CoverSourceType { get; set; }
 
         [Cloneable]
+        [BsonIgnoreIfDefault]
         public string DoubanId { get; set; }
 
         [Cloneable]
+        [BsonIgnoreIfDefault]
         public string ImdbId { get; set; }
 
         [Cloneable]

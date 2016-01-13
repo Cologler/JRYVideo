@@ -6,7 +6,7 @@ namespace JryVideo.Core.TheTVDB
     public class Banner
     {
         [XmlElement("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [XmlElement("BannerPath")]
         public string BannerPath { get; set; }
@@ -32,13 +32,13 @@ namespace JryVideo.Core.TheTVDB
         public string Rating { get; set; }
 
         [XmlElement("RatingCount")]
-        public byte RatingCount { get; set; }
+        public string RatingCount { get; set; }
 
         [XmlElement("Season")]
-        public byte Season { get; set; }
+        public string Season { get; set; }
 
         [XmlElement("SeriesName")]
-        public bool SeriesName { get; set; }
+        public string SeriesName { get; set; }
 
         [XmlElement("ThumbnailPath")]
         public string ThumbnailPath { get; set; }
