@@ -76,7 +76,7 @@ namespace JryVideo.Common
             var sunday = today.AddDays(-(int)today.DayOfWeek); // sunday
             var startDate = this.Source.StartDate.Value.ToLocalTime();
 
-            if (startDate < today)
+            if (startDate < sunday.AddDays(8)) // release before next week monday
             {
                 if (this.Source.DayOfWeek == today.DayOfWeek)
                 {

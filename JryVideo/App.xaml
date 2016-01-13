@@ -16,13 +16,15 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.ListView.xaml" />
                 
                 <ResourceDictionary>
+                    <Color x:Key="AccentColorColor">BlueViolet</Color>
+                    
                     <SolidColorBrush x:Key="AccentColorBrush"
                                      Color="BlueViolet" />
                     <SolidColorBrush x:Key="AccentColorBrush2"
                                      Color="#B681E8" />
                     <SolidColorBrush x:Key="AccentColorBrush3"
                                      Color="#D1C1E1" />
-                    
+
                     <Style TargetType="TextBlock">
                         <Setter Property="FontFamily"
                                 Value="Microsoft YaHei UI Light" />
