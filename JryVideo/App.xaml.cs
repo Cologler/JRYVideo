@@ -1,4 +1,5 @@
 ﻿using JryVideo.Configs;
+using JryVideo.Core;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -19,9 +20,7 @@ namespace JryVideo
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            JryVideo.Core.Log.Write(e.ToString());
-        }
+            => Log.Write(e.Exception.ToString());
 
         private const string UserConfigPath = @"UserConfig.json";
 
