@@ -109,6 +109,7 @@
     <Compile Include="SearchEngine\EverythingSearch.cs" />
     <Compile Include="SearchEngine\ImdbSearch.cs" />
     <Compile Include="SearchEngine\ISearchEngine.cs" />
+    <Compile Include="SearchEngine\TheTVDBSearch.cs" />
     <Compile Include="SearchEngine\WebsiteSearch.cs" />
     <Compile Include="SearchEngine\WikiSearch.cs" />
     <Compile Include="Selectors\ArtistSelector\ArtistSelectorPage.xaml.cs">
