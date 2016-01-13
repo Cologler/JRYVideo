@@ -232,6 +232,13 @@ namespace JryVideo.Viewer.VideoViewer
                     return null;
                 });
             }
+
+            public override void BeginUpdateCover()
+            {
+                if (this.Cover != null) return;
+
+                base.BeginUpdateCover();
+            }
         }
 
         public sealed class BackgroundCover : IJryCoverParent

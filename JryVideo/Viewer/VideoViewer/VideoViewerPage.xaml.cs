@@ -134,6 +134,7 @@ namespace JryVideo.Viewer.VideoViewer
             if (this.ViewModel.InfoView.OpenEditorWindows(this.TryFindParent<Window>()))
             {
                 this.ViewModel.ReloadEpisodes();
+                this.ViewModel.Background?.BeginUpdateCover();
             }
         }
 
@@ -218,7 +219,10 @@ namespace JryVideo.Viewer.VideoViewer
         private void EditSeriesMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var seriesViewModel = this.ViewModel.InfoView.SeriesView;
-            seriesViewModel?.OpenEditorWindows(this.TryFindParent<Window>());
+            if (seriesViewModel.OpenEditorWindows(this.TryFindParent<Window>()))
+            {
+                this.ViewModel.Background?.BeginUpdateCover();
+            }
         }
 
         private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -45,12 +45,9 @@ namespace JryVideo.Common
             return await JryVideoCore.Current.CurrentDataCenter.CoverManager.LoadCoverAsync(this.Source.CoverId);
         }
 
-        protected virtual async Task<bool> TryAutoAddCoverAsync()
-        {
-            return false;
-        }
+        protected abstract Task<bool> TryAutoAddCoverAsync();
 
-        public async void BeginUpdateCover()
+        public virtual async void BeginUpdateCover()
         {
             if (this.Source.CoverId != null || await this.TryAutoAddCoverAsync())
             {
