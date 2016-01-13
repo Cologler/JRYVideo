@@ -52,15 +52,12 @@ namespace JryVideo.Main
                         GC.Collect();
                         bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
                     }
-                    await this.Dispatcher.BeginInvoke(() =>
-                    {
-                        this.MemoryTextBlock.Text = bs.ToString();
-                    });
+                    await this.Dispatcher.BeginInvoke(() => this.MemoryTextBlock.Text = bs.ToString());
                     var now = DateTime.Now;
                     if (now.Day != lastDay.Day)
                     {
                         lastDay = now;
-                        this.MainPage?.Refresh();
+                        await this.Dispatcher.BeginInvoke(() => this.MainPage?.Refresh());
                     }
                     await Task.Delay(1000);
                 }

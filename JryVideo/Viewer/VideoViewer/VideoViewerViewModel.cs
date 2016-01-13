@@ -184,8 +184,7 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<bool> InternalTryAutoAddCoverAsync(string imdbId)
             {
-                if (imdbId.IsNullOrWhiteSpace()) return false;
-                if (!imdbId.StartsWith("tt")) return false;
+                if (imdbId.IsNullOrWhiteSpace() || !imdbId.StartsWith("tt")) return false;
 
                 var client = JryVideoCore.Current.TheTVDBClient;
                 if (client == null) return false;
@@ -203,10 +202,9 @@ namespace JryVideo.Viewer.VideoViewer
                 return await Task.Run(async () =>
                 {
                     var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
-                    foreach (var z in await coverManager.Source.QueryByDoubanIdAsync(JryCoverType.Background, imdbId))
-                    {
-                        return z.Id;
-                    }
+                    var x = (await coverManager.Source.QueryByDoubanIdAsync(JryCoverType.Background, imdbId))
+                            .SingleOrDefault();
+                    if (x != null) return x.Id;
                     foreach (var video in await client.GetSeriesByImdbIdAsync(imdbId))
                     {
                         var array = (await video.GetBannersAsync(client)).ToArray();
