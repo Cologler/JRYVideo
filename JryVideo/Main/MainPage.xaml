@@ -200,7 +200,7 @@
                                 <Grid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="{Binding TodayPlaying.WatchedText}"
-                                                  Visibility="{Binding IsTodayPlayAndNotEnd, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                  Visibility="{Binding IsEnableWatchedButton, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Click="WatchedEpisode_OnClick" />
                                         <MenuItem Header="edit series"
                                                   Click="EditSeries_OnClick" />

@@ -1,13 +1,13 @@
+using Jasily.Net;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Jasily.Net;
 
 namespace JryVideo.Core.TheTVDB
 {
     public class TheTVDBHost
     {
-        public async Task<TheTVDBClient> CreateAsync(string apiKey, string serectKey = null)
+        public async Task<TheTVDBClient> CreateAsync(string apiKey, string secretKey = null)
         {
             if (apiKey.IsNullOrWhiteSpace()) return null;
 

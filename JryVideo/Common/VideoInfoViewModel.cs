@@ -42,7 +42,7 @@ namespace JryVideo.Common
         public Playing TodayPlaying => this.todayPlaying;
 
         [NotifyPropertyChanged]
-        public bool IsTodayPlayAndNotEnd => this.TodayPlaying?.Episode != null && !this.TodayPlaying.IsWatched;
+        public bool IsEnableWatchedButton => this.TodayPlaying?.Episode != null && !this.TodayPlaying.IsWatched;
 
         [NotifyPropertyChanged]
         public Group VideoGroup { get; set; }
@@ -82,7 +82,7 @@ namespace JryVideo.Common
                     {
                         playing.IsWatched = !playing.IsWatched;
                         //this.NotifyPropertyChanged(nameof(this.TodayPlaying));
-                        this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
+                        this.NotifyPropertyChanged(nameof(this.IsEnableWatchedButton));
                     }
                 }
             }
@@ -306,6 +306,7 @@ namespace JryVideo.Common
         {
             var ep = this.TodayPlaying?.Episode;
             if (ep == null) return;
+            this.TodayPlaying.IsWatched = true;
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
             var video = await manager.FindAsync(this.Source.Id);
             if (video == null) return;
@@ -313,8 +314,7 @@ namespace JryVideo.Common
             if (video.Watcheds.Contains(ep.Value)) return;
             video.Watcheds.Add(ep.Value);
             await manager.UpdateAsync(video);
-            this.TodayPlaying.IsWatched = true;
-            this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
+            this.NotifyPropertyChanged(nameof(this.IsEnableWatchedButton));
         }
 
         public bool OpenEditorWindows(Window parent)
