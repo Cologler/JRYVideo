@@ -1,4 +1,5 @@
 ﻿using Jasily.ComponentModel;
+using Jasily.SDK.Douban.Entities;
 using JryVideo.Common;
 using JryVideo.Common.ValidationRules;
 using JryVideo.Core;
@@ -16,7 +17,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Jasily.SDK.Douban.Entities;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -32,6 +32,7 @@ namespace JryVideo.Controls.EditVideo
         private string names;
         private string episodesCount;
         private bool isTracking;
+        private bool isAllAired;
         private int episodeOffset;
         private NameValuePair<string, DayOfWeek?>? dayOfWeek;
         private DateTime? startDate;
@@ -101,6 +102,13 @@ namespace JryVideo.Controls.EditVideo
         {
             get { return this.isTracking; }
             set { this.SetPropertyRef(ref this.isTracking, value); }
+        }
+
+        [EditableField]
+        public bool IsAllAired
+        {
+            get { return this.isAllAired; }
+            set { this.SetPropertyRef(ref this.isAllAired, value); }
         }
 
         [EditableField]

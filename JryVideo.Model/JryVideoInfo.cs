@@ -35,6 +35,9 @@ namespace JryVideo.Model
         public bool IsTracking { get; set; }
 
         [BsonIgnoreIfDefault]
+        public bool IsAllAired { get; set; }
+
+        [BsonIgnoreIfDefault]
         public string ImdbId { get; set; }
 
         [BsonIgnoreIfDefault]

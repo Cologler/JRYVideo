@@ -139,28 +139,30 @@ namespace JryVideo.Main
             this.RefreshGroupStyle();
         }
 
+        private async void AllAiredMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            if (vm != null)
+            {
+                if (await vm.AllAiredAsync())
+                {
+                    this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
+                    vm.RefreshProperties();
+                    this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
+                }
+            }
+        }
+
         private async void TrackMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             if (vm != null)
             {
-                await this.TrackAsync(vm);
+                if (await vm.TrackAsync())
+                {
+                    this.Refresh();
+                }
             }
-        }
-
-        private async Task TrackAsync(VideoInfoViewModel vm)
-        {
-            Debug.Assert(vm != null, "vm != null");
-
-            if (await vm.TrackAsync())
-            {
-                this.Refresh();
-            }
-        }
-
-        public void Refresh()
-        {
-            this.ViewModel?.VideosViewModel.VideosView.View.Refresh();
         }
 
         private async void UntrackMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -168,18 +170,16 @@ namespace JryVideo.Main
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             if (vm != null)
             {
-                await this.UntrackAsync(vm);
+                if (await vm.UntrackAsync())
+                {
+                    this.Refresh();
+                }
             }
         }
 
-        private async Task UntrackAsync(VideoInfoViewModel vm)
+        public void Refresh()
         {
-            Debug.Assert(vm != null, "vm != null");
-
-            if (await vm.UntrackAsync())
-            {
-                this.Refresh();
-            }
+            this.ViewModel?.VideosViewModel.VideosView.View.Refresh();
         }
 
         private void FilterSeries_OnClick(object sender, RoutedEventArgs e)

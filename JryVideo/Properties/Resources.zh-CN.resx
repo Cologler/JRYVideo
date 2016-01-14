@@ -120,6 +120,9 @@
   <data name="Button_Accept_Text" xml:space="preserve">
     <value>接受</value>
   </data>
+  <data name="Button_AllAired_Text" xml:space="preserve">
+    <value>已完结</value>
+  </data>
   <data name="Button_Commit_Text" xml:space="preserve">
     <value>提交</value>
   </data>

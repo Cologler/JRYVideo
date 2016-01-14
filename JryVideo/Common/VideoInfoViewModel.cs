@@ -47,6 +47,9 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public Group VideoGroup { get; set; }
 
+        [NotifyPropertyChanged]
+        public bool IsNotAllAired => !this.Source.IsAllAired;
+
         public override void RefreshProperties()
         {
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
@@ -65,7 +68,6 @@ namespace JryVideo.Common
 
             if (this.VideoGroup.Mode == GroupMode.Today)
             {
-                if (episode == null) Debugger.Break();
                 var playing = this.todayPlaying = new Playing(episode);
                 if (playing.Episode.HasValue)
                 {
@@ -83,6 +85,10 @@ namespace JryVideo.Common
                         this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
                     }
                 }
+            }
+            else
+            {
+                this.todayPlaying = null;
             }
         }
 
@@ -249,6 +255,15 @@ namespace JryVideo.Common
             return false;
         }
 
+        public async Task<bool> AllAiredAsync()
+        {
+            if (this.Source.IsAllAired) return false;
+            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            this.Source.IsAllAired = true;
+            this.NotifyPropertyChanged(nameof(this.IsNotAllAired));
+            return await manager.UpdateAsync(this.Source);
+        }
+
         public bool IsTrackButtonEnable
         {
             get { return this.isTrackButtonEnable; }
@@ -271,7 +286,7 @@ namespace JryVideo.Common
                 this.Episode = episode;
             }
 
-            public string Text => this.Episode.HasValue ? $"today play {this.Episode.Value}" : "done!";
+            public string Text => this.Episode.HasValue ? $"today play {this.Episode.Value}" : "no more new!";
 
             public string WatchedText => $"watched ep {this.Episode}";
 
@@ -368,6 +383,7 @@ namespace JryVideo.Common
             public Group Build(JryVideoInfo video, out int? episode)
             {
                 episode = null;
+                if (video.IsAllAired) return AllAired;
                 if (!video.StartDate.HasValue) return Unknown;
 
                 var startDate = video.StartDate.Value.ToLocalTime().Date; // 第一集播出时间
@@ -381,11 +397,7 @@ namespace JryVideo.Common
                 if (nextAirDate <= this.today) // 已经播出
                 {
                     var ep = video.GetTodayEpisode(this.today) + (video.EpisodeOffset ?? 0);
-                    if (ep > video.EpisodesCount)
-                    {
-                        return AllAired;
-                    }
-                    else
+                    if (ep < video.EpisodesCount)
                     {
                         episode = ep;
                     }

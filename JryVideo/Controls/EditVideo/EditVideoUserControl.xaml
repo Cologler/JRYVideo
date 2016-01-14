@@ -6,6 +6,7 @@
              xmlns:editVideo="clr-namespace:JryVideo.Controls.EditVideo"
              xmlns:numberEditer="clr-namespace:JryVideo.Controls.NumberEditerControl"
              xmlns:validationRules="clr-namespace:JryVideo.Common.ValidationRules"
+             xmlns:properties="clr-namespace:JryVideo.Properties"
              mc:Ignorable="d"
              d:DesignHeight="400"
              d:DesignWidth="700">
@@ -212,6 +213,7 @@
                         <RowDefinition Height="34" />
                         <RowDefinition Height="34" />
                         <RowDefinition Height="34" />
+                        <RowDefinition Height="34"/>
                     </Grid.RowDefinitions>
 
                     <CheckBox IsChecked="{Binding IsTracking, Mode=TwoWay}"
@@ -240,6 +242,13 @@
                                 VerticalAlignment="Center"
                                 FirstDayOfWeek="Sunday"
                                 SelectedDate="{Binding StartLocalDate}"/>
+
+                    <CheckBox IsChecked="{Binding IsAllAired, Mode=TwoWay}"
+                              Grid.Row="3"
+                              Grid.ColumnSpan="2">
+                        <TextBlock Text="is all aired"
+                                   Style="{StaticResource LabelTextBlockStyle}" />
+                    </CheckBox>
 
                 </Grid>
                 

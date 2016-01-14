@@ -70,6 +70,15 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
+        ///   查找类似 all aired 的本地化字符串。
+        /// </summary>
+        public static string Button_AllAired_Text {
+            get {
+                return ResourceManager.GetString("Button_AllAired_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 commit 的本地化字符串。
         /// </summary>
         public static string Button_Commit_Text {

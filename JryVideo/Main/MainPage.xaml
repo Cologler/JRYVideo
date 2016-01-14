@@ -8,6 +8,7 @@
       xmlns:controls="clr-namespace:System.Windows.Controls;assembly=Jasily.Core.Desktop"
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
+      xmlns:properties="clr-namespace:JryVideo.Properties"
       mc:Ignorable="d"
       d:DesignHeight="500"
       d:DesignWidth="800"
@@ -207,6 +208,9 @@
                                                   Click="EditVideoInfo_OnClick" />
                                         <MenuItem Header="change cover"
                                                   Click="EditCover_OnClick" />
+                                        <MenuItem Visibility="{Binding IsNotAllAired, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                  Header="{x:Static properties:Resources.Button_AllAired_Text}"
+                                                  Click="AllAiredMenuItem_OnClick" />
                                         <MenuItem Visibility="{Binding IsTrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Header="track"
                                                   Click="TrackMenuItem_OnClick" />
