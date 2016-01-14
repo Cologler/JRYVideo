@@ -244,7 +244,7 @@ namespace JryVideo.Editors.EntityEditor
 
             files = files.Where(File.Exists).Select(Path.GetFileName).ToArray();
             if (files.Length == 0) return;
-            this.Format = files.Length == 1 ? files[0] : await Task.Run(() => ParseCommonFileName(files));
+            this.Format = files.Length == 1 ? files[0] : await Task.Run(() => this.ParseCommonFileName(files));
         }
 
         private async void TryParseFromFormatString()
@@ -336,6 +336,9 @@ namespace JryVideo.Editors.EntityEditor
                     });
                 }
             }
+
+            if (source.Length == 0) return string.Empty;
+            if (source.Length == 1) return source[1];
 
             var exts = source.Select(Path.GetExtension).ToArray();
             var ext = exts[0];
