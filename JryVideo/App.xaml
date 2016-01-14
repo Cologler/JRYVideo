@@ -29,7 +29,19 @@
                         <Setter Property="FontFamily"
                                 Value="Microsoft YaHei UI Light" />
                     </Style>
-                    
+
+                    <Style TargetType="TextBox"
+                           BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="FontFamily"
+                                Value="Microsoft YaHei UI" />
+                    </Style>
+
+                    <Style TargetType="ComboBox"
+                           BasedOn="{StaticResource {x:Type ComboBox}}">
+                        <Setter Property="FontFamily"
+                                Value="Microsoft YaHei UI" />
+                    </Style>
+
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
                     <convert:NullCollapsedValueConverter x:Key="NullCollapsedValueConverter" />
