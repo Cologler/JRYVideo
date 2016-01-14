@@ -47,7 +47,7 @@ namespace JryVideo.Main
                 while (true)
                 {
                     var bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
-                    if (bs.OriginValue > 1024 * 1024 * 200)
+                    if (bs.OriginValue > 1024 * 1024 * 500)
                     {
                         GC.Collect();
                         bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
