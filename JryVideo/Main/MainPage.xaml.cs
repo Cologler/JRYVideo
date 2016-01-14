@@ -258,6 +258,8 @@ namespace JryVideo.Main
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             vm?.Watch();
+            this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
+            this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
         }
 
         private void EditVideoInfo_OnClick(object sender, RoutedEventArgs e)
