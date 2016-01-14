@@ -114,19 +114,10 @@ namespace JryVideo.Model
             return false;
         }
 
-        public static bool IsYearValid(int year)
-        {
-            return year < 2100 && year > 1900;
-        }
+        public static bool IsYearValid(int year) => year < 2100 && year > 1900;
 
-        public static bool IsIndexValid(int index)
-        {
-            return index > 0;
-        }
+        public static bool IsIndexValid(int index) => index > 0;
 
-        public static bool IsEpisodesCountValid(int episodesCount)
-        {
-            return episodesCount >= 0;
-        }
+        public static bool IsEpisodesCountValid(int episodesCount) => episodesCount >= 0;
     }
 }
