@@ -33,7 +33,7 @@ namespace JryVideo.Common
                 if (this.CoverValue != value)
                 {
                     this.CoverValue = value;
-                    this.NotifyPropertyChanged();
+                    this.NotifyPropertyChanged(nameof(this.Cover));
                 }
             }
         }

@@ -138,6 +138,9 @@
   <data name="DateTime_AfterYear" xml:space="preserve">
     <value>{0} 年以后</value>
   </data>
+  <data name="DateTime_AllAired" xml:space="preserve">
+    <value>已完结</value>
+  </data>
   <data name="DateTime_Future" xml:space="preserve">
     <value>未来</value>
   </data>

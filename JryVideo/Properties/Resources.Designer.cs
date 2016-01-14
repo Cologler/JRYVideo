@@ -124,6 +124,15 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
+        ///   查找类似 all aired 的本地化字符串。
+        /// </summary>
+        public static string DateTime_AllAired {
+            get {
+                return ResourceManager.GetString("DateTime_AllAired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 future 的本地化字符串。
         /// </summary>
         public static string DateTime_Future {

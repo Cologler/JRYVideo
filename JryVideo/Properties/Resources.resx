@@ -138,6 +138,9 @@
   <data name="DateTime_AfterYear" xml:space="preserve">
     <value>after {0} year</value>
   </data>
+  <data name="DateTime_AllAired" xml:space="preserve">
+    <value>all aired</value>
+  </data>
   <data name="DateTime_Future" xml:space="preserve">
     <value>future</value>
   </data>

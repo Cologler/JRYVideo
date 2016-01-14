@@ -1,7 +1,7 @@
+using JryVideo.Model;
 using System;
 using System.Globalization;
 using System.Windows.Controls;
-using JryVideo.Model;
 
 namespace JryVideo.Common.ValidationRules
 {
@@ -30,9 +30,9 @@ namespace JryVideo.Common.ValidationRules
                 return new ValidationResult(false, "please input number.");
             }
 
-            if (!JryVideoInfo.IsEpisodesCountValid(count))
+            if (count <= 0 || !JryVideoInfo.IsEpisodesCountValid(count))
             {
-                return new ValidationResult(false, "this is a invalid count ( 0 < count ).");
+                return new ValidationResult(false, "this is a invalid count ( count should > 0 ).");
             }
 
             return ValidationResult.ValidResult;

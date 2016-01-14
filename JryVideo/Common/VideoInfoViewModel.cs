@@ -18,7 +18,6 @@ namespace JryVideo.Common
     {
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
-        private bool isDone;
         private Playing todayPlaying;
 
         public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
@@ -60,14 +59,14 @@ namespace JryVideo.Common
             // only tracking need build group info.
             if (!this.Source.IsTracking) return;
 
-            this.VideoGroup = new GroupFactory().Build(this.Source);
+            int? episode = null;
+            this.VideoGroup = new GroupFactory().Build(this.Source, out episode);
             Debug.Assert(this.VideoGroup != null);
 
             if (this.VideoGroup.Mode == GroupMode.Today)
             {
-                var episode = this.Source.GetTodayEpisode(DateTime.Now.Date) + (this.Source.EpisodeOffset ?? 0);
-                this.isDone = episode > this.Source.EpisodesCount;
-                var playing = this.todayPlaying = new Playing(this.isDone ? (int?)null : episode);
+                if (episode == null) Debugger.Break();
+                var playing = this.todayPlaying = new Playing(episode);
                 if (playing.Episode.HasValue)
                 {
                     var isWatched = await Task.Run(async () =>
@@ -99,7 +98,13 @@ namespace JryVideo.Common
                 {
                     Debug.Assert(x.TodayPlaying != null, "x.TodayPlaying != null");
                     Debug.Assert(y.TodayPlaying != null, "y.TodayPlaying != null");
-                    return x.TodayPlaying.CompareTo(y.TodayPlaying);
+                    ret = x.TodayPlaying.CompareTo(y.TodayPlaying);
+                }
+                if (ret == 0 && x.VideoGroup.Mode == GroupMode.AllAired)
+                {
+                    Debug.Assert(x.Source.StartDate != null, "x.Source.StartDate != null");
+                    Debug.Assert(y.Source.StartDate != null, "y.Source.StartDate != null");
+                    ret = y.Source.StartDate.Value.CompareTo(x.Source.StartDate.Value);
                 }
                 return ret == 0 ? y.Source.Created.CompareTo(x.Source.Created) : ret;
             }
@@ -334,6 +339,8 @@ namespace JryVideo.Common
 
             public static Group Today(DayOfWeek dayOfWeek) => Todays[(int)dayOfWeek];
 
+            public static Group AllAired { get; } = new Group(GroupMode.AllAired, Resources.DateTime_AllAired);
+
             public static Group Unknown { get; } = new Group(GroupMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
 
             public static Group ThisWeek(DayOfWeek dayOfWeek) => ThisWeeks[(int)dayOfWeek];
@@ -358,11 +365,12 @@ namespace JryVideo.Common
                 this.nextNextSunday = this.nextSunday.AddDays(7);
             }
 
-            public Group Build(JryVideoInfo video)
+            public Group Build(JryVideoInfo video, out int? episode)
             {
+                episode = null;
                 if (!video.StartDate.HasValue) return Unknown;
 
-                var startDate = video.StartDate.Value.ToLocalTime().Date;
+                var startDate = video.StartDate.Value.ToLocalTime().Date; // 第一集播出时间
                 var dayOfWeek = video.DayOfWeek ?? startDate.DayOfWeek;
                 if (startDate.DayOfWeek != dayOfWeek)
                 {
@@ -370,8 +378,18 @@ namespace JryVideo.Common
                     startDate = startDate.AddDays(offset < 0 ? offset + 7 : offset); // 修正偏移量后的播出时间
                 }
                 var nextAirDate = startDate; // 下一集播出时间
-                if (nextAirDate < this.today)
+                if (nextAirDate <= this.today) // 已经播出
                 {
+                    var ep = video.GetTodayEpisode(this.today) + (video.EpisodeOffset ?? 0);
+                    if (ep > video.EpisodesCount)
+                    {
+                        return AllAired;
+                    }
+                    else
+                    {
+                        episode = ep;
+                    }
+
                     var offset = (int)dayOfWeek - (int)this.today.DayOfWeek;
                     nextAirDate = this.today.AddDays(offset < 0 ? offset + 7 : offset);
                 }
@@ -417,6 +435,7 @@ namespace JryVideo.Common
                 switch (this.Mode)
                 {
                     case GroupMode.Today:
+                    case GroupMode.AllAired:
                     case GroupMode.Unknown:
                         return 0;
 
@@ -425,11 +444,10 @@ namespace JryVideo.Common
                         return this.dayOfWeek.CompareTo(other.dayOfWeek);
 
                     case GroupMode.FewWeek:
-                        break;
                     case GroupMode.FewMonth:
-                        break;
                     case GroupMode.Future:
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -441,6 +459,8 @@ namespace JryVideo.Common
         public enum GroupMode
         {
             Today,
+
+            AllAired,
 
             Unknown,
 

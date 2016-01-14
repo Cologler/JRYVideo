@@ -69,10 +69,7 @@ namespace JryVideo.Model
 
         public int GetTodayEpisode(DateTime dt)
         {
-            if (this.DayOfWeek == null ||
-                this.StartDate == null ||
-                dt.DayOfWeek != this.DayOfWeek ||
-                dt < this.StartDate.Value)
+            if (this.StartDate == null || dt < this.StartDate.Value)
                 return 0;
 
             return Convert.ToInt32((dt - this.StartDate.Value).TotalDays / 7) + 1;
