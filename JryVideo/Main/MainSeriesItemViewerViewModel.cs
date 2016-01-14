@@ -114,8 +114,9 @@ namespace JryVideo.Main
                 this.VideosView.Collection.Reset(source);
                 if (this.IsOnlyTracking)
                 {
-                    this.VideosView.View.CustomSort = new VideoInfoViewModel.DayOfWeekComparer();
-                    this.VideosView.View.GroupDescriptions?.Add(new PropertyGroupDescription(nameof(VideoInfoViewModel.GroupTitle)));
+                    this.VideosView.View.CustomSort = new VideoInfoViewModel.GroupComparer();
+                    this.VideosView.View.GroupDescriptions?.Add(
+                        new PropertyGroupDescription(nameof(VideoInfoViewModel.VideoGroup) + "." + nameof(VideoInfoViewModel.Group.Title)));
                 }
                 else
                 {

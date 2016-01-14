@@ -18,9 +18,7 @@ namespace JryVideo.Common
     {
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
-        private string dayOfWeek;
         private bool isDone;
-        private ViewModelCompareMode compareMode;
         private Playing todayPlaying;
 
         public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
@@ -47,11 +45,8 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public bool IsTodayPlayAndNotEnd => this.TodayPlaying?.Episode != null && !this.TodayPlaying.IsWatched;
 
-        public string GroupTitle
-        {
-            get { return this.dayOfWeek; }
-            private set { this.SetPropertyRef(ref this.dayOfWeek, value); }
-        }
+        [NotifyPropertyChanged]
+        public Group VideoGroup { get; set; }
 
         public override void RefreshProperties()
         {
@@ -65,163 +60,48 @@ namespace JryVideo.Common
             // only tracking need build group info.
             if (!this.Source.IsTracking) return;
 
-            if (!this.Source.StartDate.HasValue)
-            {
-                this.SetCompareMode(ViewModelCompareMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
-                return;
-            }
+            this.VideoGroup = new GroupFactory().Build(this.Source);
+            Debug.Assert(this.VideoGroup != null);
 
-            this.todayPlaying = null;
-            var today = DateTime.Now.Date;
-            var sunday = today.AddDays(-(int)today.DayOfWeek); // sunday
-            var startDate = this.Source.StartDate.Value.ToLocalTime();
-
-            if (startDate < sunday.AddDays(8)) // release before next week monday
+            if (this.VideoGroup.Mode == GroupMode.Today)
             {
-                if (this.Source.DayOfWeek == today.DayOfWeek)
+                var episode = this.Source.GetTodayEpisode(DateTime.Now.Date) + (this.Source.EpisodeOffset ?? 0);
+                this.isDone = episode > this.Source.EpisodesCount;
+                var playing = this.todayPlaying = new Playing(this.isDone ? (int?)null : episode);
+                if (playing.Episode.HasValue)
                 {
-                    this.compareMode = ViewModelCompareMode.Today;
-                    this.GroupTitle = $"{this.Source.DayOfWeek.GetLocalizeString()} ({Resources.DayOfWeek_Today})";
-                    var episode = this.Source.GetTodayEpisode(today) + (this.Source.EpisodeOffset ?? 0);
-                    this.isDone = episode > this.Source.EpisodesCount;
-                    var playing = this.todayPlaying = new Playing(this.isDone ? (int?)null : episode);
-                    if (playing.Episode.HasValue)
+                    var isWatched = await Task.Run(async () =>
                     {
-                        var isWatched = await Task.Run(async () =>
-                        {
-                            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
-                            var video = await manager.FindAsync(this.Source.Id);
-                            return video?.Watcheds?.Contains(playing.Episode.Value);
-                        });
+                        var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
+                        var video = await manager.FindAsync(this.Source.Id);
+                        return video?.Watcheds?.Contains(playing.Episode.Value);
+                    });
 
-                        if (isWatched != null && playing.IsWatched != isWatched.Value)
-                        {
-                            playing.IsWatched = !playing.IsWatched;
-                            //this.NotifyPropertyChanged(nameof(this.TodayPlaying));
-                            this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
-                        }
-                    }
-                }
-                else
-                {
-                    this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
-                        this.Source.DayOfWeek.GetLocalizeString());
-                }
-            }
-            else
-            {
-                if ((startDate - sunday).Days < 7) // this week
-                {
-                    this.SetCompareMode(ViewModelCompareMode.DayOfWeek,
-                        this.Source.DayOfWeek.GetLocalizeString());
-                }
-                else
-                {
-                    var compared = startDate.DayOfYear - today.DayOfYear;
-                    if (compared <= 7) // next week
+                    if (isWatched != null && playing.IsWatched != isWatched.Value)
                     {
-                        this.SetCompareMode(ViewModelCompareMode.NextWeek,
-                            string.Format(Resources.DateTime_Next, startDate.DayOfWeek.GetLocalizeString()));
-                    }
-                    else if (startDate.Month == today.Month) // in one month
-                    {
-                        var week = (compared / 7) + (compared % 7 == 0 ? 0 : 1);
-                        this.SetCompareMode(ViewModelCompareMode.FewWeek,
-                            string.Format(Resources.DateTime_AfterWeek, week));
-                    }
-                    else
-                    {
-                        if (startDate.Year == today.Year)
-                        {
-                            this.SetCompareMode(ViewModelCompareMode.FewMonth,
-                                string.Format(Resources.DateTime_AfterMonth, startDate.Month - today.Month));
-                        }
-                        else
-                        {
-                            this.SetCompareMode(ViewModelCompareMode.Future, Resources.DateTime_Future);
-                        }
+                        playing.IsWatched = !playing.IsWatched;
+                        //this.NotifyPropertyChanged(nameof(this.TodayPlaying));
+                        this.NotifyPropertyChanged(nameof(this.IsTodayPlayAndNotEnd));
                     }
                 }
             }
         }
 
-        private void SetCompareMode(ViewModelCompareMode mode, string groupTitle)
+        internal sealed class GroupComparer : Comparer<VideoInfoViewModel>
         {
-            this.compareMode = mode;
-            this.GroupTitle = groupTitle;
-        }
-
-        private enum ViewModelCompareMode
-        {
-            Today,
-
-            DayOfWeek,
-
-            NextWeek,
-
-            FewWeek,
-
-            FewMonth,
-
-            FewYear,
-
-            Future,
-
-            Unknown
-        }
-
-        internal sealed class DayOfWeekComparer : Comparer<VideoInfoViewModel>
-        {
-            private readonly DayOfWeek DayOfWeek = DateTime.Now.DayOfWeek;
-
             public override int Compare(VideoInfoViewModel x, VideoInfoViewModel y)
             {
-                Debug.Assert(x != null, "x != null");
-                Debug.Assert(y != null, "y != null");
+                Debug.Assert(x?.VideoGroup != null, "x != null");
+                Debug.Assert(y?.VideoGroup != null, "y != null");
 
-                if (x.compareMode != y.compareMode)
-                    return x.compareMode.CompareTo(y.compareMode);
-
-                var ret = this.CompareOnMode(x, y);
-                return ret == 0 ? y.Source.Created.CompareTo(x.Source.Created) : ret;
-            }
-
-            private int CompareOnMode(VideoInfoViewModel x, VideoInfoViewModel y)
-            {
-                switch (x.compareMode)
+                var ret = x.VideoGroup.CompareTo(y.VideoGroup);
+                if (ret == 0 && x.VideoGroup.Mode == GroupMode.Today)
                 {
-                    case ViewModelCompareMode.Today:
-                        Debug.Assert(x.TodayPlaying != null, "x.TodayPlaying != null");
-                        Debug.Assert(y.TodayPlaying != null, "y.TodayPlaying != null");
-                        return x.TodayPlaying.CompareTo(y.TodayPlaying);
-
-                    case ViewModelCompareMode.DayOfWeek:
-                        if (x.Source.DayOfWeek == y.Source.DayOfWeek) return 0;
-                        if (x.Source.DayOfWeek == null) return -1;
-                        if (y.Source.DayOfWeek == null) return 1;
-
-                        var sub1 = ((int)x.Source.DayOfWeek) - ((int)this.DayOfWeek);
-                        var sub2 = ((int)y.Source.DayOfWeek) - ((int)this.DayOfWeek);
-
-                        return sub1 * sub2 > 0 ? sub1 - sub2 : sub2 - sub1;
-
-                    case ViewModelCompareMode.NextWeek:
-                    case ViewModelCompareMode.FewWeek:
-                    case ViewModelCompareMode.FewMonth:
-                    case ViewModelCompareMode.FewYear:
-                        Debug.Assert(x.Source.StartDate != null, "x.Source.StartDate != null");
-                        Debug.Assert(y.Source.StartDate != null, "y.Source.StartDate != null");
-                        if (y.Source.StartDate.Value == x.Source.StartDate.Value) return 0;
-                        return DateTime.Compare(x.Source.StartDate.Value, y.Source.StartDate.Value);
-
-                    case ViewModelCompareMode.Future:
-                        if (x.Source.StartDate == y.Source.StartDate) return 0;
-                        if (x.Source.StartDate == null) return -1;
-                        if (y.Source.StartDate == null) return 1;
-                        return x.Source.StartDate.Value.CompareTo(y.Source.StartDate.Value);
+                    Debug.Assert(x.TodayPlaying != null, "x.TodayPlaying != null");
+                    Debug.Assert(y.TodayPlaying != null, "y.TodayPlaying != null");
+                    return x.TodayPlaying.CompareTo(y.TodayPlaying);
                 }
-
-                return 0;
+                return ret == 0 ? y.Source.Created.CompareTo(x.Source.Created) : ret;
             }
         }
 
@@ -430,6 +310,149 @@ namespace JryVideo.Common
                 return true;
             }
             return false;
+        }
+
+        public class GroupFactory
+        {
+            private static readonly Group[] Todays;
+            private static readonly Group[] ThisWeeks;
+            private static readonly Group[] NextWeeks;
+
+            static GroupFactory()
+            {
+                var dayOfWeeks = JasilyEnum.GetValues<DayOfWeek>();
+                Todays = dayOfWeeks
+                    .Select(z => new Group(GroupMode.Today, $"{z.GetLocalizeString()} ({Resources.DayOfWeek_Today})", z))
+                    .ToArray();
+                ThisWeeks = dayOfWeeks
+                    .Select(z => new Group(GroupMode.ThisWeek, z.GetLocalizeString(), z))
+                    .ToArray();
+                NextWeeks = dayOfWeeks
+                    .Select(z => new Group(GroupMode.NextWeek, string.Format(Resources.DateTime_Next, z.GetLocalizeString()), z))
+                    .ToArray();
+            }
+
+            public static Group Today(DayOfWeek dayOfWeek) => Todays[(int)dayOfWeek];
+
+            public static Group Unknown { get; } = new Group(GroupMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
+
+            public static Group ThisWeek(DayOfWeek dayOfWeek) => ThisWeeks[(int)dayOfWeek];
+
+            public static Group NextWeek(DayOfWeek dayOfWeek) => NextWeeks[(int)dayOfWeek];
+
+            public static Group FewWeek(int day, int week) => new Group(GroupMode.FewWeek, string.Format(Resources.DateTime_AfterWeek, week), day);
+
+            public static Group FewMonth(int day, int month) => new Group(GroupMode.FewMonth, string.Format(Resources.DateTime_AfterMonth, month), day);
+
+            public static Group Future(int day) => new Group(GroupMode.Future, Resources.DateTime_Future, day);
+
+            private readonly DateTime today;
+            private readonly DateTime nextSunday;
+            private readonly DateTime nextNextSunday;
+
+            public GroupFactory()
+            {
+                this.today = DateTime.Now.Date;
+                var dayofWeekOffset = (int)DayOfWeek.Sunday - (int)this.today.DayOfWeek + 7;
+                this.nextSunday = this.today.AddDays(dayofWeekOffset);
+                this.nextNextSunday = this.nextSunday.AddDays(7);
+            }
+
+            public Group Build(JryVideoInfo video)
+            {
+                if (!video.StartDate.HasValue) return Unknown;
+
+                var startDate = video.StartDate.Value.ToLocalTime().Date;
+                var dayOfWeek = video.DayOfWeek ?? startDate.DayOfWeek;
+                if (startDate.DayOfWeek != dayOfWeek)
+                {
+                    var offset = (int)dayOfWeek - (int)startDate.DayOfWeek;
+                    startDate = startDate.AddDays(offset < 0 ? offset + 7 : offset); // 修正偏移量后的播出时间
+                }
+                var nextAirDate = startDate; // 下一集播出时间
+                if (nextAirDate < this.today)
+                {
+                    var offset = (int)dayOfWeek - (int)this.today.DayOfWeek;
+                    nextAirDate = this.today.AddDays(offset < 0 ? offset + 7 : offset);
+                }
+                if (nextAirDate == this.today) return Today(dayOfWeek);
+                if (nextAirDate < this.nextSunday) return ThisWeek(dayOfWeek);
+                if (nextAirDate < this.nextNextSunday) return NextWeek(dayOfWeek);
+                var dayOffset = (nextAirDate - this.today).Days;
+                var week = (nextAirDate - this.nextSunday).Days / 7;
+                if (week < 4) return FewWeek(dayOffset, week + 1);
+                var month = (nextAirDate.Year - this.nextSunday.Year) * 12 + (nextAirDate.Month - this.nextSunday.Month);
+                if (month < 10) return FewMonth(dayOffset, month);
+                return Future(dayOffset);
+            }
+        }
+
+        public class Group : IComparable<Group>
+        {
+            private readonly DayOfWeek dayOfWeek;
+            private readonly int offset;
+
+            public Group(GroupMode mode, string title, int offset = 0)
+            {
+                this.offset = offset;
+                this.Mode = mode;
+                this.Title = title;
+            }
+
+            public Group(GroupMode mode, string title, DayOfWeek dayOfWeek)
+            {
+                this.dayOfWeek = dayOfWeek;
+                this.Mode = mode;
+                this.Title = title;
+            }
+
+            public GroupMode Mode { get; }
+
+            public string Title { get; }
+
+            public int CompareTo(Group other)
+            {
+                if (this.Mode != other.Mode) return ((int)this.Mode).CompareTo((int)other.Mode);
+
+                switch (this.Mode)
+                {
+                    case GroupMode.Today:
+                    case GroupMode.Unknown:
+                        return 0;
+
+                    case GroupMode.ThisWeek:
+                    case GroupMode.NextWeek:
+                        return this.dayOfWeek.CompareTo(other.dayOfWeek);
+
+                    case GroupMode.FewWeek:
+                        break;
+                    case GroupMode.FewMonth:
+                        break;
+                    case GroupMode.Future:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                return this.offset.CompareTo(other.offset);
+            }
+        }
+
+        public enum GroupMode
+        {
+            Today,
+
+            Unknown,
+
+            ThisWeek,
+
+            NextWeek,
+
+            FewWeek,
+
+            FewMonth,
+
+            Future
         }
     }
 }
