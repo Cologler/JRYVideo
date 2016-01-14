@@ -233,7 +233,7 @@ namespace JryVideo.Viewer.VideoViewer
 
             public override void BeginUpdateCover()
             {
-                if (this.Cover != null) return;
+                if (this.CoverValue != null) return;
 
                 base.BeginUpdateCover();
             }

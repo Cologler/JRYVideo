@@ -8,7 +8,7 @@ namespace JryVideo.Common
     public abstract class HasCoverViewModel<T> : JasilyViewModel<T>
         where T : IJryCoverParent
     {
-        private JryCover cover;
+        protected JryCover CoverValue { get; private set; }
 
         protected HasCoverViewModel(T source)
             : base(source)
@@ -20,21 +20,21 @@ namespace JryVideo.Common
         {
             get
             {
-                var cover = this.cover;
-
-                if (cover == null)
+                if (this.CoverValue == null)
                 {
                     this.BeginUpdateCover();
                     return null;
                 }
-                else
-                {
-                    return cover;
-                }
+
+                return this.CoverValue;
             }
             set
             {
-                this.SetPropertyRef(ref this.cover, value);
+                if (this.CoverValue != value)
+                {
+                    this.CoverValue = value;
+                    this.NotifyPropertyChanged();
+                }
             }
         }
 
