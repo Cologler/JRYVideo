@@ -10,10 +10,8 @@ using JryVideo.Model;
 using MahApps.Metro.Controls;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -117,13 +115,10 @@ namespace JryVideo.Main
 
         private void RefreshGroupStyle()
         {
+            this.VideosListView.GroupStyle.Clear();
             if (this.ViewModel.VideosViewModel.IsOnlyTracking)
             {
                 this.VideosListView.GroupStyle.Add(this.Resources["TrackingGroupStyle"] as GroupStyle);
-            }
-            else
-            {
-                this.VideosListView.GroupStyle.Clear();
             }
         }
 
@@ -139,56 +134,47 @@ namespace JryVideo.Main
             this.RefreshGroupStyle();
         }
 
+        private void RefreshVideo(VideoInfoViewModel vm)
+        {
+            this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
+            vm.RefreshProperties();
+            this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
+        }
+
         private async void AllAiredMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            if (vm != null)
+            if (vm == null) return;
+            if (await vm.AllAiredAsync())
             {
-                if (await vm.AllAiredAsync())
-                {
-                    this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
-                    vm.RefreshProperties();
-                    this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
-                }
+                this.RefreshVideo(vm);
             }
         }
 
         private async void TrackMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            if (vm != null)
-            {
-                if (await vm.TrackAsync())
-                {
-                    this.Refresh();
-                }
-            }
+            if (vm == null) return;
+            await vm.TrackAsync();
         }
 
         private async void UntrackMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            if (vm != null)
+            if (vm == null) return;
+            if (await vm.UntrackAsync() && this.ViewModel.VideosViewModel.IsOnlyTracking)
             {
-                if (await vm.UntrackAsync())
-                {
-                    this.Refresh();
-                }
+                this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
             }
         }
 
-        public void Refresh()
-        {
-            this.ViewModel?.VideosViewModel.VideosView.View.Refresh();
-        }
+        public void Refresh() => this.ViewModel?.VideosViewModel.VideosView.View.Refresh();
 
         private void FilterSeries_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            if (vm != null)
-            {
-                this.ViewModel.VideosViewModel.FilterText = vm.SeriesView.Source.Id;
-            }
+            if (vm == null) return;
+            this.ViewModel.VideosViewModel.FilterText = vm.SeriesView.Source.Id;
         }
 
         private async void ModeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
