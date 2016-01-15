@@ -202,9 +202,12 @@ namespace JryVideo.Viewer.VideoViewer
                 return await Task.Run(async () =>
                 {
                     var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
-                    var x = (await coverManager.Source.QueryByDoubanIdAsync(JryCoverType.Background, imdbId))
-                            .SingleOrDefault();
-                    if (x != null) return x.Id;
+                    if (imdbId == this.Source.ImdbId)
+                    {
+                        var x = (await coverManager.Source.QueryByImdbIdAsync(JryCoverType.Background, imdbId))
+                                .SingleOrDefault();
+                        if (x != null) return x.Id;
+                    }
                     foreach (var video in await client.GetSeriesByImdbIdAsync(imdbId))
                     {
                         var array = (await video.GetBannersAsync(client)).ToArray();
@@ -220,7 +223,7 @@ namespace JryVideo.Viewer.VideoViewer
                                 cover.CoverType = JryCoverType.Background;
                                 cover.DoubanId = this.Source.DoubanId;
                                 cover.Uri = url;
-                                cover.ImdbId = this.Source.ImdbId;
+                                cover.ImdbId = this.Source.ImdbId; // 分配给自己（而不是 series imdb Id）
 
                                 var guid = await coverManager.DownloadCoverAsync(cover);
                                 if (guid != null) return guid;

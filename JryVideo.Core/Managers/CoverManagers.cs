@@ -54,12 +54,34 @@ namespace JryVideo.Core.Managers
             if (string.IsNullOrWhiteSpace(cover.Uri))
                 throw new ArgumentException();
 
+            var key = ((int)cover.CoverType).ToString() + " ";
+            switch (cover.CoverSourceType)
+            {
+                case JryCoverSourceType.Local:
+                    throw new ArgumentException();
+
+                case JryCoverSourceType.Uri:
+                    key += cover.Uri;
+                    break;
+
+                case JryCoverSourceType.Douban:
+                    key += cover.DoubanId;
+                    break;
+
+                case JryCoverSourceType.Imdb:
+                    key += cover.ImdbId;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             return await Task.Run(async () =>
             {
                 lock (this.syncRoot)
                 {
-                    if (this.downloadingIds.Contains(url)) return null;
-                    this.downloadingIds.Add(url);
+                    if (this.downloadingIds.Contains(key)) return null;
+                    this.downloadingIds.Add(key);
                 }
 
                 try
@@ -80,7 +102,7 @@ namespace JryVideo.Core.Managers
                 {
                     lock (this.syncRoot)
                     {
-                        this.downloadingIds.Remove(url);
+                        this.downloadingIds.Remove(key);
                     }
                 }
 
