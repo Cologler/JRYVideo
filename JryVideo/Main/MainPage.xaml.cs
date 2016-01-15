@@ -168,7 +168,15 @@ namespace JryVideo.Main
             }
         }
 
-        public void Refresh() => this.ViewModel?.VideosViewModel.VideosView.View.Refresh();
+        public void Refresh()
+        {
+            if (this.ViewModel == null) return;
+            foreach (var viewModel in this.ViewModel.VideosViewModel.VideosView.Collection)
+            {
+                viewModel.RefreshProperties();
+            }
+            this.ViewModel.VideosViewModel.VideosView.View.Refresh();
+        }
 
         private void FilterSeries_OnClick(object sender, RoutedEventArgs e)
         {
