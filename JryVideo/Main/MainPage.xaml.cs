@@ -134,7 +134,7 @@ namespace JryVideo.Main
             this.RefreshGroupStyle();
         }
 
-        private void RefreshVideo(VideoInfoViewModel vm)
+        public void RefreshVideo(VideoInfoViewModel vm)
         {
             this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
             vm.RefreshProperties();
@@ -251,13 +251,19 @@ namespace JryVideo.Main
         private void EditVideoInfo_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            vm?.OpenEditorWindows(this.TryFindParent<Window>());
+            if (vm?.OpenEditorWindows(this.TryFindParent<Window>()) == true)
+            {
+                this.RefreshVideo(vm);
+            }
         }
 
         private void EditSeries_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            vm?.SeriesView?.OpenEditorWindows(this.TryFindParent<Window>());
+            if (vm?.SeriesView?.OpenEditorWindows(this.TryFindParent<Window>()) == true)
+            {
+                this.RefreshVideo(vm);
+            }
         }
     }
 }

@@ -66,10 +66,7 @@ namespace JryVideo.Main
             });
         }
 
-        void MainPage_VideoSelected(object sender, VideoInfoViewModel e)
-        {
-            this.NavigateToVideoViewerPage(e);
-        }
+        void MainPage_VideoSelected(object sender, VideoInfoViewModel e) => this.NavigateToVideoViewerPage(e);
 
         private async void NavigateToVideoViewerPage(VideoInfoViewModel info)
         {
@@ -90,13 +87,14 @@ namespace JryVideo.Main
         {
             ((Button)sender).Click -= this.VideoViewerPage_GoBackButton_Click;
 
-            var page = (VideoViewerPage) this.MainFrame.Content;
+            var page = (VideoViewerPage)this.MainFrame.Content;
             Debug.Assert(page != null);
             page.ViewModel.InfoView.SeriesView.PropertiesRefreshed -= this.InfoView_PropertiesRefreshed;
             page.ViewModel.Flush();
             this.CaptionTextBlock.Text = Caption;
             Debug.Assert(this.MainFrame.CanGoBack);
             this.MainFrame.GoBack();
+            this.MainPage.RefreshVideo(page.ViewModel.InfoView);
         }
     }
 }
