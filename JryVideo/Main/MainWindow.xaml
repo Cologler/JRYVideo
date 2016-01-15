@@ -19,6 +19,7 @@
 
         <Grid Margin="8">
             <TextBlock Text="JRY VIDEO"
+                       x:Name="CaptionTextBlock"
                        Style="{StaticResource CaptionStyle}" />
         </Grid>
 

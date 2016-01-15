@@ -15,6 +15,7 @@ namespace JryVideo.Main
     /// </summary>
     public partial class MainWindow
     {
+        public const string Caption = "JRY VIDEO";
         private MainPage MainPage;
 
         public MainWindow()
@@ -29,6 +30,7 @@ namespace JryVideo.Main
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
+            this.CaptionTextBlock.Text = Caption;
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
@@ -73,20 +75,28 @@ namespace JryVideo.Main
         {
             var page = VideoViewerPage.BuildPage(info);
             page.GoBackButton.Click += this.VideoViewerPage_GoBackButton_Click;
+            page.ViewModel.InfoView.SeriesView.PropertiesRefreshed += this.InfoView_PropertiesRefreshed;
+            this.CaptionTextBlock.Text = Caption + " | " + info.SeriesView.DisplayNameFirstLine;
             this.MainFrame.Navigate(page);
             await page.ViewModel.LoadAsync();
+        }
+
+        private void InfoView_PropertiesRefreshed(object sender, EventArgs e)
+        {
+            this.CaptionTextBlock.Text = Caption + " | " + ((SeriesViewModel)sender).DisplayNameFirstLine;
         }
 
         void VideoViewerPage_GoBackButton_Click(object sender, RoutedEventArgs e)
         {
             ((Button)sender).Click -= this.VideoViewerPage_GoBackButton_Click;
 
-            (this.MainFrame.Content as VideoViewerPage)?.ViewModel.Flush();
-
-            if (this.MainFrame.CanGoBack)
-            {
-                this.MainFrame.GoBack();
-            }
+            var page = (VideoViewerPage) this.MainFrame.Content;
+            Debug.Assert(page != null);
+            page.ViewModel.InfoView.SeriesView.PropertiesRefreshed -= this.InfoView_PropertiesRefreshed;
+            page.ViewModel.Flush();
+            this.CaptionTextBlock.Text = Caption;
+            Debug.Assert(this.MainFrame.CanGoBack);
+            this.MainFrame.GoBack();
         }
     }
 }
