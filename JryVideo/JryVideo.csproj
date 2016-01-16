@@ -105,13 +105,13 @@
     <Compile Include="Editors\VideoEditor\VideoEditorWindow.xaml.cs">
       <DependentUpon>VideoEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SearchEngine\DoubanSearch.cs" />
     <Compile Include="SearchEngine\EverythingSearch.cs" />
-    <Compile Include="SearchEngine\ImdbSearch.cs" />
+    <Compile Include="SearchEngine\IOrder.cs" />
     <Compile Include="SearchEngine\ISearchEngine.cs" />
-    <Compile Include="SearchEngine\TheTVDBSearch.cs" />
+    <Compile Include="SearchEngine\ISearchEngineProvider.cs" />
+    <Compile Include="SearchEngine\SearchEngineCenter.cs" />
     <Compile Include="SearchEngine\WebsiteSearch.cs" />
-    <Compile Include="SearchEngine\WikiSearch.cs" />
+    <Compile Include="SearchEngine\WebsiteSearchProvider.cs" />
     <Compile Include="Selectors\ArtistSelector\ArtistSelectorPage.xaml.cs">
       <DependentUpon>ArtistSelectorPage.xaml</DependentUpon>
     </Compile>

@@ -1,13 +1,9 @@
-﻿using System;
-
-namespace JryVideo.SearchEngine
+﻿namespace JryVideo.SearchEngine
 {
-    public interface ISearchEngine
+    public interface ISearchEngine : IOrder
     {
         void SearchText(string text);
 
         string Name { get; }
-
-        int Order { get; }
     }
 }

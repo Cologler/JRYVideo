@@ -2,13 +2,22 @@
 
 namespace JryVideo.SearchEngine
 {
-    public abstract class WebsiteSearch : ISearchEngine
+    public sealed class WebsiteSearch : ISearchEngine
     {
+        private readonly string url;
+
+        public WebsiteSearch(string name, string url, int order)
+        {
+            this.url = url;
+            this.Name = name;
+            this.Order = order;
+        }
+
         public void SearchText(string text)
         {
             try
             {
-                using (Process.Start(this.BuildUrl(text)))
+                using (Process.Start(this.url.Replace("%s", text)))
                 {
 
                 }
@@ -19,10 +28,8 @@ namespace JryVideo.SearchEngine
             }
         }
 
-        public abstract string Name { get; }
+        public string Name { get; }
 
-        public int Order => 2;
-
-        protected abstract string BuildUrl(string keyword);
+        public int Order { get; }
     }
 }

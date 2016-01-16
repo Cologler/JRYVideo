@@ -5,7 +5,6 @@ using JryVideo.SearchEngine;
 using JryVideo.Viewer.FilesViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -22,19 +21,6 @@ namespace JryVideo.Viewer.VideoViewer
     /// </summary>
     public partial class VideoViewerPage : Page
     {
-        private static readonly ISearchEngine[] Engines;
-
-        static VideoViewerPage()
-        {
-            var @interface = typeof(ISearchEngine);
-            Engines = typeof(VideoViewerPage).Assembly.DefinedTypes
-                .Where(z => @interface.IsAssignableFrom(z))
-                .Where(z => z.IsSealed)
-                .Select(z => (ISearchEngine)Activator.CreateInstance(z))
-                .OrderBy(z => z.Order)
-                .ToArray();
-        }
-
         public VideoViewerPage()
         {
             this.InitializeComponent();
@@ -52,7 +38,7 @@ namespace JryVideo.Viewer.VideoViewer
                 DataContext = vm
             };
 
-            Engines.ForEach(z => AppendToContextMenu(page.SeriesContextMenu, z));
+            SearchEngineCenter.Engines.ForEach(z => AppendToContextMenu(page.SeriesContextMenu, z));
             return page;
         }
 

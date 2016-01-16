@@ -14,6 +14,8 @@ namespace JryVideo
     /// </summary>
     public partial class App : Application
     {
+        public static event EventHandler<UserConfig> UserConfigChanged;
+
         public App()
         {
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
@@ -24,7 +26,17 @@ namespace JryVideo
 
         private const string UserConfigPath = @"UserConfig.json";
 
-        public UserConfig UserConfig { get; private set; }
+        public UserConfig UserConfig
+
+        {
+            get { return this.userConfig; }
+            private set
+            {
+                if (this.userConfig == value) return;
+                this.userConfig = value;
+                UserConfigChanged?.BeginInvoke(value);
+            }
+        }
 
         private FileSystemWatcher configWatcher;
 
@@ -60,6 +72,8 @@ namespace JryVideo
         }
 
         private DateTime? lastTryRead;
+        private UserConfig userConfig;
+
         private void BeginLoadUserConfig()
         {
             this.lastTryRead = DateTime.UtcNow;
