@@ -338,7 +338,7 @@ namespace JryVideo.Editors.EntityEditor
             }
 
             if (source.Length == 0) return string.Empty;
-            if (source.Length == 1) return source[1];
+            if (source.Length == 1) return source[0];
 
             var exts = source.Select(Path.GetExtension).ToArray();
             var ext = exts[0];
