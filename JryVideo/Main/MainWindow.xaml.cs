@@ -17,6 +17,7 @@ namespace JryVideo.Main
     {
         public const string Caption = "JRY VIDEO";
         private MainPage MainPage;
+        private int messageId;
 
         public MainWindow()
         {
@@ -34,10 +35,41 @@ namespace JryVideo.Main
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
+                App.UserConfigChanged += this.App_UserConfigChanged;
+
                 this.MainPage = new MainPage();
                 this.MainPage.VideoSelected += this.MainPage_VideoSelected;
                 this.MainFrame.Navigate(this.MainPage);
                 this.BeginRefresh();
+            }
+        }
+
+        private void App_UserConfigChanged(object sender, Configs.UserConfig e)
+        {
+            if (e != null)
+            {
+                this.ShowStatusMessage("read user config successd");
+            }
+            else
+            {
+                this.ShowStatusMessage("read user config failed");
+            }
+        }
+
+        private async void ShowStatusMessage(string msg)
+        {
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke(() => this.ShowStatusMessage(msg));
+                return;
+            }
+
+            var id = ++this.messageId;
+            this.StatusTextBlock.Text = msg;
+            await Task.Delay(5000);
+            if (this.messageId == id)
+            {
+                this.StatusTextBlock.Text = string.Empty;
             }
         }
 

@@ -18,7 +18,7 @@ namespace JryVideo.Common
     {
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
-        private Playing todayPlaying;
+        private WatchedInfo todayPlaying;
 
         public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
             : base(source)
@@ -39,10 +39,10 @@ namespace JryVideo.Common
         public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
 
         [NotifyPropertyChanged]
-        public Playing TodayPlaying => this.todayPlaying;
+        public WatchedInfo TodayWatched => this.todayPlaying;
 
         [NotifyPropertyChanged]
-        public bool IsEnableWatchedButton => this.TodayPlaying?.Episode != null && !this.TodayPlaying.IsWatched;
+        public bool IsEnableWatchedButton => this.TodayWatched?.Episode != null && !this.TodayWatched.IsWatched;
 
         [NotifyPropertyChanged]
         public Group VideoGroup { get; set; }
@@ -62,13 +62,13 @@ namespace JryVideo.Common
             // only tracking need build group info.
             if (!this.Source.IsTracking) return;
 
-            int? episode = null;
+            int? episode;
             this.VideoGroup = new GroupFactory().Build(this.Source, out episode);
             Debug.Assert(this.VideoGroup != null);
 
             if (this.VideoGroup.Mode == GroupMode.Today)
             {
-                var playing = this.todayPlaying = new Playing(episode);
+                var playing = this.todayPlaying = new WatchedInfo(episode);
                 if (playing.Episode.HasValue)
                 {
                     var isWatched = await Task.Run(async () =>
@@ -102,9 +102,9 @@ namespace JryVideo.Common
                 var ret = x.VideoGroup.CompareTo(y.VideoGroup);
                 if (ret == 0 && x.VideoGroup.Mode == GroupMode.Today)
                 {
-                    Debug.Assert(x.TodayPlaying != null, "x.TodayPlaying != null");
-                    Debug.Assert(y.TodayPlaying != null, "y.TodayPlaying != null");
-                    ret = x.TodayPlaying.CompareTo(y.TodayPlaying);
+                    Debug.Assert(x.TodayWatched != null, "x.TodayPlaying != null");
+                    Debug.Assert(y.TodayWatched != null, "y.TodayPlaying != null");
+                    ret = x.TodayWatched.CompareTo(y.TodayWatched);
                 }
                 if (ret == 0 && x.VideoGroup.Mode == GroupMode.AllAired)
                 {
@@ -276,12 +276,15 @@ namespace JryVideo.Common
             set { this.SetPropertyRef(ref this.isUntrackButtonEnable, value); }
         }
 
-        public sealed class Playing : NotifyPropertyChangedObject, IComparable<Playing>
+        public sealed class WatchedInfo : NotifyPropertyChangedObject, IComparable<WatchedInfo>
         {
+            private const string WatchedBackgroundColor = "Blue";
+            private const string UnwatchedBackgroundColor = "DarkOrange";
+
             private bool isWatched;
             public int? Episode { get; }
 
-            public Playing(int? episode)
+            public WatchedInfo(int? episode)
             {
                 this.Episode = episode;
             }
@@ -293,10 +296,16 @@ namespace JryVideo.Common
             public bool IsWatched
             {
                 get { return this.isWatched; }
-                set { this.SetPropertyRef(ref this.isWatched, value); }
+                set
+                {
+                    if (!this.SetPropertyRef(ref this.isWatched, value)) return;
+                    this.NotifyPropertyChanged(nameof(this.BackgroundColor));
+                }
             }
 
-            public int CompareTo(Playing other)
+            public string BackgroundColor => this.IsWatched ? WatchedBackgroundColor : UnwatchedBackgroundColor;
+
+            public int CompareTo(WatchedInfo other)
                 => this.GetOrderHash().CompareTo(other.GetOrderHash());
 
             private int GetOrderHash() => this.Episode.HasValue ? (this.IsWatched ? 2 : 0) : 1;
@@ -304,9 +313,9 @@ namespace JryVideo.Common
 
         public async void Watch()
         {
-            var ep = this.TodayPlaying?.Episode;
+            var ep = this.TodayWatched?.Episode;
             if (ep == null) return;
-            this.TodayPlaying.IsWatched = true;
+            this.TodayWatched.IsWatched = true;
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
             var video = await manager.FindAsync(this.Source.Id);
             if (video == null) return;

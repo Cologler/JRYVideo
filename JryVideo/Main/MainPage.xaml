@@ -199,7 +199,7 @@
                                 </Grid.RowDefinitions>
                                 <Grid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="{Binding TodayPlaying.WatchedText}"
+                                        <MenuItem Header="{Binding TodayWatched.WatchedText}"
                                                   Visibility="{Binding IsEnableWatchedButton, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Click="WatchedEpisode_OnClick" />
                                         <MenuItem Header="edit series"
@@ -233,12 +233,12 @@
                                         <Grid Width="150"
                                               Height="150"
                                               VerticalAlignment="Top"
-                                              Visibility="{Binding TodayPlaying, Converter={StaticResource NullCollapsedValueConverter}}"
+                                              Visibility="{Binding TodayWatched, Converter={StaticResource NullCollapsedValueConverter}}"
                                               HorizontalAlignment="Right">
                                             <Grid.Clip>
                                                 <RectangleGeometry Rect="0,0,150,150" />
                                             </Grid.Clip>
-                                            <Grid Background="DarkOrange"
+                                            <Grid Background="{Binding TodayWatched.BackgroundColor}"
                                                   Width="150"
                                                   VerticalAlignment="Top"
                                                   RenderTransformOrigin="0.25,0.5">
@@ -252,7 +252,7 @@
                                                            HorizontalAlignment="Center"
                                                            Margin="4"
                                                            FontSize="12"
-                                                           Text="{Binding TodayPlaying.Text}" />
+                                                           Text="{Binding TodayWatched.Text}" />
                                             </Grid>
                                         </Grid>
 

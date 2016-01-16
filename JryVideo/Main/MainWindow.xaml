@@ -31,10 +31,23 @@
         
         <StatusBar Grid.Row="2">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="memory usge" />
-                <Grid Width="86">
-                    <TextBlock x:Name="MemoryTextBlock"
-                               HorizontalAlignment="Right" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="90" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="memory usge" />
+                    
+                    <Grid Grid.Column="1"
+                          Width="86">
+                        <TextBlock x:Name="MemoryTextBlock"
+                                   HorizontalAlignment="Right" />
+                    </Grid>
+                </Grid>
+
+                <Grid Width="300"
+                      Margin="6,0,0,0">
+                    <TextBlock x:Name="StatusTextBlock" />
                 </Grid>
             </StackPanel>
         </StatusBar>
