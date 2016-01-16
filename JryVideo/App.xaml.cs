@@ -34,7 +34,7 @@ namespace JryVideo
             {
                 if (this.userConfig == value) return;
                 this.userConfig = value;
-                UserConfigChanged?.BeginInvoke(value);
+                UserConfigChanged?.BeginInvoke(this, value);
             }
         }
 
