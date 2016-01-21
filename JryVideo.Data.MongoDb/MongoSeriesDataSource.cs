@@ -7,10 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using JryVideo = JryVideo.Model.JryVideo;
 
 namespace JryVideo.Data.MongoDb
 {
