@@ -19,7 +19,8 @@ namespace JryVideo.Data
             SeriesId,
             VideoId,
             EntityId,
-            DoubanId
+            DoubanId,
+            Tag
         }
     }
 }
