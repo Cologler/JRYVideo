@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,8 +11,6 @@ namespace JryVideo.Model
         public JryVideoInfo()
         {
             this.Names = new List<string>();
-            this.Tags = new List<string>();
-            this.Roles = new List<JryVideoRole>();
         }
 
         public string Type { get; set; }
@@ -20,11 +19,18 @@ namespace JryVideo.Model
 
         public int Index { get; set; }
 
+        [CanBeNull]
+        [ItemNotNull]
+        [BsonIgnoreIfDefault]
         [BsonElement("ArtistIds")]
         public List<JryVideoRole> Roles { get; set; }
 
+        [CanBeNull]
+        [ItemNotNull]
+        [BsonIgnoreIfDefault]
         public List<string> Names { get; set; }
 
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public string DoubanId { get; set; }
 
@@ -37,32 +43,41 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public bool IsAllAired { get; set; }
 
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public string ImdbId { get; set; }
 
         [BsonIgnoreIfDefault]
         public int EpisodesCount { get; set; }
 
+        [CanBeNull]
+        [ItemNotNull]
+        [BsonIgnoreIfDefault]
         public List<string> Tags { get; set; }
 
         [BsonIgnoreIfDefault]
         public int? EpisodeOffset { get; set; }
 
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public string BackgroundImageId { get; set; }
 
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public DayOfWeek? DayOfWeek { get; set; }
 
         /// <summary>
         /// may not DayOfWeek (utc)
         /// </summary>
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public DateTime? StartDate { get; set; }
 
+        [CanBeNull]
         [BsonIgnore]
         public DateTime? StartLocalDate
         {
@@ -82,7 +97,7 @@ namespace JryVideo.Model
         {
             if (base.InnerTestHasError()) return true;
 
-            if (this.Names == null || this.Tags == null || this.Roles == null)
+            if (this.Names == null)
             {
                 throw new ArgumentException();
             }

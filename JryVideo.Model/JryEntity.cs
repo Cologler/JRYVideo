@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +16,8 @@ namespace JryVideo.Model
             this.TrackLanguages = new List<string>();
         }
 
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
         public JryFormat Format { get; set; }
 
         public List<string> Tags { get; set; }
@@ -28,9 +32,13 @@ namespace JryVideo.Model
         /// can not empty.
         /// </summary>
         public string Resolution { get; set; }
-        
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
         public string FilmSource { get; set; }
-        
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
         public string AudioSource { get; set; }
 
         /// <summary>

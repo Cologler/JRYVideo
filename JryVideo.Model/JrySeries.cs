@@ -1,7 +1,8 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -13,13 +14,23 @@ namespace JryVideo.Model
             this.Videos = new List<JryVideoInfo>();
         }
 
+        [ItemNotNull]
+        [NotNull]
         public List<string> Names { get; set; }
 
+        [ItemNotNull]
+        [NotNull]
         public List<JryVideoInfo> Videos { get; set; }
 
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public List<string> Tags { get; set; }
+
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public string ImdbId { get; set; }
 
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public string TheTVDBId { get; set; }
 
