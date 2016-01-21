@@ -213,6 +213,8 @@ namespace JryVideo.Core.Managers
                     return new SearchElement(SearchElement.ElementType.EntityId, text.Substring(index + 1));
                 case "douban-id":
                     return new SearchElement(SearchElement.ElementType.DoubanId, text.Substring(index + 1));
+                case "tag":
+                    return new SearchElement(SearchElement.ElementType.Tag, text.Substring(index + 1));
             }
 
             return new SearchElement(SearchElement.ElementType.Text, text);
