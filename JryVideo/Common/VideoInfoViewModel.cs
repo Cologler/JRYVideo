@@ -409,7 +409,7 @@ namespace JryVideo.Common
                 if (nextAirDate <= this.today) // 已经播出
                 {
                     var ep = video.GetTodayEpisode(this.today) + (video.EpisodeOffset ?? 0);
-                    if (ep < video.EpisodesCount)
+                    if (ep <= video.EpisodesCount)
                     {
                         episode = ep;
                     }
