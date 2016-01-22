@@ -23,7 +23,7 @@ namespace JryVideo.Main
 
         public MainSeriesItemViewerViewModel()
         {
-            this.isOnlyTracking = true;
+            this.IsOnlyTracking = true;
             this.PageSize = 50;
         }
 
@@ -58,7 +58,26 @@ namespace JryVideo.Main
         public bool IsOnlyTracking
         {
             get { return this.isOnlyTracking; }
-            set { this.SetPropertyRef(ref this.isOnlyTracking, value); }
+            set
+            {
+                if (this.SetPropertyRef(ref this.isOnlyTracking, value))
+                {
+                    if (value)
+                    {
+                        VideoInfoViewModel.IsWatchedUpdated += this.VideoInfoViewModel_IsWatchedUpdated;
+                    }
+                    else
+                    {
+                        VideoInfoViewModel.IsWatchedUpdated -= this.VideoInfoViewModel_IsWatchedUpdated;
+                    }
+                }
+            }
+        }
+
+        private void VideoInfoViewModel_IsWatchedUpdated(object sender, VideoInfoViewModel e)
+        {
+            this.VideosView.Collection.Remove(e);
+            this.VideosView.Collection.Add(e);
         }
 
         private async Task<IEnumerable<VideoInfoViewModel>> GetSourceAsync()

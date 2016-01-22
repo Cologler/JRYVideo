@@ -16,6 +16,8 @@ namespace JryVideo.Common
 {
     public sealed class VideoInfoViewModel : HasCoverViewModel<JryVideoInfo>
     {
+        public static event EventHandler<VideoInfoViewModel> IsWatchedUpdated;
+
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
         private WatchedInfo todayPlaying;
@@ -80,7 +82,8 @@ namespace JryVideo.Common
 
                     if (isWatched != null && playing.IsWatched != isWatched.Value)
                     {
-                        playing.IsWatched = !playing.IsWatched;
+                        playing.IsWatched = isWatched.Value;
+                        IsWatchedUpdated?.Invoke(this, this);
                         //this.NotifyPropertyChanged(nameof(this.TodayPlaying));
                         this.NotifyPropertyChanged(nameof(this.IsEnableWatchedButton));
                     }
