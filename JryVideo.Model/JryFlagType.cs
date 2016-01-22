@@ -8,7 +8,7 @@
 
         EntityResolution = 21,
 
-        EntityFilmSource = 22,
+        EntityQuality = 22,
 
         EntityExtension = 23,
 

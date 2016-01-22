@@ -35,7 +35,7 @@ namespace JryVideo.Model
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
-        public string FilmSource { get; set; }
+        public string Quality { get; set; }
 
         [CanBeNull]
         [BsonIgnoreIfDefault]

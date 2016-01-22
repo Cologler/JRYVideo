@@ -93,7 +93,7 @@ namespace JryVideo.Editors.EntityEditor
             var manager = JryVideoCore.Current.CurrentDataCenter.FlagManager;
 
             this.Resolutions.AddRange((await manager.LoadAsync(JryFlagType.EntityResolution)).Select(z => z.Value));
-            this.FilmSources.AddRange((await manager.LoadAsync(JryFlagType.EntityFilmSource)).Select(z => z.Value));
+            this.FilmSources.AddRange((await manager.LoadAsync(JryFlagType.EntityQuality)).Select(z => z.Value));
             this.AudioSources.AddRange((await manager.LoadAsync(JryFlagType.EntityAudioSource)).Select(z => z.Value));
             this.Extensions.AddRange((await manager.LoadAsync(JryFlagType.EntityExtension)).Select(z => z.Value));
         }
@@ -106,7 +106,7 @@ namespace JryVideo.Editors.EntityEditor
         }
 
         [EditableField]
-        public string FilmSource
+        public string Quality
         {
             get { return this.filmSource; }
             set { this.SetPropertyRef(ref this.filmSource, value.IsNullOrWhiteSpace() ? null : value.Trim()); }
@@ -257,9 +257,9 @@ namespace JryVideo.Editors.EntityEditor
             {
                 this.Resolution = this.Resolutions.FirstOrDefault(z => str.Contains(z.Replace("P", "").ToLower())) ?? string.Empty;
             }
-            if (this.FilmSource.IsNullOrWhiteSpace())
+            if (this.Quality.IsNullOrWhiteSpace())
             {
-                this.FilmSource = this.FilmSources.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+                this.Quality = this.FilmSources.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
             }
             if (this.AudioSource.IsNullOrWhiteSpace())
             {

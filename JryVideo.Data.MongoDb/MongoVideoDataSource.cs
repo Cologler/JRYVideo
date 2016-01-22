@@ -28,8 +28,8 @@ namespace JryVideo.Data.MongoDb
                     filter = Builders<Model.JryVideo>.Filter.Eq(nameof(Model.JryVideo.Entities) + "." + nameof(JryEntity.Resolution), flag);
                     break;
 
-                case JryFlagType.EntityFilmSource:
-                    filter = Builders<Model.JryVideo>.Filter.Eq(nameof(Model.JryVideo.Entities) + "." + nameof(JryEntity.FilmSource), flag);
+                case JryFlagType.EntityQuality:
+                    filter = Builders<Model.JryVideo>.Filter.Eq(nameof(Model.JryVideo.Entities) + "." + nameof(JryEntity.Quality), flag);
                     break;
                 case JryFlagType.EntityExtension:
                     filter = Builders<Model.JryVideo>.Filter.Eq(nameof(Model.JryVideo.Entities) + "." + nameof(JryEntity.Extension), flag);

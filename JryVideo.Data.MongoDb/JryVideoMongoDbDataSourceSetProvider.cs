@@ -4,6 +4,7 @@ using JryVideo.Model;
 using MongoDB.Driver;
 using System;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace JryVideo.Data.MongoDb

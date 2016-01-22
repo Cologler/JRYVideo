@@ -183,7 +183,7 @@ namespace JryVideo.Core.Managers
             {
                 return ReferenceEquals(left, right) ||
                        left.AudioSource == right.AudioSource && left.Extension == right.Extension &&
-                       left.FilmSource == right.FilmSource && left.Resolution == right.Resolution &&
+                       left.Quality == right.Quality && left.Resolution == right.Resolution &&
                        (left.Fansubs.SequenceEqual(right.Fansubs) &&
                         left.SubTitleLanguages.SequenceEqual(right.SubTitleLanguages) &&
                         left.TrackLanguages.SequenceEqual(right.TrackLanguages) &&
@@ -200,7 +200,7 @@ namespace JryVideo.Core.Managers
                 case JryFlagType.EntityResolution:
                 case JryFlagType.EntityExtension:
                 case JryFlagType.EntityAudioSource:
-                case JryFlagType.EntityFilmSource:
+                case JryFlagType.EntityQuality:
                 case JryFlagType.VideoYear:
                     throw new NotSupportedException();
 

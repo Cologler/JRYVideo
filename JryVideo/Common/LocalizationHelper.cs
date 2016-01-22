@@ -16,7 +16,7 @@ namespace JryVideo.Common
                     return Resources.JryFlagType_VideoType;
                 case JryFlagType.EntityResolution:
                     return Resources.JryFlagType_EntityResolution;
-                case JryFlagType.EntityFilmSource:
+                case JryFlagType.EntityQuality:
                     return Resources.JryFlagType_EntityFilmSource;
                 case JryFlagType.EntityExtension:
                     return Resources.JryFlagType_EntityExtension;

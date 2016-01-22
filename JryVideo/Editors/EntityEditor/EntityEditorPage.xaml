@@ -58,11 +58,11 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="film source"
+                <TextBlock Text="film quality"
                            Style="{StaticResource TitleStyle}" />
 
                 <ComboBox Grid.Row="1"
-                          Text="{Binding FilmSource, Mode=TwoWay}"
+                          Text="{Binding Quality, Mode=TwoWay}"
                           ItemsSource="{Binding FilmSources}"/>
             </Grid>
 

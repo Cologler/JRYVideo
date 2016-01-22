@@ -82,8 +82,8 @@ namespace JryVideo.Core.Managers
                     infos.Select(z => z.Resolution).ToList()
                 },
                 {
-                    JryFlagType.EntityFilmSource,
-                    infos.Where(z => !string.IsNullOrEmpty(z.FilmSource)).Select(z => z.FilmSource).ToList()
+                    JryFlagType.EntityQuality,
+                    infos.Where(z => !string.IsNullOrEmpty(z.Quality)).Select(z => z.Quality).ToList()
                 },
                 {
                     JryFlagType.EntityAudioSource,
@@ -175,7 +175,7 @@ namespace JryVideo.Core.Managers
                 case JryFlagType.EntityResolution:
                 case JryFlagType.EntityExtension:
                 case JryFlagType.EntityAudioSource:
-                case JryFlagType.EntityFilmSource:
+                case JryFlagType.EntityQuality:
                 case JryFlagType.VideoYear:
                     return true;
 
