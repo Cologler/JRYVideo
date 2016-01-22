@@ -1,46 +1,16 @@
 ﻿using JryVideo.Model;
-using System;
 using System.Threading.Tasks;
 
 namespace JryVideo.Common
 {
     public class ArtistViewModel : HasCoverViewModel<JryArtist>
     {
-        private string _doubanId;
-        private string _name;
-        private string _description;
-
         public ArtistViewModel(JryArtist source)
             : base(source)
         {
-            this._doubanId = this.Source.DoubanId;
-            this._name = String.Join(" / ", this.Source.Names);
-            this._description = this.Source.Description;
         }
 
-        /// <summary>
-        /// may null.
-        /// </summary>
-        public string DoubanId
-        {
-            get { return this._doubanId; }
-            set { this.SetPropertyRef(ref this._doubanId, value); }
-        }
-
-        public string Name
-        {
-            get { return this._name; }
-            set { this.SetPropertyRef(ref this._name, value); }
-        }
-
-        /// <summary>
-        /// may null.
-        /// </summary>
-        public string Description
-        {
-            get { return this._description; }
-            set { this.SetPropertyRef(ref this._description, value); }
-        }
+        public string Name => string.Join(" / ", this.Source.Names);
 
         protected override async Task<bool> TryAutoAddCoverAsync()
         {

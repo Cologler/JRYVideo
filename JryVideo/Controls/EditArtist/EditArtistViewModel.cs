@@ -1,16 +1,9 @@
-﻿using System.Enums;
-using JryVideo.Common;
+﻿using JryVideo.Common;
 using JryVideo.Model;
 
 namespace JryVideo.Controls.EditArtist
 {
-    public class EditArtistViewModel : ArtistViewModel
+    public class EditArtistViewModel : EditorItemViewModel<JryArtist>
     {
-        public EditArtistViewModel(JryArtist source)
-            : base(source)
-        {
-        }
-
-        public ObjectChangedAction Action { get; set; }
     }
 }

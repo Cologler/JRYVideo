@@ -1,7 +1,7 @@
-﻿using System;
+﻿using JryVideo.Model;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using JryVideo.Model;
 
 namespace JryVideo.Controls.EditArtist
 {
@@ -15,21 +15,22 @@ namespace JryVideo.Controls.EditArtist
         /// </summary>
         public event EventHandler CommitClicked;
 
-        public EditArtistViewModel ViewModel { get; private set; }
+        public EditArtistViewModel ViewModel { get; } = new EditArtistViewModel();
 
         public EditArtistUserControl()
         {
             this.InitializeComponent();
+            this.DataContext = this.ViewModel;
         }
 
         public void SetCreate(JryArtist artist)
         {
-            this.DataContext = this.ViewModel = new EditArtistViewModel(artist);
+            this.ViewModel.CreateMode();
         }
 
         public void SetModify(JryArtist artist)
         {
-            this.DataContext = this.ViewModel = new EditArtistViewModel(artist);
+            this.ViewModel.ModifyMode(artist);
         }
 
         private void CommitButton_OnClick(object sender, RoutedEventArgs e)
