@@ -53,9 +53,10 @@ namespace JryVideo.Core.Managers
 
         protected override async Task<bool> InsertAsync(IEnumerable<Model.JryVideo> objs)
         {
-            if (await base.InsertAsync(objs))
+            var videos = objs as Model.JryVideo[] ?? objs.ToArray();
+            if (await base.InsertAsync(videos))
             {
-                var entites = objs.SelectMany(z => z.Entities).ToArray();
+                var entites = videos.SelectMany(z => z.Entities).ToArray();
 
                 if (entites.Length > 0)
                     this.EntitiesCreated.BeginFire(this, entites);
@@ -111,72 +112,16 @@ namespace JryVideo.Core.Managers
             return new EntityManager(new EntityJryEntitySetSet(this, obj));
         }
 
-        internal class EntityJryEntitySetSet : IJasilyEntitySetProvider<JryEntity, string>
+        internal class EntityJryEntitySetSet : SubObjectSetProvider<Model.JryVideo, JryEntity>
         {
-            private readonly Model.JryVideo video;
-            private readonly VideoManager videoManager;
-
             public EntityJryEntitySetSet(VideoManager videoManager, Model.JryVideo video)
+                : base(videoManager, video)
             {
-                this.videoManager = videoManager;
-                this.video = video;
-            }
-
-            /// <summary>
-            /// return a entities dictionary where match id.
-            /// </summary>
-            /// <param name="id"></param>
-            /// <returns></returns>
-            public async Task<IDictionary<string, JryEntity>> FindAsync(IEnumerable<string> ids)
-            {
-                var array = ids.ToArray();
-                return this.video.Entities.Where(z => array.Contains(z.Id)).ToDictionary(z => z.Id);
-            }
-
-            public async Task<IEnumerable<JryEntity>> ListAsync(int skip, int take)
-            {
-                return this.video.Entities.ToArray();
-            }
-
-            /// <summary>
-            /// return null if not found.
-            /// </summary>
-            /// <param name="id"></param>
-            /// <returns></returns>
-            public async Task<JryEntity> FindAsync(string id)
-            {
-                return this.video.Entities.FirstOrDefault(z => z.Id == id);
-            }
-
-            public async Task<bool> InsertAsync(JryEntity entity)
-            {
-                this.video.Entities.Add(entity);
-                return await this.videoManager.UpdateAsync(this.video);
-            }
-
-            public async Task<bool> UpdateAsync(JryEntity entity)
-            {
-                var index = this.video.Entities.FindIndex(z => z.Id == entity.Id);
-                if (index == -1) return false;
-                this.video.Entities[index] = entity;
-                return await this.videoManager.UpdateAsync(this.video);
-            }
-
-            public async Task<bool> RemoveAsync(string id)
-            {
-                return this.video.Entities.RemoveAll(z => z.Id == id) > 0 &&
-                       await this.videoManager.UpdateAsync(this.video);
-            }
-
-            public async Task<bool> InsertAsync(IEnumerable<JryEntity> items)
-            {
-                this.video.Entities.AddRange(items);
-                return await this.videoManager.UpdateAsync(this.video);
             }
 
             public bool IsExists(JryEntity entity)
             {
-                return this.video.Entities.Any(z => Same(z, entity));
+                return this.Parent.Entities.Any(z => Same(z, entity));
             }
 
             private static bool Same(JryEntity left, JryEntity right)

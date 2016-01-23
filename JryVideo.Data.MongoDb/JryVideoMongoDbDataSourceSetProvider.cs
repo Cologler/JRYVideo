@@ -4,7 +4,6 @@ using JryVideo.Model;
 using MongoDB.Driver;
 using System;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace JryVideo.Data.MongoDb
@@ -44,7 +43,7 @@ namespace JryVideo.Data.MongoDb
 
         public IMongoDatabase Database { get; private set; }
 
-        public async Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode)
+        public Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode)
         {
             var builder = new MongoUrlBuilder();
 
@@ -58,7 +57,7 @@ namespace JryVideo.Data.MongoDb
 
             this.Database = this.Client.GetDatabase("JryVideo_" + mode.ToString());
 
-            return true;
+            return Task.FromResult(true);
         }
 
         public ISeriesSet GetSeriesSet()

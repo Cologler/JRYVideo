@@ -56,7 +56,7 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        public async override Task<bool> UpdateAsync(JrySeries series)
+        public override async Task<bool> UpdateAsync(JrySeries series)
         {
             var old = await this.FindAsync(series.Id);
 
@@ -128,71 +128,14 @@ namespace JryVideo.Core.Managers
 
         public VideoInfoManager GetVideoInfoManager(JrySeries obj)
         {
-            return new VideoInfoManager(new VideoInfoJryEntitySetSet(this, obj));
+            return new VideoInfoManager(new SubObjectSetProvider<JrySeries, JryVideoInfo>(this, obj));
         }
 
-        private class VideoInfoJryEntitySetSet : IJasilyEntitySetProvider<JryVideoInfo, string>
+        private class VideoInfoJryEntitySet : SubObjectSetProvider<JrySeries, JryVideoInfo>
         {
-            public SeriesManager SeriesManager { get; set; }
-
-            public JrySeries Series { get; set; }
-
-            public VideoInfoJryEntitySetSet(SeriesManager SeriesManager, JrySeries series)
+            public VideoInfoJryEntitySet(SeriesManager seriesManager, JrySeries series)
+                : base(seriesManager, series)
             {
-                this.SeriesManager = SeriesManager;
-                this.Series = series;
-            }
-
-            /// <summary>
-            /// return a entities dictionary where match id.
-            /// </summary>
-            /// <param name="id"></param>
-            /// <returns></returns>
-            public async Task<IDictionary<string, JryVideoInfo>> FindAsync(IEnumerable<string> ids)
-            {
-                var array = ids.ToArray();
-                return this.Series.Videos.Where(z => array.Contains(z.Id)).ToDictionary(z => z.Id);
-            }
-
-            public async Task<IEnumerable<JryVideoInfo>> ListAsync(int skip, int take)
-            {
-                return this.Series.Videos.ToArray();
-            }
-
-            /// <summary>
-            /// return null if not found.
-            /// </summary>
-            /// <param name="id"></param>
-            /// <returns></returns>
-            public async Task<JryVideoInfo> FindAsync(string id)
-            {
-                return this.Series.Videos.FirstOrDefault(z => z.Id == id);
-            }
-
-            public async Task<bool> InsertAsync(JryVideoInfo entity)
-            {
-                this.Series.Videos.Add(entity);
-                return await this.SeriesManager.UpdateAsync(this.Series);
-            }
-
-            public async Task<bool> UpdateAsync(JryVideoInfo entity)
-            {
-                var index = this.Series.Videos.FindIndex(z => z.Id == entity.Id);
-                if (index == -1) return false;
-                this.Series.Videos[index] = entity;
-                return await this.SeriesManager.UpdateAsync(this.Series);
-            }
-
-            public async Task<bool> RemoveAsync(string id)
-            {
-                return this.Series.Videos.RemoveAll(z => z.Id == id) > 0 &&
-                       await this.SeriesManager.UpdateAsync(this.Series);
-            }
-
-            public async Task<bool> InsertAsync(IEnumerable<JryVideoInfo> items)
-            {
-                this.Series.Videos.AddRange(items);
-                return await this.SeriesManager.UpdateAsync(this.Series);
             }
         }
 

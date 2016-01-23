@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideo : JryObject
+    public sealed class JryVideo : JryObject, IJryChild<JryEntity>
     {
         public JryVideo()
         {
@@ -16,6 +16,8 @@ namespace JryVideo.Model
         /// 尽量排序，但是不一定排序
         /// </summary>
         public List<int> Watcheds { get; set; }
+
+        List<JryEntity> IJryChild<JryEntity>.Childs => this.Entities;
 
         protected override bool InnerTestHasError()
         {

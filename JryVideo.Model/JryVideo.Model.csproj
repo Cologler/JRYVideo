@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IJryChild.cs" />
     <Compile Include="IJryCoverParent.cs" />
     <Compile Include="JryFlag.cs" />
     <Compile Include="JryFlagType.cs" />

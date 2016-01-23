@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public sealed class JrySeries : JryObject
+    public sealed class JrySeries : JryObject, IJryChild<JryVideoInfo>
     {
         public JrySeries()
         {
@@ -33,6 +33,8 @@ namespace JryVideo.Model
         [CanBeNull]
         [BsonIgnoreIfDefault]
         public string TheTVDBId { get; set; }
+
+        List<JryVideoInfo> IJryChild<JryVideoInfo>.Childs => this.Videos;
 
         protected override bool InnerTestHasError()
         {
