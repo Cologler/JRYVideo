@@ -119,7 +119,7 @@ namespace JryVideo.Main
             }
         }
 
-        protected override bool ItemFilter(VideoInfoViewModel obj) => this.filter.Where(obj);
+        protected override bool ItemFilter(VideoInfoViewModel obj) => this.filter?.Where(obj) != false;
 
         public override async Task RefreshAsync()
         {
