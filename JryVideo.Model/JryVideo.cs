@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace JryVideo.Model
@@ -15,6 +16,7 @@ namespace JryVideo.Model
         /// <summary>
         /// 尽量排序，但是不一定排序
         /// </summary>
+        [BsonIgnoreIfDefault]
         public List<int> Watcheds { get; set; }
 
         List<JryEntity> IJryChild<JryEntity>.Childs => this.Entities;
