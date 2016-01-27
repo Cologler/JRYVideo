@@ -1,10 +1,10 @@
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
@@ -16,7 +16,7 @@ namespace JryVideo.Data.MongoDb
         public MongoEntitySet(IMongoCollection<TEntity> collection)
         {
             this.Collection = collection;
-        } 
+        }
 
         /// <summary>
         /// return null if not found.
@@ -36,7 +36,7 @@ namespace JryVideo.Data.MongoDb
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IDictionary<string, TEntity>> FindAsync(IEnumerable<string> ids)
+        public async virtual Task<IDictionary<string, TEntity>> FindAsync(IEnumerable<string> ids)
         {
             return (await (await this.Collection.FindAsync(
                 Builders<TEntity>.Filter.In(t => t.Id, ids.ToArray())))
@@ -81,6 +81,15 @@ namespace JryVideo.Data.MongoDb
                 this.Print(item, "insert");
 
             await this.Collection.InsertManyAsync(items);
+            return true;
+        }
+
+        public async Task<bool> InsertOrUpdateAsync(TEntity entity)
+        {
+            var item = await this.Collection.FindOneAndReplaceAsync(
+                Builders<TEntity>.Filter.Eq(z => z.Id, entity.Id),
+                entity,
+                new FindOneAndReplaceOptions<TEntity, TEntity>() { IsUpsert = true });
             return true;
         }
 

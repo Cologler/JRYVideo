@@ -74,6 +74,8 @@
     <Compile Include="Common\LocalizationHelper.cs" />
     <Compile Include="Common\SeriesViewModel.cs" />
     <Compile Include="Common\ValidationRules\FlagValueValidationRule.cs" />
+    <Compile Include="Common\VideoRoleInfoViewModel.cs" />
+    <Compile Include="Common\VideoRoleViewModel.cs" />
     <Compile Include="Common\VideoViewModel.cs" />
     <Compile Include="Configs\MapperConfig.cs" />
     <Compile Include="Configs\MapperValue.cs" />

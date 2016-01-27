@@ -23,6 +23,8 @@ namespace JryVideo.Data
 
         IJasilyEntitySetProvider<JryArtist, string> GetArtistSet();
 
+        IJasilyEntitySetProvider<VideoRoleCollection, string> GetVideoRoleInfoSet();
+
         IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet();
     }
 }

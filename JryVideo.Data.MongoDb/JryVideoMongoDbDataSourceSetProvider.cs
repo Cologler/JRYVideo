@@ -66,11 +66,10 @@ namespace JryVideo.Data.MongoDb
         }
 
         internal IMongoCollection<Model.JryVideo> VideoCollection
-        {
-            get { return this.Database.GetCollection<Model.JryVideo>("Video"); }
-        }
+            => this.Database.GetCollection<Model.JryVideo>("Video");
 
-        public IFlagableSet<Model.JryVideo> GetVideoSet() => new MongoVideoDataSource(this, this.VideoCollection);
+        public IFlagableSet<Model.JryVideo> GetVideoSet()
+            => new MongoVideoDataSource(this, this.VideoCollection);
 
         public IFlagSet GetFlagSet()
         {
@@ -83,9 +82,10 @@ namespace JryVideo.Data.MongoDb
         }
 
         public IJasilyEntitySetProvider<JryArtist, string> GetArtistSet()
-        {
-            return new MongoJryEntitySet<JryArtist>(this, this.Database.GetCollection<JryArtist>("Artist"));
-        }
+            => new MongoJryEntitySet<JryArtist>(this, this.Database.GetCollection<JryArtist>("Artist"));
+
+        public IJasilyEntitySetProvider<VideoRoleCollection, string> GetVideoRoleInfoSet()
+            => new MongoJryEntitySet<VideoRoleCollection>(this, this.Database.GetCollection<VideoRoleCollection>("VideoRole"));
 
         public IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet()
         {

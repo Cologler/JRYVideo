@@ -75,6 +75,8 @@
     <Compile Include="JryVideoRole.cs" />
     <Compile Include="JryVideoInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VideoInfoAttached.cs" />
+    <Compile Include="VideoRoleCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

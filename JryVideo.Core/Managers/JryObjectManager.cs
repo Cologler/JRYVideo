@@ -28,7 +28,7 @@ namespace JryVideo.Core.Managers
             return await this.Source.ListAsync(skip, take);
         }
 
-        public async Task<T> FindAsync(string id)
+        public virtual async Task<T> FindAsync(string id)
         {
             return await this.Source.FindAsync(id);
         }
@@ -38,6 +38,13 @@ namespace JryVideo.Core.Managers
             if (obj.HasError()) return false;
 
             return await this.Source.InsertAsync(obj);
+        }
+
+        public async Task<bool> InsertOrUpdateAsync(T obj)
+        {
+            if (obj.HasError()) return false;
+
+            return await this.Source.InsertOrUpdateAsync(obj);
         }
 
         protected virtual async Task<bool> InsertAsync(IEnumerable<T> objs)

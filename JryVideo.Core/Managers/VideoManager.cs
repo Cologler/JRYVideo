@@ -2,14 +2,13 @@
 using JryVideo.Model;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace JryVideo.Core.Managers
 {
-    public class VideoManager : JryObjectManager<Model.JryVideo, IFlagableSet<Model.JryVideo>>
+    public sealed class VideoManager : AutoInsertVideoInfoAttachedManager<Model.JryVideo, IFlagableSet<Model.JryVideo>>
     {
         public event EventHandler<IEnumerable<JryEntity>> EntitiesCreated;
         public event EventHandler<IEnumerable<ChangingEventArgs<JryEntity>>> EntitiesUpdated;
@@ -21,14 +20,7 @@ namespace JryVideo.Core.Managers
         }
 
         public async void SeriesManager_VideoInfoCreated(object sender, IEnumerable<JryVideoInfo> e)
-        {
-            await this.InsertAsync(e.Select(i =>
-            {
-                var v = Model.JryVideo.Build(i);
-                v.BuildMetaData(true);
-                return v;
-            }));
-        }
+            => await this.InsertAsync(e.Select(VideoInfoAttached.Build<Model.JryVideo>));
 
         public async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
         {

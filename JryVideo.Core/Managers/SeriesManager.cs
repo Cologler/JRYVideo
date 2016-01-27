@@ -131,14 +131,6 @@ namespace JryVideo.Core.Managers
             return new VideoInfoManager(new SubObjectSetProvider<JrySeries, JryVideoInfo>(this, obj));
         }
 
-        private class VideoInfoJryEntitySet : SubObjectSetProvider<JrySeries, JryVideoInfo>
-        {
-            public VideoInfoJryEntitySet(SeriesManager seriesManager, JrySeries series)
-                : base(seriesManager, series)
-            {
-            }
-        }
-
         private static SearchElement ParseSearchText(string text)
         {
             var index = text.IndexOf(':');

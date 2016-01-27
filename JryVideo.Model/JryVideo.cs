@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideo : JryObject, IJryChild<JryEntity>
+    public sealed class JryVideo : VideoInfoAttached, IJryChild<JryEntity>
     {
         public JryVideo()
         {
@@ -31,23 +31,6 @@ namespace JryVideo.Model
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Guid.NewGuid().ToString().ToUpper()
-        /// </summary>
-        /// <returns></returns>
-        protected override string BuildId()
-        {
-            return this.Id;
-        }
-
-        public static JryVideo Build(JryVideoInfo info)
-        {
-            return new JryVideo()
-            {
-                Id = info.Id
-            };
         }
     }
 }

@@ -31,16 +31,22 @@ namespace JryVideo.Core.Managers
         public Task<TSub> FindAsync(string id)
             => Task.FromResult(this.ObjectSet.FirstOrDefault(z => z.Id == id));
 
+        public async Task<bool> InsertAsync(TSub entity)
+        {
+            this.ObjectSet.Add(entity);
+            return await this.parentManager.UpdateAsync(this.Parent);
+        }
+
         public async Task<bool> InsertAsync(IEnumerable<TSub> items)
         {
             this.ObjectSet.AddRange(items);
             return await this.parentManager.UpdateAsync(this.Parent);
         }
 
-        public async Task<bool> InsertAsync(TSub entity)
+        public async Task<bool> InsertOrUpdateAsync(TSub entity)
         {
-            this.ObjectSet.Add(entity);
-            return await this.parentManager.UpdateAsync(this.Parent);
+            this.ObjectSet.RemoveAll(z => z.Id == entity.Id);
+            return await this.InsertAsync(entity);
         }
 
         public Task<IEnumerable<TSub>> ListAsync(int skip, int take)
