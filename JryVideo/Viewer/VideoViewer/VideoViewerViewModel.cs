@@ -273,5 +273,25 @@ namespace JryVideo.Viewer.VideoViewer
                 return await manager.UpdateAsync(this.source.InfoView.Source);
             }
         }
+
+        public async void ResetBackground()
+        {
+            var bgId = this.InfoView.Source.BackgroundImageId;
+            await Task.Run(async () =>
+            {
+                var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
+                if (await coverManager.RemoveAsync(bgId))
+                {
+                    var videoManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(
+                        this.InfoView.SeriesView.Source);
+                    this.InfoView.Source.BackgroundImageId = null;
+                    await videoManager.UpdateAsync(this.InfoView.Source);
+                }
+            });
+            if (this.Background != null)
+            {
+                this.Background.Cover = null;
+            }
+        }
     }
 }

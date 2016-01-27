@@ -291,5 +291,15 @@ namespace JryVideo.Viewer.VideoViewer
                 box.SetIsWatchedAndNotify(!box.IsWatched);
             }
         }
+
+        private void ShowActorMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.ActorFlyout.IsOpen = !this.ActorFlyout.IsOpen;
+        }
+
+        private void ResetBackgroundMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.ResetBackground();
+        }
     }
 }

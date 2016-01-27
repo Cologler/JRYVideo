@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:JryVideo.Viewer.VideoViewer"
       xmlns:common="clr-namespace:JryVideo.Common"
+      xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       mc:Ignorable="d"
       d:DesignHeight="600"
       d:DesignWidth="800"
@@ -194,6 +195,12 @@
                         <MenuItem Header="add"
                                   x:Name="AddEntityMenuItem"
                                   Click="AddEntityMenuItem_OnClick" />
+                        <MenuItem Header="actor"
+                                  Click="ShowActorMenuItem_OnClick" />
+                        <MenuItem Header="other">
+                            <MenuItem Header="reset background"
+                                      Click="ResetBackgroundMenuItem_OnClick"></MenuItem>
+                        </MenuItem>
                     </Menu>
                 </Grid>
 
@@ -453,6 +460,22 @@
             </Grid>
 
         </Grid>
+
+        <mah:Flyout x:Name="ActorFlyout"
+                    Position="Right"
+                    Width="500"
+                    Background="Transparent"
+                    CloseButtonVisibility="Collapsed"
+                    TitleVisibility="Collapsed"
+                    Header="xxx">
+            <Border BorderThickness="1,1,0,0"
+                    BorderBrush="{StaticResource AccentColorBrush}"
+                    Background="White">
+                <Grid>
+                    
+                </Grid>
+            </Border>
+        </mah:Flyout>
 
     </Grid>
 </Page>
