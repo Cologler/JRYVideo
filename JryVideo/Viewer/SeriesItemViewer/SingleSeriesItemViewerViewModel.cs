@@ -1,10 +1,9 @@
+using JryVideo.Common;
+using JryVideo.Model;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using JryVideo.Common;
-using JryVideo.Model;
 
 namespace JryVideo.Viewer.SeriesItemViewer
 {
@@ -23,7 +22,7 @@ namespace JryVideo.Viewer.SeriesItemViewer
             set { this.SetPropertyRef(ref this.source, value); }
         }
 
-        public async override Task RefreshAsync()
+        public override async Task RefreshAsync()
         {
             var series = this.Source;
             Debug.Assert(series != null);

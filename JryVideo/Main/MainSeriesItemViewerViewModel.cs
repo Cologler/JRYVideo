@@ -154,7 +154,7 @@ namespace JryVideo.Main
                 this.isOnlyTracking = isOnlyTracking;
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    this.filterText = text.Trim();
+                    this.filterText = text.Trim().ToLower();
                 }
             }
 
@@ -166,7 +166,7 @@ namespace JryVideo.Main
                 return obj.SeriesView.Source.Id == this.filterText ||
                        obj.Source.Id == this.filterText ||
                        obj.Source.Names.Concat(obj.SeriesView.Source.Names)
-                       .Any(z => z.Contains(this.filterText));
+                       .Any(z => z.ToLower().Contains(this.filterText));
             }
         }
 
