@@ -462,94 +462,95 @@
             </Grid>
 
         </Grid>
+        
+        <mah:FlyoutsControl>
+            <mah:Flyout x:Name="ActorFlyout"
+                        Position="Right"
+                        Width="500"
+                        Background="Transparent"
+                        CloseButtonVisibility="Collapsed"
+                        TitleVisibility="Collapsed"
+                        Header="xxx">
+                <Border BorderThickness="1,1,0,0"
+                        BorderBrush="{StaticResource AccentColorBrush}"
+                        Background="White">
+                    <Grid>
+                        <ListView BorderThickness="0"
+                                  ItemsSource="{Binding VideoRoleCollection.Roles.View}"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  Background="Transparent">
 
-        <mah:Flyout x:Name="ActorFlyout"
-                    Position="Right"
-                    Width="500"
-                    Background="Transparent"
-                    CloseButtonVisibility="Collapsed"
-                    TitleVisibility="Collapsed"
-                    Header="xxx">
-            <Border BorderThickness="1,1,0,0"
-                    BorderBrush="{StaticResource AccentColorBrush}"
-                    Background="White">
-                <Grid>
-                    <ListView BorderThickness="0"
-                              ItemsSource="{Binding VideoRoleCollection.Roles.View}"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              Background="Transparent">
-                        
-                        <ListView.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <Grid Height="36"
-                                              Margin="0,10,0,4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            
-                                            <TextBlock FontSize="18"
-                                                       Foreground="Black"
-                                                       Text="{Binding Name}"
-                                                       Margin="16,4"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center" />
-                                            
-                                            <Line Width="500"
-                                                  Height="1"
-                                                  StrokeThickness="1" />
-                                            
-                                        </Grid>
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ListView.GroupStyle>
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <Grid Height="36"
+                                                  Margin="0,10,0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
 
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
+                                                <TextBlock FontSize="18"
+                                                           Foreground="Black"
+                                                           Text="{Binding Name}"
+                                                           Margin="16,4"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
 
-                        <ListView.ItemTemplate>
-                            <DataTemplate >
-                                <Grid Margin="3"
-                                      Width="150"
-                                      d:DataContext="{d:DesignInstance common:VideoRoleViewModel}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="200" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
+                                                <Line Width="500"
+                                                      Height="1"
+                                                      StrokeThickness="1" />
 
-                                    <Grid>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="3"
+                                          Width="154"
+                                          d:DataContext="{d:DesignInstance common:VideoRoleViewModel}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="230" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
                                         <Grid>
-                                            <Image Source="{Binding Cover.BinaryData}"
-                                                   RenderOptions.BitmapScalingMode="Fant"
-                                                   RenderOptions.EdgeMode="Aliased" />
+                                            <Grid>
+                                                <Image Source="{Binding Cover.BinaryData}"
+                                                       RenderOptions.BitmapScalingMode="Fant"
+                                                       RenderOptions.EdgeMode="Aliased" />
+                                            </Grid>
                                         </Grid>
+
+                                        <StackPanel Grid.Row="1"
+                                                    Orientation="Horizontal"
+                                                    HorizontalAlignment="Center">
+
+                                            <TextBlock Text="{Binding NameViewModel.FirstLine}"
+                                                       Margin="2,0"
+                                                       Foreground="Black" />
+
+                                        </StackPanel>
+
                                     </Grid>
-
-                                    <StackPanel Grid.Row="1"
-                                                Orientation="Horizontal"
-                                                HorizontalAlignment="Center"
-                                                MaxWidth="200">
-
-                                        <TextBlock Text="{Binding NameViewModel.FirstLine}"
-                                                   Margin="2,0"
-                                                   Foreground="Black" />
-
-                                    </StackPanel>
-
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Grid>
-            </Border>
-        </mah:Flyout>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
 
     </Grid>
 </Page>

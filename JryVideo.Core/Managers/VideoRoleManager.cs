@@ -38,6 +38,7 @@ namespace JryVideo.Core.Managers
             var series = (await client.GetSeriesByImdbIdAsync(video.ImdbId)).FirstOrDefault();
             if (series == null) return;
             var actors = (await series.GetActorsAsync(client)).ToArray();
+            if (actors.Length == 0) return;
             var major = actors.Select(z => z.SortOrder).Min();
 
             foreach (var actor in actors)
