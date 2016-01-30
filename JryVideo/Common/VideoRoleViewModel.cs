@@ -48,12 +48,7 @@ namespace JryVideo.Common
             if (!actors[0].HasBanner) return false;
             var url = actors[0].BuildUrl(client);
 
-            var cover = new JryCover();
-            cover.CoverSourceType = JryCoverSourceType.Imdb;
-            cover.CoverType = JryCoverType.Role;
-            cover.Uri = url;
-            cover.RoleId = this.parent.VideoViewerViewModel.InfoView.Source.Id + "_" + this.Source.Id; // 分配给自己（而不是 series imdb Id）
-
+            var cover = JryCover.CreateRole(this.parent.VideoViewerViewModel.InfoView.Source, url, this.Source);
             var guid = await JryVideoCore.Current.CurrentDataCenter.CoverManager.DownloadCoverAsync(cover);
             if (guid != null)
             {

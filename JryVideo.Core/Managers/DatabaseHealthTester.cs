@@ -1,6 +1,7 @@
 ﻿using JryVideo.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,11 +16,20 @@ namespace JryVideo.Core.Managers
             this.dataCenter = dataCenter;
         }
 
-        public async Task RunAsync()
+        [Conditional("DEBUG")]
+        public void RunOnDebugAsync()
+        {
+            // await this.RunAsync(false);
+        }
+
+        public async Task RunAsync(bool fix)
         {
             await Task.Run(async () =>
             {
-                await this.dataCenter.CoverManager.Source.CursorAsync(z => this.covers.Add(z.Id, false));
+                await this.dataCenter.CoverManager.Source.CursorAsync(z =>
+                {
+                    this.covers.Add(z.Id, false);
+                });
                 await this.dataCenter.VideoRoleManager.Source.CursorAsync(z =>
                 {
                     z.MajorRoles?.ForEach(this.ConnectToCover);
@@ -30,10 +40,19 @@ namespace JryVideo.Core.Managers
                     z.Videos.ForEach(this.ConnectToCover);
                     z.Videos.Select(x => x.BackgroundImageId).ForEach(this.ConnectToCover);
                 });
-                this.missingSource.AddRange(this.covers.Where(z => !z.Value).Select(z => z.Key));
-                
-                Log.Write($"cover missing source ({this.missingSource.Count}):".IntoArray().Concat(this.missingSource).AsLines());
-                Log.Write($"cover missing entity ({this.missingCover.Count}):".IntoArray().Concat(this.missingCover).AsLines());
+                this.coverMissingSource.AddRange(this.covers.Where(z => !z.Value).Select(z => z.Key));
+
+                Log.Write($"cover missing source ({this.coverMissingSource.Count}):".IntoArray().Concat(this.coverMissingSource).AsLines());
+                Log.Write($"cover missing entity ({this.coverMissingEntity.Count}):".IntoArray().Concat(this.coverMissingEntity).AsLines());
+
+                // remove all missing source cover
+                if (fix)
+                {
+                    foreach (var id in this.coverMissingSource)
+                    {
+                        await this.dataCenter.CoverManager.RemoveAsync(id);
+                    }
+                }
             });
         }
 
@@ -48,21 +67,12 @@ namespace JryVideo.Core.Managers
             }
             else
             {
-                this.missingCover.Add(coverId);
+                this.coverMissingEntity.Add(coverId);
             }
         }
 
         private readonly Dictionary<string, bool> covers = new Dictionary<string, bool>();
-        private readonly List<string> missingCover = new List<string>();
-        private readonly List<string> missingSource = new List<string>();
-
-        public async Task FixAsync()
-        {
-            // remove all missing source cover
-            foreach (var id in this.missingSource)
-            {
-                await this.dataCenter.CoverManager.RemoveAsync(id);
-            }
-        }
+        private readonly List<string> coverMissingEntity = new List<string>();
+        private readonly List<string> coverMissingSource = new List<string>();
     }
 }

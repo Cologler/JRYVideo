@@ -208,13 +208,7 @@ namespace JryVideo.Common
                 if (this.Source.DoubanId == null) return null;
                 var url = (await DoubanHelper.TryGetMovieInfoAsync(doubanId))?.GetLargeImageUrl();
                 if (url == null) return null;
-                var cover = new JryCover();
-                cover.CoverSourceType = JryCoverSourceType.Douban;
-                cover.CoverType = JryCoverType.Video;
-                cover.DoubanId = this.Source.DoubanId;
-                cover.Uri = url;
-                cover.ImdbId = this.Source.ImdbId;
-
+                var cover = JryCover.CreateVideo(this.Source, url);
                 return await coverManager.DownloadCoverAsync(cover);
             });
         }

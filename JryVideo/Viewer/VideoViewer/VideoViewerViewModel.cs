@@ -276,13 +276,7 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<string> DownloadAsync(string url)
             {
-                var cover = new JryCover();
-                cover.CoverSourceType = JryCoverSourceType.Imdb;
-                cover.CoverType = JryCoverType.Background;
-                cover.DoubanId = this.Source.DoubanId;
-                cover.Uri = url;
-                cover.ImdbId = this.Source.ImdbId; // 分配给自己（而不是 series imdb Id）
-
+                var cover = JryCover.CreateBackground(this.Source.Source.InfoView.Source, url);
                 return await JryVideoCore.Current.CurrentDataCenter.CoverManager.DownloadCoverAsync(cover);
             }
 

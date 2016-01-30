@@ -54,6 +54,12 @@ namespace JryVideo.Core
         {
             this.TheTVDBClient = await new TheTVDBHost().CreateAsync("2C8DAFF32B0E08A7", null);
 
+            foreach (var dc in new[] { this.NormalDataCenter, this.SecureDataCenter })
+            {
+                var tester = new DatabaseHealthTester(dc);
+                tester.RunOnDebugAsync();
+            }
+
             if (this.RunArgs != null)
             {
                 if (this.RunArgs.Contains("--test"))
@@ -62,8 +68,7 @@ namespace JryVideo.Core
                     foreach (var dc in new[] { this.NormalDataCenter, this.SecureDataCenter })
                     {
                         var tester = new DatabaseHealthTester(dc);
-                        await tester.RunAsync();
-                        if (fix) await tester.FixAsync();
+                        await tester.RunAsync(fix);
                     }
                 }
             }
