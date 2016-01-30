@@ -6,6 +6,7 @@ using JryVideo.Viewer.VideoViewer;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace JryVideo.Common
 {
@@ -17,6 +18,8 @@ namespace JryVideo.Common
         {
             this.videoId = videoId;
             this.VideoViewerViewModel = videoViewerViewModel;
+
+            this.Roles.View.GroupDescriptions?.Add(new PropertyGroupDescription(nameof(VideoRoleViewModel.GroupTitle)));
         }
 
         public VideoViewerViewModel VideoViewerViewModel { get; }

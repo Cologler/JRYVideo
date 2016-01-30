@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using JryVideo.Core;
 using JryVideo.Model;
+using System.Linq;
 using System.Threading.Tasks;
-using JryVideo.Core;
 
 namespace JryVideo.Common
 {
@@ -20,6 +20,8 @@ namespace JryVideo.Common
         public NameableViewModel<JryVideoRole> NameViewModel { get; }
 
         public bool IsMajor { get; }
+
+        public string GroupTitle => this.IsMajor ? "major" : "minor";
 
         /// <summary>
         /// the method will call PropertyChanged for each property which has [NotifyPropertyChanged]
@@ -41,6 +43,7 @@ namespace JryVideo.Common
             var actors = (await series.GetActorsAsync(client)).Where(
                 z => z.Role != null && this.Source.RoleName.Contains(z.Role.Trim())).ToArray();
             if (actors.Length != 1) return false;
+            if (!actors[0].HasBanner) return false;
             var url = actors[0].BuildUrl(client);
 
             var cover = new JryCover();
