@@ -1,4 +1,5 @@
-﻿using JryVideo.Common.Dialogs;
+﻿using System;
+using JryVideo.Common.Dialogs;
 using JryVideo.Core;
 using System.Collections.Generic;
 using System.Windows;
@@ -17,6 +18,32 @@ namespace JryVideo.Selectors.WebImageSelector
         {
             this.InitializeComponent();
             this.DataContext = this.ViewModel;
+            this.WithMode(ViewMode.Mode1);
+        }
+
+        private void WithMode(ViewMode mode)
+        {
+            this.ImagesListView1.Visibility = this.ImagesListView2.Visibility = Visibility.Collapsed;
+            switch (mode)
+            {
+                case ViewMode.Mode1:
+                    this.ImagesListView1.Visibility = Visibility.Visible;
+                    break;
+
+                case ViewMode.Mode2:
+                    this.ImagesListView2.Visibility = Visibility.Visible;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        private enum ViewMode
+        {
+            Mode1,
+
+            Mode2
         }
 
         /// <summary>
@@ -27,7 +54,7 @@ namespace JryVideo.Selectors.WebImageSelector
         {
             var dlg = new WebImageSelectorWindow() { Owner = parent };
             dlg.ViewModel.Load(urls);
-            return dlg.ShowDialog() == true ? dlg.ImagesListView.SelectedItem as string : null;
+            return dlg.ShowDialog() == true ? dlg.ViewModel.SelectedUrl : null;
         }
 
         public static string StartSelectByImdbId(Window parent, string imdbId)
@@ -40,7 +67,7 @@ namespace JryVideo.Selectors.WebImageSelector
             }
             var dlg = new WebImageSelectorWindow() { Owner = parent };
             dlg.ViewModel.BeginLoadPosterByImdbId(client, imdbId);
-            return dlg.ShowDialog() == true ? dlg.ImagesListView.SelectedItem as string : null;
+            return dlg.ShowDialog() == true ? dlg.ViewModel.SelectedUrl : null;
         }
 
         public static string StartSelectFanartByImdbId(Window parent, string index, params string[] imdbIds)
@@ -52,8 +79,9 @@ namespace JryVideo.Selectors.WebImageSelector
                 return null;
             }
             var dlg = new WebImageSelectorWindow() { Owner = parent };
+            dlg.WithMode(ViewMode.Mode2);
             dlg.ViewModel.BeginLoadFanartByImdbId(client, index, imdbIds);
-            return dlg.ShowDialog() == true ? dlg.ImagesListView.SelectedItem as string : null;
+            return dlg.ShowDialog() == true ? dlg.ViewModel.SelectedUrl : null;
         }
 
         private void AcceptButton_OnClick(object sender, System.Windows.RoutedEventArgs e)

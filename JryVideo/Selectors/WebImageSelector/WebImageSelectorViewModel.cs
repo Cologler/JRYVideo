@@ -15,8 +15,7 @@ namespace JryVideo.Selectors.WebImageSelector
         public ObservableCollection<string> Urls { get; }
             = new ObservableCollection<string>();
 
-        public JasilyCollectionView<byte[]> Buffers { get; }
-            = new JasilyCollectionView<byte[]>();
+        public string SelectedUrl { get; set; }
 
         public void Load(IEnumerable<string> urls)
         {
