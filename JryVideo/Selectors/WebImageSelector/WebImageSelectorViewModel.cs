@@ -12,6 +12,16 @@ namespace JryVideo.Selectors.WebImageSelector
 {
     public class WebImageSelectorViewModel : JasilyViewModel
     {
+        private string header = "select a image";
+
+        public string Header
+        {
+            get { return this.header; }
+            private set { this.SetPropertyRef(ref this.header, value); }
+        }
+
+        public void SetHeader(string msg) => this.Header = $"select a image ({msg})";
+
         public ObservableCollection<string> Urls { get; }
             = new ObservableCollection<string>();
 
@@ -20,12 +30,15 @@ namespace JryVideo.Selectors.WebImageSelector
         public void Load(IEnumerable<string> urls)
         {
             this.Urls.Reset(urls);
+            this.SetHeader(this.Urls.Count.ToString());
         }
 
         public async void BeginLoadPosterByImdbId(TheTVDBClient client, string imdbId)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (imdbId == null) throw new ArgumentNullException(nameof(imdbId));
+
+            this.SetHeader("loading...");
 
             var videos = (await client.GetSeriesByImdbIdAsync(imdbId)).ToArray();
             if (videos.Length == 0) return;
@@ -40,6 +53,8 @@ namespace JryVideo.Selectors.WebImageSelector
         public async void BeginLoadFanartByImdbId(TheTVDBClient client, string index, params string[] imdbIds)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
+
+            this.SetHeader("loading...");
 
             foreach (var imdbId in imdbIds)
             {
