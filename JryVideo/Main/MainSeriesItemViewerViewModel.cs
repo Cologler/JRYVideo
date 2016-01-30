@@ -163,8 +163,8 @@ namespace JryVideo.Main
                 if (this.isOnlyTracking && !obj.Source.IsTracking) return false;
                 if (this.filterText == null) return true;
 
-                return obj.SeriesView.Source.Id == this.filterText ||
-                       obj.Source.Id == this.filterText ||
+                return obj.SeriesView.Source.Id.ToLower() == this.filterText ||
+                       obj.Source.Id.ToLower() == this.filterText ||
                        obj.Source.Names.Concat(obj.SeriesView.Source.Names)
                        .Any(z => z.ToLower().Contains(this.filterText));
             }
