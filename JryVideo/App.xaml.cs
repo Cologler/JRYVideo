@@ -3,6 +3,7 @@ using JryVideo.Core;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using System.Windows;
@@ -44,12 +45,13 @@ namespace JryVideo
         {
             base.OnStartup(e);
 
+            JryVideoCore.Current.RunArgs = e.Args.ToArray();
+
             this.configWatcher = new FileSystemWatcher(".", "*.json");
             this.configWatcher.Created += this.ConfigWatcher_Changed;
             this.configWatcher.Changed += this.ConfigWatcher_Changed;
             this.configWatcher.Deleted += this.ConfigWatcher_Changed;
             this.configWatcher.EnableRaisingEvents = true;
-
 
             this.BeginLoadUserConfig();
         }

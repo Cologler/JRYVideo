@@ -28,55 +28,58 @@ namespace JryVideo.Core.Managers
 
         public async Task AutoCreateVideoRoleOnInitialize(JryVideoInfo video)
         {
-            var collection = await this.FindAsync(video.Id);
-            if (collection.MajorRoles != null || collection.MinorRoles != null) return;
-
-            var client = JryVideoCore.Current.TheTVDBClient;
-            if (client == null) return;
-
-            if (video.ImdbId == null || !video.ImdbId.StartsWith("tt")) return;
-            var series = (await client.GetSeriesByImdbIdAsync(video.ImdbId)).FirstOrDefault();
-            if (series == null) return;
-            var actors = (await series.GetActorsAsync(client)).ToArray();
-            if (actors.Length == 0) return;
-            var major = actors.Select(z => z.SortOrder).Min();
-
-            foreach (var actor in actors)
+            await Task.Run(async () =>
             {
-                var artist = (await this.artistManager.Source.FindAsync(new JryArtist.QueryParameter()
-                {
-                    TheTVDBId = actor.Id
-                })).FirstOrDefault();
+                var collection = await this.FindAsync(video.Id);
+                if (collection.MajorRoles != null || collection.MinorRoles != null) return;
 
-                if (artist == null && !actor.Name.IsNullOrWhiteSpace())
-                {
-                    artist = new JryArtist()
-                    {
-                        TheTVDBId = actor.Id,
-                        Names = new List<string>() { actor.Name.Trim() }
-                    };
-                    artist.BuildMetaData();
-                    await this.artistManager.InsertAsync(artist);
-                }
+                var client = JryVideoCore.Current.TheTVDBClient;
+                if (client == null) return;
 
-                if (artist != null)
+                if (video.ImdbId == null || !video.ImdbId.StartsWith("tt")) return;
+                var series = (await client.GetSeriesByImdbIdAsync(video.ImdbId)).FirstOrDefault();
+                if (series == null) return;
+                var actors = (await series.GetActorsAsync(client)).ToArray();
+                if (actors.Length == 0) return;
+                var major = actors.Select(z => z.SortOrder).Min();
+
+                foreach (var actor in actors)
                 {
-                    var role = new JryVideoRole()
+                    var artist = (await this.artistManager.Source.FindAsync(new JryArtist.QueryParameter()
                     {
-                        Id = artist.Id,
-                        ActorName = artist.Names.First()
-                    };
-                    if (!actor.Role.IsNullOrWhiteSpace())
+                        TheTVDBId = actor.Id
+                    })).FirstOrDefault();
+
+                    if (artist == null && !actor.Name.IsNullOrWhiteSpace())
                     {
-                        role.RoleName = new List<string>() { actor.Role.Trim() };
+                        artist = new JryArtist()
+                        {
+                            TheTVDBId = actor.Id,
+                            Names = new List<string>() { actor.Name.Trim() }
+                        };
+                        artist.BuildMetaData();
+                        await this.artistManager.InsertAsync(artist);
                     }
-                    role.BuildMetaData(true);
-                    (actor.SortOrder == major
-                        ? (collection.MajorRoles ?? (collection.MajorRoles = new List<JryVideoRole>()))
-                        : (collection.MinorRoles ?? (collection.MinorRoles = new List<JryVideoRole>()))).Add(role);
+
+                    if (artist != null)
+                    {
+                        var role = new JryVideoRole()
+                        {
+                            Id = artist.Id,
+                            ActorName = artist.Names.First()
+                        };
+                        if (!actor.Role.IsNullOrWhiteSpace())
+                        {
+                            role.RoleName = new List<string>() { actor.Role.Trim() };
+                        }
+                        role.BuildMetaData(true);
+                        (actor.SortOrder == major
+                            ? (collection.MajorRoles ?? (collection.MajorRoles = new List<JryVideoRole>()))
+                            : (collection.MinorRoles ?? (collection.MinorRoles = new List<JryVideoRole>()))).Add(role);
+                    }
                 }
-            }
-            await this.UpdateAsync(collection);
+                await this.UpdateAsync(collection);
+            });
         }
     }
 }

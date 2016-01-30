@@ -18,6 +18,20 @@ namespace JryVideo.Data.MongoDb
             this.Collection = collection;
         }
 
+        public async Task CursorAsync(Action<TEntity> callback)
+        {
+            using (var cur = await this.Collection.FindAsync(_ => true))
+            {
+                while (await cur.MoveNextAsync())
+                {
+                    foreach (var obj in cur.Current)
+                    {
+                        callback(obj);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// return null if not found.
         /// </summary>

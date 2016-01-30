@@ -3,7 +3,6 @@ using JryVideo.Core.TheTVDB;
 using JryVideo.Data;
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace JryVideo.Core
@@ -18,6 +17,8 @@ namespace JryVideo.Core
         {
             Current = new JryVideoCore();
         }
+
+        public string[] RunArgs { get; set; }
 
         public async Task InitializeAsync()
         {
@@ -52,6 +53,20 @@ namespace JryVideo.Core
         private async void BeginLazyInitialize()
         {
             this.TheTVDBClient = await new TheTVDBHost().CreateAsync("2C8DAFF32B0E08A7", null);
+
+            if (this.RunArgs != null)
+            {
+                if (this.RunArgs.Contains("--test"))
+                {
+                    var fix = this.RunArgs.Contains("--fix");
+                    foreach (var dc in new[] { this.NormalDataCenter, this.SecureDataCenter })
+                    {
+                        var tester = new DatabaseHealthTester(dc);
+                        await tester.RunAsync();
+                        if (fix) await tester.FixAsync();
+                    }
+                }
+            }
         }
 
         public DataCenter NormalDataCenter { get; private set; }

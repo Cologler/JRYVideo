@@ -1,4 +1,5 @@
 using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -51,6 +52,14 @@ namespace JryVideo.Core.Managers
 
         public Task<IEnumerable<TSub>> ListAsync(int skip, int take)
             => Task.FromResult((IEnumerable<TSub>)this.ObjectSet.Skip(skip).Take(take).ToArray());
+
+        public async Task CursorAsync(Action<TSub> callback)
+        {
+            foreach (var sub in this.ObjectSet)
+            {
+                callback(sub);
+            }
+        }
 
         public async Task<bool> RemoveAsync(string id)
         {

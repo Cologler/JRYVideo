@@ -48,6 +48,7 @@
     <Compile Include="Managers\ArtistManager.cs" />
     <Compile Include="Managers\AutoInsertObjectManager.cs" />
     <Compile Include="Managers\AutoInsertVideoInfoAttachedManager.cs" />
+    <Compile Include="Managers\DatabaseHealthTester.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\FlagManager.cs" />
     <Compile Include="Managers\CoverManagers.cs" />
