@@ -1,12 +1,11 @@
-﻿using System.Data;
-using JryVideo.Data.DataSources;
+﻿using JryVideo.Data.DataSources;
 using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class ArtistManager : JryObjectManager<JryArtist, IJasilyEntitySetProvider<JryArtist, string>>
+    public class ArtistManager : JryObjectManager<JryArtist, IArtistSet>
     {
-        public ArtistManager(IJasilyEntitySetProvider<JryArtist, string> source)
+        public ArtistManager(IArtistSet source)
             : base(source)
         {
         }

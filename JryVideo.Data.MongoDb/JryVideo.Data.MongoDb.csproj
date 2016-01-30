@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JryVideoMongoDbDataSourceSetProvider.cs" />
+    <Compile Include="MongoArtistDataSource.cs" />
     <Compile Include="MongoEntitySet.cs" />
     <Compile Include="MongoFlagDataSource.cs" />
     <Compile Include="MongoCoverDataSource.cs" />

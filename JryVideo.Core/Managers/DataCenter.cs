@@ -12,7 +12,7 @@ namespace JryVideo.Core.Managers
             this.VideoManager = new VideoManager(dataEngine.GetVideoSet());
             this.FlagManager = new FlagManager(dataEngine.GetFlagSet());
             this.ArtistManager = new ArtistManager(dataEngine.GetArtistSet());
-            this.VideoRoleManager = new VideoRoleManager(dataEngine.GetVideoRoleInfoSet());
+            this.VideoRoleManager = new VideoRoleManager(this.ArtistManager, dataEngine.GetVideoRoleInfoSet());
 
             this.SeriesManager.VideoInfoCreated += this.VideoManager.SeriesManager_VideoInfoCreated;
             this.SeriesManager.VideoInfoRemoved += this.VideoManager.SeriesManager_VideoInfoRemoved;
@@ -25,6 +25,8 @@ namespace JryVideo.Core.Managers
             this.VideoManager.EntitiesRemoved += this.FlagManager.VideoManager_EntitiesRemoved;
 
             this.FlagManager.FlagChanged += this.VideoManager.FlagManager_FlagChanged;
+
+            this.SeriesManager.VideoInfoCreated += this.VideoRoleManager.SeriesManager_VideoInfoCreated;
         }
 
         public IJryVideoDataEngine ProviderManager { get; }

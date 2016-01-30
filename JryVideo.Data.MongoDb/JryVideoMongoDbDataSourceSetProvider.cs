@@ -72,17 +72,13 @@ namespace JryVideo.Data.MongoDb
             => new MongoVideoDataSource(this, this.VideoCollection);
 
         public IFlagSet GetFlagSet()
-        {
-            return new MongoFlagDataSource(this, this.Database.GetCollection<JryFlag>("Flag"));
-        }
+            => new MongoFlagDataSource(this, this.Database.GetCollection<JryFlag>("Flag"));
 
         public ICoverSet GetCoverSet()
-        {
-            return new MongoCoverDataSource(this, this.Database.GetCollection<JryCover>("Cover"));
-        }
+            => new MongoCoverDataSource(this, this.Database.GetCollection<JryCover>("Cover"));
 
-        public IJasilyEntitySetProvider<JryArtist, string> GetArtistSet()
-            => new MongoJryEntitySet<JryArtist>(this, this.Database.GetCollection<JryArtist>("Artist"));
+        public IArtistSet GetArtistSet()
+            => new MongoArtistDataSource(this, this.Database.GetCollection<JryArtist>("Artist"));
 
         public IJasilyEntitySetProvider<VideoRoleCollection, string> GetVideoRoleInfoSet()
             => new MongoJryEntitySet<VideoRoleCollection>(this, this.Database.GetCollection<VideoRoleCollection>("VideoRole"));

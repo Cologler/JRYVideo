@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Attributes;
 using System.Diagnostics;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -21,11 +21,47 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string ImdbId { get; set; }
 
+        /// <summary>
+        /// {videoId}_{actorId}
+        /// </summary>
+        [BsonIgnoreIfDefault]
+        public string RoleId { get; set; }
+
         [Cloneable]
         public string Uri { get; set; }
 
         [Cloneable]
         public byte[] BinaryData { get; set; }
+
+        public string GetDownloadId()
+        {
+            var key = ((int)this.CoverType) + "_";
+
+            if (this.RoleId != null) return key + this.RoleId;
+
+            switch (this.CoverSourceType)
+            {
+                case JryCoverSourceType.Local:
+                    throw new ArgumentException();
+
+                case JryCoverSourceType.Uri:
+                    key += this.Uri;
+                    break;
+
+                case JryCoverSourceType.Douban:
+                    key += this.DoubanId;
+                    break;
+
+                case JryCoverSourceType.Imdb:
+                    key += this.ImdbId;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return key;
+        }
 
         protected override bool InnerTestHasError()
         {

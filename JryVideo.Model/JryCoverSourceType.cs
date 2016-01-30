@@ -9,6 +9,5 @@
         Douban = 2,
 
         Imdb = 3
-
     }
 }

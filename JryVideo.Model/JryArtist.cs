@@ -1,28 +1,36 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent
+    public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent, INameable
     {
         public JryArtist()
         {
             this.Names = new List<string>();
         }
 
-        /// <summary>
-        /// may null.
-        /// </summary>
-        public string DoubanId { get; set; }
-
+        [BsonIgnoreIfDefault]
         public List<string> Names { get; set; }
 
         /// <summary>
         /// may null.
         /// </summary>
+        [BsonIgnoreIfDefault]
         public string Description { get; set; }
 
+        [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
+
+        [BsonIgnoreIfDefault]
+        public string TheTVDBId { get; set; }
+
+        /// <summary>
+        /// may null.
+        /// </summary>
+        [BsonIgnoreIfDefault]
+        public string DoubanId { get; set; }
 
         protected override bool InnerTestHasError()
         {
@@ -71,5 +79,12 @@ namespace JryVideo.Model
         public static bool operator ==(JryArtist left, JryArtist right) => Equals(left, right);
 
         public static bool operator !=(JryArtist left, JryArtist right) => !Equals(left, right);
+
+        public struct QueryParameter
+        {
+            public string TheTVDBId { get; set; }
+
+            public string DoubanId { get; set; }
+        }
     }
 }

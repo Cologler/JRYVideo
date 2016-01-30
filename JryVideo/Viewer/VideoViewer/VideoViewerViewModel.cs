@@ -50,15 +50,15 @@ namespace JryVideo.Viewer.VideoViewer
         public async Task LoadAsync()
         {
             this.Background = new BackgroundViewModel(new BackgroundCover(this));
-            this.videoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.Source.Id);
-
+            this.videoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.Source.Id, this);
             await this.ReloadVideoAsync();
+            this.videoRoleCollection.BeginLoad();
         }
 
         public async Task ReloadVideoAsync()
         {
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
-
+            JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.Source);
             var video = await manager.FindAsync(this.InfoView.Source.Id);
 
             if (video == null)

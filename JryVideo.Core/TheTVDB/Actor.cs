@@ -26,5 +26,7 @@ namespace JryVideo.Core.TheTVDB
             if (this.Image.IsNullOrWhiteSpace()) return null;
             return await client.GetBannerByBannerPathAsync(this.Image);
         }
+
+        public string BuildUrl(TheTVDBClient client) => client.BuildBannerUrl(this.Image);
     }
 }

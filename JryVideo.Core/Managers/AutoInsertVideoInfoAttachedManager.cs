@@ -1,6 +1,6 @@
+using JryVideo.Model;
 using System.Data;
 using System.Threading.Tasks;
-using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {

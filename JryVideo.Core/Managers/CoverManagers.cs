@@ -54,27 +54,7 @@ namespace JryVideo.Core.Managers
             if (string.IsNullOrWhiteSpace(cover.Uri))
                 throw new ArgumentException();
 
-            var key = ((int)cover.CoverType).ToString() + " ";
-            switch (cover.CoverSourceType)
-            {
-                case JryCoverSourceType.Local:
-                    throw new ArgumentException();
-
-                case JryCoverSourceType.Uri:
-                    key += cover.Uri;
-                    break;
-
-                case JryCoverSourceType.Douban:
-                    key += cover.DoubanId;
-                    break;
-
-                case JryCoverSourceType.Imdb:
-                    key += cover.ImdbId;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var key = cover.GetDownloadId();
 
             return await Task.Run(async () =>
             {

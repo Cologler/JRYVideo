@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Attributes\OptionalParameterAttribute.cs" />
     <Compile Include="Attributes\RequiredParameterAttribute.cs" />
+    <Compile Include="DataSources\IArtistSet.cs" />
     <Compile Include="DataSources\IFlagableSet.cs" />
     <Compile Include="DataSources\IFlagSet.cs" />
     <Compile Include="DataSources\ICoverSet.cs" />
