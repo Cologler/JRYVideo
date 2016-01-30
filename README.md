@@ -97,6 +97,8 @@ next step。
 
 ![video-main-with-add](http://i.imgur.com/DwU6hUu.png)
 
+![video-main-actor](http://i.imgur.com/woex9eq.png)
+
 ## imdb
 
 填入 imdb 自动生成背景，美爆了：
