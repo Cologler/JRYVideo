@@ -299,7 +299,13 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void ResetBackgroundMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.ResetBackground();
+            this.ViewModel.Background?.Reset();
+        }
+
+        private async void SelectBackgroundMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var selectBackground = this.ViewModel.Background?.StartSelect(this.TryFindParent<Window>());
+            if (selectBackground != null) await selectBackground;
         }
     }
 }

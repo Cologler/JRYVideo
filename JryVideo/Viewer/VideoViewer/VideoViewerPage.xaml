@@ -200,6 +200,8 @@
                         <MenuItem Header="other">
                             <MenuItem Header="reset background"
                                       Click="ResetBackgroundMenuItem_OnClick"></MenuItem>
+                            <MenuItem Header="choose background"
+                                      Click="SelectBackgroundMenuItem_OnClick"></MenuItem>
                         </MenuItem>
                     </Menu>
                 </Grid>
