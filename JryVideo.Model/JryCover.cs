@@ -22,8 +22,10 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string ActorId { get; set; }
 
+        [BsonIgnoreIfDefault]
         public string Uri { get; set; }
 
+        [BsonIgnoreIfDefault]
         public byte[] BinaryData { get; set; }
 
         public string GetDownloadId()
@@ -109,6 +111,13 @@ namespace JryVideo.Model
                 ActorId = role.Id
             };
             return cover;
+        }
+
+        public struct QueryParameter
+        {
+            public JryCoverType CoverType { get; set; }
+
+            public string VideoId { get; set; }
         }
     }
 }

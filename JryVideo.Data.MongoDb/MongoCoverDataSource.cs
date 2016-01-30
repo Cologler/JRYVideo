@@ -2,51 +2,22 @@
 using JryVideo.Model;
 using MongoDB.Driver;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoCoverDataSource : MongoJryEntitySet<JryCover>, ICoverSet
+    public class MongoCoverDataSource : MongoJryEntitySet<JryCover, JryCover.QueryParameter>, ICoverSet
     {
         public MongoCoverDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<JryCover> collection)
             : base(engine, collection)
         {
         }
 
-        public async Task<IEnumerable<JryCover>> QueryByDoubanIdAsync(JryCoverType coverType, string doubanId)
+        protected override IEnumerable<FilterDefinition<JryCover>> BuildFilters(JryCover.QueryParameter parameter)
         {
-            var filter = Builders<JryCover>.Filter;
+            var baseFilter = Builders<JryCover>.Filter.Eq(t => t.CoverType, parameter.CoverType);
 
-            return await (await this.Collection.FindAsync(
-                filter.And(
-                    filter.Eq(t => t.CoverType, coverType),
-                    filter.Eq(t => t.DoubanId, doubanId))
-                ))
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<JryCover>> QueryByImdbIdAsync(JryCoverType coverType, string imdbId)
-        {
-            var filter = Builders<JryCover>.Filter;
-
-            return await (await this.Collection.FindAsync(
-                filter.And(
-                    filter.Eq(t => t.CoverType, coverType),
-                    filter.Eq(t => t.ImdbId, imdbId))
-                ))
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<JryCover>> QueryByUriAsync(JryCoverType coverType, string uri)
-        {
-            var filter = Builders<JryCover>.Filter;
-
-            return await (await this.Collection.FindAsync(
-                filter.And(
-                    filter.Eq(t => t.CoverType, coverType),
-                    filter.Eq(t => t.Uri, uri))
-                ))
-                .ToListAsync();
+            if (parameter.VideoId != null)
+                yield return Builders<JryCover>.Filter.And(baseFilter, Builders<JryCover>.Filter.Eq(t => t.VideoId, parameter.VideoId));
         }
     }
 }

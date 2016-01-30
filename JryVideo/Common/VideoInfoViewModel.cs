@@ -200,15 +200,17 @@ namespace JryVideo.Common
             return await Task.Run(async () =>
             {
                 var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
-                var doubanId = this.Source.DoubanId;
-                foreach (var z in await coverManager.Source.QueryByDoubanIdAsync(JryCoverType.Video, doubanId))
-                {
-                    return z.Id;
-                }
+                var cover = (await coverManager.Source.FindAsync(
+                    new JryCover.QueryParameter()
+                    {
+                        CoverType = JryCoverType.Background,
+                        VideoId = this.Source.Id
+                    })).SingleOrDefault();
+                if (cover != null) return cover.Id;
                 if (this.Source.DoubanId == null) return null;
-                var url = (await DoubanHelper.TryGetMovieInfoAsync(doubanId))?.GetLargeImageUrl();
+                var url = (await DoubanHelper.TryGetMovieInfoAsync(this.Source.DoubanId))?.GetLargeImageUrl();
                 if (url == null) return null;
-                var cover = JryCover.CreateVideo(this.Source, url);
+                cover = JryCover.CreateVideo(this.Source, url);
                 return await coverManager.DownloadCoverAsync(cover);
             });
         }
