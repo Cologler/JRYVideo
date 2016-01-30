@@ -1,10 +1,11 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideoRole : JryInfo, IJasilyLoggerObject<JryVideoRole>, IEquatable<JryVideoRole>, IJryCoverParent
+    public sealed class JryVideoRole : JryInfo, IJasilyLoggerObject<JryVideoRole>, IEquatable<JryVideoRole>, IJryCoverParent, INameable
     {
         [BsonIgnore]
         public string ArtistId => this.Id;
@@ -14,7 +15,7 @@ namespace JryVideo.Model
         /// </summary>
         public string ActorName { get; set; }
 
-        public string RoleName { get; set; }
+        public List<string> RoleName { get; set; }
 
         protected override bool InnerTestHasError()
         {
@@ -37,5 +38,12 @@ namespace JryVideo.Model
         }
 
         public string CoverId { get; set; }
+
+        [BsonIgnore]
+        List<string> INameable.Names
+        {
+            get { return this.RoleName; }
+            set { this.RoleName = value; }
+        }
     }
 }
