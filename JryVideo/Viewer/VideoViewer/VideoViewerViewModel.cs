@@ -188,6 +188,7 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<bool> TrySetByExistsAsync()
             {
+                if (this.Source.ImdbId == null || !this.Source.ImdbId.StartsWith("tt")) return false;
                 var cover = (await JryVideoCore.Current.CurrentDataCenter.CoverManager.Source
                     .QueryByImdbIdAsync(JryCoverType.Background, this.Source.ImdbId)).SingleOrDefault();
                 if (cover == null) return false;
