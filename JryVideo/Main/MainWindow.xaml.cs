@@ -105,14 +105,14 @@ namespace JryVideo.Main
             var page = VideoViewerPage.BuildPage(info);
             page.GoBackButton.Click += this.VideoViewerPage_GoBackButton_Click;
             page.ViewModel.InfoView.SeriesView.PropertiesRefreshed += this.InfoView_PropertiesRefreshed;
-            this.CaptionTextBlock.Text = Caption + " | " + info.SeriesView.DisplayNameFirstLine;
+            this.CaptionTextBlock.Text = Caption + " | " + info.SeriesView.NameViewModel.FirstLine;
             this.MainFrame.Navigate(page);
             await page.ViewModel.LoadAsync();
         }
 
         private void InfoView_PropertiesRefreshed(object sender, EventArgs e)
         {
-            this.CaptionTextBlock.Text = Caption + " | " + ((SeriesViewModel)sender).DisplayNameFirstLine;
+            this.CaptionTextBlock.Text = Caption + " | " + ((SeriesViewModel)sender).NameViewModel.FirstLine;
         }
 
         void VideoViewerPage_GoBackButton_Click(object sender, RoutedEventArgs e)

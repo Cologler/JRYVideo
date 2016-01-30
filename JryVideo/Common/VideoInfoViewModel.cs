@@ -126,10 +126,6 @@ namespace JryVideo.Common
                 Debug.Assert(x != null, "x != null");
                 Debug.Assert(y != null, "y != null");
 
-                if (x.SeriesView.DisplayNameFirstLine == "火星救援")
-                {
-                }
-
                 if (x.SeriesView.Source.Id != y.SeriesView.Source.Id)
                 {
                     return y.SeriesView.Source.Created.CompareTo(x.SeriesView.Source.Created);

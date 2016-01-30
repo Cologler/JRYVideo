@@ -4,6 +4,7 @@ using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Model;
+using JryVideo.Selectors.WebImageSelector;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +12,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using JryVideo.Selectors.WebImageSelector;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -19,6 +19,7 @@ namespace JryVideo.Viewer.VideoViewer
     {
         private VideoViewModel video;
         private BackgroundViewModel background;
+        private VideoRoleCollectionViewModel videoRoleCollection;
 
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
@@ -37,12 +38,19 @@ namespace JryVideo.Viewer.VideoViewer
         public BackgroundViewModel Background
         {
             get { return this.background; }
-            set { this.SetPropertyRef(ref this.background, value); }
+            private set { this.SetPropertyRef(ref this.background, value); }
+        }
+
+        public VideoRoleCollectionViewModel VideoRoleCollection
+        {
+            get { return this.videoRoleCollection; }
+            private set { this.SetPropertyRef(ref this.videoRoleCollection, value); }
         }
 
         public async Task LoadAsync()
         {
             this.Background = new BackgroundViewModel(new BackgroundCover(this));
+            this.videoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.Source.Id);
 
             await this.ReloadVideoAsync();
         }

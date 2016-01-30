@@ -49,7 +49,7 @@
                 </Grid>
 
                 <Grid Grid.Row="1"
-                      ToolTip="{Binding InfoView.SeriesView.DisplayFullName}"
+                      ToolTip="{Binding InfoView.SeriesView.NameViewModel.FullName}"
                       Background="#00000000">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -66,12 +66,12 @@
                         </ContextMenu>
                     </Grid.ContextMenu>
 
-                    <TextBlock Text="{Binding InfoView.SeriesView.DisplayNameFirstLine}"
+                    <TextBlock Text="{Binding InfoView.SeriesView.NameViewModel.FirstLine}"
                                Style="{StaticResource LabelTextBlockStyle}" />
 
                     <TextBlock Grid.Row="1"
-                               Visibility="{Binding InfoView.SeriesView.DisplayNameSecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
-                               Text="{Binding InfoView.SeriesView.DisplayNameSecondLine}"
+                               Visibility="{Binding InfoView.SeriesView.NameViewModel.SecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
+                               Text="{Binding InfoView.SeriesView.NameViewModel.SecondLine}"
                                Style="{StaticResource LabelTextBlockStyle}" />
                 </Grid>
 
