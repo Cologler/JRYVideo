@@ -55,9 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IImdbItem.cs" />
     <Compile Include="IJryChild.cs" />
     <Compile Include="IJryCoverParent.cs" />
     <Compile Include="INameable.cs" />
+    <Compile Include="InterfaceExtension.cs" />
     <Compile Include="JryFlag.cs" />
     <Compile Include="JryFlagType.cs" />
     <Compile Include="JryCoverSourceType.cs" />

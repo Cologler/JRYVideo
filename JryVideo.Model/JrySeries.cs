@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public sealed class JrySeries : JryObject, IJryChild<JryVideoInfo>, INameable
+    public sealed class JrySeries : JryObject, IJryChild<JryVideoInfo>, INameable, IImdbItem
     {
         public JrySeries()
         {

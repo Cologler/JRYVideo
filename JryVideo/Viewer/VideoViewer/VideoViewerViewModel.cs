@@ -50,7 +50,10 @@ namespace JryVideo.Viewer.VideoViewer
         public async Task LoadAsync()
         {
             this.Background = new BackgroundViewModel(new BackgroundCover(this));
-            this.videoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.Source.Id, this);
+            this.videoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.SeriesView.Source, this.InfoView.Source)
+            {
+                VideoViewerViewModel = this
+            };
             await this.ReloadVideoAsync();
             this.videoRoleCollection.BeginLoad();
         }
@@ -58,9 +61,7 @@ namespace JryVideo.Viewer.VideoViewer
         public async Task ReloadVideoAsync()
         {
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
-            JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.Source);
             var video = await manager.FindAsync(this.InfoView.Source.Id);
-
             if (video == null)
             {
                 this.Video = null;
@@ -78,6 +79,9 @@ namespace JryVideo.Viewer.VideoViewer
             }
 
             this.ReloadEpisodes();
+
+            await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.Source);
+            await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.SeriesView.Source);
         }
 
         public void ReloadEpisodes()

@@ -4,6 +4,7 @@ using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Viewer.VideoViewer;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -12,48 +13,60 @@ namespace JryVideo.Common
 {
     public class VideoRoleCollectionViewModel : JasilyViewModel
     {
-        private readonly string videoId;
+        private readonly JrySeries series;
+        private readonly JryVideoInfo video;
 
-        public VideoRoleCollectionViewModel(string videoId, VideoViewerViewModel videoViewerViewModel = null)
+        public VideoRoleCollectionViewModel(JrySeries series, JryVideoInfo video)
         {
-            this.videoId = videoId;
-            this.VideoViewerViewModel = videoViewerViewModel;
+            this.series = series;
+            this.video = video;
 
             this.Roles.View.GroupDescriptions?.Add(new PropertyGroupDescription(nameof(VideoRoleViewModel.GroupTitle)));
         }
 
-        public VideoViewerViewModel VideoViewerViewModel { get; }
+        public VideoViewerViewModel VideoViewerViewModel { get; set; }
 
         public JasilyCollectionView<VideoRoleViewModel> Roles { get; }
             = new JasilyCollectionView<VideoRoleViewModel>();
 
-        public VideoRoleCollection RoleSource { get; private set; }
+        public List<VideoRoleCollection> VideoRoleCollectionSources { get; }
+            = new List<VideoRoleCollection>();
 
         public async void BeginLoad()
         {
             this.Roles.Collection.Clear();
+            this.VideoRoleCollectionSources.Clear();
 
-            this.RoleSource = await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.FindAsync(this.videoId);
-            if (this.RoleSource != null)
+            var major = new List<VideoRoleViewModel>();
+            var minor = new List<VideoRoleViewModel>();
+            foreach (var imdbItem in new IImdbItem[] { this.series, this.video })
             {
-                if (this.RoleSource.MajorRoles != null)
+                var col = await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.FindAsync(imdbItem.Id);
+                if (col != null)
                 {
-                    this.Roles.Collection.AddRange(
-                        this.RoleSource.MajorRoles.Select(z => new VideoRoleViewModel(z, this, true)));
-                }
-
-                if (this.RoleSource.MinorRoles != null)
-                {
-                    this.Roles.Collection.AddRange(
-                        this.RoleSource.MinorRoles.Select(z => new VideoRoleViewModel(z, this, false)));
+                    this.VideoRoleCollectionSources.Add(col);
+                    if (col.MajorRoles != null)
+                    {
+                        major.AddRange(col.MajorRoles.Select(z => new VideoRoleViewModel(z, this, imdbItem, true)));
+                    }
+                    if (col.MinorRoles != null)
+                    {
+                        minor.AddRange(col.MinorRoles.Select(z => new VideoRoleViewModel(z, this, imdbItem, false)));
+                    }
                 }
             }
+            
+            this.Roles.Collection.AddRange(major);
+            this.Roles.Collection.AddRange(minor);
         }
 
-        public async Task CommitAsync()
+        public async Task CommitAsync(string id)
         {
-            if (this.RoleSource == null) return;
-            await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.UpdateAsync(this.RoleSource);
+            var col = this.VideoRoleCollectionSources.FirstOrDefault(z => z.Id == id);
+            if (col != null)
+            {
+                await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.UpdateAsync(col);
+            }
         }
     }
 }

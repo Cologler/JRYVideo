@@ -8,11 +8,13 @@ namespace JryVideo.Common
     public class VideoRoleViewModel : HasCoverViewModel<JryVideoRole>
     {
         private readonly VideoRoleCollectionViewModel parent;
+        private readonly IImdbItem imdbItem;
 
-        public VideoRoleViewModel(JryVideoRole source, VideoRoleCollectionViewModel parent, bool isMajor)
+        public VideoRoleViewModel(JryVideoRole source, VideoRoleCollectionViewModel parent, IImdbItem imdbItem, bool isMajor)
             : base(source)
         {
             this.parent = parent;
+            this.imdbItem = imdbItem;
             this.IsMajor = isMajor;
             this.NameViewModel = new NameableViewModel<JryVideoRole>(source);
         }
@@ -21,7 +23,15 @@ namespace JryVideo.Common
 
         public bool IsMajor { get; }
 
-        public string GroupTitle => this.IsMajor ? "major" : "minor";
+        public string GroupTitle
+        {
+            get
+            {
+                var type = this.imdbItem is JrySeries ? "series" : "video";
+                var level = this.IsMajor ? "major" : "minor";
+                return $"{type} {level} actor";
+            }
+        }
 
         /// <summary>
         /// the method will call PropertyChanged for each property which has [NotifyPropertyChanged]
@@ -36,8 +46,8 @@ namespace JryVideo.Common
         {
             if (this.parent.VideoViewerViewModel == null) return false;
             var client = JryVideoCore.Current.TheTVDBClient;
-            if (client == null) return false;
-            var imdb = this.parent.VideoViewerViewModel.InfoView.Source.ImdbId;
+            var imdb = this.imdbItem.GetValidImdb();
+            if (client == null || imdb == null) return false;
             var series = (await client.GetSeriesByImdbIdAsync(imdb)).FirstOrDefault();
             if (series == null) return false;
             var actors = (await series.GetActorsAsync(client)).Where(
@@ -53,7 +63,7 @@ namespace JryVideo.Common
             if (guid != null)
             {
                 this.Source.CoverId = guid;
-                await this.parent.CommitAsync();
+                await this.parent.CommitAsync(this.imdbItem.Id);
                 return true;
             }
             return false;
