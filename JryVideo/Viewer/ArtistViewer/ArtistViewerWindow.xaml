@@ -53,9 +53,7 @@
                     <StackPanel>
 
                         <TextBlock Text="{Binding NameView.FirstLine}"
-                                   Style="{StaticResource TitleStyle}" />
-
-
+                                   FontSize="24" />
 
                     </StackPanel>
 

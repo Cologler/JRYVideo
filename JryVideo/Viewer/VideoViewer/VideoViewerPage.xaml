@@ -545,11 +545,19 @@
                                     </Grid>
 
                                     <StackPanel Grid.Row="1"
-                                                Orientation="Horizontal"
                                                 HorizontalAlignment="Center">
 
-                                        <TextBlock Text="{Binding NameViewModel.FirstLine}"
+                                        <TextBlock Text="{Binding ActorName}"
                                                    Margin="2,0"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="Black"
+                                                   FontSize="15" />
+
+                                        <TextBlock Text="{Binding RoleName}"
+                                                   Margin="2,0"
+                                                   HorizontalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
                                                    Foreground="Black" />
 
                                     </StackPanel>
