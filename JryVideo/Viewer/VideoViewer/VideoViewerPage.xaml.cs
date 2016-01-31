@@ -307,5 +307,17 @@ namespace JryVideo.Viewer.VideoViewer
             var selectBackground = this.ViewModel.Background?.StartSelect(this.TryFindParent<Window>());
             if (selectBackground != null) await selectBackground;
         }
+
+        private void ActorMoveToAnotherMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
+            vm?.BegionMoveToAnotherCollection();
+        }
+
+        private void ActorDeleteMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
+            vm?.BeginDelete();
+        }
     }
 }

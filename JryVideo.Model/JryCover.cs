@@ -4,7 +4,9 @@ using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public sealed class JryCover : JryObject
+    public sealed class JryCover : JryObject,
+        JryCover.ISeriesRoleCover,
+        JryCover.IVideoRoleCover
     {
         public JryCoverType CoverType { get; set; }
 
@@ -20,6 +22,9 @@ namespace JryVideo.Model
         public string VideoId { get; set; }
 
         [BsonIgnoreIfDefault]
+        public string SeriesId { get; set; }
+
+        [BsonIgnoreIfDefault]
         public string ActorId { get; set; }
 
         [BsonIgnoreIfDefault]
@@ -33,7 +38,9 @@ namespace JryVideo.Model
             var key = ((int)this.CoverType) + "_";
 
             if (this.CoverType == JryCoverType.Role)
-                return ((int)this.CoverType) + "_" + this.VideoId + "_" + this.ActorId;
+            {
+                return ((int)this.CoverType) + "_" + (this.VideoId ?? this.SeriesId) + "_" + this.ActorId;
+            }
 
             switch (this.CoverSourceType)
             {
@@ -100,6 +107,19 @@ namespace JryVideo.Model
             return cover;
         }
 
+        public static JryCover CreateRole(JrySeries series, string url, JryVideoRole role)
+        {
+            var cover = new JryCover
+            {
+                CoverSourceType = JryCoverSourceType.Imdb,
+                CoverType = JryCoverType.Role,
+                Uri = url,
+                SeriesId = series.Id,
+                ActorId = role.Id
+            };
+            return cover;
+        }
+
         public static JryCover CreateRole(JryVideoInfo video, string url, JryVideoRole role)
         {
             var cover = new JryCover
@@ -118,6 +138,30 @@ namespace JryVideo.Model
             public JryCoverType CoverType { get; set; }
 
             public string VideoId { get; set; }
+        }
+
+        public interface ICover
+        {
+            JryCoverType CoverType { get; set; }
+
+            JryCoverSourceType CoverSourceType { get; set; }
+
+            byte[] BinaryData { get; set; }
+        }
+
+        public interface IRoleCover : ICover
+        {
+            string ActorId { get; set; }
+        }
+
+        public interface IVideoRoleCover : IRoleCover
+        {
+            string VideoId { get; set; }
+        }
+
+        public interface ISeriesRoleCover : IRoleCover
+        {
+            string SeriesId { get; set; }
         }
     }
 }

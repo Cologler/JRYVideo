@@ -465,10 +465,11 @@
 
         <mah:Flyout x:Name="ActorFlyout"
                     Position="Right"
-                    Width="500"
+                    Width="504"
                     Background="Transparent"
                     CloseButtonVisibility="Collapsed"
-                    TitleVisibility="Collapsed">
+                    TitleVisibility="Collapsed"
+                    Theme="Light">
             <Border BorderThickness="1,1,0,0"
                     BorderBrush="{StaticResource AccentColorBrush}"
                     Background="White">
@@ -522,6 +523,14 @@
                                         <RowDefinition Height="230" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
+                                    <Grid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{Binding MoveToAnotherHeader}"
+                                                      Click="ActorMoveToAnotherMenuItem_OnClick" />
+                                            <MenuItem Header="delete"
+                                                      Click="ActorDeleteMenuItem_OnClick" />
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
 
                                     <Grid>
                                         <Grid>

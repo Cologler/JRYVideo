@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Model;
@@ -53,6 +54,7 @@ namespace JryVideo.Common
             {
                 var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
                 this.Cover = await coverManager.LoadCoverAsync(this.Source.CoverId);
+                if (this.CoverValue == null) Debug.WriteLine("missing cover: " + this.Source.CoverId);
             }
         }
     }

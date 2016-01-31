@@ -8,30 +8,37 @@ namespace JryVideo.Common
     public class VideoRoleViewModel : HasCoverViewModel<JryVideoRole>
     {
         private readonly VideoRoleCollectionViewModel parent;
-        private readonly IImdbItem imdbItem;
 
         public VideoRoleViewModel(JryVideoRole source, VideoRoleCollectionViewModel parent, IImdbItem imdbItem, bool isMajor)
             : base(source)
         {
             this.parent = parent;
-            this.imdbItem = imdbItem;
+            this.ImdbItem = imdbItem;
             this.IsMajor = isMajor;
             this.NameViewModel = new NameableViewModel<JryVideoRole>(source);
         }
 
         public NameableViewModel<JryVideoRole> NameViewModel { get; }
 
+        public IImdbItem ImdbItem { get; private set; }
+
+        public bool IsSeriesRole => this.ImdbItem is JrySeries;
+
         public bool IsMajor { get; }
+
+        public int OrderIndex => (this.IsSeriesRole ? 0 : 10) + (this.IsMajor ? 0 : 1);
 
         public string GroupTitle
         {
             get
             {
-                var type = this.imdbItem is JrySeries ? "series" : "video";
+                var type = this.IsSeriesRole ? "series" : "video";
                 var level = this.IsMajor ? "major" : "minor";
                 return $"{type} {level} actor";
             }
         }
+
+        public string MoveToAnotherHeader => $"move to {(this.IsSeriesRole ? "video" : "series")}";
 
         /// <summary>
         /// the method will call PropertyChanged for each property which has [NotifyPropertyChanged]
@@ -46,7 +53,7 @@ namespace JryVideo.Common
         {
             if (this.parent.VideoViewerViewModel == null) return false;
             var client = JryVideoCore.Current.TheTVDBClient;
-            var imdb = this.imdbItem.GetValidImdb();
+            var imdb = this.ImdbItem.GetValidImdb();
             if (client == null || imdb == null) return false;
             var series = (await client.GetSeriesByImdbIdAsync(imdb)).FirstOrDefault();
             if (series == null) return false;
@@ -58,15 +65,31 @@ namespace JryVideo.Common
             if (!actors[0].HasBanner) return false;
             var url = actors[0].BuildUrl(client);
 
-            var cover = JryCover.CreateRole(this.parent.VideoViewerViewModel.InfoView.Source, url, this.Source);
+            var jrySeries = this.ImdbItem as JrySeries;
+            var cover = jrySeries != null
+                ? JryCover.CreateRole(jrySeries, url, this.Source)
+                : JryCover.CreateRole((JryVideoInfo)this.ImdbItem, url, this.Source);
             var guid = await JryVideoCore.Current.CurrentDataCenter.CoverManager.DownloadCoverAsync(cover);
             if (guid != null)
             {
                 this.Source.CoverId = guid;
-                await this.parent.CommitAsync(this.imdbItem.Id);
+                await this.parent.CommitAsync(this.ImdbItem.Id);
                 return true;
             }
             return false;
+        }
+
+        public async void BeginDelete() => await this.parent.DeleteAsync(this);
+
+        public async void BegionMoveToAnotherCollection()
+        {
+            var dest = await this.parent.MoveToAnotherCollectionAsync(this);
+            if (dest != null)
+            {
+                this.ImdbItem = dest;
+                this.parent.Roles.Collection.Remove(this);
+                this.parent.Roles.Collection.Add(this);
+            }
         }
     }
 }

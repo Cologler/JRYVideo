@@ -37,6 +37,7 @@ namespace JryVideo.Model
             return this.ArtistId == other.ArtistId;
         }
 
+        [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 
         [BsonIgnore]
