@@ -8,9 +8,12 @@ namespace JryVideo.Common
         public ArtistViewModel(JryArtist source)
             : base(source)
         {
+            this.NameView = new NameableViewModel<JryArtist>(source);
         }
 
         public string Name => string.Join(" / ", this.Source.Names);
+
+        public NameableViewModel<JryArtist> NameView { get; }
 
         protected override async Task<bool> TryAutoAddCoverAsync()
         {

@@ -24,5 +24,8 @@ namespace JryVideo.Common
         /// </summary>
         [NotifyPropertyChanged]
         public string FullName => this.Source.Names?.AsLines() ?? string.Empty;
+
+        [NotifyPropertyChanged]
+        public string FullNameLine => this.Source.Names == null ? string.Empty : string.Join(" / ", this.Source.Names);
     }
 }

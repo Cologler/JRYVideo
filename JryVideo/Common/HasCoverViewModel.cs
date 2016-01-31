@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Model;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace JryVideo.Common
@@ -9,7 +9,7 @@ namespace JryVideo.Common
     public abstract class HasCoverViewModel<T> : JasilyViewModel<T>
         where T : IJryCoverParent
     {
-        protected JryCover CoverValue { get; private set; }
+        private JryCover cover;
 
         protected HasCoverViewModel(T source)
             : base(source)
@@ -21,22 +21,10 @@ namespace JryVideo.Common
         {
             get
             {
-                if (this.CoverValue == null)
-                {
-                    this.BeginUpdateCover();
-                    return null;
-                }
-
-                return this.CoverValue;
+                this.BeginUpdateCoverIfEmpty();
+                return this.cover;
             }
-            set
-            {
-                if (this.CoverValue != value)
-                {
-                    this.CoverValue = value;
-                    this.NotifyPropertyChanged(nameof(this.Cover));
-                }
-            }
+            set { this.SetPropertyRef(ref this.cover, value); }
         }
 
         public async Task<JryCover> TryGetCoverAsync()
@@ -46,15 +34,26 @@ namespace JryVideo.Common
             return await JryVideoCore.Current.CurrentDataCenter.CoverManager.LoadCoverAsync(this.Source.CoverId);
         }
 
-        protected abstract Task<bool> TryAutoAddCoverAsync();
+        protected virtual Task<bool> TryAutoAddCoverAsync() => Task.FromResult(false);
 
-        public virtual async void BeginUpdateCover()
+        public void BeginUpdateCoverIfEmpty()
+        {
+            if (this.cover != null) return;
+            this.BeginUpdateCover();
+        }
+
+        public async void BeginUpdateCover()
         {
             if (this.Source.CoverId != null || await this.TryAutoAddCoverAsync())
             {
+                Debug.Assert(this.Source.CoverId != null);
                 var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
                 this.Cover = await coverManager.LoadCoverAsync(this.Source.CoverId);
-                if (this.CoverValue == null) Debug.WriteLine("missing cover: " + this.Source.CoverId);
+                if (this.cover == null)
+                {
+                    Debug.WriteLine("missing cover: " + this.Source.CoverId);
+                    if (Debugger.IsAttached) Debugger.Break();
+                }
             }
         }
     }

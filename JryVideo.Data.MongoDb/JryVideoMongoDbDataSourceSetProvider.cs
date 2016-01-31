@@ -80,8 +80,8 @@ namespace JryVideo.Data.MongoDb
         public IArtistSet GetArtistSet()
             => new MongoArtistDataSource(this, this.Database.GetCollection<JryArtist>("Artist"));
 
-        public IJasilyEntitySetProvider<VideoRoleCollection, string> GetVideoRoleInfoSet()
-            => new MongoJryEntitySet<VideoRoleCollection>(this, this.Database.GetCollection<VideoRoleCollection>("VideoRole"));
+        public IVideoRoleCollectionSet GetVideoRoleInfoSet()
+            => new MongoVideoRoleCollectionDataSource(this, this.Database.GetCollection<VideoRoleCollection>("VideoRole"));
 
         public IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet()
         {

@@ -1,30 +1,29 @@
 ﻿using JryVideo.Core;
+using JryVideo.Editors.RoleEditor;
 using JryVideo.Model;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using JryVideo.Editors.RoleEditor;
 
 namespace JryVideo.Common
 {
-    public class VideoRoleViewModel : HasCoverViewModel<JryVideoRole>
+    public class VideoRoleViewModel : VideoRoleReadonlyViewModel
     {
         private readonly VideoRoleCollectionViewModel parent;
 
         public VideoRoleViewModel(JryVideoRole source, VideoRoleCollectionViewModel parent, IImdbItem imdbItem, bool isMajor)
-            : base(source)
+            : base(source, null)
         {
             this.parent = parent;
             this.ImdbItem = imdbItem;
             this.IsMajor = isMajor;
-            this.NameViewModel = new NameableViewModel<JryVideoRole>(source);
         }
-
-        public NameableViewModel<JryVideoRole> NameViewModel { get; }
 
         public IImdbItem ImdbItem { get; private set; }
 
         public bool IsSeriesRole => this.ImdbItem is JrySeries;
+
+        public override string CollectionId => this.ImdbItem.Id;
 
         public bool IsMajor { get; }
 

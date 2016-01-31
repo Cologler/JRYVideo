@@ -5,7 +5,6 @@ using JryVideo.Core;
 using JryVideo.Data;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.PasswordEditor;
-using JryVideo.Managers.ArtistManager;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using System;
@@ -239,13 +238,6 @@ namespace JryVideo.Main
                         z => z.Source == JryVideoDataSourceProviderManagerMode.Public);
                 }
             }
-        }
-
-        private void ArtistManagerMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            var manager = new ArtistManagerWindow();
-            manager.Owner = this.TryFindParent<Window>();
-            manager.ShowDialog();
         }
 
         private void WatchedEpisode_OnClick(object sender, RoutedEventArgs e)

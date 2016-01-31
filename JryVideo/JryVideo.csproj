@@ -42,10 +42,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -76,6 +72,7 @@
     <Compile Include="Common\SeriesViewModel.cs" />
     <Compile Include="Common\ValidationRules\FlagValueValidationRule.cs" />
     <Compile Include="Common\VideoRoleCollectionViewModel.cs" />
+    <Compile Include="Common\VideoRoleReadonlyViewModel.cs" />
     <Compile Include="Common\VideoRoleViewModel.cs" />
     <Compile Include="Common\VideoViewModel.cs" />
     <Compile Include="Configs\MapperConfig.cs" />
@@ -164,9 +161,6 @@
     </Compile>
     <Compile Include="Main\DataModeViewModel.cs" />
     <Compile Include="Main\MainSeriesItemViewerViewModel.cs" />
-    <Compile Include="Managers\ArtistManager\ArtistManagerWindow.xaml.cs">
-      <DependentUpon>ArtistManagerWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Managers\FlagManager\FlagManagerViewModel.cs" />
     <Compile Include="Managers\FlagManager\FlagManagerWindow.xaml.cs">
       <DependentUpon>FlagManagerWindow.xaml</DependentUpon>
@@ -183,6 +177,10 @@
     <Compile Include="Selectors\WebImageSelector\WebImageSelectorViewModel.cs" />
     <Compile Include="Selectors\WebImageSelector\WebImageSelectorWindow.xaml.cs">
       <DependentUpon>WebImageSelectorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Viewer\ArtistViewer\ArtistViewerViewModel.cs" />
+    <Compile Include="Viewer\ArtistViewer\ArtistViewerWindow.xaml.cs">
+      <DependentUpon>ArtistViewerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Viewer\FilesViewer\FileItemViewModel.cs" />
     <Compile Include="Viewer\FilesViewer\FilesViewerViewModel.cs" />
@@ -309,15 +307,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Managers\ArtistManager\ArtistManagerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Managers\FlagManager\FlagManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Selectors\WebImageSelector\WebImageSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Viewer\ArtistViewer\ArtistViewerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

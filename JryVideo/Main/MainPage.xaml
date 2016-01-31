@@ -119,10 +119,6 @@
                               HorizontalAlignment="Left"
                               Header="add"
                               Click="AddMenuItem_OnClick" />
-
-                    <MenuItem HorizontalAlignment="Left"
-                              Header="artist"
-                              Click="ArtistManagerMenuItem_OnClick" />
                 </Menu>
 
                 <StackPanel Orientation="Horizontal"

@@ -121,7 +121,7 @@ namespace JryVideo.Viewer.VideoViewer
             if (this.ViewModel.InfoView.OpenEditorWindows(this.TryFindParent<Window>()))
             {
                 this.ViewModel.ReloadEpisodes();
-                this.ViewModel.Background?.BeginUpdateCover();
+                this.ViewModel.Background?.BeginUpdateCoverIfEmpty();
             }
         }
 
@@ -206,7 +206,7 @@ namespace JryVideo.Viewer.VideoViewer
             var seriesViewModel = this.ViewModel.InfoView.SeriesView;
             if (seriesViewModel.OpenEditorWindows(this.TryFindParent<Window>()))
             {
-                this.ViewModel.Background?.BeginUpdateCover();
+                this.ViewModel.Background?.BeginUpdateCoverIfEmpty();
             }
         }
 
@@ -338,6 +338,12 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 action();
             }
+        }
+
+        private void ActorViewMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
+            vm?.ShowActor(this.TryFindParent<Window>());
         }
     }
 }

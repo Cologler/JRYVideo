@@ -1,4 +1,5 @@
-﻿using JryVideo.Model;
+﻿using JryVideo.Data.DataSources;
+using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 namespace JryVideo.Core.Managers
 {
     public sealed class VideoRoleManager :
-        AutoInsertVideoInfoAttachedManager<VideoRoleCollection, IJasilyEntitySetProvider<VideoRoleCollection, string>>
+        AutoInsertVideoInfoAttachedManager<VideoRoleCollection, IVideoRoleCollectionSet>
     {
         private readonly ArtistManager artistManager;
         private readonly SeriesManager seriesManager;
 
-        public VideoRoleManager(SeriesManager seriesManager, ArtistManager artistManager, IJasilyEntitySetProvider<VideoRoleCollection, string> source)
+        public VideoRoleManager(SeriesManager seriesManager, ArtistManager artistManager, IVideoRoleCollectionSet source)
             : base(source)
         {
             this.seriesManager = seriesManager;
@@ -95,6 +96,32 @@ namespace JryVideo.Core.Managers
                 }
             }
             await this.UpdateAsync(collection);
+        }
+
+        public async Task<IEnumerable<Tuple<VideoRoleCollection, JryVideoRole>>> QueryByActorIdAsync(string id)
+        {
+            return (await this.Source.FindAsync(new VideoRoleCollection.QueryParameter()
+            {
+                ActorId = id
+            })).SelectMany(z => MatchActorId(id, z)).ToArray();
+        }
+
+        private static IEnumerable<Tuple<VideoRoleCollection, JryVideoRole>> MatchActorId(string id, VideoRoleCollection collection)
+        {
+            if (collection.MajorRoles != null)
+            {
+                foreach (var role in collection.MajorRoles.Where(role => role.ArtistId == id))
+                {
+                    yield return Tuple.Create(collection, role);
+                }
+            }
+            if (collection.MinorRoles != null)
+            {
+                foreach (var role in collection.MinorRoles.Where(role => role.ArtistId == id))
+                {
+                    yield return Tuple.Create(collection, role);
+                }
+            }
         }
     }
 }

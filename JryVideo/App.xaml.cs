@@ -23,12 +23,13 @@ namespace JryVideo
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-            => Log.Write(e.Exception.ToString());
+        {
+            Log.Write(e.Exception.ToString());
+        }
 
         private const string UserConfigPath = @"UserConfig.json";
 
         public UserConfig UserConfig
-
         {
             get { return this.userConfig; }
             private set

@@ -518,13 +518,17 @@
                             <DataTemplate>
                                 <Grid Margin="3"
                                       Width="154"
-                                      d:DataContext="{d:DesignInstance common:VideoRoleViewModel}">
+                                      d:DataContext="{d:DesignInstance common:VideoRoleViewModel}"
+                                      Background="Transparent"
+                                      >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="230" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ContextMenu>
                                         <ContextMenu>
+                                            <MenuItem Header="view"
+                                                      Click="ActorViewMenuItem_OnClick" />
                                             <MenuItem Header="edit"
                                                       Click="ActorEditMenuItem_OnClick" />
                                             <MenuItem Header="{Binding MoveToAnotherHeader}"
@@ -535,11 +539,9 @@
                                     </Grid.ContextMenu>
 
                                     <Grid>
-                                        <Grid>
-                                            <Image Source="{Binding Cover.BinaryData}"
-                                                   RenderOptions.BitmapScalingMode="Fant"
-                                                   RenderOptions.EdgeMode="Aliased" />
-                                        </Grid>
+                                        <Image Source="{Binding Cover.BinaryData}"
+                                               RenderOptions.BitmapScalingMode="Fant"
+                                               RenderOptions.EdgeMode="Aliased" />
                                     </Grid>
 
                                     <StackPanel Grid.Row="1"

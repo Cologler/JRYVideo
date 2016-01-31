@@ -13,5 +13,10 @@ namespace JryVideo.Model
         [CanBeNull]
         [BsonIgnoreIfDefault]
         public List<JryVideoRole> MinorRoles { get; set; }
+
+        public struct QueryParameter
+        {
+            public string ActorId { get; set; }
+        }
     }
 }

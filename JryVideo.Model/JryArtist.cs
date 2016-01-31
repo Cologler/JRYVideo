@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +14,11 @@ namespace JryVideo.Model
 
         public ArtistType Type { get; set; }
 
-        [BsonIgnoreIfDefault]
+        /// <summary>
+        /// must contain a name
+        /// </summary>
+        [NotNull]
+        [ItemNotNull]
         public List<string> Names { get; set; }
 
         /// <summary>

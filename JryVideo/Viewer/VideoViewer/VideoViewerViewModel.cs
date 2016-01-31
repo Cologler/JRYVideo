@@ -93,12 +93,13 @@ namespace JryVideo.Viewer.VideoViewer
             }
             else
             {
-                var watcheds = Enumerable.Range(1, this.InfoView.Source.EpisodesCount)
+                var episodesCount = this.InfoView.Source.EpisodesCount;
+                var watcheds = Enumerable.Range(1, episodesCount)
                     .Select(z => new WatchedEpisodeChecker(z))
                     .ToArray();
                 if (video.Watcheds != null)
                 {
-                    foreach (var ep in video.Watcheds.Where(z => z <= this.InfoView.Source.EpisodesCount))
+                    foreach (var ep in video.Watcheds.Where(z => z <= episodesCount))
                     {
                         watcheds[ep - 1].IsWatched = true;
                     }
@@ -131,11 +132,8 @@ namespace JryVideo.Viewer.VideoViewer
         public async void Flush()
         {
             var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
-
             var video = await manager.FindAsync(this.InfoView.Source.Id);
-
             if (video == null) return;
-
             var watched = this.Watcheds.Where(z => z.IsWatched)
                 .Select(z => z.Episode)
                 .OrderBy(z => z)
@@ -247,13 +245,6 @@ namespace JryVideo.Viewer.VideoViewer
                     }
                     return null;
                 });
-            }
-
-            public override void BeginUpdateCover()
-            {
-                if (this.CoverValue != null) return;
-
-                base.BeginUpdateCover();
             }
 
             private void Refresh() => base.BeginUpdateCover();
