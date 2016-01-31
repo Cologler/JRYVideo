@@ -104,6 +104,14 @@ namespace JryVideo.Viewer.VideoViewer
                         watcheds[ep - 1].IsWatched = true;
                     }
                 }
+                var min = Math.Min(episodesCount, this.Watcheds.Count);
+                if (min > 0)
+                {
+                    for (var i = 0; i < min; i++)
+                    {
+                        watcheds[i].IsWatched = this.Watcheds[i].IsWatched;
+                    }
+                }
                 this.Watcheds.Reset(watcheds);
             }
         }
