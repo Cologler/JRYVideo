@@ -102,6 +102,10 @@
     <Compile Include="Editors\PasswordEditor\PasswordEditorWindow.xaml.cs">
       <DependentUpon>PasswordEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\RoleEditor\RoleEditorViewModel.cs" />
+    <Compile Include="Editors\RoleEditor\RoleEditorWindow.xaml.cs">
+      <DependentUpon>RoleEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\SeriesEditor\SeriesEditorWindow.xaml.cs">
       <DependentUpon>SeriesEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -224,6 +228,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\PasswordEditor\PasswordEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\RoleEditor\RoleEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

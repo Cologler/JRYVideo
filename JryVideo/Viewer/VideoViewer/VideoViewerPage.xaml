@@ -525,6 +525,8 @@
                                     </Grid.RowDefinitions>
                                     <Grid.ContextMenu>
                                         <ContextMenu>
+                                            <MenuItem Header="edit"
+                                                      Click="ActorEditMenuItem_OnClick" />
                                             <MenuItem Header="{Binding MoveToAnotherHeader}"
                                                       Click="ActorMoveToAnotherMenuItem_OnClick" />
                                             <MenuItem Header="delete"

@@ -11,6 +11,8 @@ namespace JryVideo.Model
             this.Names = new List<string>();
         }
 
+        public ArtistType Type { get; set; }
+
         [BsonIgnoreIfDefault]
         public List<string> Names { get; set; }
 

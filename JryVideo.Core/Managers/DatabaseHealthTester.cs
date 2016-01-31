@@ -42,8 +42,20 @@ namespace JryVideo.Core.Managers
                 });
                 this.coverMissingSource.AddRange(this.covers.Where(z => !z.Value).Select(z => z.Key));
 
-                Log.Write($"cover missing source ({this.coverMissingSource.Count}):".IntoArray().Concat(this.coverMissingSource).AsLines());
-                Log.Write($"cover missing entity ({this.coverMissingEntity.Count}):".IntoArray().Concat(this.coverMissingEntity).AsLines());
+                var log =
+                    $"cover missing source ({this.coverMissingSource.Count}):".IntoArray()
+                        .Concat(this.coverMissingSource).Concat(
+                    $"cover missing entity ({this.coverMissingEntity.Count}):".IntoArray()
+                        .Concat(this.coverMissingEntity)).AsLines();
+
+                if (Debugger.IsAttached)
+                {
+                    Debug.WriteLine(log);
+                }
+                else
+                {
+                    Log.Write(log);
+                }
 
                 // remove all missing source cover
                 if (fix)

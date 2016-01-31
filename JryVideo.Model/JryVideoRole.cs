@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace JryVideo.Model
         /// </summary>
         public string ActorName { get; set; }
 
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
         public List<string> RoleName { get; set; }
 
         protected override bool InnerTestHasError()
@@ -40,6 +43,7 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 
+        [CanBeNull]
         [BsonIgnore]
         List<string> INameable.Names
         {

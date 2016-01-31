@@ -289,7 +289,7 @@ namespace JryVideo.Controls.EditVideo
                 this.Type = this.TypeCollection.FirstOrDefault();
 
             // initialize cover
-            if (this.Source != null && this.Source.CoverId != null)
+            if (this.Source?.CoverId != null)
             {
                 var cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.FindAsync(this.Source.CoverId);
                 if (cover != null)

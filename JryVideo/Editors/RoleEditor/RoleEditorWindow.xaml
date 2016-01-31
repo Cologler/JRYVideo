@@ -1,0 +1,93 @@
+﻿<mah:MetroWindow x:Class="JryVideo.Editors.RoleEditor.RoleEditorWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:local="clr-namespace:JryVideo.Editors.RoleEditor"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:properties="clr-namespace:JryVideo.Properties"
+                 mc:Ignorable="d"
+                 Height="400"
+                 Width="500"
+                 WindowStartupLocation="CenterOwner"
+                 BorderThickness="1"
+                 GlowBrush="{StaticResource AccentColorBrush}"
+                 ShowTitleBar="False"
+                 ResizeMode="NoResize"
+                 d:DataContext="{d:DesignInstance local:RoleEditorViewModel}">
+    <Grid>
+        <Grid Style="{StaticResource ParentPanelStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <TextBlock Style="{StaticResource CaptionStyle}"
+                           Text="edit role"
+                           x:Name="TitleTextBlock" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid Margin="0,0,6,0">
+
+                    <Image Height="300"
+                           Width="200"
+                           Source="{Binding ImageViewModel.Source}"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           RenderOptions.EdgeMode="Aliased"
+                           VerticalAlignment="Top"/>
+
+                </Grid>
+                
+                <Grid Grid.Column="1">
+
+                    <StackPanel>
+
+                        <TextBlock Text="actor"
+                                   Style="{StaticResource TitleStyle}" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding ActorName}"
+                                       VerticalAlignment="Center" />
+                            
+                            <Button Grid.Column="1"
+                                    Content="link" />
+                        </Grid>
+
+                        <TextBlock Text="role name"
+                                   Style="{StaticResource TitleStyle}"/>
+
+                        <TextBox Text="{Binding RoleName, Mode=TwoWay}"
+                                 Height="80"
+                                 AcceptsReturn="True" />
+
+                    </StackPanel>
+                    
+                </Grid>
+                
+            </Grid>
+
+            <Grid Grid.Row="2"
+                  Style="{StaticResource AcceptPanelStyle}">
+                <Button HorizontalAlignment="Right"
+                        Content="{x:Static properties:Resources.Button_Accept_Text}"
+                        x:Name="AcceptButton"
+                        Click="AcceptButton_OnClick"
+                        Style="{StaticResource CommintButtonStyle}" />
+            </Grid>
+
+        </Grid>
+    </Grid>
+</mah:MetroWindow>

@@ -2,6 +2,8 @@
 using JryVideo.Model;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using JryVideo.Editors.RoleEditor;
 
 namespace JryVideo.Common
 {
@@ -89,6 +91,15 @@ namespace JryVideo.Common
                 this.ImdbItem = dest;
                 this.parent.Roles.Collection.Remove(this);
                 this.parent.Roles.Collection.Add(this);
+            }
+        }
+
+        public async void BeginEdit(Window parent)
+        {
+            if (RoleEditorWindow.Edit(parent, this.Source))
+            {
+                this.RefreshProperties();
+                await this.parent.CommitAsync(this.ImdbItem.Id);
             }
         }
     }

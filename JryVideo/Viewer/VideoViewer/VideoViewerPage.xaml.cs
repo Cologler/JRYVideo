@@ -1,4 +1,5 @@
-﻿using JryVideo.Common;
+﻿using System;
+using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.SearchEngine;
@@ -164,11 +165,9 @@ namespace JryVideo.Viewer.VideoViewer
             this.ViewModel.InfoView.NavigateToImdb();
         }
 
-        private async void DeleteEntityButton_OnClick(object sender, RoutedEventArgs e)
+        private void DeleteEntityButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if ((await this.TryFindParent<MetroWindow>()
-                .ShowMessageAsync("warnning", "are you sure you want to delete it?", MessageDialogStyle.AffirmativeAndNegative))
-                == MessageDialogResult.Affirmative)
+            this.DeleteConfirm(async () =>
             {
                 var entity = ((FrameworkElement)sender).DataContext as EntityViewModel;
                 if (entity != null)
@@ -177,7 +176,7 @@ namespace JryVideo.Viewer.VideoViewer
                     await this.ViewModel.ReloadVideoAsync();
                     this.ViewModel.EntitesView.View.Refresh();
                 }
-            }
+            });
         }
 
         private void CopyStringMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -308,6 +307,12 @@ namespace JryVideo.Viewer.VideoViewer
             if (selectBackground != null) await selectBackground;
         }
 
+        private void ActorEditMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
+            vm?.BeginEdit(this.TryFindParent<Window>());
+        }
+
         private void ActorMoveToAnotherMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
@@ -316,8 +321,23 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void ActorDeleteMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
-            vm?.BeginDelete();
+            this.DeleteConfirm(() =>
+            {
+                var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
+                vm?.BeginDelete();
+            });
+        }
+
+        private async void DeleteConfirm(Action action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
+            if (await this.TryFindParent<MetroWindow>().ShowMessageAsync(
+                "warnning", "are you sure you want to delete it?",
+                MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Affirmative)
+            {
+                action();
+            }
         }
     }
 }
