@@ -192,9 +192,11 @@
 
                 <Grid>
                     <Menu Background="Transparent">
-                        <MenuItem Header="add"
-                                  x:Name="AddEntityMenuItem"
-                                  Click="AddEntityMenuItem_OnClick" />
+                        <MenuItem Header="item">
+                            <MenuItem Header="add"
+                                      x:Name="AddEntityMenuItem"
+                                      Click="AddEntityMenuItem_OnClick" />
+                        </MenuItem>
                         <MenuItem Header="actor"
                                   Click="ShowActorMenuItem_OnClick" />
                         <MenuItem Header="other">
