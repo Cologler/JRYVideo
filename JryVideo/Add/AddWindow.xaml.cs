@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using Jasily.Diagnostics;
+﻿using Jasily.Diagnostics;
 using JryVideo.Add.VideoCreator;
 using JryVideo.Common;
 using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Viewer.SeriesItemViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace JryVideo.Add
 {
@@ -77,7 +77,9 @@ namespace JryVideo.Add
 
             if (this.seriesItemViewerPage == null || this.seriesItemViewerPage.ViewModel.Source != series.Source)
             {
-                this.seriesItemViewerPage = new SeriesItemViewerPage(series.Source);
+                var page = new SeriesItemViewerPage();
+                page.SetSeries(series.Source);
+                this.seriesItemViewerPage = page;
             }
 
             this.ContentFrame.Navigate(this.seriesItemViewerPage);

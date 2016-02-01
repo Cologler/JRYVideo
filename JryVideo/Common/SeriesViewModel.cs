@@ -1,4 +1,6 @@
-﻿using Jasily.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Jasily.ComponentModel;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
 using System.Windows;
@@ -7,13 +9,19 @@ namespace JryVideo.Common
 {
     public sealed class SeriesViewModel : JasilyViewModel<JrySeries>
     {
+        private readonly List<VideoInfoViewModel> videoViewModels = new List<VideoInfoViewModel>();
+
         public SeriesViewModel(JrySeries source)
             : base(source)
         {
             this.NameViewModel = new NameableViewModel<JrySeries>(source);
+
+            this.videoViewModels.AddRange(source.Videos.Select(jryVideo => new VideoInfoViewModel(this, jryVideo)));
         }
 
         public NameableViewModel<JrySeries> NameViewModel { get; }
+
+        public IEnumerable<VideoInfoViewModel> VideoViewModels => this.videoViewModels;
 
         /// <summary>
         /// the method will call PropertyChanged for each property which has [NotifyPropertyChanged]

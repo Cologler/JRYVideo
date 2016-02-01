@@ -1,5 +1,5 @@
-﻿using JryVideo.Model;
-using System.ComponentModel;
+﻿using JryVideo.Controls.SelectVideo;
+using JryVideo.Model;
 using System.Windows.Controls;
 
 namespace JryVideo.Viewer.SeriesItemViewer
@@ -9,32 +9,21 @@ namespace JryVideo.Viewer.SeriesItemViewer
     /// </summary>
     public partial class SeriesItemViewerPage : Page
     {
-        private SingleSeriesItemViewerViewModel viewModel;
-
-        /// <summary>
-        /// should set by parent
-        /// </summary>
-        public SingleSeriesItemViewerViewModel ViewModel
-        {
-            get { return this.viewModel; }
-            private set { this.DataContext = this.viewModel = value; }
-        }
+        public SelectVideoViewModel ViewModel { get; }
+            = new SelectVideoViewModel();
 
         public SeriesItemViewerPage()
         {
             this.InitializeComponent();
+            this.DataContext = this.ViewModel;
         }
 
-        public SeriesItemViewerPage(JrySeries series)
-            : this()
+        public async void SetSeries(JrySeries series)
         {
-            if (!DesignerProperties.GetIsInDesignMode(this))
-            {
-                this.ViewModel = new SingleSeriesItemViewerViewModel(series);
+            this.ViewModel.Source = series;
 #pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-                this.ViewModel.RefreshAsync();
+            await this.ViewModel.RefreshAsync();
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-            }
         }
     }
 }

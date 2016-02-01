@@ -26,12 +26,17 @@ namespace JryVideo.Model
         [BsonElement("ArtistIds")]
         public List<JryVideoRole> Roles { get; set; }
 
-        [CanBeNull]
+        [NotNull]
         [ItemNotNull]
-        [BsonIgnoreIfDefault]
         public List<string> Names { get; set; }
 
-        public string GetMajorName() => this.Names?.FirstOrDefault();
+        public string GetMajorName() => this.Names.FirstOrDefault();
+
+        [BsonIgnoreIfDefault]
+        public string LastVideoId { get; set; }
+
+        [BsonIgnoreIfDefault]
+        public string NextVideoId { get; set; }
 
         [CanBeNull]
         [BsonIgnoreIfDefault]

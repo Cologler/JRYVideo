@@ -1,11 +1,11 @@
-﻿using System;
-using JryVideo.Common;
+﻿using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.SearchEngine;
 using JryVideo.Viewer.FilesViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -22,10 +22,17 @@ namespace JryVideo.Viewer.VideoViewer
     /// </summary>
     public partial class VideoViewerPage : Page
     {
+        public event EventHandler ClickedGoBack;
+        public event EventHandler<VideoInfoViewModel> ClickedOtherVideo;
+
         public VideoViewerPage()
         {
             this.InitializeComponent();
+
+            this.GoBackButton.Click += this.GoBackButton_Click;
         }
+
+        private void GoBackButton_Click(object sender, RoutedEventArgs e) => this.ClickedGoBack?.Invoke(this);
 
         public VideoViewerViewModel ViewModel { get; private set; }
 
@@ -344,6 +351,18 @@ namespace JryVideo.Viewer.VideoViewer
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
             vm?.ShowActor(this.TryFindParent<Window>());
+        }
+
+        private void GoLastVideoMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var last = this.ViewModel.InfoView.TryFindLastViewModel();
+            if (last != null) this.ClickedOtherVideo?.Invoke(this, last);
+        }
+
+        private void GoNextVideoMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var next = this.ViewModel.InfoView.TryFindNextViewModel();
+            if (next != null) this.ClickedOtherVideo?.Invoke(this, next);
         }
     }
 }

@@ -61,14 +61,14 @@
 
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -187,14 +187,36 @@
                         </Binding>
                     </ComboBox.Text>
                 </ComboBox>
+                
+                <TextBlock Grid.Row="6"
+                           Text="last video"
+                           Style="{StaticResource TitleStyle}"/>
 
                 <TextBlock Grid.Row="6"
-                           Text="offset"
+                           Grid.Column="1"
+                           Text="{Binding LastVideoName}"
                            Style="{StaticResource TitleStyle}" />
 
-                <numberEditer:NumberEditerControl Grid.Row="6"
-                                                  Grid.Column="1"
-                                                  Number="{Binding EpisodeOffset, Mode=TwoWay}"/>
+                <Button Grid.Row="6"
+                        Grid.Column="3"
+                        Content="select"
+                        VerticalAlignment="Center"
+                        Click="SelectLastVideoButton_OnClick"/>
+
+                <TextBlock Grid.Row="7"
+                           Text="next video"
+                           Style="{StaticResource TitleStyle}" />
+
+                <TextBlock Grid.Row="7"
+                           Grid.Column="1"
+                           Text="{Binding NextVideoName}"
+                           Style="{StaticResource TitleStyle}" />
+
+                <Button Grid.Row="7"
+                        Grid.Column="3"
+                        Content="select"
+                        VerticalAlignment="Center"
+                        Click="SelectNextVideoButton_OnClick"/>
 
             </Grid>
             
@@ -214,6 +236,7 @@
                         <RowDefinition Height="34" />
                         <RowDefinition Height="34" />
                         <RowDefinition Height="34"/>
+                        <RowDefinition Height="34" />
                     </Grid.RowDefinitions>
 
                     <CheckBox IsChecked="{Binding IsTracking, Mode=TwoWay}"
@@ -249,6 +272,16 @@
                         <TextBlock Text="is all aired"
                                    Style="{StaticResource LabelTextBlockStyle}" />
                     </CheckBox>
+
+                    <TextBlock Grid.Row="4"
+                               Text="offset"
+                               Style="{StaticResource TitleStyle}" />
+
+                    <numberEditer:NumberEditerControl Grid.Row="4"
+                                                      Grid.Column="1"
+                                                      Width="120"
+                                                      HorizontalAlignment="Left"
+                                                      Number="{Binding EpisodeOffset, Mode=TwoWay}" />
 
                 </Grid>
                 

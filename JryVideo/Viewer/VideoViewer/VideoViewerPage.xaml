@@ -192,6 +192,9 @@
 
                 <Grid>
                     <Menu Background="Transparent">
+                        <MenuItem Visibility="{Binding InfoView.HasLast, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Header="last video"
+                                  Click="GoLastVideoMenuItem_OnClick"/>
                         <MenuItem Header="item">
                             <MenuItem Header="add"
                                       x:Name="AddEntityMenuItem"
@@ -205,6 +208,9 @@
                             <MenuItem Header="choose background"
                                       Click="SelectBackgroundMenuItem_OnClick"></MenuItem>
                         </MenuItem>
+                        <MenuItem Visibility="{Binding InfoView.HasNext, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Header="next video"
+                                  Click="GoNextVideoMenuItem_OnClick"/>
                     </Menu>
                 </Grid>
 

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Enums;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace JryVideo.Main
 {
@@ -103,23 +102,37 @@ namespace JryVideo.Main
         private async void NavigateToVideoViewerPage(VideoInfoViewModel info)
         {
             var page = VideoViewerPage.BuildPage(info);
-            page.GoBackButton.Click += this.VideoViewerPage_GoBackButton_Click;
+            page.ClickedGoBack += this.VideoViewerPage_ClickedGoBack;
+            page.ClickedOtherVideo += this.VideoViewerPage_ClickedOtherVideo;
+
             page.ViewModel.InfoView.SeriesView.PropertiesRefreshed += this.InfoView_PropertiesRefreshed;
             this.CaptionTextBlock.Text = Caption + " | " + info.SeriesView.NameViewModel.FirstLine;
             this.MainFrame.Navigate(page);
             await page.ViewModel.LoadAsync();
         }
 
-        private void InfoView_PropertiesRefreshed(object sender, EventArgs e)
+        private void VideoViewerPage_ClickedOtherVideo(object sender, VideoInfoViewModel e)
         {
-            this.CaptionTextBlock.Text = Caption + " | " + ((SeriesViewModel)sender).NameViewModel.FirstLine;
+            this.nextVideo = e;
+            this.MainFrame.Navigated += this.MainFrame_NextVideo;
+            this.ExitVideoViewerPage((VideoViewerPage)sender);
         }
 
-        void VideoViewerPage_GoBackButton_Click(object sender, RoutedEventArgs e)
+        private void MainFrame_NextVideo(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
-            ((Button)sender).Click -= this.VideoViewerPage_GoBackButton_Click;
+            this.MainFrame.Navigated -= this.MainFrame_NextVideo;
+            var v = this.nextVideo;
+            this.nextVideo = null;
+            if (v != null) this.NavigateToVideoViewerPage(v);
+        }
 
-            var page = (VideoViewerPage)this.MainFrame.Content;
+        private VideoInfoViewModel nextVideo;
+
+        private void ExitVideoViewerPage(VideoViewerPage page)
+        {
+            page.ClickedGoBack -= this.VideoViewerPage_ClickedGoBack;
+            page.ClickedOtherVideo -= this.VideoViewerPage_ClickedOtherVideo;
+
             Debug.Assert(page != null);
             page.ViewModel.InfoView.SeriesView.PropertiesRefreshed -= this.InfoView_PropertiesRefreshed;
             page.ViewModel.Flush();
@@ -127,6 +140,14 @@ namespace JryVideo.Main
             Debug.Assert(this.MainFrame.CanGoBack);
             this.MainFrame.GoBack();
             this.MainPage.RefreshVideo(page.ViewModel.InfoView);
+        }
+
+        private void VideoViewerPage_ClickedGoBack(object sender, EventArgs e)
+            => this.ExitVideoViewerPage((VideoViewerPage)sender);
+
+        private void InfoView_PropertiesRefreshed(object sender, EventArgs e)
+        {
+            this.CaptionTextBlock.Text = Caption + " | " + ((SeriesViewModel)sender).NameViewModel.FirstLine;
         }
     }
 }

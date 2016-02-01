@@ -14,7 +14,7 @@ using static System.String;
 
 namespace JryVideo.Common
 {
-    public sealed class VideoInfoViewModel : HasCoverViewModel<JryVideoInfo>
+    public sealed class VideoInfoViewModel : VideoInfoReadonlyViewModel
     {
         public static event EventHandler<VideoInfoViewModel> IsWatchedUpdated;
 
@@ -22,23 +22,14 @@ namespace JryVideo.Common
         private bool isUntrackButtonEnable;
         private WatchedInfo todayPlaying;
 
-        public VideoInfoViewModel(JrySeries series, JryVideoInfo source)
+        public VideoInfoViewModel(SeriesViewModel seriesViewModel, JryVideoInfo source)
             : base(source)
         {
-            this.SeriesView = new SeriesViewModel(series);
+            this.SeriesView = seriesViewModel;
             this.RefreshProperties();
         }
 
         public SeriesViewModel SeriesView { get; }
-
-        [NotifyPropertyChanged]
-        public string YearWithIndex => $"({this.Source.Year}) {this.Source.Index}";
-
-        [NotifyPropertyChanged]
-        public string VideoNames => this.Source.Names.FirstOrDefault() ?? Empty;
-
-        [NotifyPropertyChanged]
-        public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
 
         [NotifyPropertyChanged]
         public WatchedInfo TodayWatched => this.todayPlaying;
@@ -48,9 +39,6 @@ namespace JryVideo.Common
 
         [NotifyPropertyChanged]
         public Group VideoGroup { get; set; }
-
-        [NotifyPropertyChanged]
-        public bool IsNotAllAired => !this.Source.IsAllAired;
 
         public override void RefreshProperties()
         {
@@ -216,9 +204,7 @@ namespace JryVideo.Common
         }
 
         public static IEnumerable<VideoInfoViewModel> Create(JrySeries series)
-        {
-            return series.Videos.Select(jryVideo => new VideoInfoViewModel(series, jryVideo));
-        }
+            => new SeriesViewModel(series).VideoViewModels;
 
         public async Task<bool> TrackAsync()
         {
@@ -490,5 +476,15 @@ namespace JryVideo.Common
 
             Future
         }
+
+        public VideoInfoViewModel TryFindLastViewModel()
+            => this.HasLast
+                ? this.SeriesView.VideoViewModels.FirstOrDefault(z => z.Source.Id == this.Source.LastVideoId)
+                : null;
+
+        public VideoInfoViewModel TryFindNextViewModel()
+            => this.HasNext
+                ? this.SeriesView.VideoViewModels.FirstOrDefault(z => z.Source.Id == this.Source.NextVideoId)
+                : null;
     }
 }

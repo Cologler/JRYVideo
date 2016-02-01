@@ -9,6 +9,8 @@ using System.ComponentModel;
 using System.Enums;
 using System.Windows;
 using System.Windows.Controls;
+using JryVideo.Common;
+using JryVideo.Selectors.VideoSelector;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -114,6 +116,20 @@ namespace JryVideo.Controls.EditVideo
         private async void LoadDoubanButton_OnClick(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.LoadDoubanAsync();
+        }
+
+        private void SelectLastVideoButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+                this.ViewModel.Parent, this.ViewModel.Source, this.ViewModel.LastVideoViewModel?.Source.Id);
+            if (video != null) this.ViewModel.LastVideoViewModel = new VideoInfoReadonlyViewModel(video);
+        }
+
+        private void SelectNextVideoButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+                this.ViewModel.Parent, this.ViewModel.Source, this.ViewModel.NextVideoViewModel?.Source.Id);
+            if (video != null) this.ViewModel.NextVideoViewModel = new VideoInfoReadonlyViewModel(video);
         }
     }
 }

@@ -36,6 +36,8 @@ namespace JryVideo.Controls.EditVideo
         private int episodeOffset;
         private NameValuePair<string, DayOfWeek?>? dayOfWeek;
         private DateTime? startDate;
+        private VideoInfoReadonlyViewModel lastVideoViewModel;
+        private VideoInfoReadonlyViewModel nextVideoViewModel;
 
         public EditVideoViewModel()
         {
@@ -136,6 +138,26 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
+        public VideoInfoReadonlyViewModel LastVideoViewModel
+        {
+            get { return this.lastVideoViewModel; }
+            set { this.SetPropertyRef(ref this.lastVideoViewModel, value, nameof(this.LastVideoViewModel), nameof(this.LastVideoName)); }
+        }
+
+        public string LastVideoName => GetContextVideoName(this.LastVideoViewModel);
+
+        public VideoInfoReadonlyViewModel NextVideoViewModel
+        {
+            get { return this.nextVideoViewModel; }
+            set { this.SetPropertyRef(ref this.nextVideoViewModel, value, nameof(this.NextVideoViewModel), nameof(this.NextVideoName)); }
+        }
+
+        public string NextVideoName => GetContextVideoName(this.NextVideoViewModel);
+
+        private static string GetContextVideoName(VideoInfoReadonlyViewModel video) => video == null
+            ? "None"
+            : (video.Source.Names.FirstOrDefault() ?? $"({video.Source.Year}) {video.Source.Type} {video.Source.Index}");
+
         public NameValuePair<string, DayOfWeek?>? DayOfWeek
         {
             get { return this.dayOfWeek; }
@@ -196,9 +218,9 @@ namespace JryVideo.Controls.EditVideo
         {
             base.WriteToObject(obj);
 
-            obj.Year = Int32.Parse(this.Year);
-            obj.Index = Int32.Parse(this.Index);
-            obj.EpisodesCount = Int32.Parse(this.EpisodesCount);
+            obj.Year = int.Parse(this.Year);
+            obj.Index = int.Parse(this.Index);
+            obj.EpisodesCount = int.Parse(this.EpisodesCount);
             obj.Names.Clear();
             if (!this.Names.IsNullOrWhiteSpace())
             {
@@ -206,6 +228,9 @@ namespace JryVideo.Controls.EditVideo
             }
             obj.DayOfWeek = this.DayOfWeek?.Value;
             obj.EpisodeOffset = this.EpisodeOffset == 0 ? (int?)null : this.EpisodeOffset;
+
+            obj.LastVideoId = this.LastVideoViewModel?.Source.Id;
+            obj.NextVideoId = this.NextVideoViewModel?.Source.Id;
         }
 
         public override void ReadFromObject(JryVideoInfo obj)
@@ -219,6 +244,20 @@ namespace JryVideo.Controls.EditVideo
 
             this.DayOfWeek = this.GetDayOfWeekValue(obj.DayOfWeek);
             this.EpisodeOffset = obj.EpisodeOffset ?? 0;
+
+            var parent = this.Parent.ThrowIfNull(nameof(this.Parent));
+            var lastId = obj.LastVideoId;
+            if (lastId != null)
+            {
+                var lastVideo = parent.Videos.FirstOrDefault(z => z.Id == lastId);
+                if (lastVideo != null) this.LastVideoViewModel = new VideoInfoReadonlyViewModel(lastVideo);
+            }
+            var nextId = obj.NextVideoId;
+            if (nextId != null)
+            {
+                var nextVideo = parent.Videos.FirstOrDefault(z => z.Id == nextId);
+                if (nextVideo != null) this.NextVideoViewModel = new VideoInfoReadonlyViewModel(nextVideo);
+            }
         }
 
         public void LoadDouban(Movie info)
