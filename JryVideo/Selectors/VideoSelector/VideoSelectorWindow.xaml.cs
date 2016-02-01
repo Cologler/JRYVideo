@@ -25,9 +25,13 @@ namespace JryVideo.Selectors.VideoSelector
 #pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
             dialog.SelectVideoViewModel.RefreshAsync();
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-            return dialog.ShowDialog() == true ? dialog.SelectVideoViewModel.VideosView.Selected.Source : null;
+            return dialog.ShowDialog() == true ? dialog.SelectVideoViewModel.VideosView.Selected?.Source : null;
         }
 
-        private void AcceptButton_OnClick(object sender, RoutedEventArgs e) => this.DialogResult = true;
+        private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
+            => this.DialogResult = true;
+
+        private void RemoveSelectButton_OnClick(object sender, RoutedEventArgs e)
+            => this.SelectVideoViewModel.VideosView.Selected = null;
     }
 }

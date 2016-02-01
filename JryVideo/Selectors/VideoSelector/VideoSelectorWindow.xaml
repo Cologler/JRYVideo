@@ -36,8 +36,19 @@
             </Grid>
 
             <Grid Grid.Row="2"
-                  Style="{StaticResource AcceptPanelStyle}">
-                <Button HorizontalAlignment="Right"
+                  Style="{StaticResource AcceptPanelStyle}"
+                  HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <Button Content="remove select"
+                        Grid.Column="0"
+                        Margin="0,0,4,0"
+                        Click="RemoveSelectButton_OnClick"></Button>
+                
+                <Button Grid.Column="1"
                         Content="{x:Static properties:Resources.Button_Accept_Text}"
                         x:Name="AcceptButton"
                         Click="AcceptButton_OnClick"
