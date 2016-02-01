@@ -56,5 +56,10 @@ namespace JryVideo.Model
 
             return false;
         }
+
+        public virtual void Saving()
+        {
+
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace JryVideo.Model
         [NotNull]
         public List<string> Names { get; set; }
 
+        public string GetMajorName() => this.Names[0];
+
         [ItemNotNull]
         [NotNull]
         public List<JryVideoInfo> Videos { get; set; }

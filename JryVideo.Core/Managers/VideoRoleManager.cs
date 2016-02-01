@@ -83,7 +83,6 @@ namespace JryVideo.Core.Managers
                     var role = new JryVideoRole()
                     {
                         Id = artist.Id,
-                        ActorName = artist.Names.First()
                     };
                     if (!actor.Role.IsNullOrWhiteSpace())
                     {

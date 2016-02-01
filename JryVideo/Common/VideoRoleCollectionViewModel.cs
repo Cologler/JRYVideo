@@ -61,6 +61,7 @@ namespace JryVideo.Common
 
             this.Roles.Collection.AddRange(major);
             this.Roles.Collection.AddRange(minor);
+            this.Roles.Collection.ForEach(z => z.RefreshProperties());
         }
 
         public async Task CommitAsync(string id = null)

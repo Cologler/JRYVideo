@@ -1,7 +1,6 @@
 using Jasily.ComponentModel;
 using JryVideo.Model;
 using System;
-using System.Linq;
 
 namespace JryVideo.Common
 {
@@ -14,7 +13,7 @@ namespace JryVideo.Common
         }
 
         [NotifyPropertyChanged]
-        public string FirstLine => this.Source.Names?.FirstOrDefault() ?? string.Empty;
+        public string FirstLine => this.Source.GetMajorName() ?? string.Empty;
 
         [NotifyPropertyChanged]
         public string SecondLine => this.Source.Names?.Count > 1 ? this.Source.Names[1] : null;

@@ -194,7 +194,7 @@ namespace JryVideo.Core.Managers
             foreach (var video in videos)
             {
                 video.Entities?.ForEach(changing);
-                await this.Source.UpdateAsync(video);
+                await this.UpdateAsync(video);
             }
         }
     }

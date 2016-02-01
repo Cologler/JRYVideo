@@ -21,6 +21,8 @@ namespace JryVideo.Model
         [ItemNotNull]
         public List<string> Names { get; set; }
 
+        public string GetMajorName() => this.Names[0];
+
         /// <summary>
         /// may null.
         /// </summary>

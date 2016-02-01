@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JryVideo.Common
 {
-    public abstract class HasCoverViewModel<T> : JasilyViewModel<T>
+    public abstract class HasCoverViewModel<T> : JryVideoViewModel<T>
         where T : IJryCoverParent
     {
         private JryCover cover;

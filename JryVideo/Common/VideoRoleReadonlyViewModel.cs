@@ -7,6 +7,8 @@ namespace JryVideo.Common
 {
     public class VideoRoleReadonlyViewModel : HasCoverViewModel<JryVideoRole>
     {
+        private string actorName;
+
         public VideoRoleReadonlyViewModel(JryVideoRole source, string collectionId)
             : base(source)
         {
@@ -18,7 +20,11 @@ namespace JryVideo.Common
 
         public virtual string CollectionId { get; }
 
-        public string ActorName => this.Source.ActorName ?? string.Empty;
+        public string ActorName
+        {
+            get { return this.actorName; }
+            private set { this.SetPropertyRef(ref this.actorName, value); }
+        }
 
         public string RoleName
         {
@@ -27,6 +33,17 @@ namespace JryVideo.Common
                 var name = this.Source.RoleName?.FirstOrDefault();
                 return name == null ? string.Empty : $"as {name}";
             }
+        }
+
+        /// <summary>
+        /// the method will call PropertyChanged for each property which has [NotifyPropertyChanged]
+        /// </summary>
+        public override async void RefreshProperties()
+        {
+            base.RefreshProperties();
+
+            var actor = await this.Managers.ArtistManager.FindAsync(this.Source.ArtistId);
+            this.ActorName = actor?.GetMajorName() ?? string.Empty;
         }
 
         public void ShowActor(Window window)

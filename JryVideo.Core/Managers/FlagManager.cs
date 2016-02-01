@@ -214,7 +214,7 @@ namespace JryVideo.Core.Managers
                 flag.Value = newName;
                 flag.Count = count;
                 flag.BuildMetaData(true);
-                ret = await this.Source.InsertAsync(flag);
+                ret = await this.InsertAsync(flag);
             }
 
             // exist

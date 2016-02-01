@@ -59,9 +59,8 @@ namespace JryVideo.Common
             var series = (await client.GetSeriesByImdbIdAsync(imdb)).FirstOrDefault();
             if (series == null) return false;
             var actors = (await series.GetActorsAsync(client)).Where(
-                z => z.Role != null && this.Source.RoleName != null
-                    ? this.Source.RoleName.Contains(z.Role.Trim())
-                    : this.Source.ActorName == z.Name).ToArray();
+                z => z.Role != null && this.Source.RoleName != null && this.Source.RoleName.Contains(z.Role.Trim()))
+                .ToArray();
             if (actors.Length != 1) return false;
             if (!actors[0].HasBanner) return false;
             var url = actors[0].BuildUrl(client);

@@ -35,6 +35,7 @@ namespace JryVideo.Core.Managers
 
         public virtual async Task<bool> InsertAsync(T obj)
         {
+            obj.Saving();
             if (obj.HasError()) return false;
 
             return await this.Source.InsertAsync(obj);
@@ -42,6 +43,7 @@ namespace JryVideo.Core.Managers
 
         public async Task<bool> InsertOrUpdateAsync(T obj)
         {
+            obj.Saving();
             if (obj.HasError()) return false;
 
             return await this.Source.InsertOrUpdateAsync(obj);
@@ -49,13 +51,16 @@ namespace JryVideo.Core.Managers
 
         protected virtual async Task<bool> InsertAsync(IEnumerable<T> objs)
         {
-            if (objs.Any(obj => obj.HasError())) return false;
+            var items = objs as T[] ?? objs.ToArray();
+            items.ForEach(z => z.Saving());
+            if (items.Any(obj => obj.HasError())) return false;
 
-            return await this.Source.InsertAsync(objs);
+            return await this.Source.InsertAsync(items);
         }
 
         public virtual async Task<bool> UpdateAsync(T obj)
         {
+            obj.Saving();
             if (obj.HasError()) return false;
 
             return await this.Source.UpdateAsync(obj);

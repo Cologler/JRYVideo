@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace JryVideo.Model
 {
@@ -11,28 +12,18 @@ namespace JryVideo.Model
         [BsonIgnore]
         public string ArtistId => this.Id;
 
-        /// <summary>
-        /// only the firse name from artist, as cache
-        /// </summary>
+        #region obsolete
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        [BsonElement("ActorName")]
         public string ActorName { get; set; }
+
+        #endregion
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
         public List<string> RoleName { get; set; }
-
-        protected override bool InnerTestHasError()
-        {
-            if (base.InnerTestHasError())
-                return true;
-
-            if (this.ActorName.IsNullOrWhiteSpace())
-            {
-                this.Log(JasilyLogger.LoggerMode.Debug, "name can not be empty.");
-                return true;
-            }
-
-            return false;
-        }
 
         public bool Equals(JryVideoRole other)
         {
@@ -49,6 +40,14 @@ namespace JryVideo.Model
         {
             get { return this.RoleName; }
             set { this.RoleName = value; }
+        }
+
+        public string GetMajorName() => this.RoleName?.FirstOrDefault();
+
+        public override void Saving()
+        {
+            base.Saving();
+            this.ActorName = null;
         }
     }
 }

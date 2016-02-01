@@ -5,5 +5,7 @@ namespace JryVideo.Model
     public interface INameable
     {
         List<string> Names { get; set; }
+
+        string GetMajorName();
     }
 }

@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\CoverViewModel.cs" />
     <Compile Include="Common\Dialogs\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
@@ -67,6 +68,7 @@
       <DependentUpon>PasswordWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\EntityViewModel.cs" />
+    <Compile Include="Common\JryVideoViewModel.cs" />
     <Compile Include="Common\LocalizationHelper.cs" />
     <Compile Include="Common\NameableViewModel.cs" />
     <Compile Include="Common\SeriesViewModel.cs" />

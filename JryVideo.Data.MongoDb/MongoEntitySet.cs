@@ -50,7 +50,7 @@ namespace JryVideo.Data.MongoDb
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async virtual Task<IDictionary<string, TEntity>> FindAsync(IEnumerable<string> ids)
+        public virtual async Task<IDictionary<string, TEntity>> FindAsync(IEnumerable<string> ids)
         {
             return (await (await this.Collection.FindAsync(
                 Builders<TEntity>.Filter.In(t => t.Id, ids.ToArray())))
@@ -58,7 +58,7 @@ namespace JryVideo.Data.MongoDb
                 .ToDictionary(z => z.Id);
         }
 
-        public async virtual Task<IEnumerable<TEntity>> ListAsync(int skip = 0, int take = Int32.MaxValue)
+        public virtual async Task<IEnumerable<TEntity>> ListAsync(int skip = 0, int take = Int32.MaxValue)
         {
             var option = new FindOptions<TEntity, TEntity>()
             {
@@ -107,7 +107,7 @@ namespace JryVideo.Data.MongoDb
             return true;
         }
 
-        public async virtual Task<bool> UpdateAsync(TEntity entity)
+        public virtual async Task<bool> UpdateAsync(TEntity entity)
         {
             this.Print(entity, "update");
             this.Log(JasilyLogger.LoggerMode.Release, "update \r\n" + entity.Print() + "\r\n");

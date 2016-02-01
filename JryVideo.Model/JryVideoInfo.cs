@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace JryVideo.Model
 {
@@ -29,6 +30,8 @@ namespace JryVideo.Model
         [ItemNotNull]
         [BsonIgnoreIfDefault]
         public List<string> Names { get; set; }
+
+        public string GetMajorName() => this.Names?.FirstOrDefault();
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
