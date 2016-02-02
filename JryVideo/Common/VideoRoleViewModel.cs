@@ -54,7 +54,7 @@ namespace JryVideo.Common
         {
             if (this.parent.VideoViewerViewModel == null) return false;
             var client = JryVideoCore.Current.TheTVDBClient;
-            var imdb = this.ImdbItem.GetValidImdb();
+            var imdb = this.ImdbItem.GetValidImdbId();
             if (client == null || imdb == null) return false;
             var series = (await client.GetSeriesByImdbIdAsync(imdb)).FirstOrDefault();
             if (series == null) return false;

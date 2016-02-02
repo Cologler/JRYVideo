@@ -58,7 +58,7 @@ namespace JryVideo.Common
         {
             if (this.Source.TheTVDBId.IsNullOrWhiteSpace())
             {
-                var imdbId = this.Source.GetValidImdb();
+                var imdbId = this.Source.GetValidImdbId();
                 var client = this.GetTVDBClient();
                 if (client != null)
                 {

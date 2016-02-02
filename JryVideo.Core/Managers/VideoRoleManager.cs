@@ -38,7 +38,7 @@ namespace JryVideo.Core.Managers
         {
             await Task.Run(async () =>
             {
-                await this.AutoCreateVideoRoleOnInitializeAsync(item.Id, item.GetValidImdb());
+                await this.AutoCreateVideoRoleOnInitializeAsync(item.Id, item.GetValidImdbId());
             });
         }
 
