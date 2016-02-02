@@ -486,5 +486,10 @@ namespace JryVideo.Common
             => this.HasNext
                 ? this.SeriesView.VideoViewModels.FirstOrDefault(z => z.Source.Id == this.Source.NextVideoId)
                 : null;
+
+        public async Task AutoCompleteAsync()
+        {
+            await this.SeriesView.AutoCompleteAsync();
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace JryVideo.Common
         {
             base.RefreshProperties();
 
-            var actor = await this.Managers.ArtistManager.FindAsync(this.Source.ArtistId);
+            var actor = await this.GetManagers().ArtistManager.FindAsync(this.Source.ArtistId);
             this.ActorName = actor?.GetMajorName() ?? string.Empty;
         }
 

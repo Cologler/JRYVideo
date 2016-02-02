@@ -56,6 +56,7 @@ namespace JryVideo.Viewer.VideoViewer
             };
             await this.ReloadVideoAsync();
             this.videoRoleCollection.BeginLoad();
+            await this.AutoCompleteAsync();
         }
 
         public async Task ReloadVideoAsync()
@@ -82,6 +83,11 @@ namespace JryVideo.Viewer.VideoViewer
 
             await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.Source);
             await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.SeriesView.Source);
+        }
+
+        public async Task AutoCompleteAsync()
+        {
+            await this.InfoView.AutoCompleteAsync();
         }
 
         public void ReloadEpisodes()

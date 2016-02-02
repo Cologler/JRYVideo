@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Jasily.ComponentModel;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
@@ -50,6 +52,24 @@ namespace JryVideo.Common
                 return true;
             }
             return false;
+        }
+
+        public async Task AutoCompleteAsync()
+        {
+            if (this.Source.TheTVDBId.IsNullOrWhiteSpace())
+            {
+                var imdbId = this.Source.GetValidImdb();
+                var client = this.GetTVDBClient();
+                if (client != null)
+                {
+                    var series = (await client.GetSeriesByImdbIdAsync(imdbId)).FirstOrDefault();
+                    if (series != null)
+                    {
+                        this.Source.TheTVDBId = series.SeriesId;
+                        await this.GetManagers().SeriesManager.UpdateAsync(this.Source);
+                    }
+                }
+            }
         }
     }
 }

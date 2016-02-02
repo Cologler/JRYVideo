@@ -1,16 +1,14 @@
 using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Core.Managers;
+using JryVideo.Core.TheTVDB;
 
 namespace JryVideo.Common
 {
-    public class JryVideoViewModel<T> : JasilyViewModel<T>
+    public static class JryVideoViewModel
     {
-        public JryVideoViewModel(T source)
-            : base(source)
-        {
-        }
+        public static DataCenter GetManagers(this JasilyViewModel vm) => JryVideoCore.Current.CurrentDataCenter;
 
-        public DataCenter Managers => JryVideoCore.Current.CurrentDataCenter;
+        public static TheTVDBClient GetTVDBClient(this JasilyViewModel vm) => JryVideoCore.Current.TheTVDBClient;
     }
 }
