@@ -50,7 +50,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         public async Task LoadAsync()
         {
-            this.Background = new BackgroundViewModel(new BackgroundCover(this));
+            this.Background = new BackgroundViewModel(this);
             this.videoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.SeriesView.Source, this.InfoView.Source)
             {
                 VideoViewerViewModel = this
@@ -196,15 +196,26 @@ namespace JryVideo.Viewer.VideoViewer
             }
         }
 
-        public sealed class BackgroundViewModel : HasCoverViewModel<BackgroundCover>
+        public sealed class BackgroundViewModel : HasCoverViewModel<IJryCoverParent>
         {
-            public BackgroundViewModel(BackgroundCover source)
-                : base(source)
+            private readonly VideoViewerViewModel parent;
+
+            public BackgroundViewModel(VideoViewerViewModel parent)
+                : base(parent.InfoView.Source.BackgroundImageAsCoverParent())
             {
+                this.parent = parent;
             }
 
             private async Task<bool> SetBackgroundIdAsync(string coverId)
-                => await this.Source.UpdateImageIfEmptyAsync(coverId);
+            {
+                this.Source.CoverId = coverId;
+                var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.Series);
+                return await manager.UpdateAsync(this.VideoInfo);
+            }
+
+            public SeriesViewModel Series => this.parent.InfoView.SeriesView;
+
+            public VideoInfoViewModel VideoInfo => this.parent.InfoView;
 
             protected override async Task<bool> TryAutoAddCoverAsync()
             {
@@ -213,9 +224,9 @@ namespace JryVideo.Viewer.VideoViewer
                 var client = JryVideoCore.Current.TheTVDBClient;
                 if (client == null) return false;
 
-                var guid = (await this.AutoGenerateCoverAsync(client, this.Source.VideoInfo.Source) ??
-                            await this.AutoGenerateCoverOverTheTVDBIdAsync(client, this.Source.Series.Source.TheTVDBId, this.Source.Index.ToString())) ??
-                           await this.AutoGenerateCoverAsync(client, this.Source.Series.Source);
+                var guid = (await this.AutoGenerateCoverAsync(client, this.VideoInfo.Source) ??
+                            await this.AutoGenerateCoverOverTheTVDBIdAsync(client, this.Series.Source.TheTVDBId, this.VideoInfo.Source.Index.ToString())) ??
+                           await this.AutoGenerateCoverAsync(client, this.Series.Source);
 
                 if (guid != null)
                 {
@@ -227,12 +238,11 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<bool> TrySetByExistsAsync()
             {
-                if (this.Source.ImdbId == null || !this.Source.ImdbId.StartsWith("tt")) return false;
                 var cover = (await this.GetManagers().CoverManager.Source.FindAsync(
                     new JryCover.QueryParameter()
                     {
                         CoverType = JryCoverType.Background,
-                        VideoId = this.Source.Source.InfoView.Source.Id
+                        VideoId = this.VideoInfo.Source.Id
                     })).SingleOrDefault();
                 if (cover == null) return false;
                 return await this.SetBackgroundIdAsync(cover.Id);
@@ -245,7 +255,7 @@ namespace JryVideo.Viewer.VideoViewer
 
                 foreach (var series in await client.GetSeriesByImdbIdAsync(imdbId))
                 {
-                    var guid = await this.AutoGenerateCoverOverTheTVDBIdAsync(client, series.SeriesId, this.Source.Index.ToString());
+                    var guid = await this.AutoGenerateCoverOverTheTVDBIdAsync(client, series.SeriesId, this.VideoInfo.Source.Index.ToString());
                     if (guid != null) return guid;
                 }
                 return null;
@@ -279,7 +289,7 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task RemoveAsync()
             {
-                var videoInfo = this.Source.Source.InfoView.Source;
+                var videoInfo = this.VideoInfo.Source;
                 var bgId = videoInfo.BackgroundImageId;
                 if (bgId == null) return;
                 await Task.Run(async () =>
@@ -288,7 +298,7 @@ namespace JryVideo.Viewer.VideoViewer
                     if (await coverManager.RemoveAsync(bgId))
                     {
                         var videoManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(
-                            this.Source.Source.InfoView.SeriesView.Source);
+                            this.VideoInfo.SeriesView.Source);
                         videoInfo.BackgroundImageId = null;
                         await videoManager.UpdateAsync(videoInfo);
                     }
@@ -297,7 +307,7 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<string> DownloadAsync(string url)
             {
-                var cover = JryCover.CreateBackground(this.Source.Source.InfoView.Source, url);
+                var cover = JryCover.CreateBackground(this.VideoInfo.Source, url);
                 return await JryVideoCore.Current.CurrentDataCenter.CoverManager.DownloadCoverAsync(cover);
             }
 
@@ -305,65 +315,29 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 var parameters = new List<RemoteId>();
 
-                var imdbId = this.Source.VideoInfo.Source.GetValidImdbId();
+                var imdbId = this.VideoInfo.Source.GetValidImdbId();
                 if (imdbId != null)
                 {
                     parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
                 }
 
-                if (!this.Source.Series.Source.TheTVDBId.IsNullOrWhiteSpace())
+                if (!this.Series.Source.TheTVDBId.IsNullOrWhiteSpace())
                 {
-                    parameters.Add(new RemoteId(RemoteIdType.TheTVDB, this.Source.Series.Source.TheTVDBId));
+                    parameters.Add(new RemoteId(RemoteIdType.TheTVDB, this.Series.Source.TheTVDBId));
                 }
 
-                imdbId = this.Source.Series.Source.GetValidImdbId();
+                imdbId = this.Series.Source.GetValidImdbId();
                 if (imdbId != null)
                 {
                     parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
                 }
 
-                var url = WebImageSelectorWindow.StartSelectFanartByImdbId(window, this.Source.Index.ToString(), parameters.ToArray());
+                var url = WebImageSelectorWindow.StartSelectFanartByImdbId(window, this.VideoInfo.Source.Index.ToString(), parameters.ToArray());
                 if (string.IsNullOrWhiteSpace(url)) return null;
                 await this.RemoveAsync();
                 await this.DownloadAsync(url);
                 this.Refresh();
                 return false;
-            }
-        }
-
-        public sealed class BackgroundCover : IJryCoverParent
-        {
-            public VideoViewerViewModel Source { get; }
-
-            public BackgroundCover(VideoViewerViewModel source)
-            {
-                this.Source = source;
-            }
-
-            public string CoverId
-            {
-                get { return this.Source.InfoView.Source.BackgroundImageId; }
-                set { this.Source.InfoView.Source.BackgroundImageId = value; }
-            }
-
-            public SeriesViewModel Series => this.Source.InfoView.SeriesView;
-
-            public VideoInfoViewModel VideoInfo => this.Source.InfoView;
-
-            public string ImdbId => this.Source.InfoView.Source.ImdbId;
-
-            public string SeriesImdbId => this.Source.InfoView.SeriesView.Source.ImdbId;
-
-            public string DoubanId => this.Source.InfoView.Source.DoubanId;
-
-            public int Index => this.Source.InfoView.Source.Index;
-
-            public async Task<bool> UpdateImageIfEmptyAsync(string guid)
-            {
-                this.Source.InfoView.Source.BackgroundImageId = guid;
-                var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(
-                    this.Source.InfoView.SeriesView.Source);
-                return await manager.UpdateAsync(this.Source.InfoView.Source);
             }
         }
     }

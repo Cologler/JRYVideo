@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Jasily.ComponentModel;
+using JryVideo.Editors.SeriesEditor;
+using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Jasily.ComponentModel;
-using JryVideo.Editors.SeriesEditor;
-using JryVideo.Model;
 using System.Windows;
 
 namespace JryVideo.Common
@@ -71,5 +71,7 @@ namespace JryVideo.Common
                 }
             }
         }
+
+        public static implicit operator JrySeries(SeriesViewModel viewModel) => viewModel?.Source;
     }
 }
