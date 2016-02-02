@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -206,56 +207,63 @@ namespace JryVideo.Viewer.VideoViewer
                 => await this.Source.UpdateImageIfEmptyAsync(coverId);
 
             protected override async Task<bool> TryAutoAddCoverAsync()
-                => await this.TrySetByExistsAsync() ||
-                   await this.InternalTryAutoAddCoverAsync(this.Source.ImdbId) ||
-                   await this.InternalTryAutoAddCoverAsync(this.Source.SeriesImdbId);
+            {
+                if (await this.TrySetByExistsAsync()) return true;
+
+                var client = JryVideoCore.Current.TheTVDBClient;
+                if (client == null) return false;
+
+                var guid = (await this.AutoGenerateCoverAsync(client, this.Source.VideoInfo.Source) ??
+                            await this.AutoGenerateCoverOverTheTVDBIdAsync(client, this.Source.Series.Source.TheTVDBId, this.Source.Index.ToString())) ??
+                           await this.AutoGenerateCoverAsync(client, this.Source.Series.Source);
+
+                if (guid != null)
+                {
+                    return await this.SetBackgroundIdAsync(guid);
+                }
+
+                return false;
+            }
 
             private async Task<bool> TrySetByExistsAsync()
             {
                 if (this.Source.ImdbId == null || !this.Source.ImdbId.StartsWith("tt")) return false;
-                var cover = (await JryVideoCore.Current.CurrentDataCenter.CoverManager.Source.FindAsync(
+                var cover = (await this.GetManagers().CoverManager.Source.FindAsync(
                     new JryCover.QueryParameter()
                     {
                         CoverType = JryCoverType.Background,
                         VideoId = this.Source.Source.InfoView.Source.Id
                     })).SingleOrDefault();
                 if (cover == null) return false;
-                await this.SetBackgroundIdAsync(cover.Id);
-                return true;
+                return await this.SetBackgroundIdAsync(cover.Id);
             }
 
-            private async Task<bool> InternalTryAutoAddCoverAsync(string imdbId)
+            private async Task<string> AutoGenerateCoverAsync(TheTVDBClient client, IImdbItem item)
             {
-                if (imdbId == null || !imdbId.StartsWith("tt")) return false;
+                var imdbId = item.GetValidImdbId();
+                if (imdbId == null) return null;
 
-                var client = JryVideoCore.Current.TheTVDBClient;
-                if (client == null) return false;
-
-                var guid = await this.AutoGenerateCoverAsync(client, imdbId, this.Source.Index.ToString());
-                if (guid != null)
+                foreach (var series in await client.GetSeriesByImdbIdAsync(imdbId))
                 {
-                    return await this.SetBackgroundIdAsync(guid);
+                    var guid = await this.AutoGenerateCoverOverTheTVDBIdAsync(client, series.SeriesId, this.Source.Index.ToString());
+                    if (guid != null) return guid;
                 }
-                return false;
+                return null;
             }
 
-            private async Task<string> AutoGenerateCoverAsync(TheTVDBClient client, string imdbId, string index)
+            private async Task<string> AutoGenerateCoverOverTheTVDBIdAsync(TheTVDBClient client, string theTVDBId, string index)
             {
+                if (theTVDBId.IsNullOrWhiteSpace()) return null;
+
                 return await Task.Run(async () =>
                 {
-                    foreach (var video in await client.GetSeriesByImdbIdAsync(imdbId))
+                    var array = (await client.GetBannersBySeriesIdAsync(theTVDBId)).ToArray();
+                    foreach (var banner in array.Where(z => z.Season == index).RandomSort()
+                        .Concat(array.Where(z => z.Season != index).RandomSort())
+                        .Where(banner => banner.BannerType == BannerType.Fanart))
                     {
-                        var array = (await video.GetBannersAsync(client)).ToArray();
-                        foreach (var banner in array.Where(z => z.Season == index)
-                            .RandomSort()
-                            .Concat(array.Where(z => z.Season != index).RandomSort()))
-                        {
-                            if (banner.BannerType == BannerType.Fanart)
-                            {
-                                var guid = await this.DownloadAsync(banner.BuildUrl(client));
-                                if (guid != null) return guid;
-                            }
-                        }
+                        var guid = await this.DownloadAsync(banner.BuildUrl(client));
+                        if (guid != null) return guid;
                     }
                     return null;
                 });
@@ -295,11 +303,26 @@ namespace JryVideo.Viewer.VideoViewer
 
             public async Task<bool?> StartSelect(Window window)
             {
-                var imdbs = new[] { this.Source.ImdbId, this.Source.SeriesImdbId }
-                    .Where(z => z != null && z.StartsWith("tt"))
-                    .ToArray();
-                if (imdbs.Length == 0) return false;
-                var url = WebImageSelectorWindow.StartSelectFanartByImdbId(window, this.Source.Index.ToString(), imdbs);
+                var parameters = new List<RemoteId>();
+
+                var imdbId = this.Source.VideoInfo.Source.GetValidImdbId();
+                if (imdbId != null)
+                {
+                    parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
+                }
+
+                if (!this.Source.Series.Source.TheTVDBId.IsNullOrWhiteSpace())
+                {
+                    parameters.Add(new RemoteId(RemoteIdType.TheTVDB, this.Source.Series.Source.TheTVDBId));
+                }
+
+                imdbId = this.Source.Series.Source.GetValidImdbId();
+                if (imdbId != null)
+                {
+                    parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
+                }
+
+                var url = WebImageSelectorWindow.StartSelectFanartByImdbId(window, this.Source.Index.ToString(), parameters.ToArray());
                 if (string.IsNullOrWhiteSpace(url)) return null;
                 await this.RemoveAsync();
                 await this.DownloadAsync(url);
@@ -322,6 +345,10 @@ namespace JryVideo.Viewer.VideoViewer
                 get { return this.Source.InfoView.Source.BackgroundImageId; }
                 set { this.Source.InfoView.Source.BackgroundImageId = value; }
             }
+
+            public SeriesViewModel Series => this.Source.InfoView.SeriesView;
+
+            public VideoInfoViewModel VideoInfo => this.Source.InfoView;
 
             public string ImdbId => this.Source.InfoView.Source.ImdbId;
 

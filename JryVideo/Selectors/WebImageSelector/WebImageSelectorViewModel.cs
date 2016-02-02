@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Model;
 
 namespace JryVideo.Selectors.WebImageSelector
 {
@@ -57,40 +58,53 @@ namespace JryVideo.Selectors.WebImageSelector
             }
         }
 
-        public async void BeginLoadFanartByImdbId(TheTVDBClient client, string index, params string[] imdbIds)
+        public async void BeginLoadFanartByImdbId(TheTVDBClient client, string index, params RemoteId[] ids)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
 
-            foreach (var imdbId in imdbIds)
+            foreach (var id in ids)
             {
-                if (await this.LoadFanartByImdbIdAsync(client, imdbId, index)) return;
+                if (await this.LoadFanartByImdbIdAsync(client, id, index)) return;
             }
 
-            foreach (var imdbId in imdbIds)
+            foreach (var id in ids)
             {
-                if (await this.LoadFanartByImdbIdAsync(client, imdbId)) return;
+                if (await this.LoadFanartByImdbIdAsync(client, id)) return;
             }
 
             this.Load(Enumerable.Empty<string>());
         }
 
-        private async Task<bool> LoadFanartByImdbIdAsync(TheTVDBClient client, string imdbId, string index = null)
+        private async Task<bool> LoadFanartByImdbIdAsync(TheTVDBClient client, RemoteId id, string index = null)
         {
-            var videos = (await client.GetSeriesByImdbIdAsync(imdbId)).ToArray();
-            if (videos.Length != 0)
+            var seriesId = await this.TryGetTheTVDBSeriesIdByRemoteId(client, id);
+            if (seriesId == null) return false;
+
+            var urls = (await client.GetBannersBySeriesIdAsync(seriesId)).Where(z => z.BannerType == BannerType.Fanart)
+                .Where(z => index == null || z.Season == index)
+                .Select(z => z.BuildUrl(client))
+                .ToArray();
+            if (urls.Length > 0)
             {
-                var urls = (await videos[0].GetBannersAsync(JryVideoCore.Current.TheTVDBClient))
-                    .Where(z => z.BannerType == BannerType.Fanart)
-                    .Where(z => index == null || z.Season == index)
-                    .Select(z => z.BuildUrl(client))
-                    .ToArray();
-                if (urls.Length > 0)
-                {
-                    this.Load(urls);
-                    return true;
-                }
+                this.Load(urls);
+                return true;
             }
             return false;
+        }
+
+        private async Task<string> TryGetTheTVDBSeriesIdByRemoteId(TheTVDBClient client, RemoteId id)
+        {
+            switch (id.Type)
+            {
+                case RemoteIdType.TheTVDB:
+                    return id.Id;
+
+                case RemoteIdType.Imdb:
+                    return (await client.GetSeriesByImdbIdAsync(id.Id)).FirstOrDefault()?.SeriesId;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

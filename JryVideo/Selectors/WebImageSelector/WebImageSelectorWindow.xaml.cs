@@ -3,6 +3,7 @@ using JryVideo.Common.Dialogs;
 using JryVideo.Core;
 using System.Collections.Generic;
 using System.Windows;
+using JryVideo.Model;
 
 namespace JryVideo.Selectors.WebImageSelector
 {
@@ -70,7 +71,7 @@ namespace JryVideo.Selectors.WebImageSelector
             return dlg.ShowDialog() == true ? dlg.ViewModel.SelectedUrl : null;
         }
 
-        public static string StartSelectFanartByImdbId(Window parent, string index, params string[] imdbIds)
+        public static string StartSelectFanartByImdbId(Window parent, string index, params RemoteId[] ids)
         {
             var client = JryVideoCore.Current.TheTVDBClient;
             if (client == null)
@@ -80,7 +81,7 @@ namespace JryVideo.Selectors.WebImageSelector
             }
             var dlg = new WebImageSelectorWindow() { Owner = parent };
             dlg.WithMode(ViewMode.Mode2);
-            dlg.ViewModel.BeginLoadFanartByImdbId(client, index, imdbIds);
+            dlg.ViewModel.BeginLoadFanartByImdbId(client, index, ids);
             return dlg.ShowDialog() == true ? dlg.ViewModel.SelectedUrl : null;
         }
 

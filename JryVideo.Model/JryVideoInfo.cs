@@ -74,6 +74,24 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string BackgroundImageId { get; set; }
 
+        public IJryCoverParent BackgroundImageAsCoverParent() => new BackgroundCoverParent(this);
+
+        private class BackgroundCoverParent : IJryCoverParent
+        {
+            private readonly JryVideoInfo jryVideoInfo;
+
+            public BackgroundCoverParent(JryVideoInfo jryVideoInfo)
+            {
+                this.jryVideoInfo = jryVideoInfo;
+            }
+
+            public string CoverId
+            {
+                get { return this.jryVideoInfo.BackgroundImageId; }
+                set { this.jryVideoInfo.BackgroundImageId = value; }
+            }
+        }
+
         [CanBeNull]
         [BsonIgnoreIfDefault]
         public DayOfWeek? DayOfWeek { get; set; }

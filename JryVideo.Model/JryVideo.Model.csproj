@@ -79,6 +79,8 @@
     <Compile Include="JryVideoRole.cs" />
     <Compile Include="JryVideoInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteId.cs" />
+    <Compile Include="RemoteIdType.cs" />
     <Compile Include="VideoInfoAttached.cs" />
     <Compile Include="VideoRoleCollection.cs" />
   </ItemGroup>

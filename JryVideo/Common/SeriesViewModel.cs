@@ -60,7 +60,7 @@ namespace JryVideo.Common
             {
                 var imdbId = this.Source.GetValidImdbId();
                 var client = this.GetTVDBClient();
-                if (client != null)
+                if (client != null && imdbId != null)
                 {
                     var series = (await client.GetSeriesByImdbIdAsync(imdbId)).FirstOrDefault();
                     if (series != null)
