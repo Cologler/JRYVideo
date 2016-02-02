@@ -80,8 +80,10 @@ namespace JryVideo.Common
         {
             var theTVDBId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(removeId);
             if (theTVDBId == null) return false;
-            var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).Where(
-                z => z.Role != null && this.Source.RoleName != null && this.Source.RoleName.Contains(z.Role.Trim()))
+            var artist = await this.GetManagers().ArtistManager.FindAsync(this.Source.ArtistId);
+            if (artist == null) return false;
+            var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).ToArray();
+            actors = actors.Where(z => z.Id == artist.TheTVDBId)
                 .ToArray();
             if (actors.Length != 1) return false;
             if (!actors[0].HasBanner) return false;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent, INameable
+    public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent, INameable, ITheTVDBItem
     {
         public JryArtist()
         {
