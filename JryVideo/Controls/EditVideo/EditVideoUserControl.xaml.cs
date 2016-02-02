@@ -1,16 +1,16 @@
-﻿using JryVideo.Common.Dialogs;
+﻿using JryVideo.Common;
+using JryVideo.Common.Dialogs;
 using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Managers.FlagManager;
 using JryVideo.Selectors.ArtistSelector;
+using JryVideo.Selectors.VideoSelector;
 using MahApps.Metro.Controls;
 using System;
 using System.ComponentModel;
 using System.Enums;
 using System.Windows;
 using System.Windows.Controls;
-using JryVideo.Common;
-using JryVideo.Selectors.VideoSelector;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -121,14 +121,18 @@ namespace JryVideo.Controls.EditVideo
         private void SelectLastVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
             var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
-                this.ViewModel.Parent, this.ViewModel.Source, this.ViewModel.LastVideoViewModel?.Source.Id);
+                this.ViewModel.Parent,
+                without: this.ViewModel.Source,
+                defaultId: this.ViewModel.LastVideoViewModel?.Source.Id);
             this.ViewModel.LastVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
         }
 
         private void SelectNextVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
             var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
-                this.ViewModel.Parent, this.ViewModel.Source, this.ViewModel.NextVideoViewModel?.Source.Id);
+                this.ViewModel.Parent,
+                without: this.ViewModel.Source,
+                defaultId: this.ViewModel.NextVideoViewModel?.Source.Id);
             this.ViewModel.NextVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
         }
     }
