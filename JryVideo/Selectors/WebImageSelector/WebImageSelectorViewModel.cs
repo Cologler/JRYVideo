@@ -1,12 +1,12 @@
 using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Core.TheTVDB;
+using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using JryVideo.Model;
 
 namespace JryVideo.Selectors.WebImageSelector
 {
@@ -77,7 +77,7 @@ namespace JryVideo.Selectors.WebImageSelector
 
         private async Task<bool> LoadFanartByImdbIdAsync(TheTVDBClient client, RemoteId id, string index = null)
         {
-            var seriesId = await this.TryGetTheTVDBSeriesIdByRemoteId(client, id);
+            var seriesId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(id);
             if (seriesId == null) return false;
 
             var urls = (await client.GetBannersBySeriesIdAsync(seriesId)).Where(z => z.BannerType == BannerType.Fanart)
@@ -90,21 +90,6 @@ namespace JryVideo.Selectors.WebImageSelector
                 return true;
             }
             return false;
-        }
-
-        private async Task<string> TryGetTheTVDBSeriesIdByRemoteId(TheTVDBClient client, RemoteId id)
-        {
-            switch (id.Type)
-            {
-                case RemoteIdType.TheTVDB:
-                    return id.Id;
-
-                case RemoteIdType.Imdb:
-                    return (await client.GetSeriesByImdbIdAsync(id.Id)).FirstOrDefault()?.SeriesId;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
     }
 }

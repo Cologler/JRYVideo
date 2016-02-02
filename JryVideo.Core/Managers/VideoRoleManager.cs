@@ -38,11 +38,19 @@ namespace JryVideo.Core.Managers
         {
             await Task.Run(async () =>
             {
-                await this.AutoCreateVideoRoleOnInitializeAsync(item.Id, item.GetValidImdbId());
+                var theTVDBItem = item as ITheTVDBItem;
+                if (theTVDBItem != null && !theTVDBItem.TheTVDBId.IsNullOrWhiteSpace())
+                {
+                    await this.AutoCreateVideoRoleAsync(item.Id, new RemoteId(RemoteIdType.TheTVDB, theTVDBItem.TheTVDBId));
+                }
+
+                var imdbId = item.GetValidImdbId();
+                if (imdbId == null) return;
+                await this.AutoCreateVideoRoleAsync(item.Id, new RemoteId(RemoteIdType.Imdb, imdbId));
             });
         }
 
-        private async Task AutoCreateVideoRoleOnInitializeAsync(string id, string imdb)
+        private async Task AutoCreateVideoRoleAsync(string id, RemoteId remoteId)
         {
             var collection = await this.FindAsync(id);
             if (collection.MajorRoles != null || collection.MinorRoles != null) return;
@@ -50,10 +58,10 @@ namespace JryVideo.Core.Managers
             var client = JryVideoCore.Current.TheTVDBClient;
             if (client == null) return;
 
-            if (imdb == null) return;
-            var series = (await client.GetSeriesByImdbIdAsync(imdb)).FirstOrDefault();
-            if (series == null) return;
-            var actors = (await series.GetActorsAsync(client)).ToArray();
+            var theTVDBId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(remoteId);
+            if (theTVDBId == null) return;
+
+            var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).ToArray();
             if (actors.Length == 0) return;
             var major = actors.Select(z => z.SortOrder).Min();
 

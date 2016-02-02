@@ -1,4 +1,5 @@
 ﻿using Jasily.Net;
+using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +82,21 @@ namespace JryVideo.Core.TheTVDB
             return result.IsSuccess && result.Result.Actors != null
                 ? result.Result.Actors
                 : Enumerable.Empty<Actor>();
+        }
+
+        public async Task<string> TryGetTheTVDBSeriesIdByRemoteIdAsync(RemoteId id)
+        {
+            switch (id.Type)
+            {
+                case RemoteIdType.TheTVDB:
+                    return id.Id;
+
+                case RemoteIdType.Imdb:
+                    return (await this.GetSeriesByImdbIdAsync(id.Id)).FirstOrDefault()?.SeriesId;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

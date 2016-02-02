@@ -1,9 +1,11 @@
-﻿using JryVideo.Core;
+﻿using System;
+using JryVideo.Core;
 using JryVideo.Editors.RoleEditor;
 using JryVideo.Model;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using JryVideo.Core.TheTVDB;
 
 namespace JryVideo.Common
 {
@@ -54,11 +56,31 @@ namespace JryVideo.Common
         {
             if (this.parent.VideoViewerViewModel == null) return false;
             var client = JryVideoCore.Current.TheTVDBClient;
+            if (client == null) return false;
+
+            var theTVDBItem = this.ImdbItem as ITheTVDBItem;
+            if (theTVDBItem != null &&
+                !theTVDBItem.TheTVDBId.IsNullOrWhiteSpace() &&
+                await this.TryAutoAddCoverAsync(client, new RemoteId(RemoteIdType.TheTVDB, theTVDBItem.TheTVDBId)))
+            {
+                return true;
+            }
+
             var imdb = this.ImdbItem.GetValidImdbId();
-            if (client == null || imdb == null) return false;
-            var series = (await client.GetSeriesByImdbIdAsync(imdb)).FirstOrDefault();
-            if (series == null) return false;
-            var actors = (await series.GetActorsAsync(client)).Where(
+            if (imdb != null &&
+                await this.TryAutoAddCoverAsync(client, new RemoteId(RemoteIdType.Imdb, imdb)))
+            {
+                return true;
+            }
+            
+            return false;
+        }
+
+        private async Task<bool> TryAutoAddCoverAsync(TheTVDBClient client, RemoteId removeId)
+        {
+            var theTVDBId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(removeId);
+            if (theTVDBId == null) return false;
+            var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).Where(
                 z => z.Role != null && this.Source.RoleName != null && this.Source.RoleName.Contains(z.Role.Trim()))
                 .ToArray();
             if (actors.Length != 1) return false;
