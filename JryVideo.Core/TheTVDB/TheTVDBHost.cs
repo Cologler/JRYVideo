@@ -19,10 +19,12 @@ namespace JryVideo.Core.TheTVDB
                 var mirrors = result.Result.Mirrors;
                 if (mirrors != null && mirrors.Length > 0)
                 {
-                    return new TheTVDBClient(apiKey, mirrors);
+                    return this.LastClientInstance = new TheTVDBClient(apiKey, mirrors);
                 }
             }
             return null;
         }
+
+        public TheTVDBClient LastClientInstance { get; private set; }
     }
 }

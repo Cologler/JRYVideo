@@ -13,9 +13,16 @@ namespace JryVideo.Core
 
         public TheTVDBClient TheTVDBClient { get; private set; }
 
+        public TheTVDBHost TheTVDBHost { get; }
+
         static JryVideoCore()
         {
             Current = new JryVideoCore();
+        }
+
+        private JryVideoCore()
+        {
+            this.TheTVDBHost = new TheTVDBHost();
         }
 
         public string[] RunArgs { get; set; }
@@ -52,7 +59,8 @@ namespace JryVideo.Core
 
         private async void BeginLazyInitialize()
         {
-            this.TheTVDBClient = await new TheTVDBHost().CreateAsync("2C8DAFF32B0E08A7", null);
+
+            this.TheTVDBClient = await this.TheTVDBHost.CreateAsync("2C8DAFF32B0E08A7", null);
 
             foreach (var dc in new[] { this.NormalDataCenter, this.SecureDataCenter })
             {

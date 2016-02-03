@@ -1,7 +1,7 @@
 ﻿using Jasily.ComponentModel;
+using JryVideo.AutoComplete;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,20 +56,7 @@ namespace JryVideo.Common
 
         public async Task AutoCompleteAsync()
         {
-            if (this.Source.TheTVDBId.IsNullOrWhiteSpace())
-            {
-                var imdbId = this.Source.GetValidImdbId();
-                var client = this.GetTVDBClient();
-                if (client != null && imdbId != null)
-                {
-                    var series = (await client.GetSeriesByImdbIdAsync(imdbId)).FirstOrDefault();
-                    if (series != null)
-                    {
-                        this.Source.TheTVDBId = series.SeriesId;
-                        await this.GetManagers().SeriesManager.UpdateAsync(this.Source);
-                    }
-                }
-            }
+            await new SeriesAutoComplete().AutoCompleteAsync(this.GetManagers().SeriesManager, this.Source);
         }
 
         public static implicit operator JrySeries(SeriesViewModel viewModel) => viewModel?.Source;

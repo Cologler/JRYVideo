@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AutoComplete\SeriesAutoComplete.cs" />
     <Compile Include="Common\CoverViewModel.cs" />
     <Compile Include="Common\Dialogs\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
