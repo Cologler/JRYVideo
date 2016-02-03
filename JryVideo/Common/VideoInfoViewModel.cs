@@ -191,7 +191,7 @@ namespace JryVideo.Common
                 var cover = (await coverManager.Source.FindAsync(
                     new JryCover.QueryParameter()
                     {
-                        CoverType = JryCoverType.Background,
+                        CoverType = JryCoverType.Video,
                         VideoId = this.Source.Id
                     })).SingleOrDefault();
                 if (cover != null) return cover.Id;
