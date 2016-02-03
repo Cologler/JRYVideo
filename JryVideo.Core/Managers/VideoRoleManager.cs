@@ -21,19 +21,6 @@ namespace JryVideo.Core.Managers
             this.artistManager = artistManager;
         }
 
-        public void SeriesManager_SeriesCreated(object sender, JrySeries e)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async void SeriesManager_VideoInfoCreated(object sender, IEnumerable<JryVideoInfo> e)
-        {
-            foreach (var video in e)
-            {
-                await this.AutoCreateVideoRoleOnInitialize(video);
-            }
-        }
-
         public async Task AutoCreateVideoRoleOnInitialize(IImdbItem item)
         {
             await Task.Run(async () =>

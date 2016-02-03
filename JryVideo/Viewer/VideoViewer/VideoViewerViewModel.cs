@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Animation;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -51,12 +50,12 @@ namespace JryVideo.Viewer.VideoViewer
         public async Task LoadAsync()
         {
             this.Background = new BackgroundViewModel(this);
-            this.videoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.SeriesView.Source, this.InfoView.Source)
+            this.VideoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.SeriesView.Source, this.InfoView.Source)
             {
                 VideoViewerViewModel = this
             };
             await this.ReloadVideoAsync();
-            this.videoRoleCollection.BeginLoad();
+            this.VideoRoleCollection.BeginLoad();
             await this.AutoCompleteAsync();
         }
 

@@ -25,9 +25,6 @@ namespace JryVideo.Core.Managers
             this.VideoManager.EntitiesRemoved += this.FlagManager.VideoManager_EntitiesRemoved;
 
             this.FlagManager.FlagChanged += this.VideoManager.FlagManager_FlagChanged;
-
-            this.SeriesManager.SeriesCreated += this.VideoRoleManager.SeriesManager_SeriesCreated;
-            this.SeriesManager.VideoInfoCreated += this.VideoRoleManager.SeriesManager_VideoInfoCreated;
         }
 
         public IJryVideoDataEngine ProviderManager { get; }
