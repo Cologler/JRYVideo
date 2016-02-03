@@ -34,5 +34,16 @@ namespace JryVideo.AutoComplete
             }
             return false;
         }
+
+        public async Task<bool> AutoCompleteRoleAsync(VideoRoleManager manager, JrySeries series)
+        {
+            if (!series.TheTVDBId.IsNullOrWhiteSpace())
+            {
+                return await manager.AutoCreateVideoRoleAsync(series.Id,
+                    new RemoteId(RemoteIdType.TheTVDB, series.TheTVDBId));
+            }
+
+            return false;
+        }
     }
 }

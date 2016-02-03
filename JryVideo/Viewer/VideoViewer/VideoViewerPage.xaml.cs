@@ -128,7 +128,7 @@ namespace JryVideo.Viewer.VideoViewer
             if (this.ViewModel.InfoView.OpenEditorWindows(this.TryFindParent<Window>()))
             {
                 this.ViewModel.ReloadEpisodes();
-                this.ViewModel.Background?.BeginUpdateCoverIfEmpty();
+                this.ViewModel.Background.BeginUpdateCoverIfEmpty();
             }
         }
 
@@ -213,7 +213,7 @@ namespace JryVideo.Viewer.VideoViewer
             var seriesViewModel = this.ViewModel.InfoView.SeriesView;
             if (seriesViewModel.OpenEditorWindows(this.TryFindParent<Window>()))
             {
-                this.ViewModel.Background?.BeginUpdateCoverIfEmpty();
+                this.ViewModel.Background.BeginUpdateCoverIfEmpty();
             }
         }
 
@@ -305,13 +305,12 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void ResetBackgroundMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.Background?.Reset();
+            this.ViewModel.Background.Reset();
         }
 
         private async void SelectBackgroundMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var selectBackground = this.ViewModel.Background?.StartSelect(this.TryFindParent<Window>());
-            if (selectBackground != null) await selectBackground;
+            await this.ViewModel.Background.StartSelect(this.TryFindParent<Window>());
         }
 
         private void ActorEditMenuItem_OnClick(object sender, RoutedEventArgs e)

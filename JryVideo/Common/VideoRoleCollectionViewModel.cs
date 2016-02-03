@@ -1,5 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using Jasily.Windows.Data;
+using JryVideo.AutoComplete;
 using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Viewer.VideoViewer;
@@ -35,7 +36,19 @@ namespace JryVideo.Common
         public List<VideoRoleCollection> VideoRoleCollectionSources { get; }
             = new List<VideoRoleCollection>();
 
-        public async void BeginLoad()
+        public async Task AutoCompleteAsync()
+        {
+            var acs = await new SeriesAutoComplete()
+                .AutoCompleteRoleAsync(this.GetManagers().VideoRoleManager, this.series);
+            var acv = await new VideoInfoAutoComplete()
+                .AutoCompleteRoleAsync(this.GetManagers().VideoRoleManager, this.video);
+            if (acs || acv)
+            {
+                await this.LoadAsync();
+            }
+        }
+
+        public async Task LoadAsync()
         {
             this.Roles.Collection.Clear();
             this.VideoRoleCollectionSources.Clear();

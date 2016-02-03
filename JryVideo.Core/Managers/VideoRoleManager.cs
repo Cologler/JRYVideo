@@ -21,39 +21,23 @@ namespace JryVideo.Core.Managers
             this.artistManager = artistManager;
         }
 
-        public async Task AutoCreateVideoRoleOnInitialize(IImdbItem item)
-        {
-            await Task.Run(async () =>
-            {
-                var theTVDBItem = item as ITheTVDBItem;
-                if (theTVDBItem != null && !theTVDBItem.TheTVDBId.IsNullOrWhiteSpace())
-                {
-                    await this.AutoCreateVideoRoleAsync(item.Id, new RemoteId(RemoteIdType.TheTVDB, theTVDBItem.TheTVDBId));
-                }
-
-                var imdbId = item.GetValidImdbId();
-                if (imdbId == null) return;
-                await this.AutoCreateVideoRoleAsync(item.Id, new RemoteId(RemoteIdType.Imdb, imdbId));
-            });
-        }
-
-        private async Task AutoCreateVideoRoleAsync(string id, RemoteId remoteId)
+        public async Task<bool> AutoCreateVideoRoleAsync(string id, RemoteId remoteId)
         {
             var collection = await this.FindAsync(id);
-            if (collection.MajorRoles != null || collection.MinorRoles != null) return;
+            if (collection.MajorRoles != null || collection.MinorRoles != null) return false;
 
-            var client = JryVideoCore.Current.TheTVDBClient;
-            if (client == null) return;
+            var client = JryVideoCore.Current.TheTVDBHost.LastClientInstance;
+            if (client == null) return false;
 
             var theTVDBId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(remoteId);
-            if (theTVDBId == null) return;
+            if (theTVDBId == null) return false;
 
             var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).ToArray();
-            if (actors.Length == 0) return;
+            if (actors.Length == 0) return false;
             var major = actors.Select(z => z.SortOrder).Min();
 
             collection = await this.FindAsync(id); // sure collection was newest.
-            if (collection.MajorRoles != null || collection.MinorRoles != null) return;
+            if (collection.MajorRoles != null || collection.MinorRoles != null) return false;
 
             foreach (var actor in actors)
             {
@@ -90,6 +74,7 @@ namespace JryVideo.Core.Managers
                 }
             }
             await this.UpdateAsync(collection);
+            return true;
         }
 
         public async Task<IEnumerable<Tuple<VideoRoleCollection, JryVideoRole>>> QueryByActorIdAsync(string id)

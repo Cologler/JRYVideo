@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoComplete\SeriesAutoComplete.cs" />
+    <Compile Include="AutoComplete\VideoInfoAutoComplete.cs" />
     <Compile Include="Common\CoverViewModel.cs" />
     <Compile Include="Common\Dialogs\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>

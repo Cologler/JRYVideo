@@ -18,13 +18,16 @@ namespace JryVideo.Viewer.VideoViewer
     public sealed class VideoViewerViewModel : JasilyViewModel
     {
         private VideoViewModel video;
-        private BackgroundViewModel background;
-        private VideoRoleCollectionViewModel videoRoleCollection;
 
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
             this.InfoView = info;
             this.EntitesView = new JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>>();
+            this.Background = new BackgroundViewModel(this);
+            this.VideoRoleCollection = new VideoRoleCollectionViewModel(info.SeriesView.Source, info.Source)
+            {
+                VideoViewerViewModel = this
+            };
         }
 
         public VideoInfoViewModel InfoView { get; }
@@ -35,34 +38,20 @@ namespace JryVideo.Viewer.VideoViewer
             private set { this.SetPropertyRef(ref this.video, value); }
         }
 
-        public BackgroundViewModel Background
-        {
-            get { return this.background; }
-            private set { this.SetPropertyRef(ref this.background, value); }
-        }
+        public BackgroundViewModel Background { get; }
 
-        public VideoRoleCollectionViewModel VideoRoleCollection
-        {
-            get { return this.videoRoleCollection; }
-            private set { this.SetPropertyRef(ref this.videoRoleCollection, value); }
-        }
+        public VideoRoleCollectionViewModel VideoRoleCollection { get; }
 
         public async Task LoadAsync()
         {
-            this.Background = new BackgroundViewModel(this);
-            this.VideoRoleCollection = new VideoRoleCollectionViewModel(this.InfoView.SeriesView.Source, this.InfoView.Source)
-            {
-                VideoViewerViewModel = this
-            };
             await this.ReloadVideoAsync();
-            this.VideoRoleCollection.BeginLoad();
+            await this.VideoRoleCollection.LoadAsync();
             await this.AutoCompleteAsync();
         }
 
         public async Task ReloadVideoAsync()
         {
-            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
-            var video = await manager.FindAsync(this.InfoView.Source.Id);
+            var video = await this.GetManagers().VideoManager.FindAsync(this.InfoView.Source.Id);
             if (video == null)
             {
                 this.Video = null;
@@ -80,14 +69,12 @@ namespace JryVideo.Viewer.VideoViewer
             }
 
             this.ReloadEpisodes();
-
-            await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.Source);
-            await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.AutoCreateVideoRoleOnInitialize(this.InfoView.SeriesView.Source);
         }
 
         public async Task AutoCompleteAsync()
         {
             await this.InfoView.AutoCompleteAsync();
+            await this.VideoRoleCollection.AutoCompleteAsync();
         }
 
         public void ReloadEpisodes()
