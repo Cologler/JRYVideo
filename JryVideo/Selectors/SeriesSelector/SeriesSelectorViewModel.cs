@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Jasily.Diagnostics;
+﻿using Jasily.Diagnostics;
 using JryVideo.Common;
 using JryVideo.Core;
+using JryVideo.Model;
 using JryVideo.Selectors.Common;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JryVideo.Selectors.SeriesSelector
 {
-    public sealed class SeriesSelectorViewModel : BaseSelectorViewModel<SeriesViewModel>
+    public sealed class SeriesSelectorViewModel : BaseSelectorViewModel<SeriesViewModel, JrySeries>
     {
         protected override bool OnFilter(SeriesViewModel obj)
         {
+            if (!base.OnFilter(obj)) return false;
+
             if (String.IsNullOrWhiteSpace(this.FilterText)) return true;
 
             if (obj == null) return true;

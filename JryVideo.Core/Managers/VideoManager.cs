@@ -19,9 +19,6 @@ namespace JryVideo.Core.Managers
         {
         }
 
-        public async void SeriesManager_VideoInfoCreated(object sender, IEnumerable<JryVideoInfo> e)
-            => await this.InsertAsync(e.Select(VideoInfoAttached.Build<Model.JryVideo>));
-
         public async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
         {
             foreach (var info in e)

@@ -102,5 +102,52 @@ namespace JryVideo.Core.Managers
                 }
             }
         }
+
+        public override async Task<bool> RemoveAsync(string id)
+        {
+            var item = await this.FindAsync(id);
+            if (item != null)
+            {
+                if (item.MajorRoles != null)
+                {
+                    foreach (var role in item.MajorRoles)
+                    {
+                        this.OnCoverParentRemoving(role);
+                    }
+                }
+                if (item.MinorRoles != null)
+                {
+                    foreach (var role in item.MinorRoles)
+                    {
+                        this.OnCoverParentRemoving(role);
+                    }
+                }
+            }
+            return await base.RemoveAsync(id);
+        }
+
+        public async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
+        {
+            foreach (var info in e)
+            {
+                await this.RemoveAsync(info.Id);
+            }
+        }
+
+        internal override Task<CombineResult> CanCombineAsync(VideoRoleCollection to, VideoRoleCollection @from)
+            => Task.FromResult(CombineResult.True);
+
+        internal override async Task<CombineResult> CombineAsync(VideoRoleCollection to, VideoRoleCollection @from)
+        {
+            var result = await this.CanCombineAsync(to, from);
+            if (result.CanCombine)
+            {
+                to.CombineFrom(@from);
+                await this.UpdateAsync(to);
+            }
+            return result;
+        }
+
+        public async void SeriesManager_ItemRemoved(object sender, string e) => await this.RemoveAsync(e);
     }
 }

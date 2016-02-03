@@ -11,6 +11,12 @@ namespace JryVideo.Core.Managers
         where T : JryObject
         where TProvider : IJasilyEntitySetProvider<T, string>
     {
+        public event EventHandler<T> ItemCreated;
+        public event EventHandler<T> ItemCreatedOrUpdated;
+        public event EventHandler<T> ItemUpdated;
+        public event EventHandler<string> ItemRemoved;
+        public event EventHandler<IJryCoverParent> CoverParentRemoving;
+
         protected JryObjectManager(TProvider source)
         {
             this.Source = source;
@@ -38,7 +44,12 @@ namespace JryVideo.Core.Managers
             obj.Saving();
             if (obj.HasError()) return false;
 
-            return await this.Source.InsertAsync(obj);
+            if (await this.Source.InsertAsync(obj))
+            {
+                this.ItemCreated?.BeginInvoke(this, obj);
+                return true;
+            }
+            return false;
         }
 
         public async Task<bool> InsertOrUpdateAsync(T obj)
@@ -46,7 +57,12 @@ namespace JryVideo.Core.Managers
             obj.Saving();
             if (obj.HasError()) return false;
 
-            return await this.Source.InsertOrUpdateAsync(obj);
+            if (await this.Source.InsertOrUpdateAsync(obj))
+            {
+                this.ItemCreatedOrUpdated?.BeginInvoke(this, obj);
+                return true;
+            }
+            return false;
         }
 
         protected virtual async Task<bool> InsertAsync(IEnumerable<T> objs)
@@ -55,7 +71,12 @@ namespace JryVideo.Core.Managers
             items.ForEach(z => z.Saving());
             if (items.Any(obj => obj.HasError())) return false;
 
-            return await this.Source.InsertAsync(items);
+            if (await this.Source.InsertAsync(items))
+            {
+                this.ItemCreated?.BeginInvoke(this, items);
+                return true;
+            }
+            return false;
         }
 
         public virtual async Task<bool> UpdateAsync(T obj)
@@ -63,12 +84,49 @@ namespace JryVideo.Core.Managers
             obj.Saving();
             if (obj.HasError()) return false;
 
-            return await this.Source.UpdateAsync(obj);
+            if (await this.Source.UpdateAsync(obj))
+            {
+                this.ItemUpdated?.BeginInvoke(this, obj);
+                return true;
+            }
+            return false;
         }
 
         public virtual async Task<bool> RemoveAsync(string id)
         {
-            return await this.Source.RemoveAsync(id);
+            if (await this.Source.RemoveAsync(id))
+            {
+                this.ItemRemoved?.BeginInvoke(this, id);
+                return true;
+            }
+            return false;
         }
+
+        protected void OnCoverParentRemoving(IJryCoverParent parent, object sender = null)
+            => this.CoverParentRemoving?.Invoke(sender ?? this, parent);
+
+        internal async Task<CombineResult> CanCombineAsync(string to, string from)
+        {
+            var obj1 = await this.FindAsync(to);
+            if (obj1 == null) return CombineResult.NotFound;
+            var obj2 = await this.FindAsync(from);
+            if (obj2 == null) return CombineResult.NotFound;
+            return await this.CanCombineAsync(obj1, obj2);
+        }
+
+        internal async Task<CombineResult> CombineAsync(string to, string from)
+        {
+            var obj1 = await this.FindAsync(to);
+            if (obj1 == null) return CombineResult.NotFound;
+            var obj2 = await this.FindAsync(from);
+            if (obj2 == null) return CombineResult.NotFound;
+            return await this.CombineAsync(obj1, obj2);
+        }
+
+        internal virtual Task<CombineResult> CanCombineAsync(T to, T from)
+            => Task.FromResult(CombineResult.NotSupported);
+
+        internal virtual Task<CombineResult> CombineAsync(T to, T from)
+            => Task.FromResult(CombineResult.NotSupported);
     }
 }

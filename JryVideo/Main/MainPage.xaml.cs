@@ -6,7 +6,10 @@ using JryVideo.Data;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.PasswordEditor;
 using JryVideo.Model;
+using JryVideo.Selectors.SeriesSelector;
+using JryVideo.Selectors.VideoSelector;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -263,6 +266,65 @@ namespace JryVideo.Main
             if (vm?.SeriesView?.OpenEditorWindows(this.TryFindParent<Window>()) == true)
             {
                 this.RefreshVideo(vm);
+            }
+        }
+
+        private async void CombineVideo_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            if (vm != null)
+            {
+                var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+                    vm.SeriesView, without: vm);
+                if (video == null) return;
+                var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(vm.SeriesView);
+                var can = await JryVideoCore.Current.CurrentDataCenter.CanCombineAsync(manager, vm, video);
+                if (!can.CanCombine)
+                {
+                    this.ShowJryVideoMessage("can not combine", can.Message);
+                }
+                else
+                {
+                    this.CombineConfirm(async () =>
+                    {
+                        await JryVideoCore.Current.CurrentDataCenter.CombineAsync(manager, vm, video);
+                    });
+                }
+            }
+        }
+
+        private async void CombineSeries_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            if (vm != null)
+            {
+                var series = SeriesSelectorWindow.Select(this.TryFindParent<Window>(),
+                    without: vm.SeriesView);
+                if (series == null) return;
+                var can = await JryVideoCore.Current.CurrentDataCenter.CanCombineAsync(vm.SeriesView, series);
+                if (!can.CanCombine)
+                {
+                    this.ShowJryVideoMessage("can not combine", can.Message);
+                }
+                else
+                {
+                    this.CombineConfirm(async () =>
+                    {
+                        await JryVideoCore.Current.CurrentDataCenter.CombineAsync(vm.SeriesView, series);
+                    });
+                }
+            }
+        }
+
+        private async void CombineConfirm(Action action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
+            if (await this.TryFindParent<MetroWindow>().ShowMessageAsync(
+                "warnning", "are you sure you want to combine this two?",
+                MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Affirmative)
+            {
+                action();
             }
         }
     }

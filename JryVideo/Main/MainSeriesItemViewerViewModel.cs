@@ -27,15 +27,8 @@ namespace JryVideo.Main
             this.PageSize = 50;
         }
 
-        public string FilterText
-        {
-            get { return this.filterText; }
-            set
-            {
-                if (this.SetPropertyRef(ref this.filterText, value))
-                    this.BeginDelayFilter();
-            }
-        }
+        protected override bool OnFilter(VideoInfoViewModel obj)
+            => base.OnFilter(obj) && this.filter?.Where(obj) != false;
 
         public string SearchText
         {
@@ -108,18 +101,11 @@ namespace JryVideo.Main
 
         public int PageIndex { get; set; }
 
-        public async void BeginDelayFilter()
+        protected override void OnResetFilter(string filterText)
         {
-            var text = this.FilterText;
-            await Task.Delay(400);
-            if (text == this.filterText)
-            {
-                this.filter = new FilterInfo(this.IsOnlyTracking, this.FilterText);
-                this.VideosView.View.Refresh();
-            }
+            base.OnResetFilter(filterText);
+            this.filter = new FilterInfo(this.IsOnlyTracking, filterText);
         }
-
-        protected override bool ItemFilter(VideoInfoViewModel obj) => this.filter?.Where(obj) != false;
 
         public override async Task RefreshAsync()
         {

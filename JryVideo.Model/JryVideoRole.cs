@@ -47,7 +47,21 @@ namespace JryVideo.Model
         public override void Saving()
         {
             base.Saving();
+#pragma warning disable 612
             this.ActorName = null;
+#pragma warning restore 612
+        }
+
+        public void CombineFrom(JryVideoRole other)
+        {
+            if (this.RoleName == null)
+            {
+                this.RoleName = other.RoleName;
+            }
+            else if (other.RoleName != null)
+            {
+                this.RoleName = this.RoleName.Concat(other.RoleName).Distinct().ToList();
+            }
         }
     }
 }

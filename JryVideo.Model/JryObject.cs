@@ -61,5 +61,8 @@ namespace JryVideo.Model
         {
 
         }
+
+        protected static bool CombineEquals(string left, string right)
+            => left == null || right == null || left == right;
     }
 }

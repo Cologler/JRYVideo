@@ -103,5 +103,15 @@ namespace JryVideo.Core.Managers
             this.MemoryCache.Remove(id);
             return result;
         }
+
+        public async void Manager_CoverParentRemoving(object sender, IJryCoverParent e)
+        {
+            var id = e.CoverId;
+            if (id != null)
+            {
+                Debug.WriteLine($"remove cover [{id}] from {e.GetType().Name}[ {e.Id}] over {sender.GetType().Name}");
+                await this.RemoveAsync(id);
+            }
+        }
     }
 }

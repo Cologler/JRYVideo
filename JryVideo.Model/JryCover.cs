@@ -37,33 +37,18 @@ namespace JryVideo.Model
         {
             var key = ((int)this.CoverType) + "_";
 
-            if (this.CoverType == JryCoverType.Role)
+            switch (this.CoverType)
             {
-                return ((int)this.CoverType) + "_" + (this.VideoId ?? this.SeriesId) + "_" + this.ActorId;
-            }
+                case JryCoverType.Role:
+                    return key + (this.VideoId ?? this.SeriesId) + "_" + this.ActorId;
 
-            switch (this.CoverSourceType)
-            {
-                case JryCoverSourceType.Local:
-                    throw new ArgumentException();
-
-                case JryCoverSourceType.Uri:
-                    key += this.Uri;
-                    break;
-
-                case JryCoverSourceType.Douban:
-                    key += this.DoubanId;
-                    break;
-
-                case JryCoverSourceType.Imdb:
-                    key += this.ImdbId;
-                    break;
+                case JryCoverType.Background:
+                case JryCoverType.Video:
+                    return key + this.VideoId;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            return key;
         }
 
         protected override bool InnerTestHasError()

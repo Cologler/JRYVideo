@@ -22,14 +22,7 @@ namespace JryVideo.Controls.SelectVideo
             }
         }
 
-        public JryVideoInfo Without { get; set; }
-
         public string DefaultId { get; set; }
-
-        protected override bool ItemFilter(VideoInfoViewModel obj)
-        {
-            return base.ItemFilter(obj) && this.Without?.Id != obj.Source.Id;
-        }
 
         public override async Task RefreshAsync()
         {
@@ -40,6 +33,11 @@ namespace JryVideo.Controls.SelectVideo
             {
                 this.VideosView.Selected = this.VideosView.Collection.FirstOrDefault(z => z.Source.Id == this.DefaultId);
             }
+        }
+
+        protected override bool OnFilter(VideoInfoViewModel obj)
+        {
+            return base.OnFilter(obj) && this.Without?.Id != obj.Source.Id;
         }
     }
 }

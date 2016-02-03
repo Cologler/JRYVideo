@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace JryVideo.Model
 {
@@ -54,6 +55,28 @@ namespace JryVideo.Model
             }
 
             return false;
+        }
+
+        public void CombineFrom(JrySeries other)
+        {
+            this.Names = this.Names.Concat(other.Names).Distinct().ToList();
+            this.Videos = this.Videos.Concat(other.Videos).ToList();
+            other.Videos = new List<JryVideoInfo>();
+
+            if (this.Tags == null)
+            {
+                this.Tags = other.Tags;
+            }
+            else if (other.Tags != null)
+            {
+                this.Tags = this.Tags.Concat(other.Tags).Distinct().ToList();
+            }
+
+            if (!CombineEquals(this.ImdbId, other.ImdbId)) throw new InvalidOperationException();
+            this.ImdbId = this.ImdbId ?? other.ImdbId;
+
+            if (!CombineEquals(this.TheTVDBId, other.TheTVDBId)) throw new InvalidOperationException();
+            this.TheTVDBId = this.TheTVDBId ?? other.TheTVDBId;
         }
     }
 }

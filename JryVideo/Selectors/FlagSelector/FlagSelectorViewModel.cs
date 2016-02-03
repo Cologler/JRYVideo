@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace JryVideo.Selectors.FlagSelector
 {
-    public sealed class FlagSelectorViewModel : BaseSelectorViewModel<FlagViewModel>
+    public sealed class FlagSelectorViewModel : BaseSelectorViewModel<FlagViewModel, JryFlag>
     {
         private readonly IEnumerable<string> readySelected;
 
@@ -25,7 +25,7 @@ namespace JryVideo.Selectors.FlagSelector
 
         protected override bool OnFilter(FlagViewModel obj)
         {
-            return this.FilterBySelected(obj) && this.FilterByText(obj);
+            return base.OnFilter(obj) && this.FilterBySelected(obj) && this.FilterByText(obj);
         }
 
         private bool FilterByText(FlagViewModel obj)

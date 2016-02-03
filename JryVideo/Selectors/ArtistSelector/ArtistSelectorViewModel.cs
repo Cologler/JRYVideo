@@ -1,13 +1,14 @@
-﻿using System;
+﻿using JryVideo.Common;
+using JryVideo.Model;
+using JryVideo.Selectors.Common;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using JryVideo.Common;
-using JryVideo.Selectors.Common;
 
 namespace JryVideo.Selectors.ArtistSelector
 {
-    public sealed class ArtistSelectorViewModel : BaseSelectorViewModel<ArtistViewModel>
+    public sealed class ArtistSelectorViewModel : BaseSelectorViewModel<ArtistViewModel, JryArtist>
     {
         public ArtistSelectorViewModel()
         {
@@ -38,7 +39,7 @@ namespace JryVideo.Selectors.ArtistSelector
 
         protected override bool OnFilter(ArtistViewModel obj)
         {
-            return this.FilterBySelected(obj) && this.FilterByKeyword(obj);
+            return base.OnFilter(obj) && this.FilterBySelected(obj) && this.FilterByKeyword(obj);
         }
 
         private bool FilterBySelected(ArtistViewModel obj)

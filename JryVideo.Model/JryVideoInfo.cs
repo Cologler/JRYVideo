@@ -20,12 +20,6 @@ namespace JryVideo.Model
 
         public int Index { get; set; }
 
-        [CanBeNull]
-        [ItemNotNull]
-        [BsonIgnoreIfDefault]
-        [BsonElement("ArtistIds")]
-        public List<JryVideoRole> Roles { get; set; }
-
         [NotNull]
         [ItemNotNull]
         public List<string> Names { get; set; }
@@ -42,6 +36,10 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string DoubanId { get; set; }
 
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public string ImdbId { get; set; }
+
         /// <summary>
         /// 是否正在追剧
         /// </summary>
@@ -50,10 +48,6 @@ namespace JryVideo.Model
 
         [BsonIgnoreIfDefault]
         public bool IsAllAired { get; set; }
-
-        [CanBeNull]
-        [BsonIgnoreIfDefault]
-        public string ImdbId { get; set; }
 
         [BsonIgnoreIfDefault]
         public int EpisodesCount { get; set; }
@@ -89,6 +83,15 @@ namespace JryVideo.Model
             {
                 get { return this.jryVideoInfo.BackgroundImageId; }
                 set { this.jryVideoInfo.BackgroundImageId = value; }
+            }
+
+            /// <summary>
+            /// key of entity
+            /// </summary>
+            public string Id
+            {
+                get { return this.jryVideoInfo.Id; }
+                set { this.jryVideoInfo.Id = value; }
             }
         }
 
@@ -160,5 +163,63 @@ namespace JryVideo.Model
         public static bool IsIndexValid(int index) => index > 0;
 
         public static bool IsEpisodesCountValid(int episodesCount) => episodesCount >= 0;
+
+
+        #region Obsolete
+
+        [BsonIgnoreIfDefault]
+        [BsonElement("ArtistIds")]
+        [Obsolete]
+        public List<JryVideoRole> Roles { get; set; }
+
+        #endregion
+
+        public override void Saving()
+        {
+            base.Saving();
+
+#pragma warning disable 612
+            if (this.Roles != null) this.Roles = null;
+#pragma warning restore 612
+        }
+
+        public void CombineFrom(JryVideoInfo other)
+        {
+            if (this.Type != other.Type) throw new InvalidOperationException();
+            if (this.Year != other.Year) throw new InvalidOperationException();
+            if (this.Index != other.Index) throw new InvalidOperationException();
+
+            this.Names = this.Names.Concat(other.Names).Distinct().ToList();
+
+            if (!CombineEquals(this.LastVideoId, other.LastVideoId)) throw new InvalidOperationException();
+            this.LastVideoId = this.LastVideoId ?? other.LastVideoId;
+
+            if (!CombineEquals(this.NextVideoId, other.NextVideoId)) throw new InvalidOperationException();
+            this.NextVideoId = this.NextVideoId ?? other.NextVideoId;
+
+            if (!CombineEquals(this.DoubanId, other.DoubanId)) throw new InvalidOperationException();
+            this.DoubanId = this.DoubanId ?? other.DoubanId;
+
+            if (!CombineEquals(this.ImdbId, other.ImdbId)) throw new InvalidOperationException();
+            this.ImdbId = this.ImdbId ?? other.ImdbId;
+
+            this.IsTracking = this.IsTracking || other.IsTracking;
+            this.IsAllAired = this.IsAllAired || other.IsAllAired;
+
+            if (this.EpisodesCount != other.EpisodesCount) throw new InvalidOperationException();
+
+            if (this.Tags == null)
+            {
+                this.Tags = other.Tags;
+            }
+            else if (other.Tags != null)
+            {
+                this.Tags = this.Tags.Concat(other.Tags).Distinct().ToList();
+            }
+
+            this.EpisodeOffset = this.EpisodeOffset ?? other.EpisodeOffset;
+            this.DayOfWeek = this.DayOfWeek ?? other.DayOfWeek;
+            this.StartDate = this.StartDate ?? other.StartDate;
+        }
     }
 }

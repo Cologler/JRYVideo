@@ -7,7 +7,6 @@
                  xmlns:local="clr-namespace:JryVideo.Selectors.WebImageSelector"
                  xmlns:properties="clr-namespace:JryVideo.Properties"
                  mc:Ignorable="d"
-                 Title="WebImageSelectorWindow"
                  Height="530"
                  Width="800"
                  ShowTitleBar="False"
@@ -87,6 +86,5 @@
             </Grid>
 
         </Grid>
-
     </Grid>
 </mah:MetroWindow>

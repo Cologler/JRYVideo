@@ -182,6 +182,9 @@
     <Compile Include="Add\AddWindow.xaml.cs">
       <DependentUpon>AddWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Selectors\SeriesSelector\SeriesSelectorWindow.xaml.cs">
+      <DependentUpon>SeriesSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Selectors\VideoSelector\VideoSelectorWindow.xaml.cs">
       <DependentUpon>VideoSelectorWindow.xaml</DependentUpon>
     </Compile>
@@ -323,6 +326,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Managers\FlagManager\FlagManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Selectors\SeriesSelector\SeriesSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,28 +1,14 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using Jasily.ComponentModel;
-using Jasily.Windows.Data;
+﻿using Jasily.Windows.Data;
 using JryVideo.Common;
+using JryVideo.Model;
+using JryVideo.Selectors.Common;
+using System.Threading.Tasks;
 
 namespace JryVideo.Viewer.SeriesItemViewer
 {
-    public abstract class SeriesItemViewerViewModel : JasilyViewModel
+    public abstract class SeriesItemViewerViewModel : BaseSelectorViewModel<VideoInfoViewModel, JryVideoInfo>
     {
-        public SeriesItemViewerViewModel()
-        {
-            this.VideosView = new JasilyCollectionView<VideoInfoViewModel>()
-            {
-                Filter = this.ItemFilter
-            };
-        }
-
-        public JasilyCollectionView<VideoInfoViewModel> VideosView { get; private set; }
-
-        protected virtual bool ItemFilter(VideoInfoViewModel obj)
-        {
-            return true;
-        }
+        public JasilyCollectionView<VideoInfoViewModel> VideosView => base.Items;
 
         public abstract Task RefreshAsync();
     }

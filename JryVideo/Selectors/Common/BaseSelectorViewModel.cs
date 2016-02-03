@@ -1,26 +1,41 @@
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows.Data;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
+using System.Threading.Tasks;
+using JryVideo.Model;
 
 namespace JryVideo.Selectors.Common
 {
-    public abstract class BaseSelectorViewModel<T> : JasilyViewModel
+    public abstract class BaseSelectorViewModel<TViewModel, TEntity> : JasilyViewModel
+        where TViewModel : JasilyViewModel<TEntity>
+        where TEntity : JryObject
     {
         private string filterText;
+        private TEntity without;
 
         public BaseSelectorViewModel()
         {
-            this.Items = new JasilyCollectionView<T>
+            this.Items = new JasilyCollectionView<TViewModel>
             {
                 Filter = this.OnFilter
             };
         }
 
-        public JasilyCollectionView<T> Items { get; private set; }
+        public JasilyCollectionView<TViewModel> Items { get; private set; }
 
-        protected abstract bool OnFilter(T obj);
+        public TEntity Without
+        {
+            get { return this.without; }
+            set
+            {
+                if (this.without != value)
+                {
+                    this.without = value;
+                    this.LazyFilter();
+                }
+            }
+        }
+
+        protected virtual bool OnFilter(TViewModel obj) => this.without?.Id != obj.Source.Id;
 
         public string FilterText
         {
@@ -28,7 +43,9 @@ namespace JryVideo.Selectors.Common
             set
             {
                 if (this.SetPropertyRef(ref this.filterText, value))
+                {
                     this.LazyFilter();
+                }
             }
         }
 
@@ -40,8 +57,14 @@ namespace JryVideo.Selectors.Common
 
             if (text == this.FilterText)
             {
+                this.OnResetFilter(text);
                 this.Items.View.Refresh();
             }
+        }
+
+        protected virtual void OnResetFilter(string filterText)
+        {
+
         }
     }
 }

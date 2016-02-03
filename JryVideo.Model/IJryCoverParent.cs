@@ -1,6 +1,8 @@
-﻿namespace JryVideo.Model
+﻿using System.Data;
+
+namespace JryVideo.Model
 {
-    public interface IJryCoverParent
+    public interface IJryCoverParent : IJasilyEntity<string>
     {
         string CoverId { get; set; }
     }

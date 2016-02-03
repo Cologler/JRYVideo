@@ -213,8 +213,16 @@
                                         <MenuItem Visibility="{Binding IsUntrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Header="untrack"
                                                   Click="UntrackMenuItem_OnClick" />
-                                        <MenuItem Header="only show this series"
-                                                  Click="FilterSeries_OnClick" />
+                                        <MenuItem Header="series">
+                                            <MenuItem Header="only show this series"
+                                                      Click="FilterSeries_OnClick" />
+                                            <MenuItem Header="combine"
+                                                      Click="CombineSeries_OnClick" />
+                                        </MenuItem>
+                                        <MenuItem Header="video">
+                                            <MenuItem Header="combine"
+                                                      Click="CombineVideo_OnClick" />
+                                        </MenuItem>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
 
