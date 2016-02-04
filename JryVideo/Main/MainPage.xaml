@@ -226,13 +226,13 @@
                                     </ContextMenu>
                                 </Grid.ContextMenu>
 
-                                <Grid Width="200">
+                                <Grid Width="200"
+                                      Margin="0,4">
                                     <Grid HorizontalAlignment="Center"
                                           VerticalAlignment="Center">
                                         <Image Source="{Binding Cover.BinaryData}"
                                                RenderOptions.BitmapScalingMode="Fant"
-                                               RenderOptions.EdgeMode="Aliased"
-                                               Margin="0,0,0,4"/>
+                                               RenderOptions.EdgeMode="Aliased" />
 
                                         <Grid Width="150"
                                               Height="150"
@@ -267,8 +267,8 @@
 
                                     <TextBlock Text="{Binding SeriesView.NameViewModel.FirstLine}"
                                                HorizontalAlignment="Center"
-                                               TextWrapping="WrapWithOverflow"
-                                               FontSize="14" />
+                                               FontSize="16"
+                                               TextTrimming="CharacterEllipsis"/>
 
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center"
