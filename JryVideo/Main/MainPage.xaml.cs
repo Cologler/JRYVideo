@@ -325,6 +325,7 @@ namespace JryVideo.Main
                 MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Affirmative)
             {
                 action();
+                await this.ViewModel.VideosViewModel.RefreshAsync();
             }
         }
     }
