@@ -198,12 +198,6 @@
                                         <MenuItem Header="{Binding TodayWatched.WatchedText}"
                                                   Visibility="{Binding IsEnableWatchedButton, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Click="WatchedEpisode_OnClick" />
-                                        <MenuItem Header="edit series"
-                                                  Click="EditSeries_OnClick" />
-                                        <MenuItem Header="edit video"
-                                                  Click="EditVideoInfo_OnClick" />
-                                        <MenuItem Header="change cover"
-                                                  Click="EditCover_OnClick" />
                                         <MenuItem Visibility="{Binding IsNotAllAired, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Header="{x:Static properties:Resources.Button_AllAired_Text}"
                                                   Click="AllAiredMenuItem_OnClick" />
@@ -216,10 +210,16 @@
                                         <MenuItem Header="series">
                                             <MenuItem Header="only show this series"
                                                       Click="FilterSeries_OnClick" />
+                                            <MenuItem Header="edit"
+                                                      Click="EditSeries_OnClick" />
                                             <MenuItem Header="combine"
                                                       Click="CombineSeries_OnClick" />
                                         </MenuItem>
                                         <MenuItem Header="video">
+                                            <MenuItem Header="edit"
+                                                      Click="EditVideoInfo_OnClick" />
+                                            <MenuItem Header="change cover"
+                                                      Click="EditCover_OnClick" />
                                             <MenuItem Header="combine"
                                                       Click="CombineVideo_OnClick" />
                                         </MenuItem>
