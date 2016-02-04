@@ -70,6 +70,7 @@
       <DependentUpon>PasswordWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\EntityViewModel.cs" />
+    <Compile Include="Common\Helper.cs" />
     <Compile Include="Common\JryVideoViewModel.cs" />
     <Compile Include="Common\LocalizationHelper.cs" />
     <Compile Include="Common\NameableViewModel.cs" />

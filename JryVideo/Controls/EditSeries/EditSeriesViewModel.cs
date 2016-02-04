@@ -7,6 +7,7 @@ using JryVideo.Model;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static JryVideo.Common.Helper;
 
 namespace JryVideo.Controls.EditSeries
 {
@@ -52,7 +53,11 @@ namespace JryVideo.Controls.EditSeries
         public string DoubanId
         {
             get { return this.doubanId; }
-            set { this.SetPropertyRef(ref this.doubanId, value); }
+            set
+            {
+                value = TryGetDoubanId(value);
+                this.SetPropertyRef(ref this.doubanId, value);
+            }
         }
 
         [EditableField]
@@ -61,11 +66,7 @@ namespace JryVideo.Controls.EditSeries
             get { return this.imdbId; }
             set
             {
-                if (value != null && !value.StartsWith("tt"))
-                {
-                    var index = value.IndexOf("tt", StringComparison.Ordinal);
-                    if (index > -1) value = value.Substring(index);
-                }
+                value = TryGetImdbId(value);
                 this.SetPropertyRef(ref this.imdbId, value);
             }
         }
