@@ -132,7 +132,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         public async void Flush()
         {
-            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
+            var manager = this.GetManagers().VideoManager;
             var video = await manager.FindAsync(this.InfoView.Source.Id);
             if (video == null) return;
             var watched = this.Watcheds.Where(z => z.IsWatched)

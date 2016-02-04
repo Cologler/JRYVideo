@@ -14,7 +14,6 @@ namespace JryVideo.Main
     public class MainSeriesItemViewerViewModel : SeriesItemViewerViewModel
     {
         private string searchText;
-        private string filterText;
         private bool hasLast;
         private bool hasNext;
         private bool isOnlyTracking;
