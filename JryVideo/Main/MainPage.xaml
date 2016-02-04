@@ -268,7 +268,8 @@
                                     <TextBlock Text="{Binding SeriesView.NameViewModel.FirstLine}"
                                                HorizontalAlignment="Center"
                                                FontSize="16"
-                                               TextTrimming="CharacterEllipsis"/>
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTip="{Binding SeriesView.NameViewModel.FullName}"/>
 
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center"
@@ -289,7 +290,8 @@
 
                                         <TextBlock Text="{Binding VideoNames}"
                                                    Margin="2,0"
-                                                   TextTrimming="CharacterEllipsis"/>
+                                                   TextTrimming="CharacterEllipsis"
+                                                   ToolTip="{Binding NameViewModel.FullName}"/>
                                     </StackPanel>
 
 
