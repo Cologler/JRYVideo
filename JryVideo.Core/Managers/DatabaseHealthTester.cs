@@ -86,6 +86,25 @@ namespace JryVideo.Core.Managers
                     }
                 }
 
+                // remove all missing source cover
+                if (fix)
+                {
+                    foreach (var coverRef in this.coverRefs.Values)
+                    {
+                        if (coverRef.RefSources.Count != 1)
+                        {
+                            if (coverRef.RefSources.Count < 1)
+                            {
+                                await this.dataCenter.CoverManager.RemoveAsync(coverRef.Id);
+                            }
+                            else if (coverRef.RefSources.Count > 1)
+                            {
+
+                            }
+                        }
+                    }
+                }
+
                 var msg = this.messages.Count == 0 ? "db safe!" : this.messages.AsLines();
                 if (Debugger.IsAttached)
                 {
@@ -94,15 +113,6 @@ namespace JryVideo.Core.Managers
                 else
                 {
                     Log.Write(msg);
-                }
-
-                // remove all missing source cover
-                if (fix)
-                {
-                    foreach (var id in this.coverRefs.Values.Where(z => z.RefSources.Count == 0).Select(z => z.Id))
-                    {
-                        await this.dataCenter.CoverManager.RemoveAsync(id);
-                    }
                 }
             });
         }
