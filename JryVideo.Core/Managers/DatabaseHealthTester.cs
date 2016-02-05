@@ -13,6 +13,7 @@ namespace JryVideo.Core.Managers
         private readonly DataCenter dataCenter;
         private readonly Dictionary<string, CoverRef> coverRefs = new Dictionary<string, CoverRef>();
         private readonly Dictionary<string, List<VideoInfoRef>> videoInfoRefs = new Dictionary<string, List<VideoInfoRef>>();
+        private readonly Dictionary<string, SeriesRef> seriesRefs = new Dictionary<string, SeriesRef>();
 
         public DatabaseHealthTester(DataCenter dataCenter)
         {
@@ -22,7 +23,7 @@ namespace JryVideo.Core.Managers
         [Conditional("DEBUG")]
         public void RunOnDebugAsync()
         {
-            //this.RunAsync(false);
+            this.RunAsync(false);
         }
 
         public async Task RunAsync(bool fix)
@@ -33,13 +34,9 @@ namespace JryVideo.Core.Managers
                 {
                     this.coverRefs.Add(z.Id, new CoverRef(z));
                 });
-                await this.dataCenter.VideoRoleManager.Source.CursorAsync(z =>
-                {
-                    z.MajorRoles?.ForEach(this.ConnectToCover);
-                    z.MinorRoles?.ForEach(this.ConnectToCover);
-                });
                 await this.dataCenter.SeriesManager.Source.CursorAsync(z =>
                 {
+                    this.seriesRefs.Add(z.Id, new SeriesRef(z));
                     foreach (var jryVideoInfo in z.Videos)
                     {
                         List<VideoInfoRef> videoInfoRefs;
@@ -48,11 +45,21 @@ namespace JryVideo.Core.Managers
                             videoInfoRefs = new List<VideoInfoRef>();
                             this.videoInfoRefs.Add(jryVideoInfo.Id, videoInfoRefs);
                         }
-                        videoInfoRefs.Add(new VideoInfoRef(z, jryVideoInfo));
+                        videoInfoRefs.Add(new VideoInfoRef(z.Id, jryVideoInfo));
                     }
 
                     z.Videos.ForEach(this.ConnectToCover);
                     z.Videos.Select(x => x.BackgroundImageAsCoverParent()).ForEach(this.ConnectToCover);
+                });
+                await this.dataCenter.VideoRoleManager.Source.CursorAsync(z =>
+                {
+                    if (!this.videoInfoRefs.ContainsKey(z.Id) &&
+                        !this.seriesRefs.ContainsKey(z.Id))
+                    {
+                        this.messages.Add($"role missing source [{z.Id}]");
+                    }
+                    z.MajorRoles?.ForEach(this.ConnectToCover);
+                    z.MinorRoles?.ForEach(this.ConnectToCover);
                 });
 
                 foreach (var coverRef in this.coverRefs.Values)
@@ -134,7 +141,7 @@ namespace JryVideo.Core.Managers
 
         private class ObjectRef
         {
-            public ObjectRef(JryObject obj)
+            protected ObjectRef(JryObject obj)
             {
                 this.Id = obj.Id;
             }
@@ -156,12 +163,20 @@ namespace JryVideo.Core.Managers
             public JryCoverType CoverType { get; }
         }
 
+        private class SeriesRef : ObjectRef
+        {
+            public SeriesRef(JrySeries series)
+                : base(series)
+            {
+            }
+        }
+
         private class VideoInfoRef : ObjectRef
         {
-            public VideoInfoRef(JrySeries series, JryVideoInfo obj)
+            public VideoInfoRef(string seriesId, JryVideoInfo obj)
                 : base(obj)
             {
-                this.SeriesId = series.Id;
+                this.SeriesId = seriesId;
             }
 
             public string SeriesId { get; }
