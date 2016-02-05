@@ -137,6 +137,7 @@
       <DependentUpon>FlagSelectorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Selectors\FlagSelector\FlagViewModel.cs" />
+    <Compile Include="Selectors\SelectResult.cs" />
     <Compile Include="Selectors\SeriesSelector\SeriesSelectorPage.xaml.cs">
       <DependentUpon>SeriesSelectorPage.xaml</DependentUpon>
     </Compile>

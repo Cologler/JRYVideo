@@ -120,20 +120,28 @@ namespace JryVideo.Controls.EditVideo
 
         private void SelectLastVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+            var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
                 this.ViewModel.Parent,
                 without: this.ViewModel.Source,
                 defaultId: this.ViewModel.LastVideoViewModel?.Source.Id);
-            this.ViewModel.LastVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
+            if (result.IsAccept)
+            {
+                var video = result.Value;
+                this.ViewModel.LastVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
+            }
         }
 
         private void SelectNextVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+            var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
                 this.ViewModel.Parent,
                 without: this.ViewModel.Source,
                 defaultId: this.ViewModel.NextVideoViewModel?.Source.Id);
-            this.ViewModel.NextVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
+            if (result.IsAccept)
+            {
+                var video = result.Value;
+                this.ViewModel.NextVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
+            }
         }
     }
 }

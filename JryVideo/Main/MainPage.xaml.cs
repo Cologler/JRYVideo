@@ -274,8 +274,10 @@ namespace JryVideo.Main
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             if (vm != null)
             {
-                var video = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+                var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
                     vm.SeriesView, without: vm);
+                if (!result.IsAccept) return;
+                var video = result.Value;
                 if (video == null) return;
                 var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(vm.SeriesView);
                 var can = await JryVideoCore.Current.CurrentDataCenter.CanCombineAsync(manager, vm, video);

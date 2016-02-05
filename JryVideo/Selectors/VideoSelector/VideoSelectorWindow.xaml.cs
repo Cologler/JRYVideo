@@ -16,7 +16,7 @@ namespace JryVideo.Selectors.VideoSelector
 
         public SelectVideoViewModel SelectVideoViewModel => this.SelectVideoControl.ViewModel;
 
-        public static JryVideoInfo Select(Window parent, JrySeries source, JryVideoInfo without = null, string defaultId = null)
+        public static SelectResult<JryVideoInfo> Select(Window parent, JrySeries source, JryVideoInfo without = null, string defaultId = null)
         {
             var dialog = new VideoSelectorWindow() { Owner = parent };
             dialog.SelectVideoViewModel.Source = source;
@@ -25,7 +25,10 @@ namespace JryVideo.Selectors.VideoSelector
 #pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
             dialog.SelectVideoViewModel.RefreshAsync();
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-            return dialog.ShowDialog() == true ? dialog.SelectVideoViewModel.VideosView.Selected?.Source : null;
+
+            return dialog.ShowDialog() == true
+                ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoViewModel.VideosView.Selected?.Source)
+                : SelectResult<JryVideoInfo>.NonAccept;
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
