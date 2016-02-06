@@ -42,6 +42,8 @@ namespace JryVideo.Model
             set { this.RoleName = value; }
         }
 
+        JryCoverType IJryCoverParent.CoverType => JryCoverType.Role;
+
         public string GetMajorName() => this.RoleName?.FirstOrDefault();
 
         public override void Saving()

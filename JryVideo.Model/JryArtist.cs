@@ -32,6 +32,8 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 
+        JryCoverType IJryCoverParent.CoverType => JryCoverType.Artist;
+
         [BsonIgnoreIfDefault]
         public string TheTVDBId { get; set; }
 

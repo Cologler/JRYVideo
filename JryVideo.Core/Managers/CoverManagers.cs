@@ -12,8 +12,6 @@ namespace JryVideo.Core.Managers
 {
     public class CoverManager : JryObjectManager<JryCover, ICoverSet>, IJasilyLoggerObject<CoverManager>
     {
-        private readonly object syncRoot = new object();
-        private readonly List<string> downloadingIds = new List<string>();
         private readonly MemoryCache MemoryCache;
 
         public CoverManager(ICoverSet source)
@@ -54,17 +52,11 @@ namespace JryVideo.Core.Managers
             if (string.IsNullOrWhiteSpace(cover.Uri))
                 throw new ArgumentException();
 
-            var key = cover.GetDownloadId();
-
-            return await Task.Run(async () =>
+            using (var start = this.StartDownload(cover.GetDownloadId()))
             {
-                lock (this.syncRoot)
-                {
-                    if (this.downloadingIds.Contains(key)) return null;
-                    this.downloadingIds.Add(key);
-                }
+                if (!start.IsOwner) return null;
 
-                try
+                return await Task.Run(async () =>
                 {
                     var request = WebRequest.CreateHttp(url);
                     var result = await request.GetResultAsBytesAsync();
@@ -77,17 +69,10 @@ namespace JryVideo.Core.Managers
                             return cover.Id;
                         }
                     }
-                }
-                finally
-                {
-                    lock (this.syncRoot)
-                    {
-                        this.downloadingIds.Remove(key);
-                    }
-                }
 
-                return null;
-            });
+                    return null;
+                });
+            }
         }
 
         public override async Task<bool> UpdateAsync(JryCover obj)
@@ -111,6 +96,40 @@ namespace JryVideo.Core.Managers
             {
                 Debug.WriteLine($"remove cover [{id}] from {e.GetType().Name}[ {e.Id}] over {sender.GetType().Name}");
                 await this.RemoveAsync(id);
+            }
+        }
+
+        private DownloadProcess StartDownload(string id) => new DownloadProcess(id);
+
+        private class DownloadProcess : IDisposable
+        {
+            private readonly string id;
+            private static readonly Dictionary<string, bool> Processs = new Dictionary<string, bool>();
+
+            public DownloadProcess(string id)
+            {
+                this.id = id;
+                lock (Processs)
+                {
+                    this.IsOwner = !Processs.ContainsKey(id);
+                    if (this.IsOwner)
+                    {
+                        Processs.Add(id, false);
+                    }
+                }
+            }
+
+            public bool IsOwner { get; }
+
+            public void Dispose()
+            {
+                lock (Processs)
+                {
+                    if (this.IsOwner)
+                    {
+                        Processs.Remove(this.id);
+                    }
+                }
             }
         }
     }

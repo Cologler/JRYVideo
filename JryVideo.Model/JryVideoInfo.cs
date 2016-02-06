@@ -52,6 +52,8 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public int EpisodesCount { get; set; }
 
+        JryCoverType IJryCoverParent.CoverType => JryCoverType.Video;
+
         [CanBeNull]
         [ItemNotNull]
         [BsonIgnoreIfDefault]
@@ -93,6 +95,8 @@ namespace JryVideo.Model
                 get { return this.jryVideoInfo.Id; }
                 set { this.jryVideoInfo.Id = value; }
             }
+
+            JryCoverType IJryCoverParent.CoverType => JryCoverType.Background;
         }
 
         [CanBeNull]
