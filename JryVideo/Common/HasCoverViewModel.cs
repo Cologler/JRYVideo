@@ -51,7 +51,7 @@ namespace JryVideo.Common
                 this.Cover = await coverManager.LoadCoverAsync(this.Source.CoverId);
                 if (this.cover == null)
                 {
-                    Debug.WriteLine("missing cover: " + this.Source.CoverId);
+                    await Log.WriteAsync($"{this.Source.GetType().Name} [{this.Source.Id}] missing cover [{this.Source.CoverId}].");
                     if (Debugger.IsAttached) Debugger.Break();
                 }
             }

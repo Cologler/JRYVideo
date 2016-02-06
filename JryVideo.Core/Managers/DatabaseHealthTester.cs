@@ -21,19 +21,16 @@ namespace JryVideo.Core.Managers
         }
 
         [Conditional("DEBUG")]
-        public void RunOnDebugAsync()
+        public async void RunOnDebugAsync()
         {
-            this.RunAsync(false);
+            await this.RunAsync(false);
         }
 
         public async Task RunAsync(bool fix)
         {
             await Task.Run(async () =>
             {
-                await this.dataCenter.CoverManager.Source.CursorAsync(z =>
-                {
-                    this.coverRefs.Add(z.Id, new CoverRef(z));
-                });
+                await this.dataCenter.CoverManager.Source.CursorAsync(this.BuildCover);
                 await this.dataCenter.SeriesManager.Source.CursorAsync(z =>
                 {
                     this.seriesRefs.Add(z.Id, new SeriesRef(z));
@@ -76,7 +73,7 @@ namespace JryVideo.Core.Managers
                         }
                         else
                         {
-                            this.messages.Add($"cover [{coverRef.Id}] ({coverRef.CoverType}) has no ref:.");
+                            this.messages.Add($"cover [{coverRef.Id}] ({coverRef.CoverType}) has no ref.");
                         }
                     }
                 }
@@ -124,6 +121,47 @@ namespace JryVideo.Core.Managers
             });
         }
 
+        private void BuildCover(JryCover cover)
+        {
+            switch (cover.CoverType)
+            {
+                case JryCoverType.Artist:
+                    break;
+
+                case JryCoverType.Video:
+                    if (cover.VideoId == null)
+                    {
+                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video Id.");
+                    }
+                    break;
+
+                case JryCoverType.Background:
+                    if (cover.VideoId == null)
+                    {
+                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video Id.");
+                    }
+                    break;
+
+                case JryCoverType.Role:
+                    if (cover.VideoId == null && cover.SeriesId == null)
+                    {
+                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video/series Id.");
+                    }
+                    if (cover.ActorId == null)
+                    {
+                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing actor Id.");
+                    }
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            this.coverRefs.Add(cover.Id, new CoverRef(cover));
+        }
+
+        private void AddMessage(string msg) => this.messages.Add(msg);
+
         private void ConnectToCover(IJryCoverParent obj)
         {
             var coverId = obj.CoverId;
@@ -135,7 +173,7 @@ namespace JryVideo.Core.Managers
             }
             else
             {
-                this.messages.Add($"missing cover [{coverId}]");
+                this.AddMessage($"missing cover [{coverId}]");
             }
         }
 

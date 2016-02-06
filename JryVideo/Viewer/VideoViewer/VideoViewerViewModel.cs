@@ -224,12 +224,25 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<bool> TrySetByExistsAsync()
             {
-                var cover = (await this.GetManagers().CoverManager.Source.FindAsync(
+                var videoId = this.VideoInfo.Source.Id;
+                var covers = (await this.GetManagers().CoverManager.Source.FindAsync(
                     new JryCover.QueryParameter()
                     {
                         CoverType = JryCoverType.Background,
-                        VideoId = this.VideoInfo.Source.Id
-                    })).SingleOrDefault();
+                        VideoId = videoId
+                    })).ToArray();
+
+                JryCover cover;
+                try
+                {
+                    cover = covers.SingleOrDefault();
+                }
+                catch (InvalidOperationException)
+                {
+                    Log.Write($"video Id [{videoId}] has more then 1 background.");
+                    throw;
+                }
+
                 if (cover == null) return false;
                 return await this.SetBackgroundIdAsync(cover.Id);
             }
