@@ -1,9 +1,11 @@
 ﻿using Jasily.Net;
+using JryVideo.Core.Models;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
@@ -64,6 +66,46 @@ namespace JryVideo.Core.Managers
                     {
                         cover.BuildMetaData();
                         cover.BinaryData = result.Result;
+                        if (await this.InsertAsync(cover))
+                        {
+                            return cover.Id;
+                        }
+                    }
+
+                    return null;
+                });
+            }
+        }
+
+        public async Task<string> BuildCoverAsync(CoverBuilder builder)
+        {
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+
+            using (var start = this.StartDownload(builder.BuildDownloadId()))
+            {
+                if (!start.IsOwner) return null;
+
+                return await Task.Run(async () =>
+                {
+                    var covers = (await this.Source.FindAsync(builder.BuildQueryParameter())).ToArray();
+                    try
+                    {
+                        var cover = covers.SingleOrDefault();
+                        if (cover != null) return cover.Id;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        Log.Write($"series [{builder.SeriesId}] video [{builder.VideoId}] cover [{builder.CoverType}] has more then 1 result.");
+                        return null;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(builder.Uri)) return null;
+
+                    var request = WebRequest.CreateHttp(builder.Uri);
+                    var result = await request.GetResultAsBytesAsync();
+                    if (result.IsSuccess)
+                    {
+                        var cover = builder.Build(result.Result);
                         if (await this.InsertAsync(cover))
                         {
                             return cover.Id;

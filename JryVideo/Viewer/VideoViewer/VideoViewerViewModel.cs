@@ -2,6 +2,7 @@
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
+using JryVideo.Core.Models;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Model;
 using JryVideo.Selectors.WebImageSelector;
@@ -205,7 +206,8 @@ namespace JryVideo.Viewer.VideoViewer
 
             protected override async Task<bool> TryAutoAddCoverAsync()
             {
-                if (await this.TrySetByExistsAsync()) return true;
+                var builder = CoverBuilder.CreateBackground(this.VideoInfo.Source, null);
+                if (await this.TrySetByExistsAsync(builder)) return true;
 
                 var client = JryVideoCore.Current.TheTVDBClient;
                 if (client == null) return false;
@@ -222,29 +224,11 @@ namespace JryVideo.Viewer.VideoViewer
                 return false;
             }
 
-            private async Task<bool> TrySetByExistsAsync()
+            private async Task<bool> TrySetByExistsAsync(CoverBuilder builder)
             {
-                var videoId = this.VideoInfo.Source.Id;
-                var covers = (await this.GetManagers().CoverManager.Source.FindAsync(
-                    new JryCover.QueryParameter()
-                    {
-                        CoverType = JryCoverType.Background,
-                        VideoId = videoId
-                    })).ToArray();
-
-                JryCover cover;
-                try
-                {
-                    cover = covers.SingleOrDefault();
-                }
-                catch (InvalidOperationException)
-                {
-                    Log.Write($"video Id [{videoId}] has more then 1 background.");
-                    throw;
-                }
-
-                if (cover == null) return false;
-                return await this.SetBackgroundIdAsync(cover.Id);
+                var id = await this.GetManagers().CoverManager.BuildCoverAsync(builder);
+                if (id == null) return false;
+                return await this.SetBackgroundIdAsync(id);
             }
 
             private async Task<string> AutoGenerateCoverAsync(TheTVDBClient client, IImdbItem item)
@@ -306,8 +290,8 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<string> DownloadAsync(string url)
             {
-                var cover = JryCover.CreateBackground(this.VideoInfo.Source, url);
-                return await JryVideoCore.Current.CurrentDataCenter.CoverManager.DownloadCoverAsync(cover);
+                var builder = CoverBuilder.CreateBackground(this.VideoInfo.Source, url);
+                return await JryVideoCore.Current.CurrentDataCenter.CoverManager.BuildCoverAsync(builder);
             }
 
             public async Task<bool?> StartSelect(Window window)
