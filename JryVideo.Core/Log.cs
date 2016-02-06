@@ -23,7 +23,7 @@ namespace JryVideo.Core
                     {
                         using (var writer = new StreamWriter(stream))
                         {
-                            var time = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+                            var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                             writer.WriteLine($"[{time}] {log ?? string.Empty}");
                         }
                     }
