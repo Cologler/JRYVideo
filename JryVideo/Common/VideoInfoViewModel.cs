@@ -1,6 +1,7 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
+using JryVideo.Core.Models;
 using JryVideo.Editors.VideoEditor;
 using JryVideo.Model;
 using JryVideo.Properties;
@@ -187,19 +188,15 @@ namespace JryVideo.Common
         {
             return await Task.Run(async () =>
             {
-                var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
-                var cover = (await coverManager.Source.FindAsync(
-                    new JryCover.QueryParameter()
-                    {
-                        CoverType = JryCoverType.Video,
-                        VideoId = this.Source.Id
-                    })).SingleOrDefault();
-                if (cover != null) return cover.Id;
+                var coverManager = this.GetManagers().CoverManager;
+                var builder = CoverBuilder.CreateVideo(this.Source);
+                var id = await coverManager.BuildCoverAsync(builder);
+                if (id != null) return id;
                 if (this.Source.DoubanId == null) return null;
                 var url = (await DoubanHelper.TryGetMovieInfoAsync(this.Source.DoubanId))?.GetLargeImageUrl();
                 if (url == null) return null;
-                cover = JryCover.CreateVideo(this.Source, url);
-                return await coverManager.DownloadCoverAsync(cover);
+                builder.Uri = url;
+                return await coverManager.BuildCoverAsync(builder);
             });
         }
 

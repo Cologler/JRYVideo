@@ -17,7 +17,15 @@ namespace JryVideo.Data.MongoDb
             var baseFilter = Builders<JryCover>.Filter.Eq(t => t.CoverType, parameter.CoverType);
 
             if (parameter.VideoId != null)
-                yield return Builders<JryCover>.Filter.And(baseFilter, Builders<JryCover>.Filter.Eq(t => t.VideoId, parameter.VideoId));
+            {
+                yield return Builders<JryCover>.Filter.And(baseFilter,
+                    Builders<JryCover>.Filter.Eq(t => t.VideoId, parameter.VideoId));
+            }
+            else if (parameter.SeriesId != null)
+            {
+                yield return Builders<JryCover>.Filter.And(baseFilter,
+                    Builders<JryCover>.Filter.Eq(t => t.SeriesId, parameter.SeriesId));
+            }
         }
     }
 }

@@ -206,8 +206,7 @@ namespace JryVideo.Viewer.VideoViewer
 
             protected override async Task<bool> TryAutoAddCoverAsync()
             {
-                var builder = CoverBuilder.CreateBackground(this.VideoInfo.Source, null);
-                if (await this.TrySetByExistsAsync(builder)) return true;
+                if (await this.TrySetByExistsAsync()) return true;
 
                 var client = JryVideoCore.Current.TheTVDBClient;
                 if (client == null) return false;
@@ -224,9 +223,9 @@ namespace JryVideo.Viewer.VideoViewer
                 return false;
             }
 
-            private async Task<bool> TrySetByExistsAsync(CoverBuilder builder)
+            private async Task<bool> TrySetByExistsAsync()
             {
-                var id = await this.GetManagers().CoverManager.BuildCoverAsync(builder);
+                var id = await this.DownloadAsync(null);
                 if (id == null) return false;
                 return await this.SetBackgroundIdAsync(id);
             }
@@ -291,7 +290,7 @@ namespace JryVideo.Viewer.VideoViewer
             private async Task<string> DownloadAsync(string url)
             {
                 var builder = CoverBuilder.CreateBackground(this.VideoInfo.Source, url);
-                return await JryVideoCore.Current.CurrentDataCenter.CoverManager.BuildCoverAsync(builder);
+                return await this.GetManagers().CoverManager.BuildCoverAsync(builder);
             }
 
             public async Task<bool?> StartSelect(Window window)

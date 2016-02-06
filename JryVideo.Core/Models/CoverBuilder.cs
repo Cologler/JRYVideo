@@ -65,36 +65,21 @@ namespace JryVideo.Core.Models
         {
             var queryParameter = new JryCover.QueryParameter()
             {
-                CoverType = this.CoverType
+                CoverType = this.CoverType,
+                VideoId = this.VideoId,
+                SeriesId = this.SeriesId
             };
 
-            switch (this.CoverType)
-            {
-                case JryCoverType.Artist:
-                    break;
-
-                case JryCoverType.Video:
-                case JryCoverType.Background:
-                    queryParameter.VideoId = this.VideoId;
-                    return queryParameter;
-
-                case JryCoverType.Role:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            throw new ArgumentOutOfRangeException();
+            return queryParameter;
         }
 
-        public static CoverBuilder CreateVideo(JryVideoInfo video, string url)
+        public static CoverBuilder CreateVideo(JryVideoInfo video)
         {
             var cover = new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Douban,
                 CoverType = JryCoverType.Video,
                 DoubanId = video.DoubanId,
-                Uri = url,
                 ImdbId = video.ImdbId,
                 VideoId = video.Id
             };

@@ -1,11 +1,12 @@
-﻿using System;
-using JryVideo.Core;
+﻿using JryVideo.Core;
+using JryVideo.Core.Models;
+using JryVideo.Core.TheTVDB;
 using JryVideo.Editors.RoleEditor;
 using JryVideo.Model;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using JryVideo.Core.TheTVDB;
 
 namespace JryVideo.Common
 {
@@ -72,7 +73,7 @@ namespace JryVideo.Common
             {
                 return true;
             }
-            
+
             return false;
         }
 
@@ -90,10 +91,10 @@ namespace JryVideo.Common
             var url = actors[0].BuildUrl(client);
 
             var jrySeries = this.ImdbItem as JrySeries;
-            var cover = jrySeries != null
-                ? JryCover.CreateRole(jrySeries, url, this.Source)
-                : JryCover.CreateRole((JryVideoInfo)this.ImdbItem, url, this.Source);
-            var guid = await JryVideoCore.Current.CurrentDataCenter.CoverManager.DownloadCoverAsync(cover);
+            var builder = jrySeries != null
+                ? CoverBuilder.CreateRole(jrySeries, url, this.Source)
+                : CoverBuilder.CreateRole((JryVideoInfo)this.ImdbItem, url, this.Source);
+            var guid = await JryVideoCore.Current.CurrentDataCenter.CoverManager.BuildCoverAsync(builder);
             if (guid != null)
             {
                 this.Source.CoverId = guid;

@@ -46,37 +46,6 @@ namespace JryVideo.Core.Managers
             });
         }
 
-        public async Task<string> DownloadCoverAsync(JryCover cover)
-        {
-            if (cover == null) throw new ArgumentNullException(nameof(cover));
-
-            var url = cover.Uri;
-            if (string.IsNullOrWhiteSpace(cover.Uri))
-                throw new ArgumentException();
-
-            using (var start = this.StartDownload(cover.GetDownloadId()))
-            {
-                if (!start.IsOwner) return null;
-
-                return await Task.Run(async () =>
-                {
-                    var request = WebRequest.CreateHttp(url);
-                    var result = await request.GetResultAsBytesAsync();
-                    if (result.IsSuccess)
-                    {
-                        cover.BuildMetaData();
-                        cover.BinaryData = result.Result;
-                        if (await this.InsertAsync(cover))
-                        {
-                            return cover.Id;
-                        }
-                    }
-
-                    return null;
-                });
-            }
-        }
-
         public async Task<string> BuildCoverAsync(CoverBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));

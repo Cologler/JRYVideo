@@ -64,65 +64,13 @@ namespace JryVideo.Model
             return false;
         }
 
-        public static JryCover CreateVideo(JryVideoInfo video, string url)
-        {
-            var cover = new JryCover
-            {
-                CoverSourceType = JryCoverSourceType.Douban,
-                CoverType = JryCoverType.Video,
-                DoubanId = video.DoubanId,
-                Uri = url,
-                ImdbId = video.ImdbId,
-                VideoId = video.Id
-            };
-            return cover;
-        }
-
-        public static JryCover CreateBackground(JryVideoInfo video, string url)
-        {
-            var cover = new JryCover
-            {
-                CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = JryCoverType.Background,
-                DoubanId = video.DoubanId,
-                Uri = url,
-                ImdbId = video.ImdbId,
-                VideoId = video.Id
-            };
-            return cover;
-        }
-
-        public static JryCover CreateRole(JrySeries series, string url, JryVideoRole role)
-        {
-            var cover = new JryCover
-            {
-                CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = JryCoverType.Role,
-                Uri = url,
-                SeriesId = series.Id,
-                ActorId = role.Id
-            };
-            return cover;
-        }
-
-        public static JryCover CreateRole(JryVideoInfo video, string url, JryVideoRole role)
-        {
-            var cover = new JryCover
-            {
-                CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = JryCoverType.Role,
-                Uri = url,
-                VideoId = video.Id,
-                ActorId = role.Id
-            };
-            return cover;
-        }
-
         public struct QueryParameter
         {
             public JryCoverType CoverType { get; set; }
 
             public string VideoId { get; set; }
+
+            public string SeriesId { get; set; }
         }
 
         public interface ICover
