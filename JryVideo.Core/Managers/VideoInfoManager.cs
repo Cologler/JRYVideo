@@ -23,11 +23,16 @@ namespace JryVideo.Core.Managers
             return await base.RemoveAsync(id);
         }
 
-        internal override async Task<CombineResult> CanCombineAsync(JryVideoInfo to, JryVideoInfo from)
+        internal override Task<CombineResult> CanCombineAsync(JryVideoInfo to, JryVideoInfo from)
         {
             if (to == null) throw new ArgumentNullException(nameof(to));
             if (from == null) throw new ArgumentNullException(nameof(from));
 
+            return Task.FromResult(this.CanCombine(to, from));
+        }
+
+        private CombineResult CanCombine(JryVideoInfo to, JryVideoInfo from)
+        {
             if (to.Type != from.Type)
             {
                 return CombineResult.False("have diff type.");

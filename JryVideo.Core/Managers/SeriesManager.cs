@@ -181,11 +181,16 @@ namespace JryVideo.Core.Managers
             return new SearchElement(SearchElement.ElementType.Text, text);
         }
 
-        internal override async Task<CombineResult> CanCombineAsync(JrySeries to, JrySeries @from)
+        internal override Task<CombineResult> CanCombineAsync(JrySeries to, JrySeries @from)
         {
             if (to == null) throw new ArgumentNullException(nameof(to));
             if (from == null) throw new ArgumentNullException(nameof(from));
 
+            return Task.FromResult(this.CanCombine(to, from));
+        }
+
+        private CombineResult CanCombine(JrySeries to, JrySeries @from)
+        {
             if (to.TheTVDBId != null && from.TheTVDBId != null && to.TheTVDBId != from.TheTVDBId)
             {
                 return CombineResult.False("have diff TheTVDB id.");
