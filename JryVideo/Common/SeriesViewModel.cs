@@ -11,11 +11,13 @@ namespace JryVideo.Common
 {
     public sealed class SeriesViewModel : JasilyViewModel<JrySeries>
     {
+        private static readonly RefreshPropertiesMapper Mapper = new RefreshPropertiesMapper(typeof(SeriesViewModel));
         private readonly List<VideoInfoViewModel> videoViewModels = new List<VideoInfoViewModel>();
 
         public SeriesViewModel(JrySeries source)
             : base(source)
         {
+            this.PropertiesMapper = Mapper;
             this.NameViewModel = new NameableViewModel<JrySeries>(source);
 
             this.videoViewModels.AddRange(source.Videos.Select(jryVideo => new VideoInfoViewModel(this, jryVideo)));

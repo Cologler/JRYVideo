@@ -4,12 +4,15 @@ using System;
 
 namespace JryVideo.Common
 {
-    public class NameableViewModel<T> : JasilyViewModel<T>
+    public sealed class NameableViewModel<T> : JasilyViewModel<T>
         where T : INameable
     {
+        private static readonly RefreshPropertiesMapper Mapper = new RefreshPropertiesMapper(typeof(NameableViewModel<T>));
+
         public NameableViewModel(T source)
             : base(source)
         {
+            this.PropertiesMapper = Mapper;
         }
 
         [NotifyPropertyChanged]

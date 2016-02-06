@@ -17,6 +17,8 @@ namespace JryVideo.Common
 {
     public sealed class VideoInfoViewModel : VideoInfoReadonlyViewModel
     {
+        private static readonly RefreshPropertiesMapper Mapper = new RefreshPropertiesMapper(typeof(VideoInfoViewModel));
+
         public static event EventHandler<VideoInfoViewModel> IsWatchedUpdated;
 
         private bool isTrackButtonEnable;
@@ -26,6 +28,7 @@ namespace JryVideo.Common
         public VideoInfoViewModel(SeriesViewModel seriesViewModel, JryVideoInfo source)
             : base(source)
         {
+            this.PropertiesMapper = Mapper;
             this.SeriesView = seriesViewModel;
             this.RefreshProperties();
         }
