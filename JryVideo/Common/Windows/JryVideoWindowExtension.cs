@@ -9,10 +9,7 @@ namespace JryVideo.Common.Windows
         public static JryVideoWindow GetWindow(this Page page)
         {
             var w = new JryVideoWindow();
-            w.TitleTextBlock.Text = page.Title;
-            w.ContentFrame.Width = page.Width;
-            w.ContentFrame.Height = page.Height;
-            w.ContentFrame.Navigate(page);
+            w.SetContentPage(page);
             return w;
         }
 

@@ -10,7 +10,7 @@ namespace JryVideo.Editors.ArtistEditor
     /// <summary>
     /// ArtistEditorPage.xaml 的交互逻辑
     /// </summary>
-    public partial class ArtistEditorPage : Page
+    public partial class ArtistEditorPage : Page, IAcceptable
     {
         public ArtistEditorPage()
         {
@@ -21,7 +21,7 @@ namespace JryVideo.Editors.ArtistEditor
         public ArtistEditorViewModel ViewModel { get; }
             = new ArtistEditorViewModel();
 
-        private async void AcceptButton_OnClick(object sender, RoutedEventArgs e)
+        public async void Accept()
         {
             if (this.ViewModel.Names.Names.IsNullOrWhiteSpace())
             {

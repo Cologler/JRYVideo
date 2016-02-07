@@ -6,6 +6,7 @@
                  xmlns:local="clr-namespace:JryVideo.Common.Windows"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:common="clr-namespace:JryVideo.Common"
+                 xmlns:properties="clr-namespace:JryVideo.Properties"
                  ShowTitleBar="False"
                  WindowStartupLocation="CenterOwner"
                  BorderThickness="1"
@@ -20,6 +21,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid>
@@ -29,6 +31,17 @@
 
             <Grid Grid.Row="1">
                 <Frame x:Name="ContentFrame" />
+            </Grid>
+
+            <Grid Grid.Row="2"
+                  Visibility="Collapsed"
+                  x:Name="CommandGrid"
+                  Style="{StaticResource AcceptPanelStyle}">
+                <Button HorizontalAlignment="Right"
+                        Content="{x:Static properties:Resources.Button_Accept_Text}"
+                        x:Name="AcceptButton"
+                        Click="AcceptButton_OnClick"
+                        Style="{StaticResource CommintButtonStyle}" />
             </Grid>
 
         </Grid>

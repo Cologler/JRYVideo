@@ -80,6 +80,7 @@
     <Compile Include="Common\VideoRoleReadonlyViewModel.cs" />
     <Compile Include="Common\VideoRoleViewModel.cs" />
     <Compile Include="Common\VideoViewModel.cs" />
+    <Compile Include="Common\Windows\IAcceptable.cs" />
     <Compile Include="Common\Windows\JryVideoWindow.xaml.cs">
       <DependentUpon>JryVideoWindow.xaml</DependentUpon>
     </Compile>
