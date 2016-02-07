@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent, INameable, ITheTVDBItem
+    public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent, INameable, ITheTVDBItem,
+        IImdbItem
     {
         public JryArtist()
         {
@@ -42,6 +43,9 @@ namespace JryVideo.Model
         /// </summary>
         [BsonIgnoreIfDefault]
         public string DoubanId { get; set; }
+
+        [BsonIgnoreIfDefault]
+        public string ImdbId { get; set; }
 
         protected override bool InnerTestHasError()
         {
@@ -96,6 +100,15 @@ namespace JryVideo.Model
             public string TheTVDBId { get; set; }
 
             public string DoubanId { get; set; }
+        }
+
+        public override void Saving()
+        {
+            base.Saving();
+
+            if (this.TheTVDBId.IsNullOrWhiteSpace()) this.TheTVDBId = null;
+            if (this.DoubanId.IsNullOrWhiteSpace()) this.DoubanId = null;
+            if (this.ImdbId.IsNullOrWhiteSpace()) this.ImdbId = null;
         }
     }
 }

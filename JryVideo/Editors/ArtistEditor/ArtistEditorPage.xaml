@@ -23,6 +23,21 @@
                          Height="80"
                          AcceptsReturn="True" />
 
+                <TextBlock Text="imdb id"
+                           Style="{StaticResource TitleStyle}" />
+
+                <TextBox Text="{Binding ImdbId, Mode=TwoWay}" />
+
+                <TextBlock Text="douban id"
+                           Style="{StaticResource TitleStyle}" />
+
+                <TextBox Text="{Binding DoubanId, Mode=TwoWay}" />
+
+                <TextBlock Text="theTVDB id"
+                           Style="{StaticResource TitleStyle}" />
+
+                <TextBox Text="{Binding TheTVDBId, Mode=TwoWay}" />
+
             </StackPanel>
         </Grid>
     </Grid>
