@@ -1,3 +1,4 @@
+using Jasily.ComponentModel;
 using JryVideo.Model;
 using JryVideo.Viewer.ArtistViewer;
 using System.Linq;
@@ -20,12 +21,14 @@ namespace JryVideo.Common
 
         public virtual string CollectionId { get; }
 
+        [NotifyPropertyChanged]
         public string ActorName
         {
             get { return this.actorName; }
             private set { this.SetPropertyRef(ref this.actorName, value); }
         }
 
+        [NotifyPropertyChanged]
         public string RoleName
         {
             get
@@ -50,6 +53,7 @@ namespace JryVideo.Common
         {
             if (this.Source.ArtistId == null) return;
             var w = new ArtistViewerWindow() { Owner = window };
+            w.TitleTextBlock.Text = "actor";
             w.ViewModel.LoadAsync(this.Source.ArtistId);
             w.ShowDialog();
         }
