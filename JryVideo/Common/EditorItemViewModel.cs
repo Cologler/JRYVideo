@@ -2,8 +2,10 @@
 using JryVideo.Core.Managers;
 using JryVideo.Model;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Enums;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace JryVideo.Common
@@ -101,6 +103,50 @@ namespace JryVideo.Common
         public virtual void Clear()
         {
 
+        }
+
+        public class NameEditableViewModel<TNameable> : JasilyEditableViewModel<TNameable>
+            where TNameable : INameable
+        {
+            private readonly bool nullIfEmpty;
+            private string names;
+
+            public NameEditableViewModel(bool nullIfEmpty)
+                : base(default(TNameable))
+            {
+                this.nullIfEmpty = nullIfEmpty;
+            }
+
+            public string Names
+            {
+                get { return this.names; }
+                set { this.SetPropertyRef(ref this.names, value); }
+            }
+
+            public override void ReadFromObject(TNameable obj)
+            {
+                base.ReadFromObject(obj);
+
+                this.Names = obj.Names == null ? string.Empty : obj.Names.AsLines();
+            }
+
+            public override void WriteToObject(TNameable obj)
+            {
+                base.WriteToObject(obj);
+
+                if (!string.IsNullOrWhiteSpace(this.Names))
+                {
+                    obj.Names = this.Names.AsLines()
+                        .Where(z => !string.IsNullOrWhiteSpace(z))
+                        .Select(z => z.Trim())
+                        .Distinct()
+                        .ToList();
+                }
+                else
+                {
+                    obj.Names = this.nullIfEmpty ? null : new List<string>();
+                }
+            }
         }
     }
 }

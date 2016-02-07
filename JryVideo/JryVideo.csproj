@@ -80,6 +80,10 @@
     <Compile Include="Common\VideoRoleReadonlyViewModel.cs" />
     <Compile Include="Common\VideoRoleViewModel.cs" />
     <Compile Include="Common\VideoViewModel.cs" />
+    <Compile Include="Common\Windows\JryVideoWindow.xaml.cs">
+      <DependentUpon>JryVideoWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Windows\JryVideoWindowExtension.cs" />
     <Compile Include="Configs\MapperConfig.cs" />
     <Compile Include="Configs\MapperValue.cs" />
     <Compile Include="Configs\UserConfig.cs" />
@@ -94,6 +98,10 @@
     <Compile Include="Controls\SelectVideo\SelectVideoControl.xaml.cs">
       <DependentUpon>SelectVideoControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\ArtistEditor\ArtistEditorPage.xaml.cs">
+      <DependentUpon>ArtistEditorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ArtistEditor\ArtistEditorViewModel.cs" />
     <Compile Include="Editors\EntityEditor\EntityEditorPage.xaml.cs">
       <DependentUpon>EntityEditorPage.xaml</DependentUpon>
     </Compile>
@@ -165,9 +173,6 @@
       <DependentUpon>EditVideoUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditVideo\EditVideoViewModel.cs" />
-    <Compile Include="Editors\ArtistEditor\EditArtistWindow.xaml.cs">
-      <DependentUpon>EditArtistWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Main\DataModeViewModel.cs" />
     <Compile Include="Main\MainSeriesItemViewerViewModel.cs" />
     <Compile Include="Managers\FlagManager\FlagManagerViewModel.cs" />
@@ -220,6 +225,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Common\Windows\JryVideoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\EditFlag\EditFlagUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -229,6 +238,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SelectVideo\SelectVideoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\ArtistEditor\ArtistEditorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -293,10 +306,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\CoverEditor\CoverEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Editors\ArtistEditor\EditArtistWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

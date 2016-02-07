@@ -349,7 +349,11 @@ namespace JryVideo.Viewer.VideoViewer
         private void ActorViewMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
-            vm?.ShowActor(this.TryFindParent<Window>());
+            if (vm != null)
+            {
+                vm.ShowActor(this.TryFindParent<Window>());
+                vm.RefreshProperties();
+            }
         }
 
         private void GoLastVideoMenuItem_OnClick(object sender, RoutedEventArgs e)

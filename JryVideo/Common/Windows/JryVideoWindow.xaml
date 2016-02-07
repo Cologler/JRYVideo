@@ -1,0 +1,36 @@
+﻿<mah:MetroWindow x:Class="JryVideo.Common.Windows.JryVideoWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:local="clr-namespace:JryVideo.Common.Windows"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:common="clr-namespace:JryVideo.Common"
+                 ShowTitleBar="False"
+                 WindowStartupLocation="CenterOwner"
+                 BorderThickness="1"
+                 ResizeMode="NoResize"
+                 SizeToContent="WidthAndHeight"
+                 GlowBrush="{StaticResource AccentColorBrush}"
+                 mc:Ignorable="d"
+                 MinWidth="300"
+                 MinHeight="300" >
+    <Grid>
+        <Grid Style="{StaticResource ParentPanelStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <TextBlock Style="{StaticResource CaptionStyle}"
+                           x:Name="TitleTextBlock" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Frame x:Name="ContentFrame" />
+            </Grid>
+
+        </Grid>
+    </Grid>
+</mah:MetroWindow>
