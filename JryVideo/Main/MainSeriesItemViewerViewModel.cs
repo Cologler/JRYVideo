@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using Jasily.Diagnostics;
 
 namespace JryVideo.Main
 {
@@ -202,7 +203,9 @@ namespace JryVideo.Main
 
             public async Task LoadAsync(SeriesManager manager)
             {
+                JasilyDebug.Pointer();
                 var items = await this.QuerySeriesAsync(manager);
+                JasilyDebug.Pointer();
 
                 this.HasNext = !this.IsOnlyTracking && items.Count > this.PageSize;
                 if (this.HasNext) items.RemoveAt(items.Count - 1);
@@ -213,15 +216,15 @@ namespace JryVideo.Main
             private async Task<List<JrySeries>> QuerySeriesAsync(SeriesManager manager)
             {
                 if (this.IsOnlyTracking)
+                {
                     return await Task.Run(async () => (
                         await manager.ListTrackingAsync()).ToList());
-
-                if (this.SearchText.IsNullOrWhiteSpace())
-                    return await Task.Run(async () => (
-                        await manager.LoadAsync(this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
+                }
                 else
+                {
                     return await Task.Run(async () => (
-                        await manager.QueryAsync(this.SearchText, this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
+                           await manager.QueryAsync(this.SearchText, this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
+                }
             }
 
             public bool Equals(DataCenter dataCenter, bool isOnlyTracking, string searchText, int pageIndex, int pageSize)

@@ -124,14 +124,38 @@ namespace JryVideo.Core.Managers
 
         public async Task<IEnumerable<JrySeries>> QueryAsync(string searchText, int skip, int take)
         {
-            return await this.Source.QueryAsync(
-                ParseSearchText(searchText.ThrowIfNullOrEmpty("searchText")), skip, take);
+            var items = searchText.IsNullOrWhiteSpace()
+                ? await base.LoadAsync(skip, take)
+                : await this.Source.QueryAsync(
+                ParseSearchText(searchText), skip, take);
+
+            return await this.WrapAsync(items);
         }
 
-        public async Task<IEnumerable<JrySeries>> ListTrackingAsync()
+        private async Task<IEnumerable<JrySeries>> WrapAsync(IEnumerable<JrySeries> items)
         {
-            return await this.Source.ListTrackingAsync();
+            var dict = items.ToDictionary(z => z.Id);
+            var keys = dict.Values
+                .Where(z => z.ContextSeriesId != null)
+                .SelectMany(z => z.ContextSeriesId)
+                .ToArray();
+            foreach (var key in keys)
+            {
+                await this.QueryAsync(dict, key);
+            }
+            return dict.Values;
         }
+
+        private async Task QueryAsync(Dictionary<string, JrySeries> sets, string key)
+        {
+            if (!sets.ContainsKey(key))
+            {
+                var series = await this.FindAsync(key);
+                sets.Add(key, series);
+            }
+        }
+
+        public async Task<IEnumerable<JrySeries>> ListTrackingAsync() => await this.Source.ListTrackingAsync();
 
         public static void BuildSeriesMetaData(JrySeries series)
         {

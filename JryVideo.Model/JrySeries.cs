@@ -37,6 +37,10 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string TheTVDBId { get; set; }
 
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public List<string> ContextSeriesId { get; set; }
+
         List<JryVideoInfo> IJryChild<JryVideoInfo>.Childs => this.Videos;
 
         protected override bool InnerTestHasError()
@@ -77,6 +81,13 @@ namespace JryVideo.Model
 
             if (!CombineEquals(this.TheTVDBId, other.TheTVDBId)) throw new InvalidOperationException();
             this.TheTVDBId = this.TheTVDBId ?? other.TheTVDBId;
+        }
+
+        public override void Saving()
+        {
+            base.Saving();
+
+            if (this.ContextSeriesId?.Count == 0) this.ContextSeriesId = null;
         }
     }
 }
