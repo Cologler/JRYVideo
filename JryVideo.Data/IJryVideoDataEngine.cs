@@ -13,6 +13,10 @@ namespace JryVideo.Data
 
         Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode);
 
+        Task<bool> HasPasswordAsync();
+
+        Task<bool> PasswordAsync(string password);
+
         ISeriesSet GetSeriesSet();
 
         IFlagableSet<Model.JryVideo> GetVideoSet();

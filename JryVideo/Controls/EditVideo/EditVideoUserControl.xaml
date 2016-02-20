@@ -281,6 +281,7 @@
                                                       Grid.Column="1"
                                                       Width="120"
                                                       HorizontalAlignment="Left"
+                                                      VerticalAlignment="Center"
                                                       Number="{Binding EpisodeOffset, Mode=TwoWay}" />
 
                 </Grid>

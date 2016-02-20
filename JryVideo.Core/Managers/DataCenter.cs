@@ -6,7 +6,17 @@ namespace JryVideo.Core.Managers
 {
     public class DataCenter
     {
+        public static DataCenter NotWork = new DataCenter(false);
+
+        public bool IsWork { get; }
+
+        private DataCenter(bool isWork)
+        {
+            this.IsWork = isWork;
+        }
+
         public DataCenter(IJryVideoDataEngine dataEngine)
+            : this(true)
         {
             this.ProviderManager = dataEngine;
             this.CoverManager = new CoverManager(dataEngine.GetCoverSet());

@@ -11,15 +11,19 @@ namespace JryVideo.Data.MongoDb
     public class MongoEntitySet<TEntity> : IJasilyEntitySetProvider<TEntity, string>, IJasilyLoggerObject<TEntity>
         where TEntity : class, IJasilyEntity<string>
     {
-        public IMongoCollection<TEntity> Collection { get; private set; }
+        internal IMongoCollection<TEntity> Collection { get; }
 
-        public MongoEntitySet(IMongoCollection<TEntity> collection)
+        public JryVideoMongoDbDataEngine Engine { get; }
+
+        public MongoEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<TEntity> collection)
         {
+            this.Engine = engine;
             this.Collection = collection;
         }
 
         public async Task CursorAsync(Action<TEntity> callback)
         {
+            this.Engine.TestPass();
             using (var cur = await this.Collection.FindAsync(_ => true))
             {
                 while (await cur.MoveNextAsync())
@@ -39,6 +43,7 @@ namespace JryVideo.Data.MongoDb
         /// <returns></returns>
         public async virtual Task<TEntity> FindAsync(string id)
         {
+            this.Engine.TestPass();
             return (await (await this.Collection.FindAsync(
                 Builders<TEntity>.Filter.Eq(t => t.Id, id)))
                 .ToListAsync())
@@ -48,10 +53,11 @@ namespace JryVideo.Data.MongoDb
         /// <summary>
         /// return a entities dictionary where match id.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
         public virtual async Task<IDictionary<string, TEntity>> FindAsync(IEnumerable<string> ids)
         {
+            this.Engine.TestPass();
             return (await (await this.Collection.FindAsync(
                 Builders<TEntity>.Filter.In(t => t.Id, ids.ToArray())))
                 .ToListAsync())
@@ -60,6 +66,7 @@ namespace JryVideo.Data.MongoDb
 
         public virtual async Task<IEnumerable<TEntity>> ListAsync(int skip = 0, int take = Int32.MaxValue)
         {
+            this.Engine.TestPass();
             var option = new FindOptions<TEntity, TEntity>()
             {
                 Skip = skip,
@@ -71,10 +78,7 @@ namespace JryVideo.Data.MongoDb
             return await (await this.Collection.FindAsync(_ => true, option)).ToListAsync();
         }
 
-        protected virtual SortDefinition<TEntity> BuildDefaultSort()
-        {
-            return null;
-        }
+        protected virtual SortDefinition<TEntity> BuildDefaultSort() => null;
 
         protected void Print(TEntity entity, string @operator)
         {
@@ -83,6 +87,7 @@ namespace JryVideo.Data.MongoDb
 
         public async Task<bool> InsertAsync(TEntity entity)
         {
+            this.Engine.TestPass();
             this.Print(entity, "insert");
 
             await this.Collection.InsertOneAsync(entity);
@@ -91,16 +96,19 @@ namespace JryVideo.Data.MongoDb
 
         public async Task<bool> InsertAsync(IEnumerable<TEntity> items)
         {
-            foreach (var item in items)
+            this.Engine.TestPass();
+            var entities = items as TEntity[] ?? items.ToArray();
+            foreach (var item in entities)
                 this.Print(item, "insert");
 
-            await this.Collection.InsertManyAsync(items);
+            await this.Collection.InsertManyAsync(entities);
             return true;
         }
 
         public async Task<bool> InsertOrUpdateAsync(TEntity entity)
         {
-            var item = await this.Collection.FindOneAndReplaceAsync(
+            this.Engine.TestPass();
+            await this.Collection.FindOneAndReplaceAsync(
                 Builders<TEntity>.Filter.Eq(z => z.Id, entity.Id),
                 entity,
                 new FindOneAndReplaceOptions<TEntity, TEntity>() { IsUpsert = true });
@@ -109,6 +117,7 @@ namespace JryVideo.Data.MongoDb
 
         public virtual async Task<bool> UpdateAsync(TEntity entity)
         {
+            this.Engine.TestPass();
             this.Print(entity, "update");
             this.Log(JasilyLogger.LoggerMode.Release, "update \r\n" + entity.Print() + "\r\n");
             var filter = Builders<TEntity>.Filter;
@@ -119,6 +128,7 @@ namespace JryVideo.Data.MongoDb
 
         public async Task<bool> RemoveAsync(string id)
         {
+            this.Engine.TestPass();
             this.Log(JasilyLogger.LoggerMode.Release, "remove \r\n" + id);
             var filter = Builders<TEntity>.Filter;
             return (await this.Collection.DeleteOneAsync(filter.Eq(t => t.Id, id))).DeletedCount == 1;

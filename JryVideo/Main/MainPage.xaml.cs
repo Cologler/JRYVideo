@@ -200,10 +200,18 @@ namespace JryVideo.Main
                 }
                 else
                 {
-                    var pw = await JryVideoCore.Current.SecureDataCenter.ProviderManager.GetSettingSet()
-                        .FindAsync("password_sha1");
+                    var secure = JryVideoCore.Current.SecureDataCenter;
 
-                    if (pw == null)
+                    if (!secure.IsWork)
+                    {
+                        this.ShowJryVideoMessage("info", "current database not support private mode.");
+                        this.SwitchPublic();
+                        return;
+                    }
+
+                    string password = null;
+
+                    if (!await secure.ProviderManager.HasPasswordAsync())
                     {
                         var dlg = new PasswordEditorWindow();
                         dlg.MessageTextBlock.Text = "first time you must set a password.";
@@ -211,25 +219,25 @@ namespace JryVideo.Main
                         dlg.Owner = this.TryFindParent<Window>();
                         if (dlg.ShowDialog() != true)
                         {
-                            this.ViewModel.SelectedMode = this.ViewModel.ModeCollection.First(
-                                z => z.Source == JryVideoDataSourceProviderManagerMode.Public);
+                            this.SwitchPublic();
                             return;
                         }
-                        var hash = JasilyHash.Create(HashType.SHA1).ComputeHashString(dlg.PasswordResult);
-                        pw = new JrySettingItem("password_sha1", hash);
-                        await JryVideoCore.Current.SecureDataCenter.ProviderManager.GetSettingSet().InsertAsync(pw);
+                        password = dlg.PasswordResult;
+                    }
+                    else
+                    {
+                        var pwDlg = new PasswordWindow();
+                        pwDlg.Owner = this.TryFindParent<Window>();
+                        if (pwDlg.ShowDialog() == true && !pwDlg.PasswordBox.Password.IsNullOrWhiteSpace())
+                        {
+                            password = pwDlg.PasswordBox.Password;
+                        }
                     }
 
-                    var pwDlg = new PasswordWindow();
-                    pwDlg.Owner = this.TryFindParent<Window>();
-                    if (pwDlg.ShowDialog() == true)
+                    if (!password.IsNullOrWhiteSpace())
                     {
-                        if (pwDlg.PasswordBox.Password.IsNullOrWhiteSpace() ||
-                            JasilyHash.Create(HashType.SHA1).ComputeHashString(pwDlg.PasswordBox.Password) != pw.Value)
-                        {
-                            this.ShowJryVideoMessage("error", "password error.");
-                        }
-                        else
+                        var hash = JasilyHash.Create(HashType.SHA1).ComputeHashString(password);
+                        if (await secure.ProviderManager.PasswordAsync(hash))
                         {
                             JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Private);
                             await this.ViewModel.VideosViewModel.RefreshAsync();
@@ -237,10 +245,16 @@ namespace JryVideo.Main
                         }
                     }
 
-                    this.ViewModel.SelectedMode = this.ViewModel.ModeCollection.First(
-                        z => z.Source == JryVideoDataSourceProviderManagerMode.Public);
+                    this.ShowJryVideoMessage("error", "password error.");
+                    this.SwitchPublic();
                 }
             }
+        }
+
+        private void SwitchPublic()
+        {
+            this.ViewModel.SelectedMode = this.ViewModel.ModeCollection.First(
+                z => z.Source == JryVideoDataSourceProviderManagerMode.Public);
         }
 
         private void WatchedEpisode_OnClick(object sender, RoutedEventArgs e)

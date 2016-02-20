@@ -9,12 +9,9 @@ namespace JryVideo.Data.MongoDb
     public class MongoJryEntitySet<T> : MongoEntitySet<T>
         where T : JryObject
     {
-        public JryVideoMongoDbDataEngine Engine { get; private set; }
-
         public MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
-            : base(collection)
+            : base(engine, collection)
         {
-            this.Engine = engine;
         }
 
         protected override SortDefinition<T> BuildDefaultSort()

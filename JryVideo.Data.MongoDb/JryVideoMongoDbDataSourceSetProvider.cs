@@ -4,6 +4,8 @@ using JryVideo.Model;
 using MongoDB.Driver;
 using System;
 using System.Data;
+using System.Linq;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace JryVideo.Data.MongoDb
@@ -18,6 +20,8 @@ namespace JryVideo.Data.MongoDb
         }
 
         public IJryVideoDataEngineInitializeParameters InitializeParametersInfo { get; }
+
+        public JryVideoDataSourceProviderManagerMode Mode { get; private set; }
 
         private sealed class JryVideoMongoDbJryVideoDataEngineInitializeParameters : IJryVideoDataEngineInitializeParameters
         {
@@ -45,6 +49,11 @@ namespace JryVideo.Data.MongoDb
 
         public Task<bool> Initialize(JryVideoDataSourceProviderManagerMode mode)
         {
+            if (!Enum.IsDefined(typeof(JryVideoDataSourceProviderManagerMode), mode))
+                throw new ArgumentOutOfRangeException(nameof(mode));
+
+            this.Mode = mode;
+
             var builder = new MongoUrlBuilder();
 
             builder.Server = MongoServerAddress.Parse("127.0.0.1:50710");
@@ -60,10 +69,43 @@ namespace JryVideo.Data.MongoDb
             return Task.FromResult(true);
         }
 
-        public ISeriesSet GetSeriesSet()
+        public async Task<bool> HasPasswordAsync()
         {
-            return new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
+            if (this.Mode == JryVideoDataSourceProviderManagerMode.Public) return false;
+            return null != await this.GetPasswordAsync();
         }
+
+        private bool isAuthed;
+
+        internal void TestPass()
+        {
+            if (this.Mode == JryVideoDataSourceProviderManagerMode.Public) return;
+            if (this.isAuthed) return;
+            throw new AuthenticationException();
+        }
+
+        private async Task<JrySettingItem> GetPasswordAsync()
+        {
+            return (await (await this.SettingCollection().FindAsync(z => z.Id == "password_sha1"))
+                .ToListAsync()).FirstOrDefault();
+        }
+
+        public async Task<bool> PasswordAsync(string password)
+        {
+            if (this.Mode == JryVideoDataSourceProviderManagerMode.Public) return true;
+
+            var pw = await this.GetPasswordAsync();
+            if (pw == null)
+            {
+                pw = new JrySettingItem("password_sha1", password);
+                await this.SettingCollection().InsertOneAsync(pw);
+            }
+            this.isAuthed = password == pw.Value;
+            return this.isAuthed;
+        }
+
+        public ISeriesSet GetSeriesSet()
+            => new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
 
         internal IMongoCollection<Model.JryVideo> VideoCollection
             => this.Database.GetCollection<Model.JryVideo>("Video");
@@ -83,10 +125,11 @@ namespace JryVideo.Data.MongoDb
         public IVideoRoleCollectionSet GetVideoRoleInfoSet()
             => new MongoVideoRoleCollectionDataSource(this, this.Database.GetCollection<VideoRoleCollection>("VideoRole"));
 
+        private IMongoCollection<JrySettingItem> SettingCollection()
+            => this.Database.GetCollection<JrySettingItem>("Setting");
+
         public IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet()
-        {
-            return new MongoEntitySet<JrySettingItem>(this.Database.GetCollection<JrySettingItem>("Setting"));
-        }
+            => new MongoEntitySet<JrySettingItem>(this, this.SettingCollection());
 
         public string Name => DataSourceProviderName;
     }

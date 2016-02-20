@@ -39,7 +39,10 @@ namespace JryVideo.Core
             //    para.ParameterValue = "";
             //    normal.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
             //}
-            await normal.Initialize(JryVideoDataSourceProviderManagerMode.Public);
+            if (!await normal.Initialize(JryVideoDataSourceProviderManagerMode.Public))
+            {
+                throw new NotSupportedException();
+            }
             this.NormalDataCenter = new DataCenter(normal);
 
             var secure = dataSourceManager.GetDefault();
@@ -50,7 +53,9 @@ namespace JryVideo.Core
             //    secure.InitializeParametersInfo.SetInitializeParameter(initializeParameter);
             //}
             await secure.Initialize(JryVideoDataSourceProviderManagerMode.Private);
-            this.SecureDataCenter = new DataCenter(secure);
+            this.SecureDataCenter = await secure.Initialize(JryVideoDataSourceProviderManagerMode.Private)
+                ? new DataCenter(secure)
+                : DataCenter.NotWork;
 
             this.Switch(JryVideoDataSourceProviderManagerMode.Public);
 
@@ -62,7 +67,7 @@ namespace JryVideo.Core
 
             this.TheTVDBClient = await this.TheTVDBHost.CreateAsync("2C8DAFF32B0E08A7", null);
 
-            foreach (var dc in new[] { this.NormalDataCenter, this.SecureDataCenter })
+            foreach (var dc in new[] { this.NormalDataCenter, /*this.SecureDataCenter*/ })
             {
                 var tester = new DatabaseHealthTester(dc);
                 tester.RunOnDebugAsync();
