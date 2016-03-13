@@ -456,8 +456,9 @@
 
                         <TextBlock Text="watched episodes"
                                    VerticalAlignment="Center" />
-                        
+
                         <Menu Grid.Column="1"
+                              Background="Transparent"
                               Margin="10,0,0,0">
                             <MenuItem Header="watch ?">
                                 <MenuItem Header="all"
