@@ -107,7 +107,7 @@ namespace JryVideo.Main
             this.filter = new FilterInfo(this.IsOnlyTracking, filterText);
         }
 
-        public override async Task RefreshAsync()
+        public virtual async Task RefreshAsync()
         {
             var source = await this.GetSourceAsync();
 

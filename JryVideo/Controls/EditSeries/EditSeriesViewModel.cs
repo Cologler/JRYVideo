@@ -5,6 +5,7 @@ using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using static JryVideo.Common.Helper;
@@ -96,7 +97,8 @@ namespace JryVideo.Controls.EditSeries
 
         public async Task<JrySeries> CommitAsync()
         {
-            var series = this.GetCommitObject().ThrowIfNull("series");
+            var series = this.GetCommitObject();
+            Debug.Assert(series != null);
 
             this.WriteToObject(series);
 

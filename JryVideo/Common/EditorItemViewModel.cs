@@ -30,7 +30,8 @@ namespace JryVideo.Common
 
         public virtual void ModifyMode(T source)
         {
-            this.Source = source.ThrowIfNull("source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            this.Source = source;
             this.Action = ObjectChangedAction.Modify;
 
             this.ReadFromObject(source);
@@ -44,7 +45,7 @@ namespace JryVideo.Common
             this.ReadFromObject(source);
         }
 
-        public virtual T GetCommitObject()
+        protected virtual T GetCommitObject()
         {
             return this.Action == ObjectChangedAction.Create ? new T() : this.Source;
         }

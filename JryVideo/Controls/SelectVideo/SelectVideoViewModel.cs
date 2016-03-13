@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JryVideo.Controls.SelectVideo
 {
-    public class SelectVideoViewModel : SeriesItemViewerViewModel
+    public sealed class SelectVideoViewModel : SeriesItemViewerViewModel
     {
         private JrySeries source;
 
@@ -17,14 +17,14 @@ namespace JryVideo.Controls.SelectVideo
             get { return this.source; }
             set
             {
-                Debug.Assert(value != null);
+                Debug.Assert(value != null, "value != null");
                 this.SetPropertyRef(ref this.source, value);
             }
         }
 
         public string DefaultId { get; set; }
 
-        public override async Task RefreshAsync()
+        public async Task RefreshAsync()
         {
             var series = this.Source;
             Debug.Assert(series != null);
@@ -35,9 +35,6 @@ namespace JryVideo.Controls.SelectVideo
             }
         }
 
-        protected override bool OnFilter(VideoInfoViewModel obj)
-        {
-            return base.OnFilter(obj) && this.Without?.Id != obj.Source.Id;
-        }
+        protected override bool OnFilter(VideoInfoViewModel obj) => base.OnFilter(obj) && this.Without?.Id != obj.Source.Id;
     }
 }

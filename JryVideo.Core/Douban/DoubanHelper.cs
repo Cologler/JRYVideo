@@ -1,10 +1,10 @@
 ﻿using Jasily.Net;
+using Jasily.SDK.Douban.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Jasily.SDK.Douban.Entities;
 
 namespace JryVideo.Core.Douban
 {
@@ -56,12 +56,14 @@ namespace JryVideo.Core.Douban
 
         public static string GetLargeImageUrl(this Artist json)
         {
-            return json.ThrowIfNull("json").Images.Large.ThrowIfNullOrEmpty("Large");
+            if (json == null) throw new ArgumentNullException(nameof(json));
+            return json.Images.Large.ThrowIfNullOrEmpty("Large");
         }
 
         public static string GetLargeImageUrl(this Movie json)
         {
-            return json.ThrowIfNull("json").Images.Large.ThrowIfNullOrEmpty("Large");
+            if (json == null) throw new ArgumentNullException(nameof(json));
+            return json.Images.Large.ThrowIfNullOrEmpty("Large");
         }
 
         public static string GetRawImageUrl(Movie json)

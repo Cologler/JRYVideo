@@ -246,7 +246,7 @@ namespace JryVideo.Controls.EditVideo
             this.DayOfWeek = this.GetDayOfWeekValue(obj.DayOfWeek);
             this.EpisodeOffset = obj.EpisodeOffset ?? 0;
 
-            var parent = this.Parent.ThrowIfNull(nameof(this.Parent));
+            var parent = this.Parent.ThrowIfNull();
             var lastId = obj.LastVideoId;
             if (lastId != null)
             {
@@ -349,7 +349,7 @@ namespace JryVideo.Controls.EditVideo
 
         public async Task CommitAsync(MetroWindow window)
         {
-            var parent = this.Parent.ThrowIfNull(nameof(this.Parent));
+            var parent = this.Parent.ThrowIfNull();
 
             if (this.Type.IsNullOrWhiteSpace())
             {
