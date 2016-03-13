@@ -1,6 +1,6 @@
-﻿using MahApps.Metro.Controls;
+﻿using Jasily.Desktop.Api;
+using MahApps.Metro.Controls;
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -32,14 +32,7 @@ namespace JryVideo.Viewer.FilesViewer
             {
                 if (file.IsExists)
                 {
-                    try
-                    {
-                        using (Process.Start(file.Source)) { }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
+                    using (Process.Start(file.Source)) { }
                 }
             }
         }
@@ -50,14 +43,7 @@ namespace JryVideo.Viewer.FilesViewer
             if (file == null) return;
             if (file.IsExists)
             {
-                try
-                {
-                    using (Process.Start(Path.GetDirectoryName(file.Source))) { }
-                }
-                catch
-                {
-                    // ignored
-                }
+                Explorer.OpenAndSelect(file.Source);
             }
         }
     }
