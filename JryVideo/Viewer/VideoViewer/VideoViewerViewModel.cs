@@ -113,6 +113,15 @@ namespace JryVideo.Viewer.VideoViewer
         public ObservableCollection<WatchedEpisodeChecker> Watcheds { get; }
             = new ObservableCollection<WatchedEpisodeChecker>();
 
+        public void WatchAll()
+            => this.Watcheds.Reset(this.Watcheds.ForEach(z => z.IsWatched = true).ToArray());
+
+        public void WatchReverse()
+            => this.Watcheds.Reset(this.Watcheds.ForEach(z => z.IsWatched = !z.IsWatched).ToArray());
+
+        public void WatchNone()
+            => this.Watcheds.Reset(this.Watcheds.ForEach(z => z.IsWatched = false).ToArray());
+
         public JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>> EntitesView { get; private set; }
 
         private int CompareEntityViewModel(EntityViewModel x, EntityViewModel y)

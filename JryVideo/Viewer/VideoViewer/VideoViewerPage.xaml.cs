@@ -367,5 +367,11 @@ namespace JryVideo.Viewer.VideoViewer
             var next = this.ViewModel.InfoView.TryFindNextViewModel();
             if (next != null) this.ClickedOtherVideo?.Invoke(this, next);
         }
+
+        private void WatchAllMenuItem_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.WatchAll();
+
+        private void WatchReverseMenuItem_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.WatchReverse();
+
+        private void WatchNoneMenuItem_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.WatchNone();
     }
 }

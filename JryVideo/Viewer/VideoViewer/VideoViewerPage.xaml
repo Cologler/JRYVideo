@@ -448,8 +448,28 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="watched episodes"
-                               Margin="0,0,0,4" />
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="watched episodes"
+                                   VerticalAlignment="Center" />
+                        
+                        <Menu Grid.Column="1"
+                              Margin="10,0,0,0">
+                            <MenuItem Header="watch ?">
+                                <MenuItem Header="all"
+                                          Click="WatchAllMenuItem_OnClick"/>
+                                <MenuItem Header="reverse"
+                                          Click="WatchReverseMenuItem_OnClick"/>
+                                <MenuItem Header="none"
+                                          Click="WatchNoneMenuItem_OnClick"/>
+                            </MenuItem>
+                        </Menu>
+
+                    </Grid>
 
                     <ListView x:Name="WatchedsListView"
                               Grid.Row="1"
