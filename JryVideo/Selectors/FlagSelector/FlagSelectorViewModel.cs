@@ -14,7 +14,7 @@ namespace JryVideo.Selectors.FlagSelector
     {
         private readonly IEnumerable<string> readySelected;
 
-        public JryFlagType Type { get; private set; }
+        public JryFlagType Type { get; }
 
         public FlagSelectorViewModel(JryFlagType type, IEnumerable<string> readySelected)
         {

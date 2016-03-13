@@ -365,18 +365,34 @@
                                                             <RowDefinition Height="Auto" />
                                                             <RowDefinition Height="Auto" />
                                                         </Grid.RowDefinitions>
+                                                        
+                                                        <Grid Margin="0,0,0,4">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="8" />
+                                                                <ColumnDefinition />
+                                                            </Grid.ColumnDefinitions>
 
-                                                        <StackPanel Grid.ColumnSpan="3"
-                                                                    Orientation="Horizontal"
-                                                                    Margin="0,0,0,4">
+                                                            <TextBlock Text="ID" />
 
-                                                            <TextBlock Text="ID"
-                                                                       Style="{StaticResource FieldLabelTextBlockStyle}"
-                                                                       Margin="0,0,8,0" />
+                                                            <TextBlock Text="{Binding Source.Id}"
+                                                                       Grid.Row="0"
+                                                                       Grid.Column="2"
+                                                                       VerticalAlignment="Center" />
 
-                                                            <TextBlock Text="{Binding Source.Id}" />
+                                                            <TextBlock Grid.Row="1"
+                                                                       Grid.Column="0"
+                                                                       Text="TIME" />
 
-                                                        </StackPanel>
+                                                            <TextBlock Text="{Binding DisplayCreated}"
+                                                                       Grid.Row="1"
+                                                                       Grid.Column="2" />
+
+                                                        </Grid>
 
                                                         <Grid Grid.Row="1">
                                                             <Grid.ColumnDefinitions>

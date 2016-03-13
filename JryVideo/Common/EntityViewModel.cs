@@ -39,6 +39,9 @@ namespace JryVideo.Common
         public string DisplayTags => ListToLine(this.Source.Tags);
 
         [NotifyPropertyChanged]
+        public string DisplayCreated => this.Source.Created.ToString("yyyy-MM-dd");
+
+        [NotifyPropertyChanged]
         public string DisplayFormat => this.Source.Format == null
             ? null
             : string.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);

@@ -62,5 +62,10 @@ namespace JryVideo.Common
         {
             return dayOfWeek.HasValue ? dayOfWeek.Value.GetLocalizeString() : Resources.DayOfWeek_Unknown;
         }
+
+        public static string GetDataSourceField(string field)
+        {
+            return field;
+        }
     }
 }
