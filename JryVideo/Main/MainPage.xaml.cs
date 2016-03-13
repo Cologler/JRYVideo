@@ -98,6 +98,7 @@ namespace JryVideo.Main
             if (e.Key == Key.Enter)
             {
                 this.ViewModel.VideosViewModel.IsOnlyTracking = false;
+                this.ViewModel.VideosViewModel.FilterText = string.Empty;
                 await this.ViewModel.VideosViewModel.ReloadAsync();
             }
         }
@@ -105,12 +106,14 @@ namespace JryVideo.Main
         private async void LastPageButton_OnClick(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.LastPageAsync();
+            // ReSharper disable once AssignNullToNotNullAttribute
             this.VideosListView.ScrollIntoView(this.VideosListView.ItemsSource.OfType<object>().FirstOrDefault());
         }
 
         private async void NextPageButton_OnClick(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.NextPageAsync();
+            // ReSharper disable once AssignNullToNotNullAttribute
             this.VideosListView.ScrollIntoView(this.VideosListView.ItemsSource.OfType<object>().FirstOrDefault());
         }
 
@@ -125,12 +128,14 @@ namespace JryVideo.Main
 
         private async void IsOnlyTrackingCheckBox_OnChecked(object sender, RoutedEventArgs e)
         {
+            this.ViewModel.VideosViewModel.FilterText = string.Empty;
             await this.ViewModel.VideosViewModel.ReloadAsync();
             this.RefreshGroupStyle();
         }
 
         private async void IsOnlyTrackingCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
         {
+            this.ViewModel.VideosViewModel.FilterText = string.Empty;
             await this.ViewModel.VideosViewModel.ReloadAsync();
             this.RefreshGroupStyle();
         }
