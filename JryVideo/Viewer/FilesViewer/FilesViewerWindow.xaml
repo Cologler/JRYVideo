@@ -32,7 +32,8 @@
                                 </ContextMenu>
                             </Grid.ContextMenu>
                             <TextBlock Text="{Binding Source}"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center"
+                                       Margin="6,0"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
