@@ -129,10 +129,10 @@ namespace JryVideo.Viewer.VideoViewer
             if (x.Source.Id == y.Source.Id) return 0;
 
             if (x.Source.Fansubs.Count > 0 && y.Source.Fansubs.Count > 0)
-                return Comparer<string>.Default.Compare(x.Source.Fansubs[0], y.Source.Fansubs[0]);
+                return string.CompareOrdinal(x.Source.Fansubs[0], y.Source.Fansubs[0]);
 
             if (x.Source.Extension != y.Source.Extension)
-                return Comparer<string>.Default.Compare(x.Source.Extension, y.Source.Extension);
+                return string.CompareOrdinal(x.Source.Extension, y.Source.Extension);
 
             return -1;
         }

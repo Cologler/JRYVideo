@@ -32,11 +32,6 @@ namespace JryVideo.Main
             set { this.SetPropertyRef(ref this.selectedMode, value); }
         }
 
-        private void Switch()
-        {
-
-        }
-
         private async void BeginUpdateDataSouce()
         {
             await this.VideosViewModel.RefreshAsync();
