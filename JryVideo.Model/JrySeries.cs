@@ -89,5 +89,38 @@ namespace JryVideo.Model
 
             if (this.ContextSeriesId?.Count == 0) this.ContextSeriesId = null;
         }
+
+        public struct QueryParameter
+        {
+            public string OriginText { get; }
+
+            public QueryMode Mode { get; }
+
+            public string Keyword { get; }
+
+            public QueryParameter([CanBeNull] string originText, QueryMode mode, [CanBeNull] string value)
+            {
+                this.OriginText = originText;
+                this.Mode = mode;
+                this.Keyword = value;
+            }
+        }
+
+        public enum QueryMode
+        {
+            Any,
+
+            OriginText,
+
+            SeriesId,
+
+            VideoId,
+
+            EntityId,
+
+            DoubanId,
+
+            Tag
+        }
     }
 }

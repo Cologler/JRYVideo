@@ -1,3 +1,4 @@
+using Jasily.Diagnostics;
 using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Managers;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using Jasily.Diagnostics;
 
 namespace JryVideo.Main
 {
@@ -201,40 +201,18 @@ namespace JryVideo.Main
                 return result;
             }
 
-            public async Task LoadAsync(SeriesManager manager)
+            private async Task LoadAsync(SeriesManager manager)
             {
                 JasilyDebug.Pointer();
-                var items = await this.QuerySeriesAsync(manager);
+                var items = this.IsOnlyTracking
+                    ? await Task.Run(async () => (await manager.ListTrackingAsync()).ToList())
+                    : await Task.Run(async () => (await manager.QueryAsync(this.SearchText, this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
                 JasilyDebug.Pointer();
 
                 this.HasNext = !this.IsOnlyTracking && items.Count > this.PageSize;
                 if (this.HasNext) items.RemoveAt(items.Count - 1);
 
                 this.Items = items;
-            }
-
-            private async Task<List<JrySeries>> QuerySeriesAsync(SeriesManager manager)
-            {
-                if (this.IsOnlyTracking)
-                {
-                    return await Task.Run(async () => (
-                        await manager.ListTrackingAsync()).ToList());
-                }
-                else
-                {
-                    return await Task.Run(async () => (
-                           await manager.QueryAsync(this.SearchText, this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
-                }
-            }
-
-            public bool Equals(DataCenter dataCenter, bool isOnlyTracking, string searchText, int pageIndex, int pageSize)
-            {
-                if (dataCenter != this.DataCenter) return false;
-
-                if (isOnlyTracking) return this.IsOnlyTracking;
-
-                if (pageIndex != this.PageIndex || pageSize != this.PageSize) return false;
-                return this.IsSearchTextEquals(searchText);
             }
 
             public bool IsSearchTextEquals(string searchText)

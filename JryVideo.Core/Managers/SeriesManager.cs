@@ -245,5 +245,112 @@ namespace JryVideo.Core.Managers
 
             return result;
         }
+
+        public sealed class Query
+        {
+            private readonly SeriesManager seriesManager;
+
+            public Query(SeriesManager seriesManager, string originText)
+            {
+                this.seriesManager = seriesManager;
+                this.QueryParameter = GetQueryParameter(originText);
+            }
+
+            public JrySeries.QueryParameter QueryParameter { get; }
+
+            private static JrySeries.QueryParameter GetQueryParameter(string originText)
+            {
+                if (string.IsNullOrWhiteSpace(originText))
+                {
+                    return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.Any, originText);
+                }
+
+                var index = originText.IndexOf(':');
+
+                if (index < 1 || index == originText.Length - 1)
+                {
+                    return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.OriginText, originText);
+                }
+
+                switch (originText.Substring(0, index).ToLower())
+                {
+                    case "series-id":
+                        return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.SeriesId, originText.Substring(index + 1));
+                    case "video-id":
+                        return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.VideoId, originText.Substring(index + 1));
+                    case "entity-id":
+                        return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.EntityId, originText.Substring(index + 1));
+                    case "douban-id":
+                        return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.DoubanId, originText.Substring(index + 1));
+                    case "tag":
+                        return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.Tag, originText.Substring(index + 1));
+                }
+
+                return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.OriginText, originText);
+            }
+
+            public async Task<IEnumerable<JrySeries>> StartQuery(int skip, int take)
+            {
+                var items = this.QueryParameter.Mode == JrySeries.QueryMode.Any
+                ? await this.seriesManager.LoadAsync(skip, take)
+                : await this.seriesManager.Source.QueryAsync(this.QueryParameter, skip, take);
+
+                return await this.WrapAsync(items);
+            }
+
+            private async Task<IEnumerable<JrySeries>> WrapAsync(IEnumerable<JrySeries> items)
+            {
+                var list = items.ToList();
+                var sets = list.ToDictionary(z => z.Id);
+                var keys = sets.Values
+                    .Where(z => z.ContextSeriesId != null)
+                    .SelectMany(z => z.ContextSeriesId)
+                    .ToArray();
+                foreach (var key in keys)
+                {
+                    if (!sets.ContainsKey(key))
+                    {
+                        var series = await this.seriesManager.FindAsync(key);
+                        sets.Add(key, series);
+                        list.Add(series);
+                    }
+                }
+                return sets.Values;
+            }
+
+            public bool IsMatch(JrySeries series, JryVideoInfo video)
+            {
+                if (series == null) throw new ArgumentNullException(nameof(series));
+                if (video == null) throw new ArgumentNullException(nameof(video));
+
+                switch (this.QueryParameter.Mode)
+                {
+                    case JrySeries.QueryMode.Any:
+                        return true;
+
+                    case JrySeries.QueryMode.OriginText:
+                        return true;
+
+                    case JrySeries.QueryMode.SeriesId:
+                        return series.Id == this.QueryParameter.Keyword;
+
+                    case JrySeries.QueryMode.VideoId:
+                        return video.Id == this.QueryParameter.Keyword;
+
+                    case JrySeries.QueryMode.EntityId:
+                        return true;
+
+                    case JrySeries.QueryMode.DoubanId:
+                        return video.DoubanId == this.QueryParameter.Keyword;
+
+                    case JrySeries.QueryMode.Tag:
+                        return (series.Tags != null && series.Tags.Any(z => z == this.QueryParameter.Keyword)) ||
+                               (video.Tags != null && video.Tags.Any(z => z == this.QueryParameter.Keyword));
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
     }
 }
