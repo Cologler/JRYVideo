@@ -12,7 +12,7 @@ using System.Windows.Data;
 
 namespace JryVideo.Main
 {
-    public class MainSeriesItemViewerViewModel : SeriesItemViewerViewModel
+    public sealed class MainSeriesItemViewerViewModel : SeriesItemViewerViewModel
     {
         private string searchText;
         private bool hasLast;
@@ -107,7 +107,7 @@ namespace JryVideo.Main
             this.filter = new FilterInfo(this.IsOnlyTracking, filterText);
         }
 
-        public virtual async Task RefreshAsync()
+        public async Task ReloadAsync()
         {
             var source = await this.GetSourceAsync();
 

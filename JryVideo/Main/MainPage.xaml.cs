@@ -5,7 +5,6 @@ using JryVideo.Core;
 using JryVideo.Data;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.PasswordEditor;
-using JryVideo.Model;
 using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Selectors.VideoSelector;
 using MahApps.Metro.Controls;
@@ -46,7 +45,7 @@ namespace JryVideo.Main
             {
                 await JryVideoCore.Current.InitializeAsync();
                 this.DataContext = this.ViewModel = new MainViewModel();
-                this.ViewModel.LoadAsync();
+                this.ViewModel.ReloadAsync();
             }
         }
 
@@ -84,7 +83,7 @@ namespace JryVideo.Main
                 Owner = this.TryFindParent<Window>()
             }.ShowDialog() == true)
             {
-                this.ViewModel.LoadAsync();
+                this.ViewModel.ReloadAsync();
             }
         }
 
@@ -99,7 +98,7 @@ namespace JryVideo.Main
             if (e.Key == Key.Enter)
             {
                 this.ViewModel.VideosViewModel.IsOnlyTracking = false;
-                await this.ViewModel.VideosViewModel.RefreshAsync();
+                await this.ViewModel.VideosViewModel.ReloadAsync();
             }
         }
 
@@ -126,13 +125,13 @@ namespace JryVideo.Main
 
         private async void IsOnlyTrackingCheckBox_OnChecked(object sender, RoutedEventArgs e)
         {
-            await this.ViewModel.SetOnlyTrackingAsync();
+            await this.ViewModel.VideosViewModel.ReloadAsync();
             this.RefreshGroupStyle();
         }
 
         private async void IsOnlyTrackingCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            await this.ViewModel.UnsetOnlyTrackingAsync();
+            await this.ViewModel.VideosViewModel.ReloadAsync();
             this.RefreshGroupStyle();
         }
 
@@ -196,7 +195,7 @@ namespace JryVideo.Main
                 if (selected.Source == JryVideoDataSourceProviderManagerMode.Public)
                 {
                     JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Public);
-                    await this.ViewModel.VideosViewModel.RefreshAsync();
+                    await this.ViewModel.VideosViewModel.ReloadAsync();
                 }
                 else
                 {
@@ -240,7 +239,7 @@ namespace JryVideo.Main
                         if (await secure.ProviderManager.PasswordAsync(hash))
                         {
                             JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Private);
-                            await this.ViewModel.VideosViewModel.RefreshAsync();
+                            await this.ViewModel.VideosViewModel.ReloadAsync();
                             return;
                         }
                     }
@@ -341,7 +340,7 @@ namespace JryVideo.Main
                 MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Affirmative)
             {
                 action();
-                await this.ViewModel.VideosViewModel.RefreshAsync();
+                await this.ViewModel.VideosViewModel.ReloadAsync();
             }
         }
     }

@@ -22,7 +22,7 @@ namespace JryVideo.Main
 
         public MainSeriesItemViewerViewModel VideosViewModel { get; private set; }
 
-        public void LoadAsync() => this.BeginUpdateDataSouce();
+        public async void ReloadAsync() => await this.VideosViewModel.ReloadAsync();
 
         public ObservableCollection<DataModeViewModel> ModeCollection { get; private set; }
 
@@ -32,31 +32,16 @@ namespace JryVideo.Main
             set { this.SetPropertyRef(ref this.selectedMode, value); }
         }
 
-        private async void BeginUpdateDataSouce()
-        {
-            await this.VideosViewModel.RefreshAsync();
-        }
-
         public async Task LastPageAsync()
         {
             this.VideosViewModel.PageIndex--;
-            await this.VideosViewModel.RefreshAsync();
+            await this.VideosViewModel.ReloadAsync();
         }
 
         public async Task NextPageAsync()
         {
             this.VideosViewModel.PageIndex++;
-            await this.VideosViewModel.RefreshAsync();
-        }
-
-        public async Task SetOnlyTrackingAsync()
-        {
-            await this.VideosViewModel.RefreshAsync();
-        }
-
-        public async Task UnsetOnlyTrackingAsync()
-        {
-            await this.VideosViewModel.RefreshAsync();
+            await this.VideosViewModel.ReloadAsync();
         }
     }
 }
