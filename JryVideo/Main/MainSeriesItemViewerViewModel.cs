@@ -94,7 +94,9 @@ namespace JryVideo.Main
             this.HasLast = search.HasLast;
             this.HasNext = search.HasNext;
 
-            return search.Items.SelectMany(VideoInfoViewModel.Create).ToArray();
+            return search.Items.SelectMany(VideoInfoViewModel.Create)
+                .Where(z => this.searchResultView.IsMatch(z.SeriesView.Source, z.Source))
+                .ToArray();
         }
 
         public int PageSize { get; set; }
@@ -158,67 +160,71 @@ namespace JryVideo.Main
 
         private class SearchResult
         {
-            public string SearchText { get; private set; }
+            private string searchText;
+            private bool isOnlyTracking;
+            private int pageIndex;
+            private int pageSize;
 
-            public bool IsOnlyTracking { get; private set; }
-
-            public int PageIndex { get; private set; }
-
-            public int PageSize { get; private set; }
-
-            public bool HasLast => this.PageIndex > 0;
+            public bool HasLast => this.pageIndex > 0;
 
             public bool HasNext { get; private set; }
 
-            public DataCenter DataCenter { get; private set; }
-
             public List<JrySeries> Items { get; private set; }
 
-            private SearchResult(DataCenter dataCenter)
+            private SearchResult()
             {
-                this.DataCenter = dataCenter;
             }
 
             public static async Task<SearchResult> OnlyTrackingAsync(DataCenter dataCenter)
             {
-                var result = new SearchResult(dataCenter)
+                var result = new SearchResult()
                 {
-                    IsOnlyTracking = true
+                    isOnlyTracking = true
                 };
-                await result.LoadAsync(dataCenter.SeriesManager);
+                await result.InitializeQueryAsync(dataCenter.SeriesManager);
                 return result;
             }
 
             public static async Task<SearchResult> SearchAsync(DataCenter dataCenter, string searchText, int pageIndex, int pageSize)
             {
-                var result = new SearchResult(dataCenter)
+                var result = new SearchResult()
                 {
-                    SearchText = searchText?.Trim() ?? string.Empty,
-                    PageIndex = pageIndex,
-                    PageSize = pageSize
+                    searchText = searchText?.Trim() ?? string.Empty,
+                    pageIndex = pageIndex,
+                    pageSize = pageSize
                 };
-                await result.LoadAsync(dataCenter.SeriesManager);
+                await result.InitializeQueryAsync(dataCenter.SeriesManager);
                 return result;
             }
 
-            private async Task LoadAsync(SeriesManager manager)
+            private async Task InitializeQueryAsync(SeriesManager manager)
             {
                 JasilyDebug.Pointer();
-                var items = this.IsOnlyTracking
+                var items = this.isOnlyTracking
                     ? await Task.Run(async () => (await manager.ListTrackingAsync()).ToList())
-                    : await Task.Run(async () => (await manager.QueryAsync(this.SearchText, this.PageIndex * this.PageSize, this.PageSize + 1)).ToList());
+                    : await Task.Run(async () => (await this.BuildQueryAsync(manager)).ToList());
                 JasilyDebug.Pointer();
 
-                this.HasNext = !this.IsOnlyTracking && items.Count > this.PageSize;
+                this.HasNext = !this.isOnlyTracking && items.Count > this.pageSize;
                 if (this.HasNext) items.RemoveAt(items.Count - 1);
 
                 this.Items = items;
             }
 
+            private SeriesManager.Query query;
+
+            private async Task<IEnumerable<JrySeries>> BuildQueryAsync(SeriesManager manager)
+            {
+                this.query = manager.GetQuery(this.searchText);
+                return await this.query.StartQuery(this.pageIndex * this.pageSize, this.pageSize + 1);
+            }
+
+            public bool IsMatch(JrySeries series, JryVideoInfo video) => this.query?.IsMatch(series, video) ?? true;
+
             public bool IsSearchTextEquals(string searchText)
             {
-                if (searchText.IsNullOrWhiteSpace()) return this.SearchText.IsNullOrWhiteSpace();
-                return searchText.Trim() == this.SearchText;
+                if (searchText.IsNullOrWhiteSpace()) return this.searchText.IsNullOrWhiteSpace();
+                return searchText.Trim() == this.searchText;
             }
         }
     }
