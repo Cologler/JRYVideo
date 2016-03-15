@@ -64,13 +64,11 @@ namespace JryVideo.Core
 
         private async void BeginLazyInitialize()
         {
-
             this.TheTVDBClient = await this.TheTVDBHost.CreateAsync("2C8DAFF32B0E08A7", null);
 
             foreach (var dc in new[] { this.NormalDataCenter, /*this.SecureDataCenter*/ })
             {
-                var tester = new DatabaseHealthTester(dc);
-                tester.RunOnDebugAsync();
+                new DatabaseHealthTester(dc).RunOnDebugAsync();
             }
 
             if (this.RunArgs != null)
@@ -78,7 +76,7 @@ namespace JryVideo.Core
                 if (this.RunArgs.Contains("--test"))
                 {
                     var fix = this.RunArgs.Contains("--fix");
-                    foreach (var dc in new[] { this.NormalDataCenter, this.SecureDataCenter })
+                    foreach (var dc in new[] { this.NormalDataCenter, /*this.SecureDataCenter*/ })
                     {
                         var tester = new DatabaseHealthTester(dc);
                         await tester.RunAsync(fix);

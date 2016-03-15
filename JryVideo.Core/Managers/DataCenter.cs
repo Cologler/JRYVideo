@@ -6,7 +6,7 @@ namespace JryVideo.Core.Managers
 {
     public class DataCenter
     {
-        public static DataCenter NotWork = new DataCenter(false);
+        public static readonly DataCenter NotWork = new DataCenter(false);
 
         public bool IsWork { get; }
 
@@ -45,7 +45,7 @@ namespace JryVideo.Core.Managers
 
         public ArtistManager ArtistManager { get; }
 
-        public VideoRoleManager VideoRoleManager { get; private set; }
+        public VideoRoleManager VideoRoleManager { get; }
 
         /// <summary>
         /// 
