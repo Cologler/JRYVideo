@@ -54,7 +54,9 @@ namespace JryVideo.Core.Managers
         public Task<IEnumerable<TSub>> ListAsync(int skip, int take)
             => Task.FromResult((IEnumerable<TSub>)this.ObjectSet.Skip(skip).Take(take).ToArray());
 
+#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
         public async Task CursorAsync(Action<TSub> callback)
+#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
         {
             foreach (var sub in this.ObjectSet)
             {

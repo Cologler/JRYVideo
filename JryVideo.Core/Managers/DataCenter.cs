@@ -26,25 +26,11 @@ namespace JryVideo.Core.Managers
             this.ArtistManager = new ArtistManager(dataEngine.GetArtistSet());
             this.VideoRoleManager = new VideoRoleManager(this.SeriesManager, this.ArtistManager, dataEngine.GetVideoRoleInfoSet());
 
-            // video
-            this.SeriesManager.VideoInfoRemoved += this.VideoManager.SeriesManager_VideoInfoRemoved;
-            this.FlagManager.FlagChanged += this.VideoManager.FlagManager_FlagChanged;
-
-            // flag
-            this.SeriesManager.VideoInfoCreated += this.FlagManager.SeriesManager_VideoInfoCreated;
-            this.SeriesManager.VideoInfoUpdated += this.FlagManager.SeriesManager_VideoInfoUpdated;
-            this.SeriesManager.VideoInfoRemoved += this.FlagManager.SeriesManager_VideoInfoRemoved;
-            this.VideoManager.EntitiesCreated += this.FlagManager.VideoManager_EntitiesCreated;
-            this.VideoManager.EntitiesUpdated += this.FlagManager.VideoManager_EntitiesUpdated;
-            this.VideoManager.EntitiesRemoved += this.FlagManager.VideoManager_EntitiesRemoved;
-
-            // cover
-            this.SeriesManager.CoverParentRemoving += this.CoverManager.Manager_CoverParentRemoving;
-            this.VideoRoleManager.CoverParentRemoving += this.CoverManager.Manager_CoverParentRemoving;
-
-            // role
-            this.SeriesManager.ItemRemoved += this.VideoRoleManager.SeriesManager_ItemRemoved;
-            this.SeriesManager.VideoInfoRemoved += this.VideoRoleManager.SeriesManager_VideoInfoRemoved;
+            // initialize
+            this.VideoManager.Initialize(this);
+            this.FlagManager.Initialize(this);
+            this.VideoRoleManager.Initialize(this);
+            this.CoverManager.Initialize(this);
         }
 
         public IJryVideoDataEngine ProviderManager { get; }

@@ -19,7 +19,7 @@ namespace JryVideo.Core.Managers
         {
         }
 
-        public async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
+        private async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
         {
             foreach (var info in e)
             {
@@ -125,7 +125,7 @@ namespace JryVideo.Core.Managers
             }
         }
 
-        public async void FlagManager_FlagChanged(object sender, EventArgs<JryFlagType, string, string> e)
+        private async void FlagManager_FlagChanged(object sender, EventArgs<JryFlagType, string, string> e)
         {
             var type = e.Value1;
             switch (type)
@@ -193,6 +193,12 @@ namespace JryVideo.Core.Managers
                 video.Entities?.ForEach(changing);
                 await this.UpdateAsync(video);
             }
+        }
+
+        public void Initialize(DataCenter dataCenter)
+        {
+            dataCenter.SeriesManager.VideoInfoRemoved += this.SeriesManager_VideoInfoRemoved;
+            dataCenter.FlagManager.FlagChanged += this.FlagManager_FlagChanged;
         }
     }
 }

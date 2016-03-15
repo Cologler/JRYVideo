@@ -2,43 +2,33 @@
 using JryVideo.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace JryVideo.Core.Managers
 {
-    public class FlagManager : JryObjectManager<JryFlag, IFlagSet>
+    public sealed class FlagManager : JryObjectManager<JryFlag, IFlagSet>
     {
         public FlagManager(IFlagSet source)
             : base(source)
         {
         }
 
+        public void Initialize(DataCenter dataCenter)
+        {
+            dataCenter.SeriesManager.VideoInfoCreated += this.SeriesManager_VideoInfoCreated;
+            dataCenter.SeriesManager.VideoInfoUpdated += this.SeriesManager_VideoInfoUpdated;
+            dataCenter.SeriesManager.VideoInfoRemoved += this.SeriesManager_VideoInfoRemoved;
+            dataCenter.VideoManager.EntitiesCreated += this.VideoManager_EntitiesCreated;
+            dataCenter.VideoManager.EntitiesUpdated += this.VideoManager_EntitiesUpdated;
+            dataCenter.VideoManager.EntitiesRemoved += this.VideoManager_EntitiesRemoved;
+        }
+
         public async Task<IEnumerable<JryFlag>> LoadAsync(JryFlagType type)
         {
             return await this.Source.QueryAsync(type);
-        }
-
-        public async void SeriesManager_VideoInfoCreated(object sender, IEnumerable<JryVideoInfo> e)
-        {
-            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
-
-            await this.ApplyFlagDictionaryAsync(dict);
-        }
-
-        public async void SeriesManager_VideoInfoUpdated(object sender, IEnumerable<ChangingEventArgs<JryVideoInfo>> e)
-        {
-            var dict = CalcFlagDictionary(BuildFlagDictionary(e.Select(z => z.New)), BuildFlagDictionary(e.Select(z => z.Old)));
-
-            await this.ApplyFlagDictionaryAsync(dict);
-        }
-
-        public async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
-        {
-            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
-
-            await this.ApplyFlagDictionaryAsync(dict);
         }
 
         private async Task ApplyFlagDictionaryAsync(Dictionary<JryFlagType, Dictionary<string, int>> dict)
@@ -142,21 +132,42 @@ namespace JryVideo.Core.Managers
             return dic;
         }
 
-        public async void VideoManager_EntitiesCreated(object sender, IEnumerable<JryEntity> e)
+        private async void SeriesManager_VideoInfoCreated(object sender, IEnumerable<JryVideoInfo> e)
         {
             var dict = CalcFlagDictionary(BuildFlagDictionary(e));
 
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        public async void VideoManager_EntitiesUpdated(object sender, IEnumerable<ChangingEventArgs<JryEntity>> e)
+        private async void SeriesManager_VideoInfoUpdated(object sender, IEnumerable<ChangingEventArgs<JryVideoInfo>> e)
         {
             var dict = CalcFlagDictionary(BuildFlagDictionary(e.Select(z => z.New)), BuildFlagDictionary(e.Select(z => z.Old)));
 
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        public async void VideoManager_EntitiesRemoved(object sender, IEnumerable<JryEntity> e)
+        private async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
+        {
+            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
+
+            await this.ApplyFlagDictionaryAsync(dict);
+        }
+
+        private async void VideoManager_EntitiesCreated(object sender, IEnumerable<JryEntity> e)
+        {
+            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
+
+            await this.ApplyFlagDictionaryAsync(dict);
+        }
+
+        private async void VideoManager_EntitiesUpdated(object sender, IEnumerable<ChangingEventArgs<JryEntity>> e)
+        {
+            var dict = CalcFlagDictionary(BuildFlagDictionary(e.Select(z => z.New)), BuildFlagDictionary(e.Select(z => z.Old)));
+
+            await this.ApplyFlagDictionaryAsync(dict);
+        }
+
+        private async void VideoManager_EntitiesRemoved(object sender, IEnumerable<JryEntity> e)
         {
             var dict = CalcFlagDictionary(null, BuildFlagDictionary(e));
 
@@ -177,6 +188,7 @@ namespace JryVideo.Core.Managers
                 case JryFlagType.EntityAudioSource:
                 case JryFlagType.EntityQuality:
                 case JryFlagType.VideoYear:
+                    Debug.Assert(false);
                     return true;
 
                 case JryFlagType.VideoType:

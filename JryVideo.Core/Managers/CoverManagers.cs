@@ -100,7 +100,7 @@ namespace JryVideo.Core.Managers
             return result;
         }
 
-        public async void Manager_CoverParentRemoving(object sender, IJryCoverParent e)
+        private async void Manager_CoverParentRemoving(object sender, IJryCoverParent e)
         {
             var id = e.CoverId;
             if (id != null)
@@ -142,6 +142,12 @@ namespace JryVideo.Core.Managers
                     }
                 }
             }
+        }
+
+        public void Initialize(DataCenter dataCenter)
+        {
+            dataCenter.SeriesManager.CoverParentRemoving += this.Manager_CoverParentRemoving;
+            dataCenter.VideoRoleManager.CoverParentRemoving += this.Manager_CoverParentRemoving;
         }
     }
 }

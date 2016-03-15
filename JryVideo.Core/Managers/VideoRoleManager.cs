@@ -21,6 +21,12 @@ namespace JryVideo.Core.Managers
             this.artistManager = artistManager;
         }
 
+        public void Initialize(DataCenter dataCenter)
+        {
+            dataCenter.SeriesManager.ItemRemoved += this.SeriesManager_ItemRemoved;
+            dataCenter.SeriesManager.VideoInfoRemoved += this.SeriesManager_VideoInfoRemoved;
+        }
+
         public async Task<bool> AutoCreateVideoRoleAsync(string id, RemoteId remoteId)
         {
             var collection = await this.FindAsync(id);
@@ -126,7 +132,7 @@ namespace JryVideo.Core.Managers
             return await base.RemoveAsync(id);
         }
 
-        public async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
+        private async void SeriesManager_VideoInfoRemoved(object sender, IEnumerable<JryVideoInfo> e)
         {
             foreach (var info in e)
             {
@@ -148,6 +154,6 @@ namespace JryVideo.Core.Managers
             return result;
         }
 
-        public async void SeriesManager_ItemRemoved(object sender, string e) => await this.RemoveAsync(e);
+        private async void SeriesManager_ItemRemoved(object sender, string e) => await this.RemoveAsync(e);
     }
 }
