@@ -71,7 +71,7 @@ namespace JryVideo.Core.Managers
                         }
                         else
                         {
-                            this.messages.Add($"cover [{coverRef.Id}] ({coverRef.CoverType}) has no ref.");
+                            this.Errors.Add(Error.CoverMissingRef(coverRef.Id));
                         }
                     }
                 }
@@ -91,41 +91,17 @@ namespace JryVideo.Core.Managers
                 // show message
                 if (Debugger.IsAttached)
                 {
-                    foreach (var error in this.Errors)
-                        Debug.WriteLine(error.ToString());
+                    foreach (var error in this.Errors) Debug.WriteLine(error.ToString());
                 }
                 else
                 {
-                    foreach (var error in this.Errors)
-                        Log.Write(error.ToString());
+                    foreach (var error in this.Errors) Log.Write(error.ToString());
                 }
 
                 // remove all missing source cover
                 if (fix)
                 {
-                    //foreach (var coverRef in this.coverRefs.Values)
-                    //{
-                    //    if (coverRef.RefSources.Count != 1)
-                    //    {
-                    //        if (coverRef.RefSources.Count < 1)
-                    //        {
-                    //            await this.dataCenter.CoverManager.RemoveAsync(coverRef.Id);
-                    //        }
-                    //        else if (coverRef.RefSources.Count > 1)
-                    //        {
-                    //        }
-                    //    }
-                    //}
-
-                    foreach (var error in this.Errors)
-                    {
-                        switch (error.Type)
-                        {
-                            case ErrorType.RoleMissingSource:
-                                await this.dataCenter.VideoRoleManager.RemoveAsync(error.Id);
-                                break;
-                        }
-                    }
+                    foreach (var error in this.Errors) await error.FixAsync(this.dataCenter);
                 }
 
                 if (Debugger.IsAttached)
@@ -212,11 +188,20 @@ namespace JryVideo.Core.Managers
             {
                 this.RefSources = new List<RefSource>();
                 this.CoverType = obj.CoverType;
+                this.SeriesId = obj.SeriesId;
+                this.VideoId = obj.VideoId;
+                this.ActorId = obj.ActorId;
             }
 
             public List<RefSource> RefSources { get; }
 
             public JryCoverType CoverType { get; }
+
+            public string SeriesId { get; }
+
+            public string VideoId { get; }
+
+            public string ActorId { get; }
         }
 
         private class SeriesRef : ObjectRef
@@ -251,13 +236,17 @@ namespace JryVideo.Core.Managers
             public string Id { get; }
         }
 
-        private struct Error
+        private class Error
         {
             public ErrorType Type { get; private set; }
 
             public string Id { get; private set; }
 
+            public string SubId { get; private set; }
+
             public static Error RoleMissingSource(string roleCollectionId) => new Error() { Type = ErrorType.RoleMissingSource, Id = roleCollectionId };
+
+            public static Error CoverMissingRef(string coverId) => new Error() { Type = ErrorType.CoverMissingRef, Id = coverId };
 
             public override string ToString()
             {
@@ -265,6 +254,26 @@ namespace JryVideo.Core.Managers
                 {
                     case ErrorType.RoleMissingSource:
                         return $"role missing source [{this.Id}]";
+
+                    case ErrorType.CoverMissingRef:
+                        return $"cover [{this.Id}] has no ref.";
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            public async Task FixAsync(DataCenter dataCenter)
+            {
+                switch (this.Type)
+                {
+                    case ErrorType.RoleMissingSource:
+                        await dataCenter.VideoRoleManager.RemoveAsync(this.Id);
+                        break;
+
+                    case ErrorType.CoverMissingRef:
+                        await dataCenter.CoverManager.RemoveAsync(this.Id);
+                        break;
 
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -274,7 +283,9 @@ namespace JryVideo.Core.Managers
 
         private enum ErrorType
         {
-            RoleMissingSource
+            RoleMissingSource,
+
+            CoverMissingRef
         }
     }
 }
