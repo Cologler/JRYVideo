@@ -67,7 +67,8 @@ namespace JryVideo.Core.Models
             {
                 CoverType = this.CoverType,
                 VideoId = this.VideoId,
-                SeriesId = this.SeriesId
+                SeriesId = this.SeriesId,
+                ActorId = this.ActorId
             };
 
             return queryParameter;

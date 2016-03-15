@@ -14,6 +14,7 @@ namespace JryVideo.Core.Managers
         private readonly Dictionary<string, CoverRef> coverRefs = new Dictionary<string, CoverRef>();
         private readonly Dictionary<string, List<VideoInfoRef>> videoInfoRefs = new Dictionary<string, List<VideoInfoRef>>();
         private readonly Dictionary<string, SeriesRef> seriesRefs = new Dictionary<string, SeriesRef>();
+        private readonly List<Error> Errors = new List<Error>();
 
         public DatabaseHealthTester(DataCenter dataCenter)
         {
@@ -21,10 +22,7 @@ namespace JryVideo.Core.Managers
         }
 
         [Conditional("DEBUG")]
-        public async void RunOnDebugAsync()
-        {
-            await this.RunAsync(false);
-        }
+        public async void RunOnDebugAsync() => await this.RunAsync(false);
 
         public async Task RunAsync(bool fix)
         {
@@ -53,7 +51,7 @@ namespace JryVideo.Core.Managers
                     if (!this.videoInfoRefs.ContainsKey(z.Id) &&
                         !this.seriesRefs.ContainsKey(z.Id))
                     {
-                        this.messages.Add($"role missing source [{z.Id}]");
+                        this.Errors.Add(Error.RoleMissingSource(z.Id));
                     }
                     z.MajorRoles?.ForEach(this.ConnectToCover);
                     z.MinorRoles?.ForEach(this.ConnectToCover);
@@ -90,33 +88,53 @@ namespace JryVideo.Core.Managers
                     }
                 }
 
+                // show message
+                if (Debugger.IsAttached)
+                {
+                    foreach (var error in this.Errors)
+                        Debug.WriteLine(error.ToString());
+                }
+                else
+                {
+                    foreach (var error in this.Errors)
+                        Log.Write(error.ToString());
+                }
+
                 // remove all missing source cover
                 if (fix)
                 {
-                    foreach (var coverRef in this.coverRefs.Values)
-                    {
-                        if (coverRef.RefSources.Count != 1)
-                        {
-                            if (coverRef.RefSources.Count < 1)
-                            {
-                                await this.dataCenter.CoverManager.RemoveAsync(coverRef.Id);
-                            }
-                            else if (coverRef.RefSources.Count > 1)
-                            {
+                    //foreach (var coverRef in this.coverRefs.Values)
+                    //{
+                    //    if (coverRef.RefSources.Count != 1)
+                    //    {
+                    //        if (coverRef.RefSources.Count < 1)
+                    //        {
+                    //            await this.dataCenter.CoverManager.RemoveAsync(coverRef.Id);
+                    //        }
+                    //        else if (coverRef.RefSources.Count > 1)
+                    //        {
+                    //        }
+                    //    }
+                    //}
 
-                            }
+                    foreach (var error in this.Errors)
+                    {
+                        switch (error.Type)
+                        {
+                            case ErrorType.RoleMissingSource:
+                                await this.dataCenter.VideoRoleManager.RemoveAsync(error.Id);
+                                break;
                         }
                     }
                 }
 
-                var msg = this.messages.Count == 0 ? "db safe!" : this.messages.AsLines();
                 if (Debugger.IsAttached)
                 {
-                    Debug.WriteLine(msg);
+                    Debug.WriteLine(this.messages.Count == 0 ? "db safe!" : this.messages.AsLines());
                 }
                 else
                 {
-                    Log.Write(msg);
+                    Log.Write(this.messages.Count == 0 ? "db safe!" : this.messages.AsLines());
                 }
             });
         }
@@ -231,6 +249,32 @@ namespace JryVideo.Core.Managers
             public string Type { get; }
 
             public string Id { get; }
+        }
+
+        private struct Error
+        {
+            public ErrorType Type { get; private set; }
+
+            public string Id { get; private set; }
+
+            public static Error RoleMissingSource(string roleCollectionId) => new Error() { Type = ErrorType.RoleMissingSource, Id = roleCollectionId };
+
+            public override string ToString()
+            {
+                switch (this.Type)
+                {
+                    case ErrorType.RoleMissingSource:
+                        return $"role missing source [{this.Id}]";
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        private enum ErrorType
+        {
+            RoleMissingSource
         }
     }
 }

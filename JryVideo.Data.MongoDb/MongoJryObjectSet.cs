@@ -23,7 +23,7 @@ namespace JryVideo.Data.MongoDb
     public abstract class MongoJryEntitySet<T, TFilterParameters> : MongoJryEntitySet<T>
         where T : JryObject
     {
-        public MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
+        protected MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
             : base(engine, collection)
         {
         }

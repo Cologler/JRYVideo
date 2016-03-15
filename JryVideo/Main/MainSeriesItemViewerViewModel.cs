@@ -94,9 +94,13 @@ namespace JryVideo.Main
             this.HasLast = search.HasLast;
             this.HasNext = search.HasNext;
 
-            return search.Items.SelectMany(VideoInfoViewModel.Create)
+            JasilyDebug.Pointer();
+            var r = search.Items.SelectMany(VideoInfoViewModel.Create)
                 .Where(z => this.searchResultView.IsMatch(z.SeriesView.Source, z.Source))
                 .ToArray();
+            JasilyDebug.Pointer();
+
+            return r;
         }
 
         public int PageSize { get; set; }

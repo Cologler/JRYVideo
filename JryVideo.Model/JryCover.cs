@@ -71,6 +71,8 @@ namespace JryVideo.Model
             public string VideoId { get; set; }
 
             public string SeriesId { get; set; }
+
+            public string ActorId { get; set; }
         }
 
         public interface ICover

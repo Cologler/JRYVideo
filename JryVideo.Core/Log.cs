@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -15,6 +16,12 @@ namespace JryVideo.Core
 
         public static void Write(string log)
         {
+            if (Debugger.IsAttached)
+            {
+                Debug.WriteLine(log);
+                return;
+            }
+
             lock (rootSync)
             {
                 try
