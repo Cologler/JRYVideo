@@ -120,7 +120,13 @@ namespace JryVideo.Model
 
             DoubanId,
 
-            Tag
+            Tag,
+
+            VideoType,
+
+            VideoYear,
+
+            ImdbId,
         }
     }
 }

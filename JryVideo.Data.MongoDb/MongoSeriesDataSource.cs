@@ -170,6 +170,36 @@ namespace JryVideo.Data.MongoDb
                         builder.Eq(q6, search.Keyword));
                     break;
 
+                case JrySeries.QueryMode.Any:
+                    throw new InvalidOperationException();
+
+                case JrySeries.QueryMode.VideoType:
+                    var q7 = PropertySelector<JrySeries>.Start(z => z)
+                        .SelectMany(z => z.Videos)
+                        .Select(z => z.Type)
+                        .ToString();
+                    Debug.Assert(q7 == "Videos.Type");
+                    filter = builder.Eq(q7, search.Keyword);
+                    break;
+
+                case JrySeries.QueryMode.VideoYear:
+                    var q8 = PropertySelector<JrySeries>.Start(z => z)
+                        .SelectMany(z => z.Videos)
+                        .Select(z => z.Year)
+                        .ToString();
+                    Debug.Assert(q8 == "Videos.Year");
+                    filter = builder.Eq(q8, int.Parse(search.Keyword));
+                    break;
+
+                case JrySeries.QueryMode.ImdbId:
+                    var q9 = PropertySelector<JrySeries>.Start(z => z)
+                        .SelectMany(z => z.Videos)
+                        .Select(z => z.ImdbId)
+                        .ToString();
+                    Debug.Assert(q9 == "Videos.ImdbId");
+                    filter = builder.Eq(q9, search.Keyword);
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
