@@ -72,8 +72,7 @@ namespace JryVideo.Main
         {
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.VideoInfoViewModel_IsWatchedUpdated, sender, e))
             {
-                this.VideosView.Collection.Remove(e);
-                this.VideosView.Collection.Add(e);
+                if (this.VideosView.Collection.Remove(e)) this.VideosView.Collection.Add(e);
             }
         }
 
