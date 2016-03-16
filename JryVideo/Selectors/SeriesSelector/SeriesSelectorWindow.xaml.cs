@@ -33,7 +33,10 @@ namespace JryVideo.Selectors.SeriesSelector
         public static JrySeries Select(Window parent, JrySeries without = null)
         {
             var window = new SeriesSelectorWindow() { Owner = parent };
-            window.seriesSelectorPage.SelectorViewModel.Without = without;
+            if (without != null)
+            {
+                window.seriesSelectorPage.SelectorViewModel.Withouts.Add(without.Id);
+            }
             return window.ShowDialog() == true ? window.seriesSelectorPage.SelectorViewModel.Items.Selected : null;
         }
     }

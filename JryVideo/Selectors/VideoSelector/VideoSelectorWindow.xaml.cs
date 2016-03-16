@@ -20,7 +20,10 @@ namespace JryVideo.Selectors.VideoSelector
         {
             var dialog = new VideoSelectorWindow() { Owner = parent };
             dialog.SelectVideoViewModel.Source = source;
-            dialog.SelectVideoViewModel.Without = without;
+            if (without != null)
+            {
+                dialog.SelectVideoViewModel.Withouts.Add(without.Id);
+            }
             dialog.SelectVideoViewModel.DefaultId = defaultId;
 #pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
             dialog.SelectVideoViewModel.RefreshAsync();

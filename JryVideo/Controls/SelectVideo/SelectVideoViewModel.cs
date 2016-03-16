@@ -34,7 +34,5 @@ namespace JryVideo.Controls.SelectVideo
                 this.VideosView.Selected = this.VideosView.Collection.FirstOrDefault(z => z.Source.Id == this.DefaultId);
             }
         }
-
-        protected override bool OnFilter(VideoInfoViewModel obj) => base.OnFilter(obj) && this.Without?.Id != obj.Source.Id;
     }
 }

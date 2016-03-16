@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using System.Threading.Tasks;
@@ -35,7 +36,9 @@ namespace JryVideo.Selectors.Common
             }
         }
 
-        protected virtual bool OnFilter(TViewModel obj) => this.without?.Id != obj.Source.Id;
+        public HashSet<string> Withouts { get; } = new HashSet<string>();
+
+        protected virtual bool OnFilter(TViewModel obj) => this.without?.Id != obj.Source.Id && !this.Withouts.Contains(obj.Source.Id);
 
         public string FilterText
         {

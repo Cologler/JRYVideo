@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace JryVideo.Main
@@ -69,8 +70,11 @@ namespace JryVideo.Main
 
         private void VideoInfoViewModel_IsWatchedUpdated(object sender, VideoInfoViewModel e)
         {
-            this.VideosView.Collection.Remove(e);
-            this.VideosView.Collection.Add(e);
+            if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.VideoInfoViewModel_IsWatchedUpdated, sender, e))
+            {
+                this.VideosView.Collection.Remove(e);
+                this.VideosView.Collection.Add(e);
+            }
         }
 
         private async Task<IEnumerable<VideoInfoViewModel>> GetSourceAsync()
