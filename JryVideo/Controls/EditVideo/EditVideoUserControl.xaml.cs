@@ -126,8 +126,7 @@ namespace JryVideo.Controls.EditVideo
                 defaultId: this.ViewModel.LastVideoViewModel?.Source.Id);
             if (result.IsAccept)
             {
-                var video = result.Value;
-                this.ViewModel.LastVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
+                this.ViewModel.ChangeContextVideo(true, result.Value);
             }
         }
 
@@ -139,8 +138,7 @@ namespace JryVideo.Controls.EditVideo
                 defaultId: this.ViewModel.NextVideoViewModel?.Source.Id);
             if (result.IsAccept)
             {
-                var video = result.Value;
-                this.ViewModel.NextVideoViewModel = video != null ? new VideoInfoReadonlyViewModel(video) : null;
+                this.ViewModel.ChangeContextVideo(false, result.Value);
             }
         }
     }

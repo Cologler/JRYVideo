@@ -142,7 +142,7 @@ namespace JryVideo.Controls.EditVideo
         public VideoInfoReadonlyViewModel LastVideoViewModel
         {
             get { return this.lastVideoViewModel; }
-            set { this.SetPropertyRef(ref this.lastVideoViewModel, value, nameof(this.LastVideoViewModel), nameof(this.LastVideoName)); }
+            private set { this.SetPropertyRef(ref this.lastVideoViewModel, value, nameof(this.LastVideoViewModel), nameof(this.LastVideoName)); }
         }
 
         public string LastVideoName => GetContextVideoName(this.LastVideoViewModel);
@@ -150,7 +150,7 @@ namespace JryVideo.Controls.EditVideo
         public VideoInfoReadonlyViewModel NextVideoViewModel
         {
             get { return this.nextVideoViewModel; }
-            set { this.SetPropertyRef(ref this.nextVideoViewModel, value, nameof(this.NextVideoViewModel), nameof(this.NextVideoName)); }
+            private set { this.SetPropertyRef(ref this.nextVideoViewModel, value, nameof(this.NextVideoViewModel), nameof(this.NextVideoName)); }
         }
 
         public string NextVideoName => GetContextVideoName(this.NextVideoViewModel);
@@ -158,6 +158,19 @@ namespace JryVideo.Controls.EditVideo
         private static string GetContextVideoName(VideoInfoReadonlyViewModel video) => video == null
             ? "None"
             : (video.Source.Names.FirstOrDefault() ?? $"({video.Source.Year}) {video.Source.Type} {video.Source.Index}");
+
+        public void ChangeContextVideo(bool isLast, JryVideoInfo video)
+        {
+            var vm = video != null ? new VideoInfoReadonlyViewModel(video) : null;
+            if (isLast)
+            {
+                this.LastVideoViewModel = vm;
+            }
+            else
+            {
+                this.NextVideoViewModel = vm;
+            }
+        }
 
         public NameValuePair<string, DayOfWeek?>? DayOfWeek
         {
@@ -230,8 +243,27 @@ namespace JryVideo.Controls.EditVideo
             obj.DayOfWeek = this.DayOfWeek?.Value;
             obj.EpisodeOffset = this.EpisodeOffset == 0 ? (int?)null : this.EpisodeOffset;
 
-            obj.LastVideoId = this.LastVideoViewModel?.Source.Id;
-            obj.NextVideoId = this.NextVideoViewModel?.Source.Id;
+            var series = this.Parent.ThrowIfNull();
+            var lastVideoId = this.LastVideoViewModel?.Source.Id;
+            if (obj.LastVideoId != lastVideoId)
+            {
+                obj.LastVideoId = lastVideoId;
+                if (lastVideoId != null && obj.Id != null)
+                {
+                    var lastVideo = series.Videos.FirstOrDefault(z => z.Id == lastVideoId);
+                    if (lastVideo != null && lastVideo.NextVideoId == null) lastVideo.NextVideoId = obj.Id;
+                }
+            }
+            var nextVideoId = this.NextVideoViewModel?.Source.Id;
+            if (obj.NextVideoId != nextVideoId)
+            {
+                obj.NextVideoId = nextVideoId;
+                if (nextVideoId != null && obj.Id != null)
+                {
+                    var nextVideo = series.Videos.FirstOrDefault(z => z.Id == nextVideoId);
+                    if (nextVideo != null && nextVideo.NextVideoId == null) nextVideo.LastVideoId = obj.Id;
+                }
+            }
         }
 
         public override void ReadFromObject(JryVideoInfo obj)
