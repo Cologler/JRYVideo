@@ -70,10 +70,7 @@ namespace JryVideo.Main
 
         private void VideoInfoViewModel_IsWatchedUpdated(object sender, VideoInfoViewModel e)
         {
-            if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.VideoInfoViewModel_IsWatchedUpdated, sender, e))
-            {
-                if (this.VideosView.Collection.Remove(e)) this.VideosView.Collection.Add(e);
-            }
+            if (this.VideosView.Collection.Remove(e)) this.VideosView.Collection.Add(e);
         }
 
         private async Task<IEnumerable<VideoInfoViewModel>> GetSourceAsync()
@@ -102,6 +99,12 @@ namespace JryVideo.Main
                 .Where(z => this.searchResultView.IsMatch(z.SeriesView.Source, z.Source))
                 .ToArray();
             JasilyDebug.Pointer();
+
+            if (this.IsOnlyTracking)
+            {
+                var groupFactory = new VideoInfoViewModel.GroupFactory();
+                r.ForEach(z => z.RefreshGroup(groupFactory));
+            }
 
             return r;
         }

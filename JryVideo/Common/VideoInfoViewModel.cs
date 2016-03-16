@@ -47,17 +47,16 @@ namespace JryVideo.Common
         public override void RefreshProperties()
         {
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
-            this.UpdateGroup();
             base.RefreshProperties();
         }
 
-        private async void UpdateGroup()
+        public async void RefreshGroup(GroupFactory groupFactory)
         {
             // only tracking need build group info.
             if (!this.Source.IsTracking) return;
 
             int? episode;
-            this.VideoGroup = new GroupFactory().Build(this.Source, out episode);
+            this.VideoGroup = groupFactory.Build(this.Source, out episode);
             Debug.Assert(this.VideoGroup != null);
 
             if (this.VideoGroup.Mode == GroupMode.Today)
@@ -85,6 +84,8 @@ namespace JryVideo.Common
             {
                 this.todayPlaying = null;
             }
+
+            base.RefreshProperties();
         }
 
         internal sealed class GroupComparer : Comparer<VideoInfoViewModel>
