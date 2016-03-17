@@ -101,12 +101,17 @@ namespace JryVideo.Main
 
             if (this.IsOnlyTracking)
             {
-                var groupFactory = new VideoInfoViewModel.GroupFactory();
-                this.GroupFactory = groupFactory;
-                r.ForEach(z => z.RefreshGroup(groupFactory));
+                this.RefreshAll(r);
             }
 
             return r;
+        }
+
+        public void RefreshAll(IEnumerable<VideoInfoViewModel> items = null)
+        {
+            var groupFactory = new VideoInfoViewModel.GroupFactory();
+            this.GroupFactory = groupFactory;
+            (items ?? this.Items.Collection).ForEach(z => z.RefreshGroup(groupFactory));
         }
 
         public int PageSize { get; set; }

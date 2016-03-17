@@ -12,7 +12,6 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows;
@@ -203,10 +202,7 @@ namespace JryVideo.Main
         public void Refresh()
         {
             if (this.ViewModel == null) return;
-            foreach (var viewModel in this.ViewModel.VideosViewModel.VideosView.Collection)
-            {
-                viewModel.RefreshProperties();
-            }
+            this.ViewModel.VideosViewModel.RefreshAll();
             this.ViewModel.VideosViewModel.VideosView.View.Refresh();
         }
 
