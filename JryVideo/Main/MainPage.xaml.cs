@@ -78,12 +78,16 @@ namespace JryVideo.Main
 
         private void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (new AddWindow()
+            var adder = new AddWindow()
             {
                 Owner = this.TryFindParent<Window>()
-            }.ShowDialog() == true)
+            };
+            if (adder.ShowDialog() == true)
             {
-                this.ViewModel.ReloadAsync();
+                if (this.ViewModel.VideosViewModel.IsOnlyTracking == adder.DialogResultObject.IsTracking)
+                {
+                    this.ViewModel.ReloadAsync();
+                }
             }
         }
 

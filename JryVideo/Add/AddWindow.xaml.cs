@@ -1,6 +1,7 @@
 ﻿using Jasily.Diagnostics;
 using JryVideo.Add.VideoCreator;
 using JryVideo.Common;
+using JryVideo.Model;
 using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Viewer.SeriesItemViewer;
 using MahApps.Metro.Controls;
@@ -19,6 +20,8 @@ namespace JryVideo.Add
         private readonly SeriesSelectorPage seriesSelectorPage;
         private SeriesItemViewerPage seriesItemViewerPage;
         private VideoCreatorPage videoCreatorPage;
+
+        public JryVideoInfo DialogResultObject { get; set; }
 
         public AddWindow()
         {

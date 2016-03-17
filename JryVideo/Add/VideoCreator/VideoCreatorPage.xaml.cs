@@ -29,7 +29,9 @@ namespace JryVideo.Add.VideoCreator
         {
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.ViewModel_Created, sender, e))
             {
-                this.TryFindParent<Window>().DialogResult = true;
+                var win = this.TryFindParent<AddWindow>();
+                win.DialogResultObject = e;
+                win.DialogResult = true;
             }
         }
     }
