@@ -12,22 +12,16 @@ namespace JryVideo.Main
     public class ProcessTrackTask
     {
         private readonly MainViewModel viewModelSource;
-        private readonly ProcessTracker tracker;
 
         public event EventHandler<VideoInfoViewModel> CurrentWatchVideo;
 
         public ProcessTrackTask(MainViewModel viewModelSource)
         {
-            ProcessTracker tracker;
             this.viewModelSource = viewModelSource;
-            this.tracker = new ProcessTracker();
-            this.tracker.Start(10000);
-            this.tracker.ProcessStarted += this.Tracker_ProcessStarted;
-            this.tracker.ProcessStoped += Tracker_ProcessStoped;
-            Task.Run(() =>
-            {
-                this.Test(Process.GetProcesses());
-            });
+            var tracker = new ProcessTracker();
+            tracker.Start(10000);
+            tracker.ProcessStarted += this.Tracker_ProcessStarted;
+            tracker.ProcessStoped += Tracker_ProcessStoped;
         }
 
         private static void Tracker_ProcessStoped(object sender, int e)
