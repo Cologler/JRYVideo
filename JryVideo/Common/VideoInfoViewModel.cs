@@ -24,6 +24,7 @@ namespace JryVideo.Common
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
         private WatchedInfo todayPlaying;
+        private GroupFactory groupFactory;
 
         public VideoInfoViewModel(SeriesViewModel seriesViewModel, JryVideoInfo source)
             : base(source)
@@ -56,6 +57,7 @@ namespace JryVideo.Common
             if (!this.Source.IsTracking) return;
 
             int? episode;
+            this.groupFactory = groupFactory;
             this.VideoGroup = groupFactory.Build(this.Source, out episode);
             Debug.Assert(this.VideoGroup != null);
 
@@ -316,6 +318,7 @@ namespace JryVideo.Common
             };
             if (dlg.ShowDialog() == true)
             {
+                this.groupFactory?.RefreshGroup(this);
                 this.RefreshProperties();
                 this.BeginUpdateCover();
                 return true;
@@ -406,6 +409,8 @@ namespace JryVideo.Common
                 if (month < 10) return FewMonth(dayOffset, month);
                 return Future(dayOffset);
             }
+
+            public void RefreshGroup(VideoInfoViewModel video) => video.RefreshGroup(this);
         }
 
         public class Group : IComparable<Group>

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 
 namespace JryVideo.Main
@@ -103,6 +102,7 @@ namespace JryVideo.Main
             if (this.IsOnlyTracking)
             {
                 var groupFactory = new VideoInfoViewModel.GroupFactory();
+                this.GroupFactory = groupFactory;
                 r.ForEach(z => z.RefreshGroup(groupFactory));
             }
 
@@ -112,6 +112,8 @@ namespace JryVideo.Main
         public int PageSize { get; set; }
 
         public int PageIndex { get; set; }
+
+        public VideoInfoViewModel.GroupFactory GroupFactory { get; private set; }
 
         protected override void OnResetFilter(string filterText)
         {
