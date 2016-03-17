@@ -131,18 +131,12 @@ namespace JryVideo.Core.Managers
         public static void BuildSeriesMetaData(JrySeries series)
         {
             BuildObjectMetaData(series);
-            foreach (var jryVideoInfo in series.Videos)
-            {
-                BuildObjectMetaData(jryVideoInfo);
-            }
+            series.Videos.ForEach(BuildObjectMetaData);
         }
 
         private static void BuildObjectMetaData(JryObject obj)
         {
-            if (obj != null && !obj.IsMetaDataBuilded())
-            {
-                obj.BuildMetaData();
-            }
+            if (obj?.IsMetaDataBuilded() == false) obj.BuildMetaData();
         }
 
         public VideoInfoManager GetVideoInfoManager(JrySeries obj)

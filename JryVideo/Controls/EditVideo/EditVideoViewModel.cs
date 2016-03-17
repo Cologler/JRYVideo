@@ -398,10 +398,10 @@ namespace JryVideo.Controls.EditVideo
 
             var obj = this.GetCommitObject();
 
-            this.WriteToObject(obj);
-
             if (this.Action == ObjectChangedAction.Create)
                 obj.BuildMetaData();
+
+            this.WriteToObject(obj);
 
             if (this.Cover != null)
             {
