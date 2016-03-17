@@ -1,4 +1,5 @@
-﻿using JryVideo.Common;
+﻿using Jasily.Desktop.Windows.Navigation;
+using JryVideo.Common;
 using JryVideo.Viewer.VideoViewer;
 using System;
 using System.ComponentModel;
@@ -18,6 +19,8 @@ namespace JryVideo.Main
         private MainPage MainPage;
         private int messageId;
 
+        public NavigationStatus MainFrameNavigationStatus { get; private set; }
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -34,6 +37,8 @@ namespace JryVideo.Main
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
+                this.MainFrameNavigationStatus = new NavigationStatus(this.MainFrame.NavigationService);
+
                 App.UserConfigChanged += this.App_UserConfigChanged;
 
                 this.MainPage = new MainPage();

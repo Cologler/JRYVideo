@@ -1,4 +1,5 @@
-﻿using JryVideo.Add;
+﻿using Jasily.Desktop.Windows.Navigation;
+using JryVideo.Add;
 using JryVideo.Common;
 using JryVideo.Common.Dialogs;
 using JryVideo.Core;
@@ -11,6 +12,7 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows;
@@ -27,6 +29,7 @@ namespace JryVideo.Main
         public event EventHandler<VideoInfoViewModel> VideoSelected;
 
         private MainViewModel ViewModel;
+        private ProcessTrackTask processTrackTask;
 
         public MainPage()
         {
@@ -46,7 +49,26 @@ namespace JryVideo.Main
                 await JryVideoCore.Current.InitializeAsync();
                 this.DataContext = this.ViewModel = new MainViewModel();
                 this.ViewModel.ReloadAsync();
+                this.processTrackTask = new ProcessTrackTask(this.ViewModel);
+                this.processTrackTask.CurrentWatchVideo += this.ProcessTrackTask_CurrentWatchVideo;
             }
+        }
+
+        private void ProcessTrackTask_CurrentWatchVideo(object sender, VideoInfoViewModel e)
+        {
+            this.Dispatcher.BeginInvoke(() =>
+            {
+                var win = this.TryFindParent<MainWindow>();
+                if (win == null) return;
+                if (ReferenceEquals(win.MainFrame.Content, this) &&
+                    win.MainFrameNavigationStatus.Status != NavigationServiceStatus.Navigating)
+                {
+                    if (this.ViewModel.VideosViewModel.VideosView.Collection.Contains(e))
+                    {
+                        this.VideoSelected?.Invoke(this, e);
+                    }
+                }
+            });
         }
 
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
@@ -94,7 +116,7 @@ namespace JryVideo.Main
         private void VideoPanel_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
-            if (vm != null) this.VideoSelected.Fire(this, vm);
+            if (vm != null) this.VideoSelected?.Invoke(this, vm);
         }
 
         private async void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)

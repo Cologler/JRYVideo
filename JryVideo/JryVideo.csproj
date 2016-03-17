@@ -126,6 +126,7 @@
     <Compile Include="Editors\VideoEditor\VideoEditorWindow.xaml.cs">
       <DependentUpon>VideoEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Main\ProcessTrackTask.cs" />
     <Compile Include="SearchEngine\EverythingSearch.cs" />
     <Compile Include="SearchEngine\IOrder.cs" />
     <Compile Include="SearchEngine\ISearchEngine.cs" />
@@ -425,6 +426,10 @@
     <ProjectReference Include="..\Jasily\Jasily.Core\Jasily.Core.csproj">
       <Project>{8442e8e7-d515-4481-8a36-71711b1fbf79}</Project>
       <Name>Jasily.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Jasily\Jasily.Desktop.Management\Jasily.Desktop.Management.csproj">
+      <Project>{c5d6273d-92f7-4797-8b5f-a812e203f779}</Project>
+      <Name>Jasily.Desktop.Management</Name>
     </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily.Desktop\Jasily.Desktop.csproj">
       <Project>{613d8f93-1cc9-4c5d-a67a-290175fc4878}</Project>
