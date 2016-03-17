@@ -168,7 +168,7 @@ namespace JryVideo.Main
         public void RefreshVideo(VideoInfoViewModel vm)
         {
             this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
-            vm.RefreshProperties();
+            this.ViewModel.VideosViewModel.RefreshVideo(vm);
             this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
         }
 

@@ -6,6 +6,7 @@ using JryVideo.Model;
 using JryVideo.Viewer.SeriesItemViewer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -101,17 +102,26 @@ namespace JryVideo.Main
 
             if (this.IsOnlyTracking)
             {
-                this.RefreshAll(r);
+                this.RebuildGroupFactoryAndRefreshItems(r);
             }
 
             return r;
         }
 
-        public void RefreshAll(IEnumerable<VideoInfoViewModel> items = null)
+        public void RefreshAll() => this.RebuildGroupFactoryAndRefreshItems(this.Items.Collection);
+
+        private void RebuildGroupFactoryAndRefreshItems(IEnumerable<VideoInfoViewModel> items)
         {
+            Debug.Assert(items != null);
             var groupFactory = new VideoInfoViewModel.GroupFactory();
             this.GroupFactory = groupFactory;
-            (items ?? this.Items.Collection).ForEach(z => z.RefreshGroup(groupFactory));
+            items.ForEach(z => z.RefreshGroup(groupFactory));
+        }
+
+        public void RefreshVideo(VideoInfoViewModel item)
+        {
+            this.GroupFactory?.RefreshGroup(item);
+            item.RefreshProperties();
         }
 
         public int PageSize { get; set; }
