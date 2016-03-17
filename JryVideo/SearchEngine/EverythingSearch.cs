@@ -30,7 +30,7 @@ namespace JryVideo.SearchEngine
                 search.Parameters.IsMatchWholeWord = false;
                 search.Parameters.IsMatchCase = false;
                 search.Parameters.IsRegex = false;
-                return search.SearchAll(text, 100).SelectMany(z => z).ToArray();
+                return search.SearchAll(text, 100).SelectMany(z => z).Take(300).ToArray();
             });
         }
     }

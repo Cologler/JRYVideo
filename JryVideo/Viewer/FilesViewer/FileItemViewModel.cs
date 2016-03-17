@@ -7,7 +7,8 @@ namespace JryVideo.Viewer.FilesViewer
         public FileItemViewModel(string path)
             : base(path)
         {
-            this.IsExists = File.Exists(path);
         }
+
+        public override bool IsExists => File.Exists(this.Source);
     }
 }
