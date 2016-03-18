@@ -105,7 +105,7 @@ namespace JryVideo.Main
             };
             if (adder.ShowDialog() == true)
             {
-                if (this.ViewModel.VideosViewModel.IsOnlyTracking == adder.DialogResultObject.IsTracking)
+                if (adder.DialogResultObject.IsTracking || !this.ViewModel.VideosViewModel.IsOnlyTracking)
                 {
                     this.ViewModel.ReloadAsync();
                 }
