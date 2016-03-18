@@ -42,7 +42,7 @@ namespace JryVideo.Configs
         {
             var source = mapper?
                     .Where(z => z.From != null && z.To != null)
-                    .Where(item => item.From.Where(z => z.Length > 0).FirstOrDefault(name.Contains) != null)
+                    .Where(item => item.From.Where(z => z.Length > 0).FirstOrDefault(z => name.Contains(z, StringComparison.OrdinalIgnoreCase)) != null)
                     .SelectMany(item => item.To)
                     .Distinct();
             if (source == null) return new string[0];

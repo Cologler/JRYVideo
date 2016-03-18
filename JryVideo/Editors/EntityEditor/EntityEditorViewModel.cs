@@ -247,27 +247,61 @@ namespace JryVideo.Editors.EntityEditor
             this.Format = files.Length == 1 ? files[0] : await Task.Run(() => this.ParseCommonFileName(files));
         }
 
+        private string[] fansubFlags;
+        private string[] subTitleLanguagesFlags;
+        private string[] trackLanguageFlags;
+        private string[] tagFlags;
+
         private async void TryParseFromFormatString()
         {
             var format = this.Format;
             if (format.IsNullOrWhiteSpace() || this.Action != ObjectChangedAction.Create) return;
 
-            var str = format.ToLower();
             if (this.Resolution.IsNullOrWhiteSpace())
             {
-                this.Resolution = this.Resolutions.FirstOrDefault(z => str.Contains(z.Replace("P", "").ToLower())) ?? string.Empty;
+                this.Resolution = this.Resolutions
+                    .FirstOrDefault(z => format.Contains(z.Replace("P", ""), StringComparison.OrdinalIgnoreCase))
+                    ?? string.Empty;
             }
             if (this.Quality.IsNullOrWhiteSpace())
             {
-                this.Quality = this.FilmSources.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+                this.Quality = this.FilmSources
+                    .FirstOrDefault(z => format.Contains(z, StringComparison.OrdinalIgnoreCase))
+                    ?? string.Empty;
             }
             if (this.AudioSource.IsNullOrWhiteSpace())
             {
-                this.AudioSource = this.AudioSources.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+                this.AudioSource = this.AudioSources
+                    .FirstOrDefault(z => format.Contains(z, StringComparison.OrdinalIgnoreCase))
+                    ?? string.Empty;
             }
             if (this.Extension.IsNullOrWhiteSpace())
             {
-                this.Extension = this.Extensions.FirstOrDefault(z => str.Contains(z.ToLower())) ?? string.Empty;
+                this.Extension = this.Extensions
+                    .FirstOrDefault(z => format.Contains(z, StringComparison.OrdinalIgnoreCase))
+                    ?? string.Empty;
+            }
+
+            var flagManager = this.GetManagers().FlagManager;
+            if (this.fansubFlags == null)
+            {
+                this.fansubFlags = (await flagManager.LoadAsync(JryFlagType.EntityFansub))
+                    .Select(z => z.Value).ToArray();
+            }
+            if (this.subTitleLanguagesFlags == null)
+            {
+                this.subTitleLanguagesFlags = (await flagManager.LoadAsync(JryFlagType.EntitySubTitleLanguage))
+                    .Select(z => z.Value).ToArray();
+            }
+            if (this.trackLanguageFlags == null)
+            {
+                this.trackLanguageFlags = (await flagManager.LoadAsync(JryFlagType.EntityTrackLanguage))
+                    .Select(z => z.Value).ToArray();
+            }
+            if (this.tagFlags == null)
+            {
+                this.tagFlags = (await flagManager.LoadAsync(JryFlagType.EntityTag))
+                    .Select(z => z.Value).ToArray();
             }
 
             var mapper = ((App)Application.Current).UserConfig?.Mapper;
@@ -276,15 +310,19 @@ namespace JryVideo.Editors.EntityEditor
                 var filter = new Func<string, bool>(z => !z.IsNullOrWhiteSpace());
                 this.Fansubs.Reset(this.Fansubs.ToArray()
                     .Concat(await mapper.TryFireAsync(JryFlagType.EntityFansub, format, filter))
+                    .Concat(this.fansubFlags.Where(z => format.Contains(z, StringComparison.OrdinalIgnoreCase)))
                     .Distinct());
                 this.SubTitleLanguages.Reset(this.SubTitleLanguages.ToArray()
                     .Concat(await mapper.TryFireAsync(JryFlagType.EntitySubTitleLanguage, format, filter))
+                    .Concat(this.subTitleLanguagesFlags.Where(z => format.Contains(z, StringComparison.OrdinalIgnoreCase)))
                     .Distinct());
                 this.TrackLanguages.Reset(this.TrackLanguages.ToArray()
                     .Concat(await mapper.TryFireAsync(JryFlagType.EntityTrackLanguage, format, filter))
+                    .Concat(this.trackLanguageFlags.Where(z => format.Contains(z, StringComparison.OrdinalIgnoreCase)))
                     .Distinct());
                 this.Tags.Reset(this.Tags.ToArray()
                     .Concat(await mapper.TryFireAsync(JryFlagType.EntityTag, format, filter))
+                    .Concat(this.tagFlags.Where(z => format.Contains(z, StringComparison.OrdinalIgnoreCase)))
                     .Distinct());
             }
         }
