@@ -27,7 +27,7 @@ namespace JryVideo.Data.MongoDb
             switch (search.Mode)
             {
                 case JrySeries.QueryMode.OriginText:
-                    var q1 = PropertySelector<JrySeries>.Start(z => z)
+                    var q1 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Names)
                         .ToString();
@@ -42,7 +42,7 @@ namespace JryVideo.Data.MongoDb
                     return s == null ? Enumerable.Empty<JrySeries>() : s.IntoArray();
 
                 case JrySeries.QueryMode.VideoId:
-                    var q2 = PropertySelector<JrySeries>.Start(z => z)
+                    var q2 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Id)
                         .ToString();
@@ -51,7 +51,7 @@ namespace JryVideo.Data.MongoDb
                     break;
 
                 case JrySeries.QueryMode.EntityId:
-                    var q3 = PropertySelector<Model.JryVideo>.Start(z => z)
+                    var q3 = PropertySelector<Model.JryVideo>.Start()
                         .SelectMany(z => z.Entities)
                         .Select(z => z.Id)
                         .ToString();
@@ -59,7 +59,7 @@ namespace JryVideo.Data.MongoDb
                     var it = await this.Engine.VideoCollection.FindAsync(Builders<Model.JryVideo>.Filter.Eq(q3, search.Keyword));
                     var en = (await it.ToListAsync()).FirstOrDefault();
                     if (en == null) return Enumerable.Empty<JrySeries>();
-                    var q4 = PropertySelector<JrySeries>.Start(z => z)
+                    var q4 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Id)
                         .ToString();
@@ -68,7 +68,7 @@ namespace JryVideo.Data.MongoDb
                     break;
 
                 case JrySeries.QueryMode.DoubanId:
-                    var q5 = PropertySelector<JrySeries>.Start(z => z)
+                    var q5 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.DoubanId)
                         .ToString();
@@ -77,7 +77,7 @@ namespace JryVideo.Data.MongoDb
                     break;
 
                 case JrySeries.QueryMode.Tag:
-                    var q6 = PropertySelector<JrySeries>.Start(z => z)
+                    var q6 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Tags)
                         .ToString();
@@ -91,7 +91,7 @@ namespace JryVideo.Data.MongoDb
                     throw new InvalidOperationException();
 
                 case JrySeries.QueryMode.VideoType:
-                    var q7 = PropertySelector<JrySeries>.Start(z => z)
+                    var q7 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Type)
                         .ToString();
@@ -100,7 +100,7 @@ namespace JryVideo.Data.MongoDb
                     break;
 
                 case JrySeries.QueryMode.VideoYear:
-                    var q8 = PropertySelector<JrySeries>.Start(z => z)
+                    var q8 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Year)
                         .ToString();
@@ -109,7 +109,7 @@ namespace JryVideo.Data.MongoDb
                     break;
 
                 case JrySeries.QueryMode.ImdbId:
-                    var q9 = PropertySelector<JrySeries>.Start(z => z)
+                    var q9 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.ImdbId)
                         .ToString();
