@@ -120,7 +120,7 @@ namespace JryVideo.Controls.EditVideo
             get { return this.startDate; }
             set
             {
-                if (value.HasValue)
+                if (value.HasValue && this.Action == ObjectChangedAction.Create)
                 {
                     if (this.DayOfWeek == null)
                     {
@@ -133,6 +133,10 @@ namespace JryVideo.Controls.EditVideo
                     if (value.Value >= today.AddDays(-(int)today.DayOfWeek)) // this week
                     {
                         this.IsTracking = true;
+                    }
+                    else if (this.EpisodesCount == "1")
+                    {
+                        this.IsAllAired = true;
                     }
                 }
                 this.SetPropertyRef(ref this.startDate, value);
