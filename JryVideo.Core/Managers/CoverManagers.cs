@@ -50,7 +50,7 @@ namespace JryVideo.Core.Managers
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-            using (var start = this.StartDownload(builder.BuildDownloadId()))
+            using (var start = new DownloadProcess(builder.BuildDownloadId()))
             {
                 if (!start.IsOwner) return null;
 
@@ -110,22 +110,20 @@ namespace JryVideo.Core.Managers
             }
         }
 
-        private DownloadProcess StartDownload(string id) => new DownloadProcess(id);
-
-        private class DownloadProcess : IDisposable
+        private struct DownloadProcess : IDisposable
         {
             private readonly string id;
-            private static readonly Dictionary<string, bool> Processs = new Dictionary<string, bool>();
+            private static readonly HashSet<string> Processs = new HashSet<string>();
 
             public DownloadProcess(string id)
             {
                 this.id = id;
                 lock (Processs)
                 {
-                    this.IsOwner = !Processs.ContainsKey(id);
+                    this.IsOwner = !Processs.Contains(id);
                     if (this.IsOwner)
                     {
-                        Processs.Add(id, false);
+                        Processs.Add(id);
                     }
                 }
             }
