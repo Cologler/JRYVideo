@@ -40,6 +40,6 @@ namespace JryVideo.Controls.EditFlag
         }
 
         protected override async Task<bool> OnUpdateAsync(IObjectEditProvider<JryFlag> provider, JryFlag obj)
-            => await ((FlagManager)provider).UpdateNameAsync(obj.Type, this.OldValue, obj.Value);
+            => await ((FlagManager)provider).ReplaceAsync(obj.Type, this.OldValue, obj.Value);
     }
 }

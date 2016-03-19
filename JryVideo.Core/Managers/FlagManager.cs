@@ -2,7 +2,6 @@
 using JryVideo.Model;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
@@ -174,38 +173,41 @@ namespace JryVideo.Core.Managers
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        public async Task<bool> UpdateNameAsync(JryFlagType type, string oldName, string newName)
+        public static bool CanReplace(JryFlagType type)
         {
-            if (oldName == null) throw new ArgumentNullException(nameof(oldName));
-            if (newName == null) throw new ArgumentNullException(nameof(newName));
-            if (oldName == newName) return true;
-
             switch (type)
             {
-                // can not change
                 case JryFlagType.VideoYear:
 
                 case JryFlagType.EntityResolution:
                 case JryFlagType.EntityExtension:
                 case JryFlagType.EntityAudioSource:
                 case JryFlagType.EntityQuality:
-                    Debug.Assert(false);
                     return false;
 
                 case JryFlagType.SeriesTag:
 
                 case JryFlagType.VideoType:
                 case JryFlagType.VideoTag:
+                    return false;
 
                 case JryFlagType.EntityFansub:
                 case JryFlagType.EntitySubTitleLanguage:
                 case JryFlagType.EntityTrackLanguage:
                 case JryFlagType.EntityTag:
-                    break;
+                    return true;
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        public async Task<bool> ReplaceAsync(JryFlagType type, string oldName, string newName)
+        {
+            if (oldName == null) throw new ArgumentNullException(nameof(oldName));
+            if (newName == null) throw new ArgumentNullException(nameof(newName));
+            if (!CanReplace(type)) throw new NotSupportedException();
+            if (oldName == newName) return true;
 
             // old
             var oldId = JryFlag.BuildCounterId(type, oldName);

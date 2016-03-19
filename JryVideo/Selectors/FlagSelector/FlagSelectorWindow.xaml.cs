@@ -1,10 +1,12 @@
 ﻿using JryVideo.Common;
+using JryVideo.Core.Managers;
 using JryVideo.Editors.FlagEditor;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -69,6 +71,7 @@ namespace JryVideo.Selectors.FlagSelector
             var flagViewModel = ((FrameworkElement)sender).DataContext as FlagViewModel;
             if (flagViewModel == null) return;
             var win = new FlagEditorWindow() { Owner = this };
+            Debug.Assert(FlagManager.CanReplace(flagViewModel.Source.Type));
             win.InitializeEditor(flagViewModel.Source);
             if (win.ShowDialog() == true)
             {

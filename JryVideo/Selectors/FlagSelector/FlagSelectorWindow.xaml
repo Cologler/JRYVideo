@@ -60,6 +60,7 @@
                                     <Grid.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Header="edit"
+                                                      IsEnabled="{Binding CanReplace}"
                                                       Click="EditFlagMenuItem_OnClick"></MenuItem>
                                             <MenuItem Header="delete"
                                                       Click="DeleteFlagMenuItem_OnClick"></MenuItem>

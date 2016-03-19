@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
+using JryVideo.Core.Managers;
 using JryVideo.Model;
 
 namespace JryVideo.Selectors.FlagSelector
@@ -10,5 +10,7 @@ namespace JryVideo.Selectors.FlagSelector
             : base(source)
         {
         }
+
+        public bool CanReplace => FlagManager.CanReplace(this.Source.Type);
     }
 }
