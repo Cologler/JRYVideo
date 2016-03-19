@@ -84,13 +84,16 @@ namespace JryVideo.Main
                 var lastDay = DateTime.Now;
                 while (true)
                 {
-                    var bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
-                    if (bs.OriginValue > 1024 * 1024 * 500)
+                    using (var p = Process.GetCurrentProcess())
                     {
-                        GC.Collect();
-                        bs = Process.GetCurrentProcess().WorkingSet64.GetByteSize();
+                        var bs = p.WorkingSet64.GetByteSize();
+                        if (bs.OriginValue > 1024 * 1024 * 500)
+                        {
+                            GC.Collect();
+                            bs = p.WorkingSet64.GetByteSize();
+                        }
+                        await this.Dispatcher.BeginInvoke(() => this.MemoryTextBlock.Text = bs.ToString());
                     }
-                    await this.Dispatcher.BeginInvoke(() => this.MemoryTextBlock.Text = bs.ToString());
                     var now = DateTime.Now;
                     if (now.Day != lastDay.Day)
                     {
