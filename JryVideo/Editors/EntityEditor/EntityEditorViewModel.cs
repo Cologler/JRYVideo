@@ -1,5 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Common;
+using JryVideo.Controls.SelectFlag;
 using JryVideo.Core;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
@@ -23,22 +24,16 @@ namespace JryVideo.Editors.EntityEditor
         private string filmSource;
         private string audioSource;
         private string extension;
-        private bool isWildcardChecked;
+        private bool isWildcardChecked = true;
         private bool isRegexChecked;
         private string format;
 
         public EntityEditorViewModel()
         {
-            this.Tags = new ObservableCollection<string>();
-            this.Fansubs = new ObservableCollection<string>();
-            this.SubTitleLanguages = new ObservableCollection<string>();
-            this.TrackLanguages = new ObservableCollection<string>();
-            this.isWildcardChecked = true;
-
-            this.Resolutions = new List<string>();
-            this.FilmSources = new List<string>();
-            this.AudioSources = new List<string>();
-            this.Extensions = new List<string>();
+            this.FansubsViewModel = new SelectFlagViewModel(JryFlagType.EntityFansub, this[JryFlagType.EntityFansub]);
+            this.SubTitleLanguagesViewModel = new SelectFlagViewModel(JryFlagType.EntitySubTitleLanguage, this[JryFlagType.EntitySubTitleLanguage]);
+            this.TrackLanguagesViewModel = new SelectFlagViewModel(JryFlagType.EntityTrackLanguage, this[JryFlagType.EntityTrackLanguage]);
+            this.TagsViewModel = new SelectFlagViewModel(JryFlagType.EntityTag, this[JryFlagType.EntityTag]);
         }
 
         public Model.JryVideo Video { get; private set; }
@@ -72,21 +67,29 @@ namespace JryVideo.Editors.EntityEditor
             }
         }
 
-        public ObservableCollection<string> Tags { get; private set; }
+        public ObservableCollection<string> Fansubs { get; } = new ObservableCollection<string>();
 
-        public ObservableCollection<string> Fansubs { get; private set; }
+        public ObservableCollection<string> SubTitleLanguages { get; } = new ObservableCollection<string>();
 
-        public ObservableCollection<string> SubTitleLanguages { get; private set; }
+        public ObservableCollection<string> TrackLanguages { get; } = new ObservableCollection<string>();
 
-        public ObservableCollection<string> TrackLanguages { get; private set; }
+        public ObservableCollection<string> Tags { get; } = new ObservableCollection<string>();
 
-        public List<string> Resolutions { get; private set; }
+        public SelectFlagViewModel FansubsViewModel { get; }
 
-        public List<string> FilmSources { get; private set; }
+        public SelectFlagViewModel SubTitleLanguagesViewModel { get; }
 
-        public List<string> AudioSources { get; private set; }
+        public SelectFlagViewModel TrackLanguagesViewModel { get; }
 
-        public List<string> Extensions { get; private set; }
+        public SelectFlagViewModel TagsViewModel { get; }
+
+        public List<string> Resolutions { get; } = new List<string>();
+
+        public List<string> FilmSources { get; } = new List<string>();
+
+        public List<string> AudioSources { get; } = new List<string>();
+
+        public List<string> Extensions { get; } = new List<string>();
 
         public async Task LoadAsync()
         {

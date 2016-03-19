@@ -96,6 +96,10 @@
     <Compile Include="Controls\NumberEditerControl\NumberEditerControl.xaml.cs">
       <DependentUpon>NumberEditerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SelectFlag\SelectFlagControl.xaml.cs">
+      <DependentUpon>SelectFlagControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SelectFlag\SelectFlagViewModel.cs" />
     <Compile Include="Controls\SelectVideo\SelectVideoControl.xaml.cs">
       <DependentUpon>SelectVideoControl.xaml</DependentUpon>
     </Compile>
@@ -236,6 +240,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\NumberEditerControl\NumberEditerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SelectFlag\SelectFlagControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="JryVideo.Controls.SelectFlag.SelectFlagControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JryVideo.Controls.SelectFlag"
+             xmlns:properties="clr-namespace:JryVideo.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid d:DataContext="{d:DesignInstance local:SelectFlagViewModel}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <ListView ItemsSource="{Binding Collection}"
+                  BorderThickness="0"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid MinWidth="40"
+                          Background="#C059CF"
+                          Margin="2">
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="copy"
+                                          Click="CopyMenuItem_OnClick" />
+                                <MenuItem Header="remove"
+                                          Click="RemoveMenuItem_OnClick" />
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                        <TextBlock Text="{Binding}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Margin="6"
+                                   Foreground="White" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Button Grid.Column="1"
+                Content="{x:Static properties:Resources.Button_Select_Text}"
+                x:Name="SelectFansubButton"
+                Click="SelectButton_OnClick"
+                VerticalAlignment="Top"
+                Margin="4,0,0,0"/>
+    </Grid>
+</UserControl>
