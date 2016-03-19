@@ -1,4 +1,4 @@
-﻿<Page x:Class="JryVideo.Editors.EntityEditor.EntityEditorPage"
+﻿<Page xmlns:SelectFlag="clr-namespace:JryVideo.Controls.SelectFlag"  x:Class="JryVideo.Editors.EntityEditor.EntityEditorPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -95,7 +95,9 @@
             </Grid>
         </Grid>
         
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"
+              Width="400"
+              HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -144,10 +146,6 @@
             </Grid.Resources>
 
             <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -156,37 +154,13 @@
                 <TextBlock Text="fansubs"
                            Style="{StaticResource TitleStyle}" />
 
-                <ListView ItemsSource="{Binding Fansubs}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Style="{StaticResource ItemGridStyle}">
-                                <Grid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="copy"
-                                                  Click="CopyFlagMenuItem_OnClick" />
-                                    </ContextMenu>
-                                </Grid.ContextMenu>
-                                <TextBlock Text="{Binding}"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="6"
-                                           Foreground="White" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
-                        x:Name="SelectFansubButton"
-                        Click="SelectFansubButton_OnClick" />
+                <SelectFlag:SelectFlagControl Grid.Row="1"
+                                              DataContext="{Binding FansubsViewModel}"
+                                              HorizontalAlignment="Left" />
 
             </Grid>
 
             <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -195,37 +169,13 @@
                 <TextBlock Text="subtitle languages"
                            Style="{StaticResource TitleStyle}" />
 
-                <ListView ItemsSource="{Binding SubTitleLanguages}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Style="{StaticResource ItemGridStyle}">
-                                <Grid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="copy"
-                                                  Click="CopyFlagMenuItem_OnClick" />
-                                    </ContextMenu>
-                                </Grid.ContextMenu>
-                                <TextBlock Text="{Binding}"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="6"
-                                           Foreground="White" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
-                        x:Name="SelectSubTitleLanguageButton"
-                        Click="SelectSubTitleLanguageButton_OnClick" />
+                <SelectFlag:SelectFlagControl Grid.Row="1"
+                                              DataContext="{Binding SubTitleLanguagesViewModel}"
+                                              HorizontalAlignment="Left" />
 
             </Grid>
 
             <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -234,37 +184,13 @@
                 <TextBlock Text="track languages"
                            Style="{StaticResource TitleStyle}" />
 
-                <ListView ItemsSource="{Binding TrackLanguages}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Style="{StaticResource ItemGridStyle}">
-                                <Grid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="copy"
-                                                  Click="CopyFlagMenuItem_OnClick" />
-                                    </ContextMenu>
-                                </Grid.ContextMenu>
-                                <TextBlock Text="{Binding}"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="6"
-                                           Foreground="White"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
-                        x:Name="SelectTrackLanguageButton"
-                        Click="SelectTrackLanguageButton_OnClick" />
+                <SelectFlag:SelectFlagControl Grid.Row="1"
+                                              DataContext="{Binding TrackLanguagesViewModel}"
+                                              HorizontalAlignment="Left" />
 
             </Grid>
 
             <Grid Grid.Row="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -273,28 +199,9 @@
                 <TextBlock Text="tags"
                            Style="{StaticResource TitleStyle}" />
 
-                <ListView ItemsSource="{Binding Tags}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Style="{StaticResource ItemGridStyle}">
-                                <Grid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="copy"
-                                                  Click="CopyFlagMenuItem_OnClick" />
-                                    </ContextMenu>
-                                </Grid.ContextMenu>
-                                <TextBlock Text="{Binding}"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="6"
-                                           Foreground="White" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <Button Content="{x:Static properties:Resources.Button_Select_Text}"
-                        Click="SelectTagButton_OnClick" />
+                <SelectFlag:SelectFlagControl Grid.Row="1"
+                                              DataContext="{Binding TagsViewModel}"
+                                              HorizontalAlignment="Left" />
 
             </Grid>
         </Grid>
