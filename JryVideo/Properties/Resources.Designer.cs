@@ -385,6 +385,24 @@ namespace JryVideo.Properties {
         }
         
         /// <summary>
+        ///   查找类似 tag 的本地化字符串。
+        /// </summary>
+        public static string JryFlagType_SeriesTag {
+            get {
+                return ResourceManager.GetString("JryFlagType_SeriesTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 tag 的本地化字符串。
+        /// </summary>
+        public static string JryFlagType_VideoTag {
+            get {
+                return ResourceManager.GetString("JryFlagType_VideoTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 type 的本地化字符串。
         /// </summary>
         public static string JryFlagType_VideoType {

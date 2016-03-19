@@ -30,17 +30,10 @@ namespace JryVideo.Editors.EntityEditor
 
         public EntityEditorViewModel()
         {
-            this.FansubsViewModel = new SelectFlagViewModel(
-                JryFlagType.EntityFansub, new ObservableCollection<string>());
-
-            this.SubTitleLanguagesViewModel = new SelectFlagViewModel(
-                JryFlagType.EntitySubTitleLanguage, new ObservableCollection<string>());
-
-            this.TrackLanguagesViewModel = new SelectFlagViewModel(
-                JryFlagType.EntityTrackLanguage, new ObservableCollection<string>());
-
-            this.TagsViewModel = new SelectFlagViewModel(
-                JryFlagType.EntityTag, new ObservableCollection<string>());
+            this.FansubsViewModel = new SelectFlagViewModel(JryFlagType.EntityFansub);
+            this.SubTitleLanguagesViewModel = new SelectFlagViewModel(JryFlagType.EntitySubTitleLanguage);
+            this.TrackLanguagesViewModel = new SelectFlagViewModel(JryFlagType.EntityTrackLanguage);
+            this.TagsViewModel = new SelectFlagViewModel(JryFlagType.EntityTag);
         }
 
         public Model.JryVideo Video { get; private set; }

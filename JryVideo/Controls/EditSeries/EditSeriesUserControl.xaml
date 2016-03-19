@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="JryVideo.Controls.EditSeries.EditSeriesUserControl"
+﻿<UserControl xmlns:SelectFlag="clr-namespace:JryVideo.Controls.SelectFlag"  x:Class="JryVideo.Controls.EditSeries.EditSeriesUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -45,6 +45,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -88,6 +90,18 @@
                         Height="28"
                         Content="{x:Static properties:Resources.Button_Load_Text}"
                         Click="LoadFromDoubanButton_OnClick" />
+
+                <TextBlock Text="tags"
+                           Grid.Row="4"
+                           Style="{StaticResource TitleStyle}" />
+
+                <SelectFlag:SelectFlagControl Grid.Row="4"
+                                              Grid.Column="1"
+                                              Grid.ColumnSpan="2"
+                                              Margin="6,2,0,0"
+                                              Height="50"
+                                              DataContext="{Binding TagsViewModel}"/>
+                
             </Grid>
 
             <Button x:Name="CommitButton"

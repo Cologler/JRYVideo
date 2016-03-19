@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JryVideo.Model
 {
-    public sealed class JrySeries : JryObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem
+    public sealed class JrySeries : JryObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem, ITagable
     {
         public JrySeries()
         {

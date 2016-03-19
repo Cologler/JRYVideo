@@ -1,5 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Common;
+using JryVideo.Controls.SelectFlag;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
@@ -30,6 +31,7 @@ namespace JryVideo.Controls.EditSeries
             base.ReadFromObject(obj);
 
             this.Names = this.Source == null ? "" : this.Source.Names.AsLines();
+            this.TagsViewModel.ReadTags(obj);
         }
 
         public override void WriteToObject(JrySeries obj)
@@ -49,7 +51,10 @@ namespace JryVideo.Controls.EditSeries
 
             obj.ImdbId = obj.ImdbId.IsNullOrWhiteSpace() ? null : obj.ImdbId.Trim();
             obj.TheTVDBId = obj.TheTVDBId.IsNullOrWhiteSpace() ? null : obj.TheTVDBId.Trim();
+            this.TagsViewModel.WriteTags(obj, true);
         }
+
+        public SelectFlagViewModel TagsViewModel { get; } = new SelectFlagViewModel(JryFlagType.SeriesTag);
 
         public string DoubanId
         {

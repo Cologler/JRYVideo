@@ -30,8 +30,12 @@ namespace JryVideo.Common
                     return Resources.JryFlagType_EntityAudioSource;
                 case JryFlagType.EntityTag:
                     return Resources.JryFlagType_EntityTag;
+                case JryFlagType.SeriesTag:
+                    return Resources.JryFlagType_SeriesTag;
+                case JryFlagType.VideoTag:
+                    return Resources.JryFlagType_VideoTag;
                 default:
-                    throw new ArgumentOutOfRangeException("flag", flag, null);
+                    throw new ArgumentOutOfRangeException(nameof(flag), flag, null);
             }
         }
 

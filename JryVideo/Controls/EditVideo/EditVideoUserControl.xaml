@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="JryVideo.Controls.EditVideo.EditVideoUserControl"
+﻿<UserControl xmlns:SelectFlag="clr-namespace:JryVideo.Controls.SelectFlag"  x:Class="JryVideo.Controls.EditVideo.EditVideoUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -310,35 +310,12 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    
-                    <TextBlock Style="{StaticResource TitleStyle}"
-                               Text="artist" />
 
-                    <Button Grid.Column="1"
-                            x:Name="SelectArtistButton"
-                            Click="SelectArtistButton_OnClick"
-                            Content="select"
-                            Margin="40,0,0,0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Left"
-                            IsEnabled="False"/>
-                </Grid>
-                
-                <Grid Grid.Row="1"
-                      Margin="0,4,0,0">
-                    
-                    <TextBlock Text="come soon ..."
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"
-                               FontSize="40"/>
-                    
-                </Grid>
+                <TextBlock Text="tag"
+                           Style="{StaticResource TitleStyle}" />
+
+                <SelectFlag:SelectFlagControl Grid.Row="1"
+                                              DataContext="{Binding TagsViewModel}"/>
                 
             </Grid>
 

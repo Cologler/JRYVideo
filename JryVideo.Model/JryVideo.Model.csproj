@@ -61,6 +61,7 @@
     <Compile Include="IJryCoverParent.cs" />
     <Compile Include="INameable.cs" />
     <Compile Include="InterfaceExtension.cs" />
+    <Compile Include="ITagable.cs" />
     <Compile Include="ITheTVDBItem.cs" />
     <Compile Include="JryFlag.cs" />
     <Compile Include="JryFlagType.cs" />

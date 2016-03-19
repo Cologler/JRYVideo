@@ -2,6 +2,7 @@
 using Jasily.SDK.Douban.Entities;
 using JryVideo.Common;
 using JryVideo.Common.ValidationRules;
+using JryVideo.Controls.SelectFlag;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Editors.CoverEditor;
@@ -143,6 +144,8 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
+        public SelectFlagViewModel TagsViewModel { get; } = new SelectFlagViewModel(JryFlagType.VideoTag);
+
         public VideoInfoReadonlyViewModel LastVideoViewModel
         {
             get { return this.lastVideoViewModel; }
@@ -268,6 +271,8 @@ namespace JryVideo.Controls.EditVideo
                     if (nextVideo != null && nextVideo.NextVideoId == null) nextVideo.LastVideoId = obj.Id;
                 }
             }
+
+            this.TagsViewModel.WriteTags(obj, true);
         }
 
         public override void ReadFromObject(JryVideoInfo obj)
@@ -295,6 +300,8 @@ namespace JryVideo.Controls.EditVideo
                 var nextVideo = parent.Videos.FirstOrDefault(z => z.Id == nextId);
                 if (nextVideo != null) this.NextVideoViewModel = new VideoInfoReadonlyViewModel(nextVideo);
             }
+
+            this.TagsViewModel.ReadTags(obj);
         }
 
         public void LoadDouban(Movie info)

@@ -225,6 +225,12 @@
   <data name="JryFlagType_EntityTrackLanguage" xml:space="preserve">
     <value>track language</value>
   </data>
+  <data name="JryFlagType_SeriesTag" xml:space="preserve">
+    <value>tag</value>
+  </data>
+  <data name="JryFlagType_VideoTag" xml:space="preserve">
+    <value>tag</value>
+  </data>
   <data name="JryFlagType_VideoType" xml:space="preserve">
     <value>type</value>
   </data>
