@@ -130,17 +130,6 @@ namespace JryVideo.Core.Managers
             var type = e.Value1;
             switch (type)
             {
-                // can not change
-                case JryFlagType.EntityResolution:
-                case JryFlagType.EntityExtension:
-                case JryFlagType.EntityAudioSource:
-                case JryFlagType.EntityQuality:
-                case JryFlagType.VideoYear:
-                    throw new NotSupportedException();
-
-                case JryFlagType.VideoType:
-                    return;
-
                 case JryFlagType.EntityFansub:
                 case JryFlagType.EntitySubTitleLanguage:
                 case JryFlagType.EntityTrackLanguage:
@@ -148,7 +137,8 @@ namespace JryVideo.Core.Managers
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    if ((int)type > 20) throw new NotSupportedException();
+                    return;
             }
 
             var oldValue = e.Value2;

@@ -3,6 +3,7 @@ using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
@@ -325,6 +326,76 @@ namespace JryVideo.Core.Managers
                 }
 
                 return false;
+            }
+        }
+
+        public void Initialize(DataCenter dataCenter)
+        {
+            dataCenter.FlagManager.FlagChanged += this.FlagManager_FlagChanged;
+        }
+
+        private async void FlagManager_FlagChanged(object sender, EventArgs<JryFlagType, string, string> e)
+        {
+            var type = e.Value1;
+            var oldValue = e.Value2;
+            var newValue = e.Value3;
+
+            JrySeries.QueryParameter queryParameter;
+            switch (type)
+            {
+                case JryFlagType.SeriesTag:
+                case JryFlagType.VideoTag:
+                    queryParameter = new JrySeries.QueryParameter(oldValue, JrySeries.QueryMode.Tag, oldValue);
+                    break;
+
+                case JryFlagType.VideoType:
+                    queryParameter = new JrySeries.QueryParameter(oldValue, JrySeries.QueryMode.VideoType, oldValue);
+                    break;
+
+                default:
+                    if ((int)type < 20) throw new NotSupportedException();
+                    return;
+            }
+
+            var series = (await this.Source.QueryAsync(queryParameter, 0, int.MaxValue)).ToArray();
+
+            switch (type)
+            {
+                case JryFlagType.SeriesTag:
+                    foreach (var item in series.Where(z => z.Tags != null && z.Tags.Contains(oldValue)))
+                    {
+                        if (item.Tags?.Remove(oldValue) == true) item.Tags?.Add(newValue);
+                        await this.UpdateAsync(item);
+                    }
+                    break;
+
+                case JryFlagType.VideoTag:
+                    foreach (var item in series)
+                    {
+                        Debug.Assert(item.Videos != null);
+                        var hasChanged = false;
+                        foreach (var info in item.Videos.Where(z => z.Tags?.Contains(oldValue) == true))
+                        {
+                            if (info.Tags?.Remove(oldValue) == true) info.Tags?.Add(newValue);
+                            hasChanged = true;
+                        }
+                        if (hasChanged) await this.UpdateAsync(item);
+                    }
+                    break;
+
+                case JryFlagType.VideoType:
+                    foreach (var item in series)
+                    {
+                        Debug.Assert(item.Videos != null);
+                        var hasChanged = false;
+                        foreach (var info in item.Videos.Where(z => z.Type == oldValue))
+                        {
+                            info.Type = newValue;
+                            hasChanged = true;
+                        }
+                        if (hasChanged) await this.UpdateAsync(item);
+                    }
+                    break;
             }
         }
     }

@@ -27,6 +27,7 @@ namespace JryVideo.Core.Managers
             this.VideoRoleManager = new VideoRoleManager(this.SeriesManager, this.ArtistManager, dataEngine.GetVideoRoleInfoSet());
 
             // initialize
+            this.SeriesManager.Initialize(this);
             this.VideoManager.Initialize(this);
             this.FlagManager.Initialize(this);
             this.VideoRoleManager.Initialize(this);

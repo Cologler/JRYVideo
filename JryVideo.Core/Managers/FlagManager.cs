@@ -183,15 +183,20 @@ namespace JryVideo.Core.Managers
             switch (type)
             {
                 // can not change
+                case JryFlagType.VideoYear:
+
                 case JryFlagType.EntityResolution:
                 case JryFlagType.EntityExtension:
                 case JryFlagType.EntityAudioSource:
                 case JryFlagType.EntityQuality:
-                case JryFlagType.VideoYear:
                     Debug.Assert(false);
-                    return true;
+                    return false;
+
+                case JryFlagType.SeriesTag:
 
                 case JryFlagType.VideoType:
+                case JryFlagType.VideoTag:
+
                 case JryFlagType.EntityFansub:
                 case JryFlagType.EntitySubTitleLanguage:
                 case JryFlagType.EntityTrackLanguage:

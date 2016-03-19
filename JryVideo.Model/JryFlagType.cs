@@ -2,9 +2,13 @@
 {
     public enum JryFlagType : int
     {
+        SeriesTag = 1,
+
         VideoYear = 11,
 
         VideoType = 12,
+
+        VideoTag = 13,
 
         EntityResolution = 21,
 
