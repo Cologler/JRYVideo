@@ -1,4 +1,6 @@
-﻿using Jasily.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using Jasily.ComponentModel;
 using JryVideo.Data;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -7,15 +9,17 @@ namespace JryVideo.Main
 {
     public class MainViewModel : JasilyViewModel
     {
-        private DataModeViewModel selectedMode;
+        private NameValuePair<JryVideoDataSourceProviderManagerMode> selectedMode;
 
         public MainViewModel()
         {
             this.VideosViewModel = new MainSeriesItemViewerViewModel();
-            this.ModeCollection = new ObservableCollection<DataModeViewModel>()
+            this.ModeCollection = new ObservableCollection<NameValuePair<JryVideoDataSourceProviderManagerMode>>()
             {
-                new DataModeViewModel(JryVideoDataSourceProviderManagerMode.Public),
-                new DataModeViewModel(JryVideoDataSourceProviderManagerMode.Private)
+                JryVideoDataSourceProviderManagerMode.Public.WithName(
+                    nameof(JryVideoDataSourceProviderManagerMode.Public)),
+                JryVideoDataSourceProviderManagerMode.Private.WithName(
+                    nameof(JryVideoDataSourceProviderManagerMode.Private)),
             };
             this.selectedMode = this.ModeCollection[0];
         }
@@ -24,9 +28,9 @@ namespace JryVideo.Main
 
         public async void ReloadAsync() => await this.VideosViewModel.ReloadAsync();
 
-        public ObservableCollection<DataModeViewModel> ModeCollection { get; private set; }
+        public ObservableCollection<NameValuePair<JryVideoDataSourceProviderManagerMode>> ModeCollection { get; private set; }
 
-        public DataModeViewModel SelectedMode
+        public NameValuePair<JryVideoDataSourceProviderManagerMode> SelectedMode
         {
             get { return this.selectedMode; }
             set { this.SetPropertyRef(ref this.selectedMode, value); }

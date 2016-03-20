@@ -179,7 +179,6 @@
       <DependentUpon>EditVideoUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditVideo\EditVideoViewModel.cs" />
-    <Compile Include="Main\DataModeViewModel.cs" />
     <Compile Include="Main\MainSeriesItemViewerViewModel.cs" />
     <Compile Include="Managers\FlagManager\FlagManagerViewModel.cs" />
     <Compile Include="Managers\FlagManager\FlagManagerWindow.xaml.cs">
