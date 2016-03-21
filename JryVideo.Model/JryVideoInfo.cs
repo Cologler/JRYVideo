@@ -72,7 +72,7 @@ namespace JryVideo.Model
 
         public IJryCoverParent BackgroundImageAsCoverParent() => new BackgroundCoverParent(this);
 
-        private class BackgroundCoverParent : IJryCoverParent
+        private sealed class BackgroundCoverParent : IJryCoverParent
         {
             private readonly JryVideoInfo jryVideoInfo;
 
@@ -97,6 +97,12 @@ namespace JryVideo.Model
             }
 
             JryCoverType IJryCoverParent.CoverType => JryCoverType.Background;
+
+            /// <summary>
+            /// return 'type [id]'
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString() => $"{nameof(BackgroundCoverParent)} [{this.Id}]";
         }
 
         [CanBeNull]

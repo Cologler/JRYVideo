@@ -44,16 +44,16 @@ namespace JryVideo.Common
 
         public async void BeginUpdateCover()
         {
-            if (this.Source.CoverId != null || await this.TryAutoAddCoverAsync())
+            if (this.Source.CoverId == null && !await this.TryAutoAddCoverAsync()) return;
+
+            Debug.Assert(this.Source.CoverId != null);
+            if (this.IsDelayLoad) await Task.Yield();
+            this.Cover = await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId);
+            if (this.cover == null)
             {
-                Debug.Assert(this.Source.CoverId != null);
-                if (this.IsDelayLoad) await Task.Yield();
-                this.Cover = await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId);
-                if (this.cover == null)
-                {
-                    await Log.WriteAsync($"{this.Source.GetType().Name} [{this.Source.Id}] missing cover [{this.Source.CoverId}].");
-                    if (Debugger.IsAttached) Debugger.Break();
-                }
+                var errorMsg = $"{this.Source} missing cover [{this.Source.CoverId}].";
+                await Log.WriteAsync(errorMsg);
+                if (Debugger.IsAttached) Debugger.Break();
             }
         }
 

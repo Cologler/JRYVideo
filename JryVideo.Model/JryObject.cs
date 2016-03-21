@@ -64,5 +64,11 @@ namespace JryVideo.Model
 
         protected static bool CombineEquals(string left, string right)
             => left == null || right == null || left == right;
+
+        /// <summary>
+        /// return 'type [id]'
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"{this.GetType().Name} [{this.Id}]";
     }
 }
