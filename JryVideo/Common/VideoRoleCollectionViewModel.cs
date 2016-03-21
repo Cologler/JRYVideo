@@ -57,7 +57,7 @@ namespace JryVideo.Common
             var minor = new List<VideoRoleViewModel>();
             foreach (var imdbItem in new IImdbItem[] { this.series, this.video })
             {
-                var col = await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.FindAsync(imdbItem.Id);
+                var col = await this.GetManagers().VideoRoleManager.FindAsync(imdbItem.Id);
                 if (col != null)
                 {
                     this.VideoRoleCollectionSources.Add(col);
@@ -81,7 +81,7 @@ namespace JryVideo.Common
         {
             foreach (var col in this.VideoRoleCollectionSources.Where(z => id == null || z.Id == id))
             {
-                await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.UpdateAsync(col);
+                await this.GetManagers().VideoRoleManager.UpdateAsync(col);
             }
         }
 
@@ -95,11 +95,11 @@ namespace JryVideo.Common
                 collection.MinorRoles?.Remove(role.Source) == true)
             {
                 this.Roles.Collection.Remove(role);
-                await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.UpdateAsync(collection);
+                await this.GetManagers().VideoRoleManager.UpdateAsync(collection);
                 var id = role.Source.CoverId;
                 if (!string.IsNullOrWhiteSpace(id))
                 {
-                    await JryVideoCore.Current.CurrentDataCenter.CoverManager.RemoveAsync(id);
+                    await this.GetManagers().CoverManager.RemoveAsync(id);
                 }
             }
         }
