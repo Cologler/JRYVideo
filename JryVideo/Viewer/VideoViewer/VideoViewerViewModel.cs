@@ -348,6 +348,8 @@ namespace JryVideo.Viewer.VideoViewer
                 this.Refresh();
                 return false;
             }
+
+            protected override bool IsDelayLoad => true;
         }
     }
 }

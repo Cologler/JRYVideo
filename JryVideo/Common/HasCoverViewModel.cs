@@ -47,8 +47,8 @@ namespace JryVideo.Common
             if (this.Source.CoverId != null || await this.TryAutoAddCoverAsync())
             {
                 Debug.Assert(this.Source.CoverId != null);
-                var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
-                this.Cover = await coverManager.LoadCoverAsync(this.Source.CoverId);
+                if (this.IsDelayLoad) await Task.Yield();
+                this.Cover = await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId);
                 if (this.cover == null)
                 {
                     await Log.WriteAsync($"{this.Source.GetType().Name} [{this.Source.Id}] missing cover [{this.Source.CoverId}].");
@@ -56,5 +56,7 @@ namespace JryVideo.Common
                 }
             }
         }
+
+        protected virtual bool IsDelayLoad => false;
     }
 }
