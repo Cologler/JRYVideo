@@ -44,21 +44,23 @@ namespace JryVideo.Main
                 this.MainPage = new MainPage();
                 this.MainPage.VideoSelected += this.MainPage_VideoSelected;
                 this.MainFrame.Navigate(this.MainPage);
+                OnShowMessage += this.MainWindow_OnShowMessage;
                 this.BeginRefresh();
             }
         }
 
-        private void App_UserConfigChanged(object sender, Configs.UserConfig e)
+        private void MainWindow_OnShowMessage(object sender, string e)
         {
-            if (e != null)
-            {
-                this.ShowStatusMessage("read user config successd");
-            }
-            else
-            {
-                this.ShowStatusMessage("read user config failed");
-            }
+            Debug.Assert(e != null);
+            this.ShowStatusMessage(e);
         }
+
+        private void App_UserConfigChanged(object sender, Configs.UserConfig e)
+            => this.ShowStatusMessage(e != null ? "read user config successd" : "read user config failed");
+
+        private static event EventHandler<string> OnShowMessage;
+
+        public static void ShowMessage(string msg) => OnShowMessage?.Invoke(null, msg);
 
         private async void ShowStatusMessage(string msg)
         {

@@ -138,8 +138,11 @@ namespace JryVideo.Viewer.VideoViewer
                 if (video.Watcheds != null)
                 {
                     video.Watcheds = null;
-                    await manager.UpdateAsync(video);
-                    return true;
+                    if (await manager.UpdateAsync(video))
+                    {
+                        this.ShowStatueMessage("watched updated.");
+                        return true;
+                    }
                 }
             }
             else
@@ -148,8 +151,11 @@ namespace JryVideo.Viewer.VideoViewer
                     watched.Where((t, i) => video.Watcheds[i] != t).Any())
                 {
                     video.Watcheds = watched;
-                    await manager.UpdateAsync(video);
-                    return true;
+                    if (await manager.UpdateAsync(video))
+                    {
+                        this.ShowStatueMessage("watched updated.");
+                        return true;
+                    }
                 }
             }
 
