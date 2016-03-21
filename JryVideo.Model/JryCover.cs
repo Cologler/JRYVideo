@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
 using System.Diagnostics;
 
 namespace JryVideo.Model
@@ -32,24 +31,6 @@ namespace JryVideo.Model
 
         [BsonIgnoreIfDefault]
         public byte[] BinaryData { get; set; }
-
-        public string GetDownloadId()
-        {
-            var key = ((int)this.CoverType) + "_";
-
-            switch (this.CoverType)
-            {
-                case JryCoverType.Role:
-                    return key + (this.VideoId ?? this.SeriesId) + "_" + this.ActorId;
-
-                case JryCoverType.Background:
-                case JryCoverType.Video:
-                    return key + this.VideoId;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
 
         protected override bool InnerTestHasError()
         {

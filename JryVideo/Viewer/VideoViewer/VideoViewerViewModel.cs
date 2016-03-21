@@ -147,8 +147,7 @@ namespace JryVideo.Viewer.VideoViewer
             }
             else
             {
-                if (video.Watcheds?.Count != watched.Count ||
-                    watched.Where((t, i) => video.Watcheds[i] != t).Any())
+                if (video.Watcheds?.Count != watched.Count || !watched.SequenceEqual(video.Watcheds))
                 {
                     video.Watcheds = watched;
                     if (await manager.UpdateAsync(video))

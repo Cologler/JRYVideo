@@ -67,10 +67,11 @@ namespace JryVideo.Core.Managers
                         Log.Write($"series [{builder.SeriesId}] video [{builder.VideoId}] cover [{builder.CoverType}] has more then 1 result.");
                         return null;
                     }
-
                     if (string.IsNullOrWhiteSpace(builder.Uri)) return null;
 
-                    var request = WebRequest.CreateHttp(builder.Uri);
+                    HttpWebRequest request;
+                    try { request = WebRequest.CreateHttp(builder.Uri); }
+                    catch { return null; }
                     var result = await request.GetResultAsBytesAsync();
                     if (result.IsSuccess)
                     {
@@ -132,9 +133,9 @@ namespace JryVideo.Core.Managers
 
             public void Dispose()
             {
-                lock (Processs)
+                if (this.IsOwner)
                 {
-                    if (this.IsOwner)
+                    lock (Processs)
                     {
                         Processs.Remove(this.id);
                     }
