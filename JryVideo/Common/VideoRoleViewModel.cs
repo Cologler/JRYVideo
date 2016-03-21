@@ -15,7 +15,7 @@ namespace JryVideo.Common
         private readonly VideoRoleCollectionViewModel parent;
 
         public VideoRoleViewModel(JryVideoRole source, VideoRoleCollectionViewModel parent, IImdbItem imdbItem, bool isMajor)
-            : base(source, null)
+            : base(source)
         {
             this.parent = parent;
             this.ImdbItem = imdbItem;
@@ -25,8 +25,6 @@ namespace JryVideo.Common
         public IImdbItem ImdbItem { get; private set; }
 
         public bool IsSeriesRole => this.ImdbItem is JrySeries;
-
-        public override string CollectionId => this.ImdbItem.Id;
 
         public bool IsMajor { get; }
 
@@ -98,13 +96,11 @@ namespace JryVideo.Common
             if (guid != null)
             {
                 this.Source.CoverId = guid;
-                await this.parent.CommitAsync(this.ImdbItem.Id);
+                await this.parent.CommitAsync();
                 return true;
             }
             return false;
         }
-
-        public async void BeginDelete() => await this.parent.DeleteAsync(this);
 
         public async void BegionMoveToAnotherCollection()
         {
@@ -122,7 +118,7 @@ namespace JryVideo.Common
             if (RoleEditorWindow.Edit(parent, this.Source))
             {
                 this.RefreshProperties();
-                await this.parent.CommitAsync(this.ImdbItem.Id);
+                await this.parent.CommitAsync();
             }
         }
     }

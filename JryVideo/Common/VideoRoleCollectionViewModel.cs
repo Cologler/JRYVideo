@@ -11,6 +11,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Markup;
+using JryVideo.Core.Managers;
 
 namespace JryVideo.Common
 {
@@ -42,10 +44,7 @@ namespace JryVideo.Common
                 .AutoCompleteRoleAsync(this.GetManagers().VideoRoleManager, this.series);
             var acv = await new VideoInfoAutoComplete()
                 .AutoCompleteRoleAsync(this.GetManagers().VideoRoleManager, this.video);
-            if (acs || acv)
-            {
-                await this.LoadAsync();
-            }
+            if (acs || acv) await this.LoadAsync();
         }
 
         public async Task LoadAsync()
@@ -53,22 +52,22 @@ namespace JryVideo.Common
             this.Roles.Collection.Clear();
             this.VideoRoleCollectionSources.Clear();
 
+            var manager = this.GetManagers().VideoRoleManager;
+
             var major = new List<VideoRoleViewModel>();
             var minor = new List<VideoRoleViewModel>();
             foreach (var imdbItem in new IImdbItem[] { this.series, this.video })
             {
-                var col = await this.GetManagers().VideoRoleManager.FindAsync(imdbItem.Id);
-                if (col != null)
+                var col = await manager.FindAsync(imdbItem.Id);
+                Debug.Assert(col != null);
+                this.VideoRoleCollectionSources.Add(col);
+                if (col.MajorRoles != null)
                 {
-                    this.VideoRoleCollectionSources.Add(col);
-                    if (col.MajorRoles != null)
-                    {
-                        major.AddRange(col.MajorRoles.Select(z => new VideoRoleViewModel(z, this, imdbItem, true)));
-                    }
-                    if (col.MinorRoles != null)
-                    {
-                        minor.AddRange(col.MinorRoles.Select(z => new VideoRoleViewModel(z, this, imdbItem, false)));
-                    }
+                    major.AddRange(col.MajorRoles.Select(z => new VideoRoleViewModel(z, this, imdbItem, true)));
+                }
+                if (col.MinorRoles != null)
+                {
+                    minor.AddRange(col.MinorRoles.Select(z => new VideoRoleViewModel(z, this, imdbItem, false)));
                 }
             }
 
@@ -77,9 +76,9 @@ namespace JryVideo.Common
             this.Roles.Collection.ForEach(z => z.RefreshProperties());
         }
 
-        public async Task CommitAsync(string id = null)
+        public async Task CommitAsync()
         {
-            foreach (var col in this.VideoRoleCollectionSources.Where(z => id == null || z.Id == id))
+            foreach (var col in this.VideoRoleCollectionSources)
             {
                 await this.GetManagers().VideoRoleManager.UpdateAsync(col);
             }
@@ -109,10 +108,11 @@ namespace JryVideo.Common
             Debug.Assert(this.VideoRoleCollectionSources.Count == 2);
             var series = this.VideoRoleCollectionSources[0];
             var video = this.VideoRoleCollectionSources[1];
+            var manager = this.GetManagers().VideoRoleManager;
             if (role.IsSeriesRole ? Exchange(series, video, role.Source) : Exchange(video, series, role.Source))
             {
-                await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.UpdateAsync(series);
-                await JryVideoCore.Current.CurrentDataCenter.VideoRoleManager.UpdateAsync(video);
+                await manager.UpdateAsync(series);
+                await manager.UpdateAsync(video);
                 return role.IsSeriesRole ? this.video : this.series as IImdbItem;
             }
             return null;
@@ -138,5 +138,93 @@ namespace JryVideo.Common
         public int Compare(object x, object y) => this.Compare(x as VideoRoleViewModel, y as VideoRoleViewModel);
 
         public int Compare(VideoRoleViewModel x, VideoRoleViewModel y) => x.OrderIndex.CompareTo(y.OrderIndex);
+
+        public async Task CombineActorsAsync()
+        {
+            var action = new CombineAction(
+                this.GetManagers().VideoRoleManager,
+                this.GetManagers().CoverManager,
+                this.video.Id,
+                this.series.Id);
+            await action.CombineAsync();
+            await this.LoadAsync();
+        }
+
+        public class CombineAction
+        {
+            private readonly VideoRoleManager manager;
+            private readonly CoverManager coverManager;
+            private readonly string sourceId;
+            private readonly string destId;
+
+            public CombineAction(VideoRoleManager manager, CoverManager coverManager, string sourceId, string destId)
+            {
+                this.manager = manager;
+                this.coverManager = coverManager;
+                this.sourceId = sourceId;
+                this.destId = destId;
+            }
+
+            public List<string> RemovedCoverId { get; } = new List<string>();
+
+            public async Task CombineAsync()
+            {
+                var source = await this.manager.FindAsync(this.sourceId);
+                var dest = await this.manager.FindAsync(this.destId);
+                Debug.Assert(source != null && dest != null);
+                this.CombineTo(source.MajorRoles, dest.MajorRoles);
+                this.CombineTo(source.MinorRoles, dest.MinorRoles);
+                if (await this.manager.UpdateAsync(dest) && await this.manager.UpdateAsync(source))
+                {
+                    foreach (var id in this.RemovedCoverId)
+                    {
+                        await this.coverManager.RemoveAsync(id);
+                    }
+                }
+            }
+
+            private void CombineTo(List<JryVideoRole> source, List<JryVideoRole> dest)
+            {
+                if (source == null || dest == null) return;
+
+                foreach (var role in source.ToArray())
+                {
+                    var other = dest.FirstOrDefault(z => z.Id == role.Id);
+                    if (other != null)
+                    {
+                        this.CombineTo(role, other);
+                    }
+                    else
+                    {
+                        dest.Add(role);
+                    }
+                }
+                source.Clear();
+            }
+
+            private void CombineTo(JryVideoRole source, JryVideoRole dest)
+            {
+                Debug.Assert(source != null && dest != null);
+
+                if (source.CoverId != null)
+                {
+                    if (dest.CoverId == null)
+                    {
+                        dest.CoverId = source.CoverId;
+                    }
+                    else
+                    {
+                        this.RemovedCoverId.Add(source.CoverId);
+                    }
+                }
+
+                if (source.RoleName != null)
+                {
+                    dest.RoleName = dest.RoleName == null
+                        ? source.RoleName.ToList()
+                        : source.RoleName.Concat(dest.RoleName).Distinct().ToList();
+                }
+            }
+        }
     }
 }

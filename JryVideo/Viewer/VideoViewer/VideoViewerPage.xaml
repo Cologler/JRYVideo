@@ -523,11 +523,30 @@
                     BorderBrush="{StaticResource AccentColorBrush}"
                     Background="White">
                 <Grid>
-                    <ListView BorderThickness="0"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    
+                    <Grid>
+                        <Menu>
+                            <MenuItem Header="add" />
+                            <MenuItem Header="fix"
+                                      HorizontalAlignment="Left">
+                                <MenuItem Header="combine to series actors"
+                                          Click="CombineActorsMenuItem_OnClick" />
+                            </MenuItem>
+                        </Menu>
+                    </Grid>
+                    
+                    <ListView x:Name="ActorsListView"
+                              Grid.Row="1"
+                              BorderThickness="0"
                               ItemsSource="{Binding VideoRoleCollection.Roles.View}"
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              Background="White" >
+                              Background="White"
+                              TabIndex="0">
 
                         <ListView.GroupStyle>
                             <GroupStyle>

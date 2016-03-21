@@ -299,9 +299,7 @@ namespace JryVideo.Viewer.VideoViewer
         }
 
         private void ShowActorMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            this.ActorFlyout.IsOpen = !this.ActorFlyout.IsOpen;
-        }
+            => this.ActorFlyout.IsOpen = !this.ActorFlyout.IsOpen;
 
         private void ResetBackgroundMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
@@ -327,10 +325,10 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void ActorDeleteMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            this.DeleteConfirm(() =>
+            this.DeleteConfirm(async() =>
             {
                 var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
-                vm?.BeginDelete();
+                if (vm != null) await this.ViewModel.VideoRoleCollection.DeleteAsync(vm);
             });
         }
 
@@ -375,5 +373,8 @@ namespace JryVideo.Viewer.VideoViewer
         private void WatchNoneMenuItem_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.WatchNone();
 
         private async void WatchSaveMenuItem_OnClick(object sender, RoutedEventArgs e) => await this.ViewModel.WatchSaveAsync();
+
+        private async void CombineActorsMenuItem_OnClick(object sender, RoutedEventArgs e)
+            => await this.ViewModel.VideoRoleCollection.CombineActorsAsync();
     }
 }

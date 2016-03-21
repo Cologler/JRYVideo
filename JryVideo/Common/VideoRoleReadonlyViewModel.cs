@@ -10,16 +10,13 @@ namespace JryVideo.Common
     {
         private string actorName;
 
-        public VideoRoleReadonlyViewModel(JryVideoRole source, string collectionId)
+        public VideoRoleReadonlyViewModel(JryVideoRole source)
             : base(source)
         {
-            this.CollectionId = collectionId;
             this.NameViewModel = new NameableViewModel<JryVideoRole>(source);
         }
 
         public NameableViewModel<JryVideoRole> NameViewModel { get; }
-
-        public virtual string CollectionId { get; }
 
         [NotifyPropertyChanged]
         public string ActorName

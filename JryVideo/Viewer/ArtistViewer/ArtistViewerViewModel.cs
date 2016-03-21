@@ -28,7 +28,7 @@ namespace JryVideo.Viewer.ArtistViewer
             this.ArtistView = new ArtistViewModel(artist);
 
             var roles = (await dataCenter.VideoRoleManager.QueryByActorIdAsync(artistId))
-                .Select(z => new VideoRoleReadonlyViewModel(z.Item2, z.Item1.Id))
+                .Select(z => new VideoRoleReadonlyViewModel(z.Item2))
                 .ToArray();
             this.RoleViews.AddRange(roles);
         }
