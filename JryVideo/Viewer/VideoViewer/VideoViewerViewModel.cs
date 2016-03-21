@@ -119,6 +119,43 @@ namespace JryVideo.Viewer.VideoViewer
 
         public void WatchNone() => this.Watcheds.ForEach(z => z.SetIsWatchedAndNotify(false));
 
+        public async Task<bool> WatchSaveAsync()
+        {
+            var manager = this.GetManagers().VideoManager;
+            var video = await manager.FindAsync(this.InfoView.Source.Id);
+            if (video == null)
+            {
+                Debug.Assert(false);
+                return false;
+            }
+
+            var watched = this.Watcheds.Where(z => z.IsWatched)
+                .Select(z => z.Episode)
+                .OrderBy(z => z)
+                .ToList();
+            if (watched.Count == 0)
+            {
+                if (video.Watcheds != null)
+                {
+                    video.Watcheds = null;
+                    await manager.UpdateAsync(video);
+                    return true;
+                }
+            }
+            else
+            {
+                if (video.Watcheds?.Count != watched.Count ||
+                    watched.Where((t, i) => video.Watcheds[i] != t).Any())
+                {
+                    video.Watcheds = watched;
+                    await manager.UpdateAsync(video);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>> EntitesView { get; private set; }
 
         private int CompareEntityViewModel(EntityViewModel x, EntityViewModel y)
@@ -139,31 +176,9 @@ namespace JryVideo.Viewer.VideoViewer
 
         public async void Flush()
         {
-            var manager = this.GetManagers().VideoManager;
-            var video = await manager.FindAsync(this.InfoView.Source.Id);
-            if (video == null) return;
-            var watched = this.Watcheds.Where(z => z.IsWatched)
-                .Select(z => z.Episode)
-                .OrderBy(z => z)
-                .ToList();
-            if (watched.Count == 0)
+            if (await this.WatchSaveAsync())
             {
-                if (video.Watcheds != null)
-                {
-                    video.Watcheds = null;
-                    await manager.UpdateAsync(video);
-                    this.InfoView.RefreshProperties();
-                }
-            }
-            else
-            {
-                if (video.Watcheds?.Count != watched.Count ||
-                    watched.Where((t, i) => video.Watcheds[i] != t).Any())
-                {
-                    video.Watcheds = watched;
-                    await manager.UpdateAsync(video);
-                    this.InfoView.RefreshProperties();
-                }
+                this.InfoView.RefreshProperties();
             }
         }
 

@@ -24,14 +24,13 @@ namespace JryVideo.Common
         private bool isTrackButtonEnable;
         private bool isUntrackButtonEnable;
         private WatchedInfo todayPlaying;
-        private GroupFactory groupFactory;
 
         public VideoInfoViewModel(SeriesViewModel seriesViewModel, JryVideoInfo source)
             : base(source)
         {
             this.PropertiesMapper = Mapper;
             this.SeriesView = seriesViewModel;
-            this.RefreshProperties();
+            this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
         }
 
         public SeriesViewModel SeriesView { get; }
@@ -47,17 +46,18 @@ namespace JryVideo.Common
 
         public override void RefreshProperties()
         {
-            this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
+            this.RefreshGroup(this.VideoGroupFactory);
             base.RefreshProperties();
         }
 
-        public async void RefreshGroup(GroupFactory groupFactory)
+        public GroupFactory VideoGroupFactory { get; set; }
+
+        private async void RefreshGroup(GroupFactory groupFactory = null)
         {
             // only tracking need build group info.
-            if (!this.Source.IsTracking) return;
+            if (groupFactory == null || !this.Source.IsTracking) return;
 
             int? episode;
-            this.groupFactory = groupFactory;
             this.VideoGroup = groupFactory.Build(this.Source, out episode);
             Debug.Assert(this.VideoGroup != null);
 
@@ -318,7 +318,7 @@ namespace JryVideo.Common
             };
             if (dlg.ShowDialog() == true)
             {
-                this.groupFactory?.RefreshGroup(this);
+                this.VideoGroupFactory?.RefreshGroup(this);
                 this.RefreshProperties();
                 this.BeginUpdateCover();
                 return true;

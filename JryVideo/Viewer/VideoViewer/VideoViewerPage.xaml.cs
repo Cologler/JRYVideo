@@ -373,5 +373,7 @@ namespace JryVideo.Viewer.VideoViewer
         private void WatchReverseMenuItem_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.WatchReverse();
 
         private void WatchNoneMenuItem_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.WatchNone();
+
+        private async void WatchSaveMenuItem_OnClick(object sender, RoutedEventArgs e) => await this.ViewModel.WatchSaveAsync();
     }
 }

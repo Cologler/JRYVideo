@@ -115,7 +115,11 @@ namespace JryVideo.Main
             Debug.Assert(items != null);
             var groupFactory = new VideoInfoViewModel.GroupFactory();
             this.GroupFactory = groupFactory;
-            items.ForEach(z => z.RefreshGroup(groupFactory));
+            items.ForEach(z =>
+            {
+                z.VideoGroupFactory = groupFactory;
+                z.RefreshProperties();
+            });
         }
 
         public void RefreshVideo(VideoInfoViewModel item)

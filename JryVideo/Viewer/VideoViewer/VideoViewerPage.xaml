@@ -191,7 +191,8 @@
                 </Grid.RowDefinitions>
 
                 <Grid>
-                    <Menu Background="Transparent">
+                    <Menu Background="Transparent"
+                          HorizontalAlignment="Left">
                         <MenuItem Visibility="{Binding InfoView.HasLast, Converter={StaticResource BooleanToVisibilityConverter}}"
                                   Header="last video"
                                   Click="GoLastVideoMenuItem_OnClick"/>
@@ -459,7 +460,8 @@
 
                         <Menu Grid.Column="1"
                               Background="Transparent"
-                              Margin="10,0,0,0">
+                              Margin="10,0,0,0"
+                              HorizontalAlignment="Left">
                             <MenuItem Header="watch ?">
                                 <MenuItem Header="all"
                                           Click="WatchAllMenuItem_OnClick"/>
@@ -467,6 +469,8 @@
                                           Click="WatchReverseMenuItem_OnClick"/>
                                 <MenuItem Header="none"
                                           Click="WatchNoneMenuItem_OnClick"/>
+                                <MenuItem Header="save"
+                                          Click="WatchSaveMenuItem_OnClick" />
                             </MenuItem>
                         </Menu>
 
