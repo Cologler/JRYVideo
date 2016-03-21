@@ -28,8 +28,7 @@ namespace JryVideo.Main
             this.PageSize = 50;
         }
 
-        protected override bool OnFilter(VideoInfoViewModel obj)
-            => base.OnFilter(obj) && this.filter?.Where(obj) != false;
+        protected override bool OnFilter(VideoInfoViewModel obj) => this.filter?.Where(obj) != false;
 
         public string SearchText
         {
@@ -146,7 +145,7 @@ namespace JryVideo.Main
 
             if (source != null)
             {
-                this.filter = new FilterInfo(this.IsOnlyTracking, this.FilterText);
+                this.OnResetFilter(this.FilterText);
                 this.VideosView.View.CustomSort = null;
                 this.VideosView.View.GroupDescriptions?.Clear();
                 this.VideosView.Collection.Reset(source);
@@ -173,7 +172,7 @@ namespace JryVideo.Main
                 this.isOnlyTracking = isOnlyTracking;
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    this.filterText = text.Trim().ToLower();
+                    this.filterText = text.Trim();
                 }
             }
 
@@ -182,10 +181,11 @@ namespace JryVideo.Main
                 if (this.isOnlyTracking && !obj.Source.IsTracking) return false;
                 if (this.filterText == null) return true;
 
-                return obj.SeriesView.Source.Id.ToLower() == this.filterText ||
-                       obj.Source.Id.ToLower() == this.filterText ||
-                       obj.Source.Names.Concat(obj.SeriesView.Source.Names)
-                       .Any(z => z.ToLower().Contains(this.filterText));
+                return
+                    this.filterText.Equals(obj.SeriesView.Source.Id, StringComparison.OrdinalIgnoreCase) ||
+                    this.filterText.Equals(obj.Source.Id, StringComparison.OrdinalIgnoreCase) ||
+                    obj.Source.Names.Concat(obj.SeriesView.Source.Names)
+                        .Any(z => z.Contains(this.filterText, StringComparison.OrdinalIgnoreCase));
             }
         }
 
