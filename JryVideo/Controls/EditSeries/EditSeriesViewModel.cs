@@ -15,22 +15,18 @@ namespace JryVideo.Controls.EditSeries
 {
     public class EditSeriesViewModel : EditorItemViewModel<JrySeries>
     {
-        private string names;
         private string doubanId;
         private string imdbId;
         private string theTVDBId;
 
-        public string Names
-        {
-            get { return this.names; }
-            set { this.SetPropertyRef(ref this.names, value); }
-        }
+        public NameEditableViewModel<JrySeries> NamesViewModel { get; }
+            = new NameEditableViewModel<JrySeries>(false);
 
         public override void ReadFromObject(JrySeries obj)
         {
             base.ReadFromObject(obj);
-
-            this.Names = this.Source == null ? "" : this.Source.Names.AsLines();
+            
+            this.NamesViewModel.ReadFromObject(obj);
             this.TagsViewModel.ReadTags(obj);
         }
 
@@ -38,17 +34,7 @@ namespace JryVideo.Controls.EditSeries
         {
             base.WriteToObject(obj);
 
-            obj.Names.Clear();
-
-            if (!String.IsNullOrWhiteSpace(this.Names))
-            {
-                obj.Names.AddRange(
-                    this.Names.AsLines()
-                        .Select(z => z.Trim())
-                        .Where(z => !String.IsNullOrWhiteSpace(z)));
-                obj.Names = obj.Names.Distinct().ToList();
-            }
-
+            this.NamesViewModel.WriteToObject(obj);
             obj.ImdbId = obj.ImdbId.IsNullOrWhiteSpace() ? null : obj.ImdbId.Trim();
             obj.TheTVDBId = obj.TheTVDBId.IsNullOrWhiteSpace() ? null : obj.TheTVDBId.Trim();
             this.TagsViewModel.WriteTags(obj, true);
@@ -86,17 +72,13 @@ namespace JryVideo.Controls.EditSeries
 
         public async Task LoadDoubanAsync()
         {
-            if (String.IsNullOrWhiteSpace(this.DoubanId)) return;
+            if (string.IsNullOrWhiteSpace(this.DoubanId)) return;
 
             var movie = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
 
             if (movie != null)
             {
-                var doubanName = DoubanMovieParser.Parse(movie).SeriesNames.AsLines();
-
-                this.Names = String.IsNullOrWhiteSpace(this.Names)
-                    ? doubanName
-                    : String.Join("\r\n", this.Names, doubanName);
+                this.NamesViewModel.AddRange(DoubanMovieParser.Parse(movie).SeriesNames);
             }
         }
 
@@ -116,7 +98,7 @@ namespace JryVideo.Controls.EditSeries
 
         public override void Clear()
         {
-            this.Names = "";
+            this.NamesViewModel.Names = "";
             this.DoubanId = "";
         }
     }

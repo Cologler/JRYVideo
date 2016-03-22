@@ -33,7 +33,7 @@
                        Style="{StaticResource TitleStyle}" />
 
             <TextBox x:Name="NameTextBox"
-                     Text="{Binding Names}"
+                     Text="{Binding NamesViewModel.Names}"
                      Grid.Row="1"
                      AcceptsReturn="True"
                      VerticalScrollBarVisibility="Auto"

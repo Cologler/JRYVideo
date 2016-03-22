@@ -20,17 +20,9 @@ namespace JryVideo.Controls.EditSeries
             this.DataContext = this.ViewModel = new EditSeriesViewModel();
         }
 
-        void ViewModel_FindErrorMessages(object sender, object e)
-        {
-            if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.ViewModel_FindErrorMessages, sender, e))
-            {
-                this.TryFindParent<MetroWindow>().ShowMessageAsync(Properties.Resources.EditSeries_InvalidInput_Title, "");
-            }
-        }
-
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (this.ViewModel.Names.IsNullOrWhiteSpace())
+            if (this.ViewModel.NamesViewModel.Names.IsNullOrWhiteSpace())
             {
                 await this.TryFindParent<MetroWindow>().ShowMessageAsync(Properties.Resources.EditSeries_InvalidInput_Title, "name can not be empty.");
                 return;

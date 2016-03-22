@@ -298,7 +298,7 @@
 
                     <TextBox Grid.Row="1"
                              Grid.ColumnSpan="4"
-                             Text="{Binding Names, Mode=TwoWay}"
+                             Text="{Binding NamesViewModel.Names, Mode=TwoWay}"
                              AcceptsReturn="True" />
                 </Grid>
                 

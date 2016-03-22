@@ -31,7 +31,6 @@ namespace JryVideo.Controls.EditVideo
         private string index;
         private string imdbId;
         private string doubanId;
-        private string names;
         private string episodesCount;
         private bool isTracking;
         private bool isAllAired;
@@ -202,11 +201,8 @@ namespace JryVideo.Controls.EditVideo
             set { this.SetPropertyRef(ref this.index, value); }
         }
 
-        public string Names
-        {
-            get { return this.names; }
-            set { this.SetPropertyRef(ref this.names, value); }
-        }
+        public NameEditableViewModel<JryVideoInfo> NamesViewModel { get; }
+            = new NameEditableViewModel<JryVideoInfo>(false);
 
         public string EpisodesCount
         {
@@ -242,11 +238,7 @@ namespace JryVideo.Controls.EditVideo
             obj.Year = int.Parse(this.Year);
             obj.Index = int.Parse(this.Index);
             obj.EpisodesCount = int.Parse(this.EpisodesCount);
-            obj.Names.Clear();
-            if (!this.Names.IsNullOrWhiteSpace())
-            {
-                obj.Names.AddRange(this.Names.AsLines().Select(z => z.Trim()).Where(z => !z.IsNullOrWhiteSpace()).Distinct());
-            }
+            this.NamesViewModel.WriteToObject(obj);
             obj.DayOfWeek = this.DayOfWeek?.Value;
             obj.EpisodeOffset = this.EpisodeOffset == 0 ? (int?)null : this.EpisodeOffset;
 
@@ -281,7 +273,7 @@ namespace JryVideo.Controls.EditVideo
 
             this.Index = obj.Index.ToString();
             this.Year = obj.Year.ToString();
-            this.Names = obj.Names.AsLines();
+            this.NamesViewModel.ReadFromObject(obj);
             this.EpisodesCount = obj.EpisodesCount.ToString();
 
             this.DayOfWeek = this.GetDayOfWeekValue(obj.DayOfWeek);
@@ -307,11 +299,7 @@ namespace JryVideo.Controls.EditVideo
         public void LoadDouban(Movie info)
         {
             var parser = DoubanMovieParser.Parse(info);
-            var doubanSecondName = parser.EntityNames.AsLines();
-
-            this.Names = this.Names.IsNullOrWhiteSpace()
-                ? doubanSecondName
-                : String.Join("\r\n", this.Names, doubanSecondName);
+            this.NamesViewModel.AddRange(parser.EntityNames);
 
             var defaultValue = (Application.Current as App)?.UserConfig?.DefaultValue;
             if (defaultValue != null)
