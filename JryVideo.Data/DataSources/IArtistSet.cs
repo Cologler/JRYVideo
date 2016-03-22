@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace JryVideo.Data.DataSources
 {
-    public interface IArtistSet : IJasilyEntitySetProvider<JryArtist, string>
+    public interface IArtistSet : IJasilyEntitySetProvider<Artist, string>
     {
-        Task<IEnumerable<JryArtist>> FindAsync(JryArtist.QueryParameter parameter);
+        Task<IEnumerable<Artist>> FindAsync(Artist.QueryParameter parameter);
     }
 }

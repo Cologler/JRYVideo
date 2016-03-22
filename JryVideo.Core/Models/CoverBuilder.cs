@@ -34,6 +34,9 @@ namespace JryVideo.Core.Models
                 case JryCoverType.Video:
                     return key + this.VideoId;
 
+                case JryCoverType.Artist:
+                    return key + this.ActorId;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -76,7 +79,7 @@ namespace JryVideo.Core.Models
 
         public static CoverBuilder CreateVideo(JryVideoInfo video)
         {
-            var cover = new CoverBuilder
+            return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Douban,
                 CoverType = JryCoverType.Video,
@@ -84,12 +87,11 @@ namespace JryVideo.Core.Models
                 ImdbId = video.ImdbId,
                 VideoId = video.Id
             };
-            return cover;
         }
 
         public static CoverBuilder CreateBackground(JryVideoInfo video, string url)
         {
-            var cover = new CoverBuilder
+            return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = JryCoverType.Background,
@@ -98,12 +100,11 @@ namespace JryVideo.Core.Models
                 ImdbId = video.ImdbId,
                 VideoId = video.Id
             };
-            return cover;
         }
 
         public static CoverBuilder CreateRole(JrySeries series, string url, JryVideoRole role)
         {
-            var cover = new CoverBuilder
+            return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = JryCoverType.Role,
@@ -111,12 +112,11 @@ namespace JryVideo.Core.Models
                 SeriesId = series.Id,
                 ActorId = role.Id
             };
-            return cover;
         }
 
         public static CoverBuilder CreateRole(JryVideoInfo video, string url, JryVideoRole role)
         {
-            var cover = new CoverBuilder
+            return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = JryCoverType.Role,
@@ -124,7 +124,18 @@ namespace JryVideo.Core.Models
                 VideoId = video.Id,
                 ActorId = role.Id
             };
-            return cover;
+        }
+
+        public static CoverBuilder CreateArtist(string doubanId, string url, Artist artist)
+        {
+            return new CoverBuilder
+            {
+                CoverSourceType = JryCoverSourceType.Douban,
+                CoverType = JryCoverType.Artist,
+                DoubanId = doubanId,
+                Uri = url,
+                ActorId = artist.Id
+            };
         }
     }
 }

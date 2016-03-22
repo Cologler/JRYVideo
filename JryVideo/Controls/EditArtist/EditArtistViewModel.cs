@@ -3,7 +3,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Controls.EditArtist
 {
-    public class EditArtistViewModel : EditorItemViewModel<JryArtist>
+    public class EditArtistViewModel : EditorItemViewModel<Artist>
     {
     }
 }

@@ -47,14 +47,14 @@ namespace JryVideo.Core.Managers
 
             foreach (var actor in actors)
             {
-                var artist = (await this.artistManager.Source.FindAsync(new JryArtist.QueryParameter()
+                var artist = (await this.artistManager.Source.FindAsync(new Artist.QueryParameter()
                 {
                     TheTVDBId = actor.Id
                 })).FirstOrDefault();
 
                 if (artist == null && !actor.Name.IsNullOrWhiteSpace())
                 {
-                    artist = new JryArtist()
+                    artist = new Artist()
                     {
                         TheTVDBId = actor.Id,
                         Names = new List<string>() { actor.Name.Trim() }

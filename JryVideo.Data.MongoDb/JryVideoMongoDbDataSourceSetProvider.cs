@@ -120,7 +120,7 @@ namespace JryVideo.Data.MongoDb
             => new MongoCoverDataSource(this, this.Database.GetCollection<JryCover>("Cover"));
 
         public IArtistSet GetArtistSet()
-            => new MongoArtistDataSource(this, this.Database.GetCollection<JryArtist>("Artist"));
+            => new MongoArtistDataSource(this, this.Database.GetCollection<Artist>("Artist"));
 
         public IVideoRoleCollectionSet GetVideoRoleInfoSet()
             => new MongoVideoRoleCollectionDataSource(this, this.Database.GetCollection<VideoRoleCollection>("VideoRole"));

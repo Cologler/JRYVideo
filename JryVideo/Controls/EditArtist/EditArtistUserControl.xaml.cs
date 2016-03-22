@@ -23,12 +23,12 @@ namespace JryVideo.Controls.EditArtist
             this.DataContext = this.ViewModel;
         }
 
-        public void SetCreate(JryArtist artist)
+        public void SetCreate(Artist artist)
         {
             this.ViewModel.CreateMode();
         }
 
-        public void SetModify(JryArtist artist)
+        public void SetModify(Artist artist)
         {
             this.ViewModel.ModifyMode(artist);
         }

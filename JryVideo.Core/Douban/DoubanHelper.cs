@@ -2,6 +2,7 @@
 using Jasily.SDK.Douban.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,14 +11,11 @@ namespace JryVideo.Core.Douban
 {
     public static class DoubanHelper
     {
-        private const string ApiUrl = "http://api.douban.com/v2/movie/subject/";
-
         public static async Task<Movie> TryGetMovieInfoAsync(string doubanId)
         {
             var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/subject/" + doubanId);
-
             var result = await request.GetResultAsBytesAsync();
-
+            PrintInDebug(result);
             if (result.IsSuccess)
             {
                 try
@@ -36,9 +34,8 @@ namespace JryVideo.Core.Douban
         public static async Task<Artist> TryGetArtistInfoAsync(string doubanId)
         {
             var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/celebrity/" + doubanId);
-
             var result = await request.GetResultAsBytesAsync();
-
+            PrintInDebug(result);
             if (result.IsSuccess)
             {
                 try
@@ -52,6 +49,15 @@ namespace JryVideo.Core.Douban
             }
 
             return null;
+        }
+
+        [Conditional("DEBUG")]
+        private static void PrintInDebug(WebResult<byte[]> result)
+        {
+            if (Debugger.IsAttached && result.IsSuccess)
+            {
+                Debug.WriteLine(result.AsText());
+            }
         }
 
         public static string GetLargeImageUrl(this Artist json)

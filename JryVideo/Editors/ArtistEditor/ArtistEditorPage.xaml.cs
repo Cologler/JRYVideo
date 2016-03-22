@@ -30,5 +30,8 @@ namespace JryVideo.Editors.ArtistEditor
             }
             this.SetDialogResult(true);
         }
+
+        private async void LoadFromDoubanButton_OnClick(object sender, RoutedEventArgs e)
+            => await this.ViewModel.LoadFromDoubanAsync();
     }
 }

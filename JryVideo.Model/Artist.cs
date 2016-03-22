@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 namespace JryVideo.Model
 {
-    public class JryArtist : JryObject, IEquatable<JryArtist>, IJryCoverParent, INameable, ITheTVDBItem,
+    public class Artist : JryObject, IEquatable<Artist>, IJryCoverParent, INameable, ITheTVDBItem,
         IImdbItem
     {
-        public JryArtist()
+        public Artist()
         {
             this.Names = new List<string>();
         }
@@ -35,6 +35,8 @@ namespace JryVideo.Model
 
         JryCoverType IJryCoverParent.CoverType => JryCoverType.Artist;
 
+        #region remote id
+
         [BsonIgnoreIfDefault]
         public string TheTVDBId { get; set; }
 
@@ -46,6 +48,8 @@ namespace JryVideo.Model
 
         [BsonIgnoreIfDefault]
         public string ImdbId { get; set; }
+
+        #endregion
 
         protected override bool InnerTestHasError()
         {
@@ -68,7 +72,7 @@ namespace JryVideo.Model
         /// <param name="obj">要与当前对象进行比较的对象。</param>
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as JryArtist);
+            return this.Equals(obj as Artist);
         }
 
         /// <summary>
@@ -78,7 +82,7 @@ namespace JryVideo.Model
         /// 如果当前对象等于 <paramref name="other"/> 参数，则为 true；否则为 false。
         /// </returns>
         /// <param name="other">与此对象进行比较的对象。</param>
-        public bool Equals(JryArtist other)
+        public bool Equals(Artist other)
         {
             return !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || string.Equals(this.Id, other.Id));
         }
@@ -91,9 +95,9 @@ namespace JryVideo.Model
         /// </returns>
         public override int GetHashCode() => this.Id?.GetHashCode() ?? 0;
 
-        public static bool operator ==(JryArtist left, JryArtist right) => Equals(left, right);
+        public static bool operator ==(Artist left, Artist right) => Equals(left, right);
 
-        public static bool operator !=(JryArtist left, JryArtist right) => !Equals(left, right);
+        public static bool operator !=(Artist left, Artist right) => !Equals(left, right);
 
         public struct QueryParameter
         {

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JryVideo.Selectors.ArtistSelector
 {
-    public sealed class ArtistSelectorViewModel : BaseSelectorViewModel<ArtistViewModel, JryArtist>
+    public sealed class ArtistSelectorViewModel : BaseSelectorViewModel<ArtistViewModel, Artist>
     {
         public ArtistSelectorViewModel()
         {

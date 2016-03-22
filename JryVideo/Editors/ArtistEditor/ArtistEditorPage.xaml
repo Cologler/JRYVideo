@@ -31,7 +31,19 @@
                 <TextBlock Text="douban id"
                            Style="{StaticResource TitleStyle}" />
 
-                <TextBox Text="{Binding DoubanId, Mode=TwoWay}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBox Text="{Binding DoubanId, Mode=TwoWay}" />
+                    
+                    <Button Grid.Column="1"
+                            Margin="4,0,0,0"
+                            Content="{x:Static properties:Resources.Button_Load_Text}"
+                            Click="LoadFromDoubanButton_OnClick"/>
+                </Grid>
 
                 <TextBlock Text="theTVDB id"
                            Style="{StaticResource TitleStyle}" />

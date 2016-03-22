@@ -67,7 +67,7 @@
     <Compile Include="JryFlagType.cs" />
     <Compile Include="JryCoverSourceType.cs" />
     <Compile Include="JryCoverType.cs" />
-    <Compile Include="JryArtist.cs" />
+    <Compile Include="Artist.cs" />
     <Compile Include="JryFormatType.cs" />
     <Compile Include="JryCover.cs" />
     <Compile Include="JryEntity.cs" />

@@ -148,6 +148,9 @@ namespace JryVideo.Common
                     obj.Names = this.nullIfEmpty ? null : new List<string>();
                 }
             }
+
+            public void AddRange(IEnumerable<string> items)
+                => this.Names = this.Names.AsLines().Concat(items).AsLines();
         }
     }
 }

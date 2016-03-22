@@ -31,9 +31,11 @@ namespace JryVideo.Data.MongoDb
                         Builders<JryCover>.Filter.Eq(t => t.ActorId, parameter.ActorId),
                         Builders<JryCover>.Filter.Eq(t => t.SeriesId, parameter.SeriesId));
                 }
-                else
+                else // artist
                 {
-                    Debug.Assert(false);
+                    Debug.Assert(parameter.CoverType == JryCoverType.Artist);
+                    yield return Builders<JryCover>.Filter.And(baseFilter,
+                        Builders<JryCover>.Filter.Eq(t => t.ActorId, parameter.ActorId));
                 }
 
                 yield break;
