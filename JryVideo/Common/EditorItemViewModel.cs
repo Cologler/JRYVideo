@@ -110,7 +110,7 @@ namespace JryVideo.Common
             where TNameable : INameable
         {
             private readonly bool nullIfEmpty;
-            private string names;
+            private string names = string.Empty;
 
             public NameEditableViewModel(bool nullIfEmpty)
                 : base(default(TNameable))
