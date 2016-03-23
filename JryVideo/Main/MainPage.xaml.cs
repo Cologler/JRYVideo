@@ -167,9 +167,11 @@ namespace JryVideo.Main
 
         public void RefreshVideo(VideoInfoViewModel vm)
         {
-            this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
-            this.ViewModel.VideosViewModel.RefreshVideo(vm);
-            this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
+            if (this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm))
+            {
+                this.ViewModel.VideosViewModel.RefreshVideo(vm);
+                this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
+            }
         }
 
         private async void AllAiredMenuItem_OnClick(object sender, RoutedEventArgs e)
