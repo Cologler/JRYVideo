@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using JryVideo.Data;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -13,7 +13,6 @@ namespace JryVideo.Main
 
         public MainViewModel()
         {
-            this.VideosViewModel = new MainSeriesItemViewerViewModel();
             this.ModeCollection = new ObservableCollection<NameValuePair<JryVideoDataSourceProviderManagerMode>>()
             {
                 JryVideoDataSourceProviderManagerMode.Public.WithName(
@@ -24,11 +23,11 @@ namespace JryVideo.Main
             this.selectedMode = this.ModeCollection[0];
         }
 
-        public MainSeriesItemViewerViewModel VideosViewModel { get; private set; }
+        public MainSeriesItemViewerViewModel VideosViewModel { get; } = new MainSeriesItemViewerViewModel();
 
         public async void ReloadAsync() => await this.VideosViewModel.ReloadAsync();
 
-        public ObservableCollection<NameValuePair<JryVideoDataSourceProviderManagerMode>> ModeCollection { get; private set; }
+        public ObservableCollection<NameValuePair<JryVideoDataSourceProviderManagerMode>> ModeCollection { get; }
 
         public NameValuePair<JryVideoDataSourceProviderManagerMode> SelectedMode
         {
