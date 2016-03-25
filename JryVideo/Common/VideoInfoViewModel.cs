@@ -46,16 +46,16 @@ namespace JryVideo.Common
 
         public override void RefreshProperties()
         {
-            this.RefreshGroup(this.VideoGroupFactory);
+            GroupFactory.RefreshGroup(this);
             base.RefreshProperties();
         }
 
-        public GroupFactory VideoGroupFactory { get; set; }
+        public bool NeedGroup { get; set; }
 
-        private async void RefreshGroup(GroupFactory groupFactory = null)
+        private async void RefreshGroup(GroupFactory groupFactory)
         {
             // only tracking need build group info.
-            if (groupFactory == null || !this.Source.IsTracking) return;
+            if (!this.Source.IsTracking) return;
 
             int? episode;
             this.VideoGroup = groupFactory.Build(this.Source, out episode);
@@ -318,7 +318,7 @@ namespace JryVideo.Common
             };
             if (dlg.ShowDialog() == true)
             {
-                this.VideoGroupFactory?.RefreshGroup(this);
+                GroupFactory.RefreshGroup(this);
                 this.RefreshProperties();
                 this.BeginUpdateCover();
                 return true;
@@ -331,6 +331,7 @@ namespace JryVideo.Common
             private static readonly Group[] Todays;
             private static readonly Group[] ThisWeeks;
             private static readonly Group[] NextWeeks;
+            private static GroupFactory Current;
 
             static GroupFactory()
             {
@@ -344,6 +345,8 @@ namespace JryVideo.Common
                 NextWeeks = dayOfWeeks
                     .Select(z => new Group(GroupMode.NextWeek, string.Format(Resources.DateTime_Next, z.GetLocalizeString()), z))
                     .ToArray();
+
+                RebuildCurrent();
             }
 
             public static Group Today(DayOfWeek dayOfWeek) => Todays[(int)dayOfWeek];
@@ -366,7 +369,7 @@ namespace JryVideo.Common
             private readonly DateTime nextSunday;
             private readonly DateTime nextNextSunday;
 
-            public GroupFactory()
+            private GroupFactory()
             {
                 this.today = DateTime.Now.Date;
                 var dayofWeekOffset = (int)DayOfWeek.Sunday - (int)this.today.DayOfWeek + 7;
@@ -410,7 +413,14 @@ namespace JryVideo.Common
                 return Future(dayOffset);
             }
 
-            public void RefreshGroup(VideoInfoViewModel video) => video.RefreshGroup(this);
+            public static void RefreshGroup(VideoInfoViewModel video)
+            {
+                if (!video.NeedGroup) return;
+                Debug.Assert(Current != null);
+                video.RefreshGroup(Current);
+            }
+
+            public static void RebuildCurrent() => Current = new GroupFactory();
         }
 
         public class Group : IComparable<Group>

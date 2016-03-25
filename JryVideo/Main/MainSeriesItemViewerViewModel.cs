@@ -112,26 +112,17 @@ namespace JryVideo.Main
         private void RebuildGroupFactoryAndRefreshItems(IEnumerable<VideoInfoViewModel> items)
         {
             Debug.Assert(items != null);
-            var groupFactory = new VideoInfoViewModel.GroupFactory();
-            this.GroupFactory = groupFactory;
-            items.ForEach(z =>
+            VideoInfoViewModel.GroupFactory.RebuildCurrent();
+            foreach (var item in items)
             {
-                z.VideoGroupFactory = groupFactory;
-                z.RefreshProperties();
-            });
-        }
-
-        public void RefreshVideo(VideoInfoViewModel item)
-        {
-            this.GroupFactory?.RefreshGroup(item);
-            item.RefreshProperties();
+                item.NeedGroup = true;
+                item.RefreshProperties();
+            }
         }
 
         public int PageSize { get; set; }
 
         public int PageIndex { get; set; }
-
-        public VideoInfoViewModel.GroupFactory GroupFactory { get; private set; }
 
         protected override void OnResetFilter(string filterText)
         {

@@ -1,9 +1,11 @@
-﻿using JryVideo.Core;
+﻿using JryVideo.Common;
+using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,15 +14,13 @@ namespace JryVideo.Selectors.FlagSelector
 {
     public sealed class FlagSelectorViewModel : BaseSelectorViewModel<FlagViewModel, JryFlag>
     {
-        private readonly IEnumerable<string> readySelected;
+        private string[] filters = Empty<string>.Array;
 
         public JryFlagType Type { get; }
 
-        public FlagSelectorViewModel(JryFlagType type, IEnumerable<string> readySelected)
+        public FlagSelectorViewModel(JryFlagType type)
         {
-            this.readySelected = readySelected;
             this.Type = type;
-            this.SelectedItems = new ObservableCollection<FlagViewModel>();
         }
 
         protected override bool OnFilter(FlagViewModel obj)
@@ -30,8 +30,9 @@ namespace JryVideo.Selectors.FlagSelector
 
         private bool FilterByText(FlagViewModel obj)
         {
-            return string.IsNullOrWhiteSpace(this.FilterText) ||
-                obj.Source.Value.ToLower().Contains(this.FilterText.Trim().ToLower());
+            Debug.Assert(this.filters != null);
+            return this.filters.Length == 0 ||
+                   this.filters.Any(z => obj.Source.Value.Contains(z, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool FilterBySelected(FlagViewModel obj)
@@ -39,22 +40,36 @@ namespace JryVideo.Selectors.FlagSelector
             return !this.SelectedItems.Contains(obj);
         }
 
-        public ObservableCollection<FlagViewModel> SelectedItems { get; private set; }
+        protected override void OnResetFilter(string filterText)
+        {
+            base.OnResetFilter(filterText);
+
+            this.filters = string.IsNullOrWhiteSpace(filterText)
+                ? Empty<string>.Array
+                : filterText.Split("|", StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public ObservableCollection<FlagViewModel> SelectedItems { get; } = new ObservableCollection<FlagViewModel>();
+
+        public List<string> SelectedStrings { get; } = new List<string>();
 
         public async Task LoadAsync()
         {
-            var manager = JryVideoCore.Current.CurrentDataCenter.FlagManager;
-
-            var items = (await manager.LoadAsync(this.Type)).ToArray();
+            var items = (await this.GetManagers().FlagManager.LoadAsync(this.Type)).ToArray();
 
             this.Items.Collection.Clear();
             foreach (var item in items.Select(z => new FlagViewModel(z)))
             {
-                if (this.readySelected.Contains(item.Source.Value))
+                if (this.SelectedStrings.Contains(item.Source.Value))
                     this.SelectedItems.Add(item);
 
                 this.Items.Collection.Add(item);
             }
+        }
+
+        public void Sync()
+        {
+            this.SelectedStrings.Reset(this.SelectedItems.Select(z => z.Source.Value));
         }
 
         public void SelectItem(FlagViewModel item)

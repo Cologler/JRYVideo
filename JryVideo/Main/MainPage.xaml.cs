@@ -169,7 +169,7 @@ namespace JryVideo.Main
         {
             if (this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm))
             {
-                this.ViewModel.VideosViewModel.RefreshVideo(vm);
+                vm.RefreshProperties();
                 this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
             }
         }
@@ -218,7 +218,7 @@ namespace JryVideo.Main
         private async void ModeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = this.ViewModel.SelectedMode;
-            
+
             if (selected.Value == JryVideoDataSourceProviderManagerMode.Public)
             {
                 JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Public);
