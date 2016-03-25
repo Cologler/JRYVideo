@@ -13,6 +13,7 @@ namespace JryVideo.Common
     public abstract class EditorItemViewModel<T> : JasilyEditableViewModel<T>
         where T : JryObject, new()
     {
+        private string description;
         public event EventHandler<RequestActionEventArgs<T>> Creating;
         public event EventHandler<T> Created;
         public event EventHandler<T> Updated;
@@ -35,6 +36,13 @@ namespace JryVideo.Common
             this.Action = ObjectChangedAction.Modify;
 
             this.ReadFromObject(source);
+        }
+
+        [EditableField]
+        public string Description
+        {
+            get { return this.description; }
+            set { this.SetPropertyRef(ref this.description, value); }
         }
 
         public virtual void CloneMode(T source)

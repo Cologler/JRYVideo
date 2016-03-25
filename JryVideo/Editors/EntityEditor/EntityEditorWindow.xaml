@@ -3,7 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  Title="EntityEditorWindow"
-                 Height="560"
+                 Height="640"
                  Width="600"
                  xmlns:properties="clr-namespace:JryVideo.Properties"
                  ShowTitleBar="False"

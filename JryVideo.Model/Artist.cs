@@ -24,12 +24,6 @@ namespace JryVideo.Model
 
         public string GetMajorName() => this.Names[0];
 
-        /// <summary>
-        /// may null.
-        /// </summary>
-        [BsonIgnoreIfDefault]
-        public string Description { get; set; }
-
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 

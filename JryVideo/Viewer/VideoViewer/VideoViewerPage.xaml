@@ -371,6 +371,7 @@
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="Auto" />
                                                                 <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
                                                             </Grid.RowDefinitions>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto" />
@@ -391,6 +392,14 @@
 
                                                             <TextBlock Text="{Binding DisplayCreated}"
                                                                        Grid.Row="1"
+                                                                       Grid.Column="2" />
+
+                                                            <TextBlock Grid.Row="2"
+                                                                       Grid.Column="0"
+                                                                       Text="DESCRIPTION" />
+
+                                                            <TextBlock Text="{Binding Source.Description}"
+                                                                       Grid.Row="2"
                                                                        Grid.Column="2" />
 
                                                         </Grid>

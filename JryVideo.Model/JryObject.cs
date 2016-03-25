@@ -15,7 +15,7 @@ namespace JryVideo.Model
         public DateTime Created { get; set; }
 
         [BsonIgnoreIfDefault]
-        public string Desciption { get; set; }
+        public string Description { get; set; }
 
         public virtual void BuildMetaData(bool isForce = false)
         {
@@ -63,7 +63,7 @@ namespace JryVideo.Model
 
         public virtual void Saving()
         {
-            if (string.IsNullOrWhiteSpace(this.Desciption)) this.Desciption = null;
+            if (string.IsNullOrWhiteSpace(this.Description)) this.Description = null;
         }
 
         protected static bool CombineEquals(string left, string right)

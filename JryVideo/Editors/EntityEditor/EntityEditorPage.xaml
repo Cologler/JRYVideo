@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:JryVideo.Editors.EntityEditor"
       xmlns:properties="clr-namespace:JryVideo.Properties"
       mc:Ignorable="d" 
-      d:DesignHeight="370" d:DesignWidth="500"
+      d:DesignHeight="450" d:DesignWidth="500"
       Title="EntityCreatorPage"
       d:DataContext="{d:DesignInstance local:EntityEditorViewModel}">
 
@@ -17,6 +17,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
         <Grid>
@@ -239,6 +240,22 @@
                 
             </Grid>
         </Grid>
-        
+
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="desciption"
+                       Style="{StaticResource TitleStyle}" />
+
+            <TextBox Grid.Row="1"
+                     Text="{Binding Description, Mode=TwoWay}"
+                     FontFamily="Microsoft YaHei UI Light"
+                     AcceptsReturn="True"
+                     Height="40"/>
+        </Grid>
+
     </Grid>
 </Page>
