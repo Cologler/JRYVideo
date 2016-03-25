@@ -147,6 +147,7 @@ namespace JryVideo.Core.Managers
         {
             dataCenter.SeriesManager.CoverParentRemoving += this.Manager_CoverParentRemoving;
             dataCenter.VideoRoleManager.CoverParentRemoving += this.Manager_CoverParentRemoving;
+            dataCenter.ArtistManager.CoverParentRemoving += this.Manager_CoverParentRemoving;
         }
     }
 }

@@ -32,10 +32,14 @@ namespace JryVideo.Selectors.FlagSelector
                 Properties.Resources.FlagSelectorWindow_Title_Format,
                 type.GetLocalizeString());
 
-            this.DataContext = this.ViewModel = new FlagSelectorViewModel(type, readySelected ?? Enumerable.Empty<string>());
+            this.DataContext = this.ViewModel = new FlagSelectorViewModel(type);
             this.EditFlagUserControl.FlagType = type;
             this.EditFlagUserControl.ViewModel.Creating += this.EditFlagUserControl_ViewModel_Creating;
             this.EditFlagUserControl.ViewModel.Created += this.ViewModel.EditFlagUserControl_ViewModel_Created;
+            if (readySelected != null)
+            {
+                this.ViewModel.SelectedStrings.AddRange(readySelected);
+            }
             this.ViewModel.LoadAsync();
         }
 
@@ -75,6 +79,7 @@ namespace JryVideo.Selectors.FlagSelector
             win.InitializeEditor(flagViewModel.Source);
             if (win.ShowDialog() == true)
             {
+                this.ViewModel.Sync();
                 await this.ViewModel.LoadAsync();
             }
         }

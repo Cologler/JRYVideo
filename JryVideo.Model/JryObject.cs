@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Attributes;
 using System.Data;
 using System.Diagnostics;
@@ -12,6 +13,9 @@ namespace JryVideo.Model
 
         [Cloneable]
         public DateTime Created { get; set; }
+
+        [BsonIgnoreIfDefault]
+        public string Desciption { get; set; }
 
         public virtual void BuildMetaData(bool isForce = false)
         {
@@ -59,7 +63,7 @@ namespace JryVideo.Model
 
         public virtual void Saving()
         {
-
+            if (string.IsNullOrWhiteSpace(this.Desciption)) this.Desciption = null;
         }
 
         protected static bool CombineEquals(string left, string right)
