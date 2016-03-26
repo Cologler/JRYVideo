@@ -12,6 +12,17 @@ namespace JryVideo.Core.Managers.Journals
 
         public DataJournalType Type => DataJournalType.FlagChanged;
 
+        public bool IsObsolete(Type type)
+        {
+            if (type == typeof(JryEntity) && (int)this.FlagType > 20)
+                return true;
+
+            if ((type == typeof(JrySeries) || type == typeof(JryVideoInfo)) && (int)this.FlagType < 20)
+                return true;
+
+            return false;
+        }
+
         public JryFlagType FlagType { get; }
     }
 }

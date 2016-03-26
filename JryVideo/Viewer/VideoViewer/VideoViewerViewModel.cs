@@ -2,7 +2,6 @@
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
-using JryVideo.Core.Managers.Journals;
 using JryVideo.Core.Models;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Model;
@@ -80,21 +79,13 @@ namespace JryVideo.Viewer.VideoViewer
             var ver = this.dataVersion;
             if (ver == this.GetManagers().Journal.Version) return;
 
-            var logs = this.GetManagers().Journal.GetChanged(ver);
-            foreach (var journal in logs)
+            var logs = this.GetManagers().Journal.GetChanged(ver, out ver);
+            if (logs.Any(z => z.IsObsolete(typeof(JryEntity))))
             {
-                switch (journal.Type)
-                {
-                    case DataJournalType.FlagChanged:
-                        var ins = (FlagChangedJournal)journal;
-                        if ((int)ins.FlagType > 20)
-                        {
-                            await this.ReloadVideoAsync();
-                            return;
-                        }
-                        break;
-                }
+                await this.ReloadVideoAsync();
+                return;
             }
+            this.dataVersion = ver;
         }
 
         public async Task AutoCompleteAsync()

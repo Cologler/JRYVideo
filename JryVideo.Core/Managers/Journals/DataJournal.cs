@@ -19,10 +19,11 @@ namespace JryVideo.Core.Managers.Journals
             }
         }
 
-        public IEnumerable<IDataJournal> GetChanged(int from)
+        public IEnumerable<IDataJournal> GetChanged(int from, out int to)
         {
             lock (this.journals)
             {
+                to = this.journals.Count;
                 return this.journals.Skip(from).ToArray();
             }
         }
