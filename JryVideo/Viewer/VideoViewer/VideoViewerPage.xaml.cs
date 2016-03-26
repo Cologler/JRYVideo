@@ -119,7 +119,10 @@ namespace JryVideo.Viewer.VideoViewer
             if (dlg.ShowDialog() == true)
             {
                 await this.ViewModel.ReloadVideoAsync();
-                this.ViewModel.EntitesView.View.Refresh();
+            }
+            else
+            {
+                this.ViewModel.UpdateVersion();
             }
         }
 
@@ -325,7 +328,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void ActorDeleteMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            this.DeleteConfirm(async() =>
+            this.DeleteConfirm(async () =>
             {
                 var vm = ((FrameworkElement)sender).DataContext as VideoRoleViewModel;
                 if (vm != null) await this.ViewModel.VideoRoleCollection.DeleteAsync(vm);

@@ -1,4 +1,5 @@
-﻿using JryVideo.Data;
+﻿using JryVideo.Core.Managers.Journals;
+using JryVideo.Data;
 using JryVideo.Model;
 using System.Threading.Tasks;
 
@@ -32,6 +33,8 @@ namespace JryVideo.Core.Managers
             this.FlagManager.Initialize(this);
             this.VideoRoleManager.Initialize(this);
             this.CoverManager.Initialize(this);
+
+            this.Journal.Initialize(this);
         }
 
         public IJryVideoDataEngine ProviderManager { get; }
@@ -47,6 +50,8 @@ namespace JryVideo.Core.Managers
         public ArtistManager ArtistManager { get; }
 
         public VideoRoleManager VideoRoleManager { get; }
+
+        public DataJournal Journal { get; } = new DataJournal();
 
         /// <summary>
         /// 

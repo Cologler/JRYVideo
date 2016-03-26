@@ -50,6 +50,10 @@
     <Compile Include="Managers\AutoInsertVideoInfoAttachedManager.cs" />
     <Compile Include="Managers\CombineResult.cs" />
     <Compile Include="Managers\DatabaseHealthTester.cs" />
+    <Compile Include="Managers\Journals\FlagChangedJournal.cs" />
+    <Compile Include="Managers\Journals\IDataJournal.cs" />
+    <Compile Include="Managers\Journals\DataJournalType.cs" />
+    <Compile Include="Managers\Journals\DataJournal.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\FlagManager.cs" />
     <Compile Include="Managers\CoverManagers.cs" />

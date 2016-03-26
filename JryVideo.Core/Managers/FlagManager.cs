@@ -239,7 +239,7 @@ namespace JryVideo.Core.Managers
             // exist
             if (ret)
             {
-                this.FlagChanged.BeginFire(this, new EventArgs<JryFlagType, string, string>(type, oldName, newName));
+                this.FlagChanged?.Invoke(this, new EventArgs<JryFlagType, string, string>(type, oldName, newName));
             }
             return ret;
         }

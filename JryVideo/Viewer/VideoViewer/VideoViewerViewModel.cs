@@ -2,6 +2,7 @@
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
+using JryVideo.Core.Managers.Journals;
 using JryVideo.Core.Models;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Model;
@@ -19,6 +20,7 @@ namespace JryVideo.Viewer.VideoViewer
     public sealed class VideoViewerViewModel : JasilyViewModel
     {
         private VideoViewModel video;
+        private int dataVersion;
 
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
@@ -52,6 +54,7 @@ namespace JryVideo.Viewer.VideoViewer
 
         public async Task ReloadVideoAsync()
         {
+            this.EntitesView.Collection.Clear();
             var video = await this.GetManagers().VideoManager.FindAsync(this.InfoView.Source.Id);
             if (video == null)
             {
@@ -61,15 +64,37 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 this.Video = new VideoViewModel(video);
 
-                this.EntitesView.Collection.Clear();
-                this.EntitesView.Collection.AddRange(video.Entities
+                this.EntitesView.Collection.Reset(video.Entities
                     .Select(z => new EntityViewModel(z))
                     .GroupBy(v => v.Source.Resolution ?? "unknown")
                     .OrderBy(z => z.Key)
                     .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g.OrderBy(this.CompareEntityViewModel))));
             }
 
+            this.dataVersion = this.GetManagers().Journal.Version;
             this.ReloadEpisodes();
+        }
+
+        public async void UpdateVersion()
+        {
+            var ver = this.dataVersion;
+            if (ver == this.GetManagers().Journal.Version) return;
+
+            var logs = this.GetManagers().Journal.GetChanged(ver);
+            foreach (var journal in logs)
+            {
+                switch (journal.Type)
+                {
+                    case DataJournalType.FlagChanged:
+                        var ins = (FlagChangedJournal)journal;
+                        if ((int)ins.FlagType > 20)
+                        {
+                            await this.ReloadVideoAsync();
+                            return;
+                        }
+                        break;
+                }
+            }
         }
 
         public async Task AutoCompleteAsync()
