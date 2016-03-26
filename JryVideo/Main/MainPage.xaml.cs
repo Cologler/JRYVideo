@@ -62,7 +62,7 @@ namespace JryVideo.Main
                 if (ReferenceEquals(win.MainFrame.Content, this) &&
                     win.MainFrameNavigationStatus.Status != NavigationServiceStatus.Navigating)
                 {
-                    if (this.ViewModel.VideosViewModel.VideosView.Collection.Contains(e))
+                    if (this.ViewModel.VideosViewModel.Items.Collection.Contains(e))
                     {
                         this.VideoSelected?.Invoke(this, e);
                     }
@@ -164,10 +164,10 @@ namespace JryVideo.Main
 
         public void RefreshVideo(VideoInfoViewModel vm)
         {
-            if (this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm))
+            if (this.ViewModel.VideosViewModel.Items.Collection.Remove(vm))
             {
                 vm.RefreshProperties();
-                this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
+                this.ViewModel.VideosViewModel.Items.Collection.Add(vm);
             }
         }
 
@@ -194,7 +194,7 @@ namespace JryVideo.Main
             if (vm == null) return;
             if (await vm.UntrackAsync() && this.ViewModel.VideosViewModel.IsOnlyTracking)
             {
-                this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
+                this.ViewModel.VideosViewModel.Items.Collection.Remove(vm);
             }
         }
 
@@ -202,7 +202,7 @@ namespace JryVideo.Main
         {
             if (this.ViewModel == null) return;
             this.ViewModel.VideosViewModel.RefreshAll();
-            this.ViewModel.VideosViewModel.VideosView.View.Refresh();
+            this.ViewModel.VideosViewModel.Items.View.Refresh();
         }
 
         private void FilterSeries_OnClick(object sender, RoutedEventArgs e)
@@ -283,8 +283,8 @@ namespace JryVideo.Main
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             vm?.Watch();
-            this.ViewModel.VideosViewModel.VideosView.Collection.Remove(vm);
-            this.ViewModel.VideosViewModel.VideosView.Collection.Add(vm);
+            this.ViewModel.VideosViewModel.Items.Collection.Remove(vm);
+            this.ViewModel.VideosViewModel.Items.Collection.Add(vm);
         }
 
         private void EditVideoInfo_OnClick(object sender, RoutedEventArgs e)

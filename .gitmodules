@@ -7,3 +7,6 @@
 [submodule "Jasily.SDK.Douban"]
 	path = Jasily.SDK.Douban
 	url = https://github.com/Cologler/Jasily.SDK.Douban.git
+[submodule "Jasily.Chinese"]
+	path = Jasily.Chinese
+	url = https://github.com/Cologler/chinese.jasily.cologler.git

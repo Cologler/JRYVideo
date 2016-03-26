@@ -3,7 +3,7 @@ using JryVideo.Common;
 using JryVideo.Core;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
-using JryVideo.Viewer.SeriesItemViewer;
+using JryVideo.Selectors.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,7 +13,7 @@ using System.Windows.Data;
 
 namespace JryVideo.Main
 {
-    public sealed class MainSeriesItemViewerViewModel : SeriesItemViewerViewModel
+    public sealed class MainSeriesItemViewerViewModel : BaseSelectorViewModel<VideoInfoViewModel, JryVideoInfo>
     {
         private string searchText;
         private bool hasLast;
@@ -69,7 +69,7 @@ namespace JryVideo.Main
 
         private void VideoInfoViewModel_IsWatchedUpdated(object sender, VideoInfoViewModel e)
         {
-            if (this.VideosView.Collection.Remove(e)) this.VideosView.Collection.Add(e);
+            if (this.Items.Collection.Remove(e)) this.Items.Collection.Add(e);
         }
 
         private async Task<IEnumerable<VideoInfoViewModel>> GetSourceAsync()
@@ -103,6 +103,7 @@ namespace JryVideo.Main
             {
                 this.RebuildGroupFactoryAndRefreshItems(r);
             }
+            r.Select(z => z.SeriesView).Distinct().ForEach(z => z.NameViewModel.BeginRebuildPinyins());
 
             return r;
         }
@@ -137,18 +138,18 @@ namespace JryVideo.Main
             if (source != null)
             {
                 this.OnResetFilter(this.FilterText);
-                this.VideosView.View.CustomSort = null;
-                this.VideosView.View.GroupDescriptions?.Clear();
-                this.VideosView.Collection.Reset(source);
+                this.Items.View.CustomSort = null;
+                this.Items.View.GroupDescriptions?.Clear();
+                this.Items.Collection.Reset(source);
                 if (this.IsOnlyTracking)
                 {
-                    this.VideosView.View.CustomSort = new VideoInfoViewModel.GroupComparer();
-                    this.VideosView.View.GroupDescriptions?.Add(
+                    this.Items.View.CustomSort = new VideoInfoViewModel.GroupComparer();
+                    this.Items.View.GroupDescriptions?.Add(
                         new PropertyGroupDescription(nameof(VideoInfoViewModel.VideoGroup) + "." + nameof(VideoInfoViewModel.Group.Title)));
                 }
                 else
                 {
-                    this.VideosView.View.CustomSort = new VideoInfoViewModel.DefaultComparer();
+                    this.Items.View.CustomSort = new VideoInfoViewModel.DefaultComparer();
                 }
             }
         }
@@ -175,7 +176,10 @@ namespace JryVideo.Main
                 return
                     this.filterText.Equals(obj.SeriesView.Source.Id, StringComparison.OrdinalIgnoreCase) ||
                     this.filterText.Equals(obj.Source.Id, StringComparison.OrdinalIgnoreCase) ||
-                    obj.Source.Names.Concat(obj.SeriesView.Source.Names)
+                    obj.Source.Names
+                        .Concat(obj.SeriesView.Source.Names)
+                        .Concat(obj.NameViewModel.Pinyins)
+                        .Concat(obj.SeriesView.NameViewModel.Pinyins)
                         .Any(z => z.Contains(this.filterText, StringComparison.OrdinalIgnoreCase));
             }
         }

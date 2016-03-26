@@ -30,7 +30,7 @@ namespace JryVideo.Selectors.VideoSelector
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
 
             return dialog.ShowDialog() == true
-                ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoViewModel.VideosView.Selected?.Source)
+                ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoViewModel.Items.Selected?.Source)
                 : SelectResult<JryVideoInfo>.NonAccept;
         }
 
@@ -38,6 +38,6 @@ namespace JryVideo.Selectors.VideoSelector
             => this.DialogResult = true;
 
         private void RemoveSelectButton_OnClick(object sender, RoutedEventArgs e)
-            => this.SelectVideoViewModel.VideosView.Selected = null;
+            => this.SelectVideoViewModel.Items.Selected = null;
     }
 }

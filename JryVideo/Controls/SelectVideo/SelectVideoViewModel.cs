@@ -1,6 +1,6 @@
 using JryVideo.Common;
 using JryVideo.Model;
-using JryVideo.Viewer.SeriesItemViewer;
+using JryVideo.Selectors.Common;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JryVideo.Controls.SelectVideo
 {
-    public sealed class SelectVideoViewModel : SeriesItemViewerViewModel
+    public sealed class SelectVideoViewModel : BaseSelectorViewModel<VideoInfoViewModel, JryVideoInfo>
     {
         private JrySeries source;
 
@@ -28,10 +28,10 @@ namespace JryVideo.Controls.SelectVideo
         {
             var series = this.Source;
             Debug.Assert(series != null);
-            this.VideosView.Collection.AddRange(await Task.Run(() => VideoInfoViewModel.Create(series).ToArray()));
+            this.Items.Collection.AddRange(await Task.Run(() => VideoInfoViewModel.Create(series).ToArray()));
             if (this.DefaultId != null)
             {
-                this.VideosView.Selected = this.VideosView.Collection.FirstOrDefault(z => z.Source.Id == this.DefaultId);
+                this.Items.Selected = this.Items.Collection.FirstOrDefault(z => z.Source.Id == this.DefaultId);
             }
         }
     }

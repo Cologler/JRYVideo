@@ -161,9 +161,9 @@
 
                 <ListView x:Name="VideosListView"
                           BorderThickness="0"
-                          ItemsSource="{Binding VideosViewModel.VideosView.View}"
+                          ItemsSource="{Binding VideosViewModel.Items.View}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          SelectedItem="{Binding VideosViewModel.VideosView.Selected}"
+                          SelectedItem="{Binding VideosViewModel.Items.Selected}"
                           Style="{StaticResource VirtualisedMetroListView}"
                           ScrollViewer.IsDeferredScrollingEnabled="False">
 

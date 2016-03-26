@@ -11,8 +11,8 @@
              d:DataContext="{d:DesignInstance local:SelectVideoViewModel}">
     <Grid>
         <ListView BorderThickness="0"
-                  ItemsSource="{Binding VideosView.View}"
-                  SelectedItem="{Binding VideosView.Selected, Mode=TwoWay}"
+                  ItemsSource="{Binding Items.View}"
+                  SelectedItem="{Binding Items.Selected, Mode=TwoWay}"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 

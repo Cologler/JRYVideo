@@ -1,8 +1,9 @@
-using System.Collections.Generic;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
-using System.Threading.Tasks;
 using JryVideo.Model;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Jasily.Diagnostics;
 
 namespace JryVideo.Selectors.Common
 {
@@ -11,9 +12,8 @@ namespace JryVideo.Selectors.Common
         where TEntity : JryObject
     {
         private string filterText;
-        private TEntity without;
 
-        public BaseSelectorViewModel()
+        protected BaseSelectorViewModel()
         {
             this.Items = new JasilyCollectionView<TViewModel>
             {
@@ -21,24 +21,11 @@ namespace JryVideo.Selectors.Common
             };
         }
 
-        public JasilyCollectionView<TViewModel> Items { get; private set; }
-
-        public TEntity Without
-        {
-            get { return this.without; }
-            set
-            {
-                if (this.without != value)
-                {
-                    this.without = value;
-                    this.LazyFilter();
-                }
-            }
-        }
+        public JasilyCollectionView<TViewModel> Items { get; }
 
         public HashSet<string> Withouts { get; } = new HashSet<string>();
 
-        protected virtual bool OnFilter(TViewModel obj) => this.without?.Id != obj.Source.Id && !this.Withouts.Contains(obj.Source.Id);
+        protected virtual bool OnFilter(TViewModel obj) => !this.Withouts.Contains(obj.Source.Id);
 
         public string FilterText
         {
@@ -61,7 +48,9 @@ namespace JryVideo.Selectors.Common
             if (text == this.FilterText)
             {
                 this.OnResetFilter(text);
+                JasilyDebug.Pointer();
                 this.Items.View.Refresh();
+                JasilyDebug.Pointer();
             }
         }
 

@@ -216,7 +216,6 @@
     <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerPage.xaml.cs">
       <DependentUpon>SeriesItemViewerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Viewer\SeriesItemViewer\SeriesItemViewerViewModel.cs" />
     <Compile Include="Controls\SelectVideo\SelectVideoViewModel.cs" />
     <Compile Include="Viewer\VideoViewer\VideoViewerPage.xaml.cs">
       <DependentUpon>VideoViewerPage.xaml</DependentUpon>
@@ -417,6 +416,10 @@
     <ProjectReference Include="..\EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK.csproj">
       <Project>{54757096-eb16-40d7-9eb7-833293d2daf7}</Project>
       <Name>Jasily.EverythingSDK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Jasily.Chinese\Jasily.Chinese\Jasily.Chinese\Jasily.Chinese.csproj">
+      <Project>{f40e24ef-84f5-49f9-98cd-b911a5196ab9}</Project>
+      <Name>Jasily.Chinese</Name>
     </ProjectReference>
     <ProjectReference Include="..\Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban\Jasily.SDK.Douban.csproj">
       <Project>{933cfbaa-c105-4c1f-92c9-11fcc5cb157e}</Project>
