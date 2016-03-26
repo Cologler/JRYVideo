@@ -331,7 +331,7 @@ namespace JryVideo.Common
             private static readonly Group[] Todays;
             private static readonly Group[] ThisWeeks;
             private static readonly Group[] NextWeeks;
-            private static GroupFactory Current;
+            private static GroupFactory current;
 
             static GroupFactory()
             {
@@ -416,11 +416,11 @@ namespace JryVideo.Common
             public static void RefreshGroup(VideoInfoViewModel video)
             {
                 if (!video.NeedGroup) return;
-                Debug.Assert(Current != null);
-                video.RefreshGroup(Current);
+                Debug.Assert(current != null);
+                video.RefreshGroup(current);
             }
 
-            public static void RebuildCurrent() => Current = new GroupFactory();
+            public static void RebuildCurrent() => current = new GroupFactory();
         }
 
         public class Group : IComparable<Group>

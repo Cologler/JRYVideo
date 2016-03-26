@@ -2,6 +2,8 @@ using Jasily.Chinese.PinYin;
 using Jasily.ComponentModel;
 using JryVideo.Model;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace JryVideo.Common
@@ -42,27 +44,31 @@ namespace JryVideo.Common
         public override void RefreshProperties()
         {
             base.RefreshProperties();
-            this.BeginRebuildPinyins();
+            if (this.IsBuildPinyin) this.BeginRebuildPinyins();
         }
+
+        public bool IsBuildPinyin { get; set; }
 
         public void RebuildPinyins()
         {
             var names = this.Source.Names?.ToArray();
             if (names == null) return;
-            for (var i = 0; i < names.Length; i++)
+            var f = new List<string>(names.Length);
+            foreach (var array in names.Select(z => z.ToCharArray()))
             {
-                var array = names[i].ToCharArray();
+                var diff = false;
                 for (var j = 0; j < array.Length; j++)
                 {
                     var py = PinYinManager[array[j]];
                     if (py.HasValue && py.Value.PinYin.Length > 0)
                     {
                         array[j] = py.Value.PinYin[0];
+                        diff = true;
                     }
                 }
-                names[i] = array.GetString();
+                if (diff) f.Add(array.GetString());
             }
-            this.Pinyins = names;
+            this.Pinyins = f.Count > 0 ? f.ToArray() : Empty<string>.Array;
         }
 
         public void BeginRebuildPinyins() => Task.Run(() => this.RebuildPinyins());

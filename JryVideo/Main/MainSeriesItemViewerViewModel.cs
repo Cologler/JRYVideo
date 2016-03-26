@@ -103,7 +103,11 @@ namespace JryVideo.Main
             {
                 this.RebuildGroupFactoryAndRefreshItems(r);
             }
-            r.Select(z => z.SeriesView).Distinct().ForEach(z => z.NameViewModel.BeginRebuildPinyins());
+            r.Select(z => z.SeriesView).Distinct().ForEach(z =>
+            {
+                z.NameViewModel.IsBuildPinyin = true;
+                z.NameViewModel.BeginRebuildPinyins();
+            });
 
             return r;
         }
@@ -117,6 +121,7 @@ namespace JryVideo.Main
             foreach (var item in items)
             {
                 item.NeedGroup = true;
+                item.NameViewModel.IsBuildPinyin = true;
                 item.RefreshProperties();
             }
         }
