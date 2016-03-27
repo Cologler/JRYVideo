@@ -1,6 +1,5 @@
 using Jasily.Diagnostics;
 using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
@@ -76,7 +75,7 @@ namespace JryVideo.Main
         {
             this.HasLast = this.HasNext = false;
 
-            var dataCenter = JryVideoCore.Current.CurrentDataCenter;
+            var dataCenter = this.GetManagers();
             var search = this.searchResultView;
 
             if (search == null || !search.IsSearchTextEquals(this.SearchText))
@@ -84,6 +83,7 @@ namespace JryVideo.Main
                 this.PageIndex = 0;
             }
 
+            var ver = dataCenter.Journal.Version;
             search = this.IsOnlyTracking
                 ? await SearchResult.OnlyTrackingAsync(dataCenter)
                 : await SearchResult.SearchAsync(dataCenter, this.SearchText, this.PageIndex, this.PageSize);
@@ -94,20 +94,20 @@ namespace JryVideo.Main
             this.HasNext = search.HasNext;
 
             JasilyDebug.Pointer();
-            var r = search.Items.SelectMany(VideoInfoViewModel.Create)
-                .Where(z => this.searchResultView.IsMatch(z.SeriesView.Source, z.Source))
-                .ToArray();
-            JasilyDebug.Pointer();
-
-            if (this.IsOnlyTracking)
-            {
-                this.RebuildGroupFactoryAndRefreshItems(r);
-            }
-            r.Select(z => z.SeriesView).Distinct().ForEach(z =>
+            var svm = search.Items.Select(z => new SeriesViewModel(z, ver)).ToArray();
+            svm.ForEach(z =>
             {
                 z.NameViewModel.IsBuildPinyin = true;
                 z.NameViewModel.BeginRebuildPinyins();
             });
+            var r = svm.SelectMany(z => z.VideoViewModels)
+                .Where(z => this.searchResultView.IsMatch(z.SeriesView, z))
+                .ToArray();
+            if (this.IsOnlyTracking)
+            {
+                this.RebuildGroupFactoryAndRefreshItems(r);
+            }
+            JasilyDebug.Pointer();
 
             return r;
         }

@@ -1,4 +1,5 @@
 ﻿using Jasily.ComponentModel;
+using JryVideo.Common.Dialogs;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Models;
@@ -312,6 +313,12 @@ namespace JryVideo.Common
 
         public bool OpenEditorWindows(Window parent)
         {
+            if (this.SeriesView.Version.IsObsolete())
+            {
+                parent.ShowJryVideoMessage("error", "data was obsolete, please refresh.");
+                return false;
+            }
+
             var dlg = new VideoEditorWindow(this)
             {
                 Owner = parent

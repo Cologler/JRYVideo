@@ -41,10 +41,5 @@ namespace JryVideo.Common
             base.RefreshProperties();
             this.NameViewModel.RefreshProperties();
         }
-
-        public static implicit operator JryVideoInfo(VideoInfoReadonlyViewModel viewModel) => viewModel?.Source;
-
-        public static implicit operator VideoInfoReadonlyViewModel(JryVideoInfo video) =>
-            video == null ? null : new VideoInfoReadonlyViewModel(video);
     }
 }

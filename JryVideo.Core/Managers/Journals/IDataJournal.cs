@@ -1,3 +1,4 @@
+using JryVideo.Model;
 using System;
 
 namespace JryVideo.Core.Managers.Journals
@@ -7,5 +8,7 @@ namespace JryVideo.Core.Managers.Journals
         DataJournalType Type { get; }
 
         bool IsObsolete(Type type);
+
+        bool IsObsolete(JryObject obj);
     }
 }

@@ -1,5 +1,6 @@
 using JryVideo.Model;
 using System;
+using System.Diagnostics;
 
 namespace JryVideo.Core.Managers.Journals
 {
@@ -21,6 +22,12 @@ namespace JryVideo.Core.Managers.Journals
                 return true;
 
             return false;
+        }
+
+        public bool IsObsolete(JryObject obj)
+        {
+            Debug.Assert(obj != null);
+            return this.IsObsolete(obj.GetType());
         }
 
         public JryFlagType FlagType { get; }

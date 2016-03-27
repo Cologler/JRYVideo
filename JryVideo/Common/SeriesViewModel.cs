@@ -12,15 +12,13 @@ namespace JryVideo.Common
 {
     public sealed class SeriesViewModel : JasilyViewModel<JrySeries>
     {
-        private bool isObsolete;
-        private int version;
         private static readonly RefreshPropertiesMapper Mapper = new RefreshPropertiesMapper(typeof(SeriesViewModel));
         private readonly List<VideoInfoViewModel> videoViewModels = new List<VideoInfoViewModel>();
 
         public SeriesViewModel(JrySeries source, int version)
             : base(source)
         {
-            this.version = version;
+            this.Version = new DataVersion<JrySeries>(source, version);
             this.PropertiesMapper = Mapper;
             this.NameViewModel = new NameableViewModel<JrySeries>(source);
 
@@ -48,7 +46,7 @@ namespace JryVideo.Common
 
         public bool OpenEditorWindows(Window parent)
         {
-            if (this.IsObsolete())
+            if (this.Version.IsObsolete())
             {
                 parent.ShowJryVideoMessage("error", "data was obsolete, please refresh.");
                 return false;
@@ -66,30 +64,11 @@ namespace JryVideo.Common
             return false;
         }
 
-        public bool IsObsolete()
-        {
-            if (this.isObsolete) return true;
-            var journal = this.GetManagers().Journal;
-            if (this.version == journal.Version) return false;
-            int @new;
-            var logs = journal.GetChanged(this.version, out @new);
-            if (logs.Any(z => z.IsObsolete(typeof(JrySeries))))
-            {
-                this.isObsolete = true;
-                return true;
-            }
-            else
-            {
-                this.version = @new;
-                return false;
-            }
-        }
-
         public async Task AutoCompleteAsync()
         {
             await new SeriesAutoComplete().AutoCompleteAsync(this.GetManagers().SeriesManager, this.Source);
         }
 
-        public static implicit operator JrySeries(SeriesViewModel viewModel) => viewModel?.Source;
+        public DataVersion<JrySeries> Version { get; }
     }
 }
