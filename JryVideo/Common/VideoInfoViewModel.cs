@@ -312,7 +312,7 @@ namespace JryVideo.Common
 
         public bool OpenEditorWindows(Window parent)
         {
-            var dlg = new VideoEditorWindow(this.SeriesView.Source, this.Source)
+            var dlg = new VideoEditorWindow(this)
             {
                 Owner = parent
             };

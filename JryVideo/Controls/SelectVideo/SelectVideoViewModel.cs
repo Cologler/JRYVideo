@@ -4,34 +4,22 @@ using JryVideo.Selectors.Common;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace JryVideo.Controls.SelectVideo
 {
     public sealed class SelectVideoViewModel : BaseSelectorViewModel<VideoInfoViewModel, JryVideoInfo>
     {
-        private JrySeries source;
+        public SeriesViewModel Series { get; private set; }
 
-        public JrySeries Source
+        public void SetSeries(SeriesViewModel series, string defaultId = null)
         {
-            get { return this.source; }
-            set
-            {
-                Debug.Assert(value != null, "value != null");
-                this.SetPropertyRef(ref this.source, value);
-            }
-        }
-
-        public string DefaultId { get; set; }
-
-        public async Task RefreshAsync()
-        {
-            var series = this.Source;
             Debug.Assert(series != null);
-            this.Items.Collection.AddRange(await Task.Run(() => VideoInfoViewModel.Create(series).ToArray()));
-            if (this.DefaultId != null)
+            this.Series = series;
+
+            this.Items.Collection.Reset(series.VideoViewModels);
+            if (defaultId != null)
             {
-                this.Items.Selected = this.Items.Collection.FirstOrDefault(z => z.Source.Id == this.DefaultId);
+                this.Items.Selected = this.Items.Collection.FirstOrDefault(z => z.Source.Id == defaultId);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using JryVideo.Model;
+﻿using JryVideo.Common;
+using JryVideo.Model;
 using MahApps.Metro.Controls;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +18,7 @@ namespace JryVideo.Add.VideoCreator
             this.InitializeComponent();
         }
 
-        public VideoCreatorPage(JrySeries series)
+        public VideoCreatorPage(SeriesViewModel series)
             : this()
         {
             this.DataContext = this.CreatorViewModel = new VideoCreatorViewModel(series);

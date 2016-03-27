@@ -184,7 +184,7 @@ namespace JryVideo.Controls.EditVideo
             set { this.SetPropertyRef(ref this.dayOfWeek, value); }
         }
 
-        public JrySeries Parent { get; set; }
+        public SeriesViewModel Parent { get; set; }
 
         /// <summary>
         /// set from cover editor. if never use that, should be null.
@@ -242,7 +242,7 @@ namespace JryVideo.Controls.EditVideo
             obj.DayOfWeek = this.DayOfWeek?.Value;
             obj.EpisodeOffset = this.EpisodeOffset == 0 ? (int?)null : this.EpisodeOffset;
 
-            var series = this.Parent.ThrowIfNull();
+            var series = this.Parent.ThrowIfNull().Source;
             var lastVideoId = this.LastVideoViewModel?.Source.Id;
             if (obj.LastVideoId != lastVideoId)
             {
@@ -279,7 +279,7 @@ namespace JryVideo.Controls.EditVideo
             this.DayOfWeek = this.GetDayOfWeekValue(obj.DayOfWeek);
             this.EpisodeOffset = obj.EpisodeOffset ?? 0;
 
-            var parent = this.Parent.ThrowIfNull();
+            var parent = this.Parent.ThrowIfNull().Source;
             var lastId = obj.LastVideoId;
             if (lastId != null)
             {

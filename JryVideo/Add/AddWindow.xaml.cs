@@ -7,7 +7,6 @@ using JryVideo.Viewer.SeriesItemViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace JryVideo.Add
@@ -58,7 +57,7 @@ namespace JryVideo.Add
             }
             else if (this.ContentFrame.Content == this.seriesItemViewerPage)
             {
-                await this.NavigateToCreateVideoPage(selected);
+                this.NavigateToCreateVideoPage(selected);
                 return;
             }
         }
@@ -78,29 +77,27 @@ namespace JryVideo.Add
             this.TitleTextBlock.Text = "sure video was not exists";
             this.LastButton.Visibility = this.NextButton.Visibility = Visibility.Visible;
 
-            if (this.seriesItemViewerPage == null || this.seriesItemViewerPage.ViewModel.Source != series.Source)
+            if (this.seriesItemViewerPage == null || this.seriesItemViewerPage.ViewModel.Series != series)
             {
                 var page = new SeriesItemViewerPage();
-                page.SetSeries(series.Source);
+                page.ViewModel.SetSeries(series);
                 this.seriesItemViewerPage = page;
             }
 
             this.ContentFrame.Navigate(this.seriesItemViewerPage);
         }
 
-        private async Task NavigateToCreateVideoPage(SeriesViewModel series)
+        private void NavigateToCreateVideoPage(SeriesViewModel series)
         {
             this.TitleTextBlock.Text = "create video";
             this.NextButton.Visibility = Visibility.Hidden;
 
-            if (this.videoCreatorPage == null || this.videoCreatorPage.CreatorViewModel.Source != series.Source)
+            if (this.videoCreatorPage == null || this.videoCreatorPage.CreatorViewModel.Source != series)
             {
-                this.videoCreatorPage = new VideoCreatorPage(series.Source);
+                this.videoCreatorPage = new VideoCreatorPage(series);
             }
 
             this.ContentFrame.Navigate(this.videoCreatorPage);
-
-            await this.videoCreatorPage.CreatorViewModel.LoadAsync();
         }
 
         private void LastButton_OnClick(object sender, RoutedEventArgs e)

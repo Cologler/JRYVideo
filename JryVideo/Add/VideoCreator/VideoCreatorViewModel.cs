@@ -1,31 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Model;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace JryVideo.Add.VideoCreator
 {
-    public class VideoCreatorViewModel : JasilyViewModel<JrySeries>
+    public class VideoCreatorViewModel : JasilyViewModel
     {
         private VideoInfoViewModel selected;
 
-        public ObservableCollection<VideoInfoViewModel> VideoCollection { get; private set; }
+        public ObservableCollection<VideoInfoViewModel> VideoCollection { get; } = new ObservableCollection<VideoInfoViewModel>();
 
-        public async Task LoadAsync()
+        public SeriesViewModel Source { get; }
+
+        public VideoCreatorViewModel(SeriesViewModel source)
         {
-            var series = this.Source;
-
-            this.VideoCollection.AddRange(
-                await Task.Run(() => VideoInfoViewModel.Create(series)));
-        }
-
-        public VideoCreatorViewModel(JrySeries source)
-            : base(source)
-        {
-            this.VideoCollection = new ObservableCollection<VideoInfoViewModel>();
+            this.Source = source;
+            this.VideoCollection.AddRange(source.VideoViewModels);
         }
 
         public VideoInfoViewModel Selected

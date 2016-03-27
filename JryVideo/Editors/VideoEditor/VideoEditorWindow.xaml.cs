@@ -1,4 +1,5 @@
-﻿using JryVideo.Model;
+﻿using JryVideo.Common;
+using JryVideo.Model;
 using MahApps.Metro.Controls;
 using System.Windows;
 
@@ -14,11 +15,11 @@ namespace JryVideo.Editors.VideoEditor
             this.InitializeComponent();
         }
 
-        public VideoEditorWindow(JrySeries series, JryVideoInfo video)
+        public VideoEditorWindow(VideoInfoViewModel video)
             : this()
         {
             this.EditVideoUserControl.ViewModel.Updated += this.VideoInfo_Updated;
-            this.EditVideoUserControl.ViewModel.Parent = series;
+            this.EditVideoUserControl.ViewModel.Parent = video.SeriesView;
             this.EditVideoUserControl.ViewModel.ModifyMode(video);
         }
 

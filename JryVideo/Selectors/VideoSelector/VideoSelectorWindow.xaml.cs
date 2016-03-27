@@ -1,4 +1,5 @@
-﻿using JryVideo.Controls.SelectVideo;
+﻿using JryVideo.Common;
+using JryVideo.Controls.SelectVideo;
 using JryVideo.Model;
 using System.Windows;
 
@@ -16,18 +17,14 @@ namespace JryVideo.Selectors.VideoSelector
 
         public SelectVideoViewModel SelectVideoViewModel => this.SelectVideoControl.ViewModel;
 
-        public static SelectResult<JryVideoInfo> Select(Window parent, JrySeries source, JryVideoInfo without = null, string defaultId = null)
+        public static SelectResult<JryVideoInfo> Select(Window parent, SeriesViewModel source, JryVideoInfo without = null, string defaultId = null)
         {
             var dialog = new VideoSelectorWindow() { Owner = parent };
-            dialog.SelectVideoViewModel.Source = source;
             if (without != null)
             {
                 dialog.SelectVideoViewModel.Withouts.Add(without.Id);
             }
-            dialog.SelectVideoViewModel.DefaultId = defaultId;
-#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-            dialog.SelectVideoViewModel.RefreshAsync();
-#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            dialog.SelectVideoViewModel.SetSeries(source, defaultId);
 
             return dialog.ShowDialog() == true
                 ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoViewModel.Items.Selected?.Source)

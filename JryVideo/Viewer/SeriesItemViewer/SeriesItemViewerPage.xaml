@@ -11,7 +11,7 @@
 
     <Grid>
         <ListView BorderThickness="0"
-                  ItemsSource="{Binding VideosView.View}"
+                  ItemsSource="{Binding Items.View}"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
