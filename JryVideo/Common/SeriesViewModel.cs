@@ -1,5 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.AutoComplete;
+using JryVideo.Common.Dialogs;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
 using System.Collections.Generic;
@@ -11,16 +12,19 @@ namespace JryVideo.Common
 {
     public sealed class SeriesViewModel : JasilyViewModel<JrySeries>
     {
+        private bool isObsolete;
+        private int version;
         private static readonly RefreshPropertiesMapper Mapper = new RefreshPropertiesMapper(typeof(SeriesViewModel));
         private readonly List<VideoInfoViewModel> videoViewModels = new List<VideoInfoViewModel>();
 
-        public SeriesViewModel(JrySeries source)
+        public SeriesViewModel(JrySeries source, int version)
             : base(source)
         {
+            this.version = version;
             this.PropertiesMapper = Mapper;
             this.NameViewModel = new NameableViewModel<JrySeries>(source);
 
-            this.videoViewModels.AddRange(source.Videos.Select(jryVideo => new VideoInfoViewModel(this, jryVideo)));
+            this.videoViewModels.AddRange(source.Videos.Select(z => new VideoInfoViewModel(this, z)));
         }
 
         public NameableViewModel<JrySeries> NameViewModel { get; }
@@ -44,7 +48,13 @@ namespace JryVideo.Common
 
         public bool OpenEditorWindows(Window parent)
         {
-            var dlg = new SeriesEditorWindow(this.Source)
+            if (this.IsObsolete())
+            {
+                parent.ShowJryVideoMessage("error", "data was obsolete, please refresh.");
+                return false;
+            }
+
+            var dlg = new SeriesEditorWindow(this)
             {
                 Owner = parent
             };
@@ -54,6 +64,25 @@ namespace JryVideo.Common
                 return true;
             }
             return false;
+        }
+
+        public bool IsObsolete()
+        {
+            if (this.isObsolete) return true;
+            var journal = this.GetManagers().Journal;
+            if (this.version == journal.Version) return false;
+            int @new;
+            var logs = journal.GetChanged(this.version, out @new);
+            if (logs.Any(z => z.IsObsolete(typeof(JrySeries))))
+            {
+                this.isObsolete = true;
+                return true;
+            }
+            else
+            {
+                this.version = @new;
+                return false;
+            }
         }
 
         public async Task AutoCompleteAsync()

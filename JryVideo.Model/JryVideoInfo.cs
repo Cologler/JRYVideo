@@ -191,6 +191,8 @@ namespace JryVideo.Model
 #pragma warning disable 612
             if (this.Roles != null) this.Roles = null;
 #pragma warning restore 612
+
+            if (this.Tags?.Count == 0) this.Tags = null;
         }
 
         public void CombineFrom(JryVideoInfo other)

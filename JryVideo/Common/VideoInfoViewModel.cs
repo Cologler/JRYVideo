@@ -206,8 +206,8 @@ namespace JryVideo.Common
             });
         }
 
-        public static IEnumerable<VideoInfoViewModel> Create(JrySeries series)
-            => new SeriesViewModel(series).VideoViewModels;
+        public static IEnumerable<VideoInfoViewModel> Create(JrySeries series, int version)
+            => new SeriesViewModel(series, version).VideoViewModels;
 
         public async Task<bool> TrackAsync()
         {

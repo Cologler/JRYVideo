@@ -299,6 +299,7 @@ namespace JryVideo.Main
         private void EditSeries_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+
             if (vm?.SeriesView?.OpenEditorWindows(this.TryFindParent<Window>()) == true)
             {
                 this.RefreshVideo(vm);

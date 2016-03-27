@@ -87,6 +87,7 @@ namespace JryVideo.Model
         {
             base.Saving();
 
+            if (this.Tags?.Count == 0) this.Tags = null;
             if (this.ContextSeriesId?.Count == 0) this.ContextSeriesId = null;
         }
 

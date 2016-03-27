@@ -1,6 +1,5 @@
 ﻿using Jasily.Diagnostics;
 using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
 using System;
@@ -29,13 +28,14 @@ namespace JryVideo.Selectors.SeriesSelector
 
         public async Task LoadAsync()
         {
-            var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
+            var seriesManager = this.GetManagers().SeriesManager;
+            var ver = this.GetManagers().Journal.Version;
 
             JasilyDebug.Pointer();
             this.Items.Collection.AddRange(
                 await Task.Run(async () =>
                     (await seriesManager.LoadAsync())
-                    .Select(z => new SeriesViewModel(z))));
+                    .Select(z => new SeriesViewModel(z, ver))));
             JasilyDebug.Pointer();
         }
     }

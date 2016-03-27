@@ -364,7 +364,7 @@ namespace JryVideo.Core.Managers
                 case JryFlagType.SeriesTag:
                     foreach (var item in series.Where(z => z.Tags != null && z.Tags.Contains(oldValue)))
                     {
-                        if (item.Tags?.Remove(oldValue) == true) item.Tags?.Add(newValue);
+                        if (item.Tags?.Remove(oldValue) == true) item.Tags.Add(newValue);
                         await this.UpdateAsync(item);
                     }
                     break;
@@ -376,7 +376,7 @@ namespace JryVideo.Core.Managers
                         var hasChanged = false;
                         foreach (var info in item.Videos.Where(z => z.Tags?.Contains(oldValue) == true))
                         {
-                            if (info.Tags?.Remove(oldValue) == true) info.Tags?.Add(newValue);
+                            if (info.Tags?.Remove(oldValue) == true) info.Tags.Add(newValue);
                             hasChanged = true;
                         }
                         if (hasChanged) await this.UpdateAsync(item);

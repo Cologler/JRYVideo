@@ -20,12 +20,16 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public JryFormat Format { get; set; }
 
+        [NotNull]
         public List<string> Tags { get; set; }
 
+        [NotNull]
         public List<string> Fansubs { get; set; }
 
+        [NotNull]
         public List<string> SubTitleLanguages { get; set; }
 
+        [NotNull]
         public List<string> TrackLanguages { get; set; }
 
         /// <summary>
