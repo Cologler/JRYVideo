@@ -37,10 +37,6 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string TheTVDBId { get; set; }
 
-        [CanBeNull]
-        [BsonIgnoreIfDefault]
-        public List<string> ContextSeriesId { get; set; }
-
         List<JryVideoInfo> IJryChild<JryVideoInfo>.Childs => this.Videos;
 
         protected override bool InnerTestHasError()
@@ -67,19 +63,12 @@ namespace JryVideo.Model
             this.Videos = this.Videos.Concat(other.Videos).ToList();
             other.Videos = new List<JryVideoInfo>();
 
-            if (this.Tags == null)
-            {
-                this.Tags = other.Tags;
-            }
-            else if (other.Tags != null)
-            {
-                this.Tags = this.Tags.Concat(other.Tags).Distinct().ToList();
-            }
+            this.Tags = CombineStrings(this.Tags, other.Tags);
 
-            if (!CombineEquals(this.ImdbId, other.ImdbId)) throw new InvalidOperationException();
+            if (!CanCombineField(this.ImdbId, other.ImdbId)) throw new InvalidOperationException();
             this.ImdbId = this.ImdbId ?? other.ImdbId;
 
-            if (!CombineEquals(this.TheTVDBId, other.TheTVDBId)) throw new InvalidOperationException();
+            if (!CanCombineField(this.TheTVDBId, other.TheTVDBId)) throw new InvalidOperationException();
             this.TheTVDBId = this.TheTVDBId ?? other.TheTVDBId;
         }
 
@@ -88,7 +77,6 @@ namespace JryVideo.Model
             base.Saving();
 
             if (this.Tags?.Count == 0) this.Tags = null;
-            if (this.ContextSeriesId?.Count == 0) this.ContextSeriesId = null;
         }
 
         public struct QueryParameter

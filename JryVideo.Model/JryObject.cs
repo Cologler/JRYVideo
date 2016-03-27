@@ -1,8 +1,10 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Attributes;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
 
 namespace JryVideo.Model
 {
@@ -66,13 +68,25 @@ namespace JryVideo.Model
             if (string.IsNullOrWhiteSpace(this.Description)) this.Description = null;
         }
 
-        protected static bool CombineEquals(string left, string right)
-            => left == null || right == null || left == right;
-
         /// <summary>
         /// return 'type [id]'
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"{this.GetType().Name} [{this.Id}]";
+
+        protected static List<string> CombineStrings(List<string> first, List<string> second)
+        {
+            if (first == null || second == null)
+            {
+                return first?.ToList() ?? second?.ToList();
+            }
+
+            return first.Concat(second).Distinct().ToList();
+        }
+
+        protected static bool CanCombineField(string left, string right)
+        {
+            return left == null || right == null || left == right;
+        }
     }
 }

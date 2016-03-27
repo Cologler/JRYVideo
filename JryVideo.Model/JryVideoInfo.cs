@@ -203,16 +203,16 @@ namespace JryVideo.Model
 
             this.Names = this.Names.Concat(other.Names).Distinct().ToList();
 
-            if (!CombineEquals(this.LastVideoId, other.LastVideoId)) throw new InvalidOperationException();
+            if (!CanCombineField(this.LastVideoId, other.LastVideoId)) throw new InvalidOperationException();
             this.LastVideoId = this.LastVideoId ?? other.LastVideoId;
 
-            if (!CombineEquals(this.NextVideoId, other.NextVideoId)) throw new InvalidOperationException();
+            if (!CanCombineField(this.NextVideoId, other.NextVideoId)) throw new InvalidOperationException();
             this.NextVideoId = this.NextVideoId ?? other.NextVideoId;
 
-            if (!CombineEquals(this.DoubanId, other.DoubanId)) throw new InvalidOperationException();
+            if (!CanCombineField(this.DoubanId, other.DoubanId)) throw new InvalidOperationException();
             this.DoubanId = this.DoubanId ?? other.DoubanId;
 
-            if (!CombineEquals(this.ImdbId, other.ImdbId)) throw new InvalidOperationException();
+            if (!CanCombineField(this.ImdbId, other.ImdbId)) throw new InvalidOperationException();
             this.ImdbId = this.ImdbId ?? other.ImdbId;
 
             this.IsTracking = this.IsTracking || other.IsTracking;
@@ -220,15 +220,7 @@ namespace JryVideo.Model
 
             if (this.EpisodesCount != other.EpisodesCount) throw new InvalidOperationException();
 
-            if (this.Tags == null)
-            {
-                this.Tags = other.Tags;
-            }
-            else if (other.Tags != null)
-            {
-                this.Tags = this.Tags.Concat(other.Tags).Distinct().ToList();
-            }
-
+            this.Tags = CombineStrings(this.Tags, other.Tags);
             this.EpisodeOffset = this.EpisodeOffset ?? other.EpisodeOffset;
             this.DayOfWeek = this.DayOfWeek ?? other.DayOfWeek;
             this.StartDate = this.StartDate ?? other.StartDate;
