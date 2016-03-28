@@ -231,4 +231,22 @@
   <data name="JryFlagType_VideoYear" xml:space="preserve">
     <value>年代</value>
   </data>
+  <data name="StarTip_1" xml:space="preserve">
+    <value>浪费时间</value>
+  </data>
+  <data name="StarTip_2" xml:space="preserve">
+    <value>较差</value>
+  </data>
+  <data name="StarTip_3" xml:space="preserve">
+    <value>可以打发时间</value>
+  </data>
+  <data name="StarTip_4" xml:space="preserve">
+    <value>佳作</value>
+  </data>
+  <data name="StarTip_5" xml:space="preserve">
+    <value>神作</value>
+  </data>
+  <data name="StarTip_Default" xml:space="preserve">
+    <value>未选择</value>
+  </data>
 </root>

@@ -20,6 +20,9 @@ namespace JryVideo.Model
 
         public int Index { get; set; }
 
+        [BsonIgnoreIfDefault]
+        public int Star { get; set; }
+
         [NotNull]
         [ItemNotNull]
         public List<string> Names { get; set; }

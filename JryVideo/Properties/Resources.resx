@@ -237,4 +237,22 @@
   <data name="JryFlagType_VideoYear" xml:space="preserve">
     <value>year</value>
   </data>
+  <data name="StarTip_1" xml:space="preserve">
+    <value>1 star</value>
+  </data>
+  <data name="StarTip_2" xml:space="preserve">
+    <value>2 star</value>
+  </data>
+  <data name="StarTip_3" xml:space="preserve">
+    <value>3 star</value>
+  </data>
+  <data name="StarTip_4" xml:space="preserve">
+    <value>4 star</value>
+  </data>
+  <data name="StarTip_5" xml:space="preserve">
+    <value>5 star</value>
+  </data>
+  <data name="StarTip_Default" xml:space="preserve">
+    <value>unselected</value>
+  </data>
 </root>

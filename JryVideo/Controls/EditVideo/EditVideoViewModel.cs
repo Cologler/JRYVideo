@@ -39,6 +39,7 @@ namespace JryVideo.Controls.EditVideo
         private DateTime? startDate;
         private VideoInfoReadonlyViewModel lastVideoViewModel;
         private VideoInfoReadonlyViewModel nextVideoViewModel;
+        private int star;
 
         public EditVideoViewModel()
         {
@@ -112,6 +113,13 @@ namespace JryVideo.Controls.EditVideo
         {
             get { return this.isAllAired; }
             set { this.SetPropertyRef(ref this.isAllAired, value); }
+        }
+
+        [EditableField]
+        public int Star
+        {
+            get { return this.star; }
+            set { this.SetPropertyRef(ref this.star, value); }
         }
 
         [EditableField]

@@ -419,5 +419,59 @@ namespace JryVideo.Properties {
                 return ResourceManager.GetString("JryFlagType_VideoYear", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 1 star 的本地化字符串。
+        /// </summary>
+        public static string StarTip_1 {
+            get {
+                return ResourceManager.GetString("StarTip_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 2 star 的本地化字符串。
+        /// </summary>
+        public static string StarTip_2 {
+            get {
+                return ResourceManager.GetString("StarTip_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 3 star 的本地化字符串。
+        /// </summary>
+        public static string StarTip_3 {
+            get {
+                return ResourceManager.GetString("StarTip_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 4 star 的本地化字符串。
+        /// </summary>
+        public static string StarTip_4 {
+            get {
+                return ResourceManager.GetString("StarTip_4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 5 star 的本地化字符串。
+        /// </summary>
+        public static string StarTip_5 {
+            get {
+                return ResourceManager.GetString("StarTip_5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 unselected 的本地化字符串。
+        /// </summary>
+        public static string StarTip_Default {
+            get {
+                return ResourceManager.GetString("StarTip_Default", resourceCulture);
+            }
+        }
     }
 }

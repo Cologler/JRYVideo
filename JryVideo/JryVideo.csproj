@@ -104,6 +104,9 @@
     <Compile Include="Controls\SelectVideo\SelectVideoControl.xaml.cs">
       <DependentUpon>SelectVideoControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\StarEditorControl\StarEditorControl.xaml.cs">
+      <DependentUpon>StarEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\ArtistEditor\ArtistEditorPage.xaml.cs">
       <DependentUpon>ArtistEditorPage.xaml</DependentUpon>
     </Compile>
@@ -247,6 +250,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SelectVideo\SelectVideoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\StarEditorControl\StarEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -468,7 +475,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\StarEditorControl\" />
     <Folder Include="Creators\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
