@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="JryVideo.Controls.NumberEditorControl.NumberEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="28"
+             d:DesignWidth="300">
+    <Grid Height="28">
+        <Border BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                BorderThickness="1">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Padding="0"
+                        Click="SubButton_OnClick">
+                    <Path x:Name="BtnArrow1"
+                          IsHitTestVisible="false"
+                          Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z "
+                          HorizontalAlignment="Center"
+                          Height="4"
+                          Stretch="Uniform"
+                          Width="8"
+                          Fill="{DynamicResource GrayBrush1}" />
+                </Button>
+
+                <TextBlock Name="ValueTextBlock"
+                           Grid.Column="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontFamily="Microsoft YaHei UI" />
+
+                <Button Grid.Column="2"
+                        Padding="0"
+                        Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Click="AddButton_OnClick">
+                    <Path x:Name="BtnArrow2"
+                          IsHitTestVisible="false"
+                          Data="F1 M 301.14,-182.942L 311.57,-182.942L 306.355,-189.041L 301.14,-182.942 Z "
+                          HorizontalAlignment="Center"
+                          Height="4"
+                          Stretch="Uniform"
+                          Width="8"
+                          Fill="{DynamicResource GrayBrush1}" />
+                </Button>
+            </Grid>
+        </Border>
+        
+        
+    </Grid>
+</UserControl>

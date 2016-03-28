@@ -94,8 +94,8 @@
       <DependentUpon>EditFlagUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditFlag\EditFlagViewModel.cs" />
-    <Compile Include="Controls\NumberEditerControl\NumberEditerControl.xaml.cs">
-      <DependentUpon>NumberEditerControl.xaml</DependentUpon>
+    <Compile Include="Controls\NumberEditorControl\NumberEditorControl.xaml.cs">
+      <DependentUpon>NumberEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SelectFlag\SelectFlagControl.xaml.cs">
       <DependentUpon>SelectFlagControl.xaml</DependentUpon>
@@ -238,7 +238,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\NumberEditerControl\NumberEditerControl.xaml">
+    <Page Include="Controls\NumberEditorControl\NumberEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -468,6 +468,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controls\StarEditorControl\" />
     <Folder Include="Creators\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

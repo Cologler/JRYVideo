@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:editVideo="clr-namespace:JryVideo.Controls.EditVideo"
-             xmlns:numberEditer="clr-namespace:JryVideo.Controls.NumberEditerControl"
              xmlns:validationRules="clr-namespace:JryVideo.Common.ValidationRules"
              xmlns:properties="clr-namespace:JryVideo.Properties"
+             xmlns:numberEditorControl="clr-namespace:JryVideo.Controls.NumberEditorControl"
              mc:Ignorable="d"
              d:DesignHeight="400"
              d:DesignWidth="700">
@@ -277,7 +277,7 @@
                                Text="offset"
                                Style="{StaticResource TitleStyle}" />
 
-                    <numberEditer:NumberEditerControl Grid.Row="4"
+                    <numberEditorControl:NumberEditorControl Grid.Row="4"
                                                       Grid.Column="1"
                                                       Width="120"
                                                       HorizontalAlignment="Left"
