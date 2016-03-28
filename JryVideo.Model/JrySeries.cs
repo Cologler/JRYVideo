@@ -93,6 +93,72 @@ namespace JryVideo.Model
                 this.Mode = mode;
                 this.Keyword = value;
             }
+
+            public static bool CanBeYear(string text)
+            {
+                Debug.Assert(text.Length > 0);
+                return text.All(char.IsDigit) && text.Length < 5;
+            }
+
+            public static int GetYear(string text) => int.Parse(text);
+
+            public static bool CanBeStar(string text)
+            {
+                Debug.Assert(text.Length > 0);
+
+                var array = GetStar(text);
+                Debug.Assert(array != null);
+                return array.Length > 0;
+            }
+
+            public static int[] GetStar(string text)
+            {
+                text = text.Replace(" ", "");
+
+                switch (text.Length)
+                {
+                    case 1:
+                        var index = StarCharRange.IndexOf(text[0]);
+                        if (index >= 0) return new[] { index + 1 };
+                        break;
+
+                    case 2: // [-]?[/d][-]?
+                        // "2-" => "2-5" => 2345, "-4" => "1-4" => 1234
+                        if (text[0] == '-' && StarCharRange.Contains(text[1])) // -d
+                        {
+                            return GetStar("1" + text); // 1-d
+                        }
+                        if (text[1] == '-' && StarCharRange.Contains(text[0])) // d-
+                        {
+                            return GetStar(text + "5"); // d-5
+                        }
+                        break;
+
+                    case 3: // [/d][-][/d]
+                        // 2-4 => 234
+                        if (text[1] == '-')
+                        {
+                            var l = StarCharRange.IndexOf(text[0]);
+                            var r = StarCharRange.IndexOf(text[2]);
+                            if (l >= 0 && r >= 0)
+                            {
+                                var min = Math.Min(l, r);
+                                var max = Math.Max(l, r) + 1;
+                                return Enumerable.Range(1, 5).Skip(min).Take(max - min).ToArray();
+                            }
+                        }
+                        break;
+                }
+
+                return Empty<int>.Array;
+            }
+
+            private static readonly char[] StarCharRange;
+
+            static QueryParameter()
+            {
+                StarCharRange = Enumerable.Range(1, 5).Select(z => z.ToString()[0]).ToArray();
+            }
         }
 
         public enum QueryMode
@@ -116,6 +182,8 @@ namespace JryVideo.Model
             VideoYear,
 
             ImdbId,
+
+            Star
         }
     }
 }

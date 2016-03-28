@@ -100,12 +100,13 @@ namespace JryVideo.Data.MongoDb
                     break;
 
                 case JrySeries.QueryMode.VideoYear:
+                    var year = JrySeries.QueryParameter.GetYear(search.Keyword);
                     var q8 = PropertySelector<JrySeries>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Year)
                         .ToString();
                     Debug.Assert(q8 == "Videos.Year");
-                    filter = builder.Eq(q8, int.Parse(search.Keyword));
+                    filter = builder.Eq(q8, year);
                     break;
 
                 case JrySeries.QueryMode.ImdbId:
@@ -115,6 +116,17 @@ namespace JryVideo.Data.MongoDb
                         .ToString();
                     Debug.Assert(q9 == "Videos.ImdbId");
                     filter = builder.Eq(q9, search.Keyword);
+                    break;
+
+                case JrySeries.QueryMode.Star:
+                    var q10 = PropertySelector<JrySeries>.Start()
+                        .SelectMany(z => z.Videos)
+                        .Select(z => z.Star)
+                        .ToString();
+                    Debug.Assert(q10 == "Videos.Star");
+                    var stars = JrySeries.QueryParameter.GetStar(search.Keyword);
+                    Debug.Assert(stars.Length > 0);
+                    filter = builder.In(q10, stars);
                     break;
 
                 default:

@@ -191,11 +191,16 @@ namespace JryVideo.Core.Managers
         public sealed class Query
         {
             private readonly SeriesManager seriesManager;
+            private readonly int[] starArray;
 
             public Query(SeriesManager seriesManager, string originText)
             {
                 this.seriesManager = seriesManager;
                 this.QueryParameter = ParseQueryParameter(originText);
+                if (this.QueryParameter.Mode == JrySeries.QueryMode.Star)
+                {
+                    this.starArray = JrySeries.QueryParameter.GetStar(this.QueryParameter.Keyword);
+                }
             }
 
             public JrySeries.QueryParameter QueryParameter { get; }
@@ -249,12 +254,26 @@ namespace JryVideo.Core.Managers
                                 originText.Substring(index + 1));
 
                         case "year":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.VideoYear,
-                                originText.Substring(index + 1));
+                            var year = originText.Substring(index + 1);
+                            if (JrySeries.QueryParameter.CanBeYear(year))
+                            {
+                                return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.VideoYear,
+                                    year);
+                            }
+                            break;
 
                         case "imdb-id":
                             return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.ImdbId,
                                 originText.Substring(index + 1));
+
+                        case "star":
+                            var star = originText.Substring(index + 1);
+                            if (JrySeries.QueryParameter.CanBeStar(star))
+                            {
+                                return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.Star,
+                                    star);
+                            }
+                            break;
                     }
                 }
 
@@ -320,6 +339,9 @@ namespace JryVideo.Core.Managers
                     case JrySeries.QueryMode.ImdbId:
                         if (video.ImdbId == queryParameter.Keyword) return true;
                         break;
+
+                    case JrySeries.QueryMode.Star:
+                        return this.starArray.Contains(video.Star);
 
                     default:
                         throw new ArgumentOutOfRangeException();
