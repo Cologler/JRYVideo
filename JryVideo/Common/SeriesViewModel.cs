@@ -46,9 +46,8 @@ namespace JryVideo.Common
 
         public bool OpenEditorWindows(Window parent)
         {
-            if (this.Version.IsObsolete())
+            if (this.IsVersionObsolete(parent))
             {
-                parent.ShowJryVideoMessage("error", "data was obsolete, please refresh.");
                 return false;
             }
 
@@ -67,6 +66,17 @@ namespace JryVideo.Common
         public async Task AutoCompleteAsync()
         {
             await new SeriesAutoComplete().AutoCompleteAsync(this.GetManagers().SeriesManager, this.Source);
+        }
+
+        public bool IsVersionObsolete(Window parent)
+        {
+            if (this.Version.IsObsolete())
+            {
+                parent?.ShowJryVideoMessage("error", "data was obsolete, please refresh.");
+                return true;
+            }
+
+            return false;
         }
 
         public DataVersion<JrySeries> Version { get; }

@@ -20,6 +20,7 @@ namespace JryVideo.Controls.StarEditorControl
         public StarEditorControl()
         {
             this.InitializeComponent();
+            this.Value = -1;
             this.Value = 0;
         }
 

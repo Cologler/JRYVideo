@@ -1,5 +1,4 @@
 ﻿using Jasily.ComponentModel;
-using JryVideo.Common.Dialogs;
 using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Models;
@@ -213,7 +212,7 @@ namespace JryVideo.Common
         public async Task<bool> TrackAsync()
         {
             this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;
-            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
             this.Source.IsTracking = true;
 
             if (await manager.UpdateAsync(this.Source))
@@ -228,7 +227,7 @@ namespace JryVideo.Common
         public async Task<bool> UntrackAsync()
         {
             this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;
-            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
             this.Source.IsTracking = false;
 
             if (await manager.UpdateAsync(this.Source))
@@ -243,7 +242,7 @@ namespace JryVideo.Common
         public async Task<bool> AllAiredAsync()
         {
             if (this.Source.IsAllAired) return false;
-            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
             this.Source.IsAllAired = true;
             this.NotifyPropertyChanged(nameof(this.IsNotAllAired));
             return await manager.UpdateAsync(this.Source);
@@ -301,7 +300,7 @@ namespace JryVideo.Common
             var ep = this.TodayWatched?.Episode;
             if (ep == null) return;
             this.TodayWatched.IsWatched = true;
-            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
+            var manager = this.GetManagers().VideoManager;
             var video = await manager.FindAsync(this.Source.Id);
             if (video == null) return;
             if (video.Watcheds == null) video.Watcheds = new List<int>();
@@ -313,9 +312,8 @@ namespace JryVideo.Common
 
         public bool OpenEditorWindows(Window parent)
         {
-            if (this.SeriesView.Version.IsObsolete())
+            if (this.SeriesView.IsVersionObsolete(parent))
             {
-                parent.ShowJryVideoMessage("error", "data was obsolete, please refresh.");
                 return false;
             }
 
