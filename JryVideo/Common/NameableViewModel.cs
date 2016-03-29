@@ -18,7 +18,7 @@ namespace JryVideo.Common
             : base(source)
         {
             this.PropertiesMapper = Mapper;
-            this.Pinyins = Empty<string>.Array;
+            this.QueryStrings = Empty<string>.Array;
         }
 
         [NotifyPropertyChanged]
@@ -36,7 +36,7 @@ namespace JryVideo.Common
         [NotifyPropertyChanged]
         public string FullNameLine => this.Source.Names == null ? string.Empty : string.Join(" / ", this.Source.Names);
 
-        public string[] Pinyins { get; private set; }
+        public string[] QueryStrings { get; private set; }
 
         /// <summary>
         /// the method will call PropertyChanged for each property which has [NotifyPropertyChanged]
@@ -44,18 +44,20 @@ namespace JryVideo.Common
         public override void RefreshProperties()
         {
             base.RefreshProperties();
-            if (this.IsBuildPinyin) this.BeginRebuildPinyins();
+            if (this.IsBuildQueryStrings) this.BeginRebuildQueryStrings();
         }
 
-        public bool IsBuildPinyin { get; set; }
+        public bool IsBuildQueryStrings { get; set; }
 
-        public void RebuildPinyins()
+        public void RebuildQueryStrings()
         {
             var names = this.Source.Names?.ToArray();
             if (names == null) return;
             var f = new List<string>(names.Length);
-            foreach (var array in names.Select(z => z.ToCharArray()))
+            foreach (var name in names)
             {
+                // pinyin
+                var array = name.ToCharArray();
                 var diff = false;
                 for (var j = 0; j < array.Length; j++)
                 {
@@ -67,10 +69,28 @@ namespace JryVideo.Common
                     }
                 }
                 if (diff) f.Add(array.GetString());
+
+                // english
+                if (name.All(z => z.IsEnglishChar()))
+                {
+                    // super girl => sg
+                    var words = name.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                    if (words.Length > 1)
+                    {
+                        f.Add(words.Select(z => z[0]).GetString());
+                    }
+
+                    // SuperGirl => sg
+                    var words2 = name.Where(char.IsUpper).GetString();
+                    if (words2.Length != name.Length && words2.Length > 1)
+                    {
+                        f.Add(words2);
+                    }
+                }
             }
-            this.Pinyins = f.Count > 0 ? f.ToArray() : Empty<string>.Array;
+            this.QueryStrings = f.Count > 0 ? f.Distinct().ToArray() : Empty<string>.Array;
         }
 
-        public void BeginRebuildPinyins() => Task.Run(() => this.RebuildPinyins());
+        public void BeginRebuildQueryStrings() => Task.Run(() => this.RebuildQueryStrings());
     }
 }

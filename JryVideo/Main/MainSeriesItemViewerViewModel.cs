@@ -97,8 +97,8 @@ namespace JryVideo.Main
             var svm = search.Items.Select(z => new SeriesViewModel(z, ver)).ToArray();
             svm.ForEach(z =>
             {
-                z.NameViewModel.IsBuildPinyin = true;
-                z.NameViewModel.BeginRebuildPinyins();
+                z.NameViewModel.IsBuildQueryStrings = true;
+                z.NameViewModel.BeginRebuildQueryStrings();
             });
             var r = svm.SelectMany(z => z.VideoViewModels)
                 .Where(z => this.searchResultView.IsMatch(z.SeriesView, z))
@@ -121,7 +121,7 @@ namespace JryVideo.Main
             foreach (var item in items)
             {
                 item.NeedGroup = true;
-                item.NameViewModel.IsBuildPinyin = true;
+                item.NameViewModel.IsBuildQueryStrings = true;
                 item.RefreshProperties();
             }
         }
@@ -183,8 +183,8 @@ namespace JryVideo.Main
                     this.filterText.Equals(obj.Source.Id, StringComparison.OrdinalIgnoreCase) ||
                     obj.Source.Names
                         .Concat(obj.SeriesView.Source.Names)
-                        .Concat(obj.NameViewModel.Pinyins)
-                        .Concat(obj.SeriesView.NameViewModel.Pinyins)
+                        .Concat(obj.NameViewModel.QueryStrings)
+                        .Concat(obj.SeriesView.NameViewModel.QueryStrings)
                         .Any(z => z.Contains(this.filterText, StringComparison.OrdinalIgnoreCase));
             }
         }
