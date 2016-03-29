@@ -24,7 +24,7 @@
             <Grid Height="30"
                   HorizontalAlignment="Right"
                   VerticalAlignment="Top">
-                <Slider Margin="0,0,100,0"
+                <Slider Margin="0,0,110,0"
                         Style="{DynamicResource FlatSlider}"
                         TickPlacement="TopLeft"
                         Minimum="0.2"
