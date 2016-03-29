@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Enums;
 using System.Threading.Tasks;
 using System.Windows;
+using Jasily.IO;
 
 namespace JryVideo.Main
 {
