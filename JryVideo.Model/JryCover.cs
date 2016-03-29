@@ -32,6 +32,12 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public byte[] BinaryData { get; set; }
 
+        /// <summary>
+        /// (value / 10) was opacity.
+        /// </summary>
+        [BsonIgnoreIfDefault]
+        public int? Opacity { get; set; }
+
         protected override bool InnerTestHasError()
         {
             if (base.InnerTestHasError()) return true;

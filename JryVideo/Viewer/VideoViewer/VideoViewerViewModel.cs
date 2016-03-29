@@ -201,6 +201,8 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 this.InfoView.RefreshProperties();
             }
+
+            this.Background.Flush();
         }
 
         public sealed class WatchedEpisodeChecker : NotifyPropertyChangedObject
@@ -227,7 +229,9 @@ namespace JryVideo.Viewer.VideoViewer
 
         public sealed class BackgroundViewModel : HasCoverViewModel<IJryCoverParent>
         {
+            private const double DefaultOpacity = 0.2;
             private readonly VideoViewerViewModel parent;
+            private double opacity = DefaultOpacity;
 
             public BackgroundViewModel(VideoViewerViewModel parent)
                 : base(parent.InfoView.Source.BackgroundImageAsCoverParent())
@@ -365,6 +369,50 @@ namespace JryVideo.Viewer.VideoViewer
             }
 
             protected override bool IsDelayLoad => true;
+
+            public double Opacity
+            {
+                get { return this.opacity; }
+                set { this.SetPropertyRef(ref this.opacity, value); }
+            }
+
+            public int? GetSaveValue()
+            {
+                var intValue = checked((int)(this.Opacity * 10));
+                Debug.Assert(intValue >= 2 && intValue <= 8);
+                return intValue < 3 || intValue > 8 ? (int?)null : intValue;
+            }
+
+            protected override void SetCover(JryCover cover)
+            {
+                if (cover?.Opacity != null)
+                {
+                    var o = (double)cover.Opacity.Value;
+                    o = Math.Max(Math.Min(0.8, o / 10), 0.2);
+                    this.Opacity = o;
+                }
+                else
+                {
+                    this.Opacity = DefaultOpacity;
+                }
+                base.SetCover(cover);
+            }
+
+            public async void Flush()
+            {
+                if (this.IsCoverEmpty) return;
+                var manager = this.GetManagers().CoverManager;
+                var cover = await manager.LoadCoverAsync(this.Source.CoverId);
+                if (cover != null)
+                {
+                    var o = this.GetSaveValue();;
+                    if (cover.Opacity != o)
+                    {
+                        cover.Opacity = o;
+                        await manager.UpdateAsync(cover);
+                    }
+                }
+            }
         }
     }
 }

@@ -14,12 +14,27 @@
 
     <Grid>
 
-        <Image Stretch="UniformToFill" 
-               Opacity="0.2"
-               IsHitTestVisible="False"
-               Margin="0,-56,0,0"
-               x:Name="BackgroundImage"
-               Source="{Binding Background.Cover.BinaryData}"/>
+        <Grid Margin="0,-56,0,0">
+            <Image Stretch="UniformToFill"
+                   Opacity="{Binding Background.Opacity}"
+                   IsHitTestVisible="False"
+                   x:Name="BackgroundImage"
+                   Source="{Binding Background.Cover.BinaryData}" />
+
+            <Grid Height="30"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Top">
+                <Slider Margin="0,0,100,0"
+                        Style="{DynamicResource FlatSlider}"
+                        TickPlacement="TopLeft"
+                        Minimum="0.2"
+                        Maximum="0.8"
+                        Value="{Binding Background.Opacity, Mode=TwoWay}"
+                        SmallChange="0.1"
+                        TickFrequency="0.1"
+                        LargeChange="0.1" />
+            </Grid>
+        </Grid>
 
         <Grid Margin="8">
             <Grid.ColumnDefinitions>

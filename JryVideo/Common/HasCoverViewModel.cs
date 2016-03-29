@@ -24,7 +24,7 @@ namespace JryVideo.Common
                 this.BeginUpdateCoverIfEmpty();
                 return this.cover;
             }
-            set { this.SetPropertyRef(ref this.cover, value); }
+            private set { this.SetPropertyRef(ref this.cover, value); }
         }
 
         public async Task<JryCover> TryGetCoverAsync()
@@ -38,9 +38,11 @@ namespace JryVideo.Common
 
         public void BeginUpdateCoverIfEmpty()
         {
-            if (this.cover != null) return;
+            if (!this.IsCoverEmpty) return;
             this.BeginUpdateCover();
         }
+
+        public bool IsCoverEmpty => this.cover == null;
 
         public async void BeginUpdateCover()
         {
@@ -48,8 +50,13 @@ namespace JryVideo.Common
 
             Debug.Assert(this.Source.CoverId != null);
             if (this.IsDelayLoad) await Task.Yield();
-            this.Cover = await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId);
-            if (this.cover == null)
+            this.SetCover(await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId));
+        }
+
+        protected virtual async void SetCover(JryCover cover)
+        {
+            this.Cover = cover;
+            if (cover == null)
             {
                 var errorMsg = $"{this.Source} missing cover [{this.Source.CoverId}].";
                 await Log.WriteAsync(errorMsg);
