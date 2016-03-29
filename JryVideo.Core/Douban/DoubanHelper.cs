@@ -56,7 +56,7 @@ namespace JryVideo.Core.Douban
         {
             if (Debugger.IsAttached && result.IsSuccess)
             {
-                Debug.WriteLine(result.AsText());
+                Debug.WriteLine(result.AsText().Result ?? string.Empty);
             }
         }
 
@@ -84,10 +84,10 @@ namespace JryVideo.Core.Douban
 
         public static IEnumerable<string> ParseName(Artist json)
         {
-            if (!String.IsNullOrWhiteSpace(json.Name))
+            if (!string.IsNullOrWhiteSpace(json.Name))
                 yield return json.Name;
 
-            if (!String.IsNullOrWhiteSpace(json.OriginName))
+            if (!string.IsNullOrWhiteSpace(json.OriginName))
                 yield return json.OriginName;
 
             if (json.OtherNames != null)
