@@ -1,5 +1,7 @@
 ﻿using Jasily.ComponentModel;
+using JryVideo.Common;
 using JryVideo.Data;
+using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,11 +32,21 @@ namespace JryVideo.Main
         {
             await this.VideosViewModel.ReloadAsync();
             this.isInitializeLoaded = true;
+            this.ReloadGrouping();
         }
 
         public async Task ReloadIfInitializedAsync()
         {
             if (this.isInitializeLoaded) await this.VideosViewModel.ReloadAsync();
+        }
+
+        public async void ReloadGrouping()
+        {
+            await this.Grouping.ReloadFlagsAsync(
+                JryFlagType.SeriesTag,
+                JryFlagType.VideoYear,
+                JryFlagType.VideoTag,
+                JryFlagType.VideoType);
         }
 
         public ObservableCollection<NameValuePair<JryVideoDataSourceProviderManagerMode>> ModeCollection { get; }
@@ -55,6 +67,49 @@ namespace JryVideo.Main
         {
             this.VideosViewModel.PageIndex++;
             await this.VideosViewModel.ReloadAsync();
+        }
+
+        public VideoGroupingViewModel Grouping { get; } = new VideoGroupingViewModel();
+
+        public void OnClickGrouping(object item)
+        {
+            var flag = item as FlagViewModel;
+            if (flag != null)
+            {
+                switch (flag.Source.Type)
+                {
+                    case JryFlagType.SeriesTag:
+                    case JryFlagType.VideoTag:
+                        this.VideosViewModel.SearchText = "tag:" + flag.Source.Value;
+                        break;
+
+                    case JryFlagType.VideoYear:
+                        this.VideosViewModel.SearchText = "year:" + flag.Source.Value;
+                        break;
+
+                    case JryFlagType.VideoType:
+                        this.VideosViewModel.SearchText = "type:" + flag.Source.Value;
+                        break;
+
+
+                    case JryFlagType.EntityResolution:
+                    case JryFlagType.EntityQuality:
+                    case JryFlagType.EntityExtension:
+                    case JryFlagType.EntityFansub:
+                    case JryFlagType.EntitySubTitleLanguage:
+                    case JryFlagType.EntityTrackLanguage:
+                    case JryFlagType.EntityAudioSource:
+                    case JryFlagType.EntityTag:
+                        throw new NotSupportedException();
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                return;
+            }
+
+            var star = (int)item;
+            this.VideosViewModel.SearchText = "star:" + star;
         }
     }
 }

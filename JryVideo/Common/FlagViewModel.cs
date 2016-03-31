@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Jasily.ComponentModel;
+﻿using Jasily.ComponentModel;
 using JryVideo.Model;
 
 namespace JryVideo.Common
@@ -10,5 +9,7 @@ namespace JryVideo.Common
             : base(source)
         {
         }
+
+        public string NameWithCount => $"{this.Source.Value} ({this.Source.Count})";
     }
 }

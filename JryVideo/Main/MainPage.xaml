@@ -119,6 +119,41 @@
                               HorizontalAlignment="Left"
                               Header="add"
                               Click="AddMenuItem_OnClick" />
+                    <MenuItem Header="search"
+                              Click="SearchMenuItem_OnClick">
+                        <MenuItem Header="type"
+                                  ItemsSource="{Binding Grouping.Types}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NameWithCount}" />
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                        <MenuItem Header="year"
+                                  ItemsSource="{Binding Grouping.Years}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NameWithCount}" />
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                        <MenuItem Header="tags"
+                                  ItemsSource="{Binding Grouping.Tags}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NameWithCount}" />
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                        <MenuItem Header="star"
+                                  ItemsSource="{Binding Grouping.Stars}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                    </MenuItem>
                 </Menu>
 
                 <StackPanel Orientation="Horizontal"
@@ -149,16 +184,6 @@
             </Grid>
 
             <Grid Grid.Row="1">
-                <ListView BorderThickness="0">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
                 <ListView x:Name="VideosListView"
                           BorderThickness="0"
                           ItemsSource="{Binding VideosViewModel.Items.View}"

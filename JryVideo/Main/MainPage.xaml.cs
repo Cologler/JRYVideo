@@ -95,7 +95,7 @@ namespace JryVideo.Main
             }
         }
 
-        private void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private async void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var adder = new AddWindow()
             {
@@ -103,7 +103,7 @@ namespace JryVideo.Main
             };
             if (adder.ShowDialog() == true)
             {
-                this.ViewModel.ReloadAsync();
+                await this.ViewModel.ReloadIfInitializedAsync();
             }
         }
 
@@ -113,18 +113,23 @@ namespace JryVideo.Main
             if (vm != null) this.VideoSelected?.Invoke(this, vm);
         }
 
-        private async void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)
+        private void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                if (this.ViewModel.VideosViewModel.IsOnlyTracking)
-                {
-                    this.cancelReloadCount++;
-                    this.ViewModel.VideosViewModel.IsOnlyTracking = false;
-                }
-                this.ViewModel.VideosViewModel.SetFilterTextWithoutRefresh(string.Empty);
-                await this.ViewModel.ReloadIfInitializedAsync();
+                this.StartSearch();
             }
+        }
+
+        private async void StartSearch()
+        {
+            if (this.ViewModel.VideosViewModel.IsOnlyTracking)
+            {
+                this.cancelReloadCount++;
+                this.ViewModel.VideosViewModel.IsOnlyTracking = false;
+            }
+            this.ViewModel.VideosViewModel.SetFilterTextWithoutRefresh(string.Empty);
+            await this.ViewModel.ReloadIfInitializedAsync();
         }
 
         private async void LastPageButton_OnClick(object sender, RoutedEventArgs e)
@@ -374,6 +379,12 @@ namespace JryVideo.Main
                 action();
                 await this.ViewModel.VideosViewModel.ReloadAsync();
             }
+        }
+
+        private void SearchMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.OnClickGrouping(((FrameworkElement)e.OriginalSource).DataContext);
+            this.StartSearch();
         }
     }
 }
