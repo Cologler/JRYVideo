@@ -130,22 +130,29 @@ namespace JryVideo.Main
 
         public int PageIndex { get; set; }
 
-        protected override void OnResetFilter(string filterText)
+        protected override bool OnResetFilter(string filterText)
         {
-            base.OnResetFilter(filterText);
-            this.filter = new FilterInfo(this.IsOnlyTracking, filterText);
+            var filter = this.filter;
+            var next = new FilterInfo(this.IsOnlyTracking, filterText);
+            if (filter == null || !filter.Equals(next))
+            {
+                this.filter = next;
+                return true;
+            }
+            return false;
         }
 
         public async Task ReloadAsync()
         {
-            var source = await this.GetSourceAsync();
+            var items = await this.GetSourceAsync();
+            JasilyDebug.Pointer();
 
-            if (source != null)
+            if (items != null)
             {
                 this.OnResetFilter(this.FilterText);
                 this.Items.View.CustomSort = null;
                 this.Items.View.GroupDescriptions?.Clear();
-                this.Items.Collection.Reset(source);
+                this.Items.Collection.Clear();
                 if (this.IsOnlyTracking)
                 {
                     this.Items.View.CustomSort = new VideoInfoViewModel.GroupComparer();
@@ -156,36 +163,43 @@ namespace JryVideo.Main
                 {
                     this.Items.View.CustomSort = new VideoInfoViewModel.DefaultComparer();
                 }
+                this.Items.Collection.AddRange(items);
             }
         }
 
-        private class FilterInfo
+        private class FilterInfo : IEquatable<FilterInfo>
         {
-            private readonly bool isOnlyTracking;
-            private readonly string filterText;
+            public bool OnlyTracking { get; }
+
+            public string Text { get; }
 
             public FilterInfo(bool isOnlyTracking, string text)
             {
-                this.isOnlyTracking = isOnlyTracking;
+                this.OnlyTracking = isOnlyTracking;
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    this.filterText = text.Trim();
+                    this.Text = text.Trim();
                 }
             }
 
             public bool Where(VideoInfoViewModel obj)
             {
-                if (this.isOnlyTracking && !obj.Source.IsTracking) return false;
-                if (this.filterText == null) return true;
+                if (this.OnlyTracking && !obj.Source.IsTracking) return false;
+                if (this.Text == null) return true;
 
                 return
-                    this.filterText.Equals(obj.SeriesView.Source.Id, StringComparison.OrdinalIgnoreCase) ||
-                    this.filterText.Equals(obj.Source.Id, StringComparison.OrdinalIgnoreCase) ||
+                    this.Text.Equals(obj.SeriesView.Source.Id, StringComparison.OrdinalIgnoreCase) ||
+                    this.Text.Equals(obj.Source.Id, StringComparison.OrdinalIgnoreCase) ||
                     obj.Source.Names
                         .Concat(obj.SeriesView.Source.Names)
                         .Concat(obj.NameViewModel.QueryStrings)
                         .Concat(obj.SeriesView.NameViewModel.QueryStrings)
-                        .Any(z => z.Contains(this.filterText, StringComparison.OrdinalIgnoreCase));
+                        .Any(z => z.Contains(this.Text, StringComparison.OrdinalIgnoreCase));
+            }
+
+            public bool Equals(FilterInfo other)
+            {
+                return other != null && other.Text == this.Text && other.OnlyTracking == this.OnlyTracking;
             }
         }
 

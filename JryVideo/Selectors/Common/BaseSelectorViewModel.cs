@@ -1,9 +1,10 @@
 using Jasily.ComponentModel;
+using Jasily.Diagnostics;
 using Jasily.Windows.Data;
 using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Jasily.Diagnostics;
 
 namespace JryVideo.Selectors.Common
 {
@@ -39,6 +40,16 @@ namespace JryVideo.Selectors.Common
             }
         }
 
+        public void SetFilterTextWithoutRefresh(string value)
+        {
+            if (!this.filterText.NormalEquals(value))
+            {
+                this.filterText = value;
+                this.NotifyPropertyChanged(nameof(this.FilterText));
+                this.OnResetFilter(value);
+            }
+        }
+
         private async void LazyFilter()
         {
             var text = this.FilterText;
@@ -47,16 +58,14 @@ namespace JryVideo.Selectors.Common
 
             if (text == this.FilterText)
             {
-                this.OnResetFilter(text);
-                JasilyDebug.Pointer();
-                this.Items.View.Refresh();
-                JasilyDebug.Pointer();
+                if (this.OnResetFilter(text))
+                {
+                    JasilyDebug.Pointer();
+                    this.Items.View.Refresh();
+                }
             }
         }
 
-        protected virtual void OnResetFilter(string filterText)
-        {
-
-        }
+        protected virtual bool OnResetFilter(string filterText) => true;
     }
 }

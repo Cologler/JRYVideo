@@ -9,6 +9,7 @@ namespace JryVideo.Main
 {
     public class MainViewModel : JasilyViewModel
     {
+        public bool isInitializeLoaded;
         private NameValuePair<JryVideoDataSourceProviderManagerMode> selectedMode;
 
         public MainViewModel()
@@ -25,7 +26,16 @@ namespace JryVideo.Main
 
         public MainSeriesItemViewerViewModel VideosViewModel { get; } = new MainSeriesItemViewerViewModel();
 
-        public async void ReloadAsync() => await this.VideosViewModel.ReloadAsync();
+        public async void ReloadAsync()
+        {
+            await this.VideosViewModel.ReloadAsync();
+            this.isInitializeLoaded = true;
+        }
+
+        public async Task ReloadIfInitializedAsync()
+        {
+            if (this.isInitializeLoaded) await this.VideosViewModel.ReloadAsync();
+        }
 
         public ObservableCollection<NameValuePair<JryVideoDataSourceProviderManagerMode>> ModeCollection { get; }
 

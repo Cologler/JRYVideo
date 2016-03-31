@@ -40,13 +40,13 @@ namespace JryVideo.Selectors.FlagSelector
             return !this.SelectedItems.Contains(obj);
         }
 
-        protected override void OnResetFilter(string filterText)
+        protected override bool OnResetFilter(string filterText)
         {
-            base.OnResetFilter(filterText);
-
             this.filters = string.IsNullOrWhiteSpace(filterText)
                 ? Empty<string>.Array
                 : filterText.Split("|", StringSplitOptions.RemoveEmptyEntries);
+
+            return true;
         }
 
         public ObservableCollection<FlagViewModel> SelectedItems { get; } = new ObservableCollection<FlagViewModel>();

@@ -29,6 +29,7 @@ namespace JryVideo.Main
 
         private MainViewModel ViewModel;
         private ProcessTrackTask processTrackTask;
+        private int cancelReloadCount;
 
         public MainPage()
         {
@@ -72,10 +73,7 @@ namespace JryVideo.Main
 
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
         {
-            var frameworkElement = sender as FrameworkElement;
-            if (frameworkElement == null) return;
-
-            var vm = frameworkElement.DataContext as VideoInfoViewModel;
+            var vm = (sender as FrameworkElement)?.DataContext as VideoInfoViewModel;
             if (vm == null) return;
 
             var dlg = new CoverEditorWindow();
@@ -119,9 +117,13 @@ namespace JryVideo.Main
         {
             if (e.Key == Key.Enter)
             {
-                this.ViewModel.VideosViewModel.IsOnlyTracking = false;
-                this.ViewModel.VideosViewModel.FilterText = string.Empty;
-                await this.ViewModel.VideosViewModel.ReloadAsync();
+                if (this.ViewModel.VideosViewModel.IsOnlyTracking)
+                {
+                    this.cancelReloadCount++;
+                    this.ViewModel.VideosViewModel.IsOnlyTracking = false;
+                }
+                this.ViewModel.VideosViewModel.SetFilterTextWithoutRefresh(string.Empty);
+                await this.ViewModel.ReloadIfInitializedAsync();
             }
         }
 
@@ -150,15 +152,21 @@ namespace JryVideo.Main
 
         private async void IsOnlyTrackingCheckBox_OnChecked(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.VideosViewModel.FilterText = string.Empty;
-            await this.ViewModel.VideosViewModel.ReloadAsync();
+            this.ViewModel.VideosViewModel.SetFilterTextWithoutRefresh(string.Empty);
+            await this.ViewModel.ReloadIfInitializedAsync();
             this.RefreshGroupStyle();
         }
 
         private async void IsOnlyTrackingCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.VideosViewModel.FilterText = string.Empty;
-            await this.ViewModel.VideosViewModel.ReloadAsync();
+            if (this.cancelReloadCount > 0)
+            {
+                this.cancelReloadCount--;
+                return;
+            }
+
+            this.ViewModel.VideosViewModel.SetFilterTextWithoutRefresh(string.Empty);
+            await this.ViewModel.ReloadIfInitializedAsync();
             this.RefreshGroupStyle();
         }
 
@@ -219,7 +227,7 @@ namespace JryVideo.Main
             if (selected.Value == JryVideoDataSourceProviderManagerMode.Public)
             {
                 JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Public);
-                await this.ViewModel.VideosViewModel.ReloadAsync();
+                await this.ViewModel.ReloadIfInitializedAsync();
             }
             else
             {
@@ -263,7 +271,7 @@ namespace JryVideo.Main
                     if (await secure.ProviderManager.PasswordAsync(hash))
                     {
                         JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Private);
-                        await this.ViewModel.VideosViewModel.ReloadAsync();
+                        await this.ViewModel.ReloadIfInitializedAsync();
                         return;
                     }
                 }
