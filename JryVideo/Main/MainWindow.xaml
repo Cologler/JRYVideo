@@ -19,15 +19,16 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Margin="8">
+        <Frame Grid.Row="1"
+               x:Name="MainFrame"
+               NavigationUIVisibility="Hidden" />
+
+        <Grid Grid.Row="0"
+              Margin="8">
             <TextBlock Text="JRY VIDEO"
                        x:Name="CaptionTextBlock"
                        Style="{StaticResource CaptionStyle}" />
         </Grid>
-
-        <Frame Grid.Row="1"
-               x:Name="MainFrame"
-               NavigationUIVisibility="Hidden" />
         
         <StatusBar Grid.Row="2">
             <StackPanel Orientation="Horizontal">
