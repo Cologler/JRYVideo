@@ -264,7 +264,7 @@ namespace JryVideo.Main
                 return await this.query.StartQuery(this.pageIndex * this.pageSize, this.pageSize + 1);
             }
 
-            public bool IsMatch(JrySeries series, JryVideoInfo video) => this.query?.IsMatch(series, video) ?? true;
+            public bool IsMatch(JrySeries series, JryVideoInfo video) => this.query?.IsMatch(series, video) ?? video.IsTracking;
 
             public bool IsSearchTextEquals(string searchText)
             {
