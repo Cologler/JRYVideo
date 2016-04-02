@@ -213,7 +213,8 @@
                                   Background="#00000000"
                                   x:Name="VideoPanel"
                                   MouseLeftButtonUp="VideoPanel_OnMouseLeftButtonUp"
-                                  Width="208">
+                                  Width="208"
+                                  HorizontalAlignment="Left">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition Height="Auto" />

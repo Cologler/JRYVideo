@@ -3,17 +3,19 @@ using JryVideo.Core.TheTVDB;
 using JryVideo.Data;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JryVideo.Core
 {
     public class JryVideoCore
     {
+        private int theTVDBClientInitializing;
+        private TheTVDBClient theTVDBClient;
+
         public static JryVideoCore Current { get; private set; }
 
-        public TheTVDBClient TheTVDBClient { get; private set; }
-
-        public TheTVDBHost TheTVDBHost { get; }
+        public TheTVDBHost TheTVDBHost { get; } = new TheTVDBHost();
 
         static JryVideoCore()
         {
@@ -22,7 +24,6 @@ namespace JryVideo.Core
 
         private JryVideoCore()
         {
-            this.TheTVDBHost = new TheTVDBHost();
         }
 
         public string[] RunArgs { get; set; }
@@ -62,9 +63,32 @@ namespace JryVideo.Core
             this.BeginLazyInitialize();
         }
 
+        public TheTVDBClient TheTVDBClient
+        {
+            get
+            {
+                var client = this.theTVDBClient;
+                if (client == null) this.InitializeTheTVDBClient();
+                return client;
+            }
+        }
+
+        private async void InitializeTheTVDBClient()
+        {
+            if (this.theTVDBClientInitializing == 0)
+            {
+                if (Interlocked.CompareExchange(ref this.theTVDBClientInitializing, 1, 0) == 0)
+                {
+                    var client = await this.TheTVDBHost.CreateAsync("2C8DAFF32B0E08A7", null);
+                    if (client != null) Interlocked.CompareExchange(ref this.theTVDBClient, client, null);
+                    this.theTVDBClientInitializing = 0;
+                }
+            }
+        }
+
         private async void BeginLazyInitialize()
         {
-            this.TheTVDBClient = await this.TheTVDBHost.CreateAsync("2C8DAFF32B0E08A7", null);
+            this.InitializeTheTVDBClient();
 
             foreach (var dc in new[] { this.NormalDataCenter, /*this.SecureDataCenter*/ })
             {
