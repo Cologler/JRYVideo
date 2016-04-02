@@ -70,7 +70,7 @@ namespace JryVideo.Main
                         .ToArray(),
                     Video = z
                 }).ToArray();
-                var video = nameWithVideo.FirstOrDefault(z => z.Names.Any(x => name.Contains(x)));
+                var video = nameWithVideo.FirstOrDefault(z => z.Names.Any(x => name.Contains(x, StringComparison.OrdinalIgnoreCase)));
                 if (video != null)
                 {
                     this.CurrentWatchVideo?.Invoke(this, video.Video);
