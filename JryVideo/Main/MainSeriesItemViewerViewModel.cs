@@ -164,6 +164,7 @@ namespace JryVideo.Main
                     this.Items.View.CustomSort = new VideoInfoViewModel.DefaultComparer();
                 }
                 this.Items.Collection.AddRange(items);
+                this.Items.View.Refresh();
             }
         }
 
