@@ -30,7 +30,16 @@ namespace JryVideo.Core.Managers.Journals
 
         public void Initialize(DataCenter dataCenter)
         {
+            dataCenter.FlagManager.ItemCreated += this.FlagManager_ItemCreated;
             dataCenter.FlagManager.FlagChanged += this.FlagManager_FlagChanged;
+        }
+
+        private void FlagManager_ItemCreated(object sender, JryFlag e)
+        {
+            lock (this.journals)
+            {
+                this.journals.Add(new FlagCreatedJournal(e.Type, e.Value));
+            }
         }
 
         private void FlagManager_FlagChanged(object sender, System.EventArgs<JryFlagType, string, string> e)

@@ -1,19 +1,15 @@
-using System.Diagnostics;
-using System.Linq;
-using JryVideo.Model;
+using JryVideo.Core.Managers.Journals;
+using System.Collections.Generic;
 
 namespace JryVideo.Common
 {
-    public sealed class DataVersion<T> where T : JryObject
+    public abstract class DataVersion
     {
         private bool isObsolete;
-        private readonly T item;
         private int version;
 
-        public DataVersion(T item, int initVersion)
+        protected DataVersion(int initVersion)
         {
-            Debug.Assert(item != null);
-            this.item = item;
             this.version = initVersion;
         }
 
@@ -24,7 +20,7 @@ namespace JryVideo.Common
             if (this.version == journal.Version) return false;
             int @new;
             var logs = journal.GetChanged(this.version, out @new);
-            if (logs.Any(z => z.IsObsolete(this.item)))
+            if (this.IsObsoleteCore(logs))
             {
                 this.isObsolete = true;
                 return true;
@@ -35,5 +31,7 @@ namespace JryVideo.Common
                 return false;
             }
         }
+
+        protected abstract bool IsObsoleteCore(IEnumerable<IDataJournal> logs);
     }
 }

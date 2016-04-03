@@ -10,5 +10,7 @@ namespace JryVideo.Core.Managers.Journals
         bool IsObsolete(Type type);
 
         bool IsObsolete(JryObject obj);
+
+        bool IsObsolete(JryFlagType flag);
     }
 }

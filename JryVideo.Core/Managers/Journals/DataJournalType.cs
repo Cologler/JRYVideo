@@ -2,6 +2,8 @@ namespace JryVideo.Core.Managers.Journals
 {
     public enum DataJournalType
     {
-        FlagChanged
+        FlagChanged,
+
+        FlagCreated,
     }
 }

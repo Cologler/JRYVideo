@@ -30,6 +30,8 @@ namespace JryVideo.Core.Managers.Journals
             return this.IsObsolete(obj.GetType());
         }
 
+        public bool IsObsolete(JryFlagType flag) => this.FlagType == flag;
+
         public JryFlagType FlagType { get; }
     }
 }

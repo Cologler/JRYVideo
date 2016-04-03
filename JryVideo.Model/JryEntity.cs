@@ -35,6 +35,7 @@ namespace JryVideo.Model
         /// <summary>
         /// can not empty.
         /// </summary>
+        [NotNull]
         public string Resolution { get; set; }
 
         [CanBeNull]

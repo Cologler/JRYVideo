@@ -181,6 +181,7 @@ namespace JryVideo.Main
             {
                 vm.RefreshProperties();
                 this.ViewModel.VideosViewModel.Items.Collection.Add(vm);
+                this.ViewModel.ReloadGrouping();
             }
         }
 

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Jasily.ComponentModel;
+using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Jasily.ComponentModel;
-using JryVideo.Model;
 
 namespace JryVideo.Common
 {
@@ -16,7 +16,7 @@ namespace JryVideo.Common
 
         public ObservableCollection<FlagViewModel> Types { get; } = new ObservableCollection<FlagViewModel>();
 
-        public List<int> Stars { get; } = new List<int>() { 1, 2, 3, 4, 5};
+        public List<int> Stars { get; } = new List<int>() { 1, 2, 3, 4, 5 };
 
         public async Task ReloadFlagsAsync(params JryFlagType[] flags)
         {

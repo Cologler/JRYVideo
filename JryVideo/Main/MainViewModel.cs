@@ -31,13 +31,17 @@ namespace JryVideo.Main
         public async void ReloadAsync()
         {
             await this.VideosViewModel.ReloadAsync();
-            this.isInitializeLoaded = true;
             this.ReloadGrouping();
+            this.isInitializeLoaded = true;
         }
 
         public async Task ReloadIfInitializedAsync()
         {
-            if (this.isInitializeLoaded) await this.VideosViewModel.ReloadAsync();
+            if (this.isInitializeLoaded)
+            {
+                await this.VideosViewModel.ReloadAsync();
+                this.ReloadGrouping();
+            }
         }
 
         public async void ReloadGrouping()

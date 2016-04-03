@@ -1,4 +1,5 @@
-﻿using JryVideo.Model;
+﻿using Jasily;
+using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +15,8 @@ namespace JryVideo.Core.Managers
         private readonly Dictionary<string, CoverRef> coverRefs = new Dictionary<string, CoverRef>();
         private readonly Dictionary<string, List<VideoInfoRef>> videoInfoRefs = new Dictionary<string, List<VideoInfoRef>>();
         private readonly Dictionary<string, SeriesRef> seriesRefs = new Dictionary<string, SeriesRef>();
+        private readonly Dictionary<int, Dictionary<string, int>> flagRefs = new Dictionary<int, Dictionary<string, int>>();
+        private readonly Dictionary<int, Dictionary<string, int>> originFlagRefs = new Dictionary<int, Dictionary<string, int>>();
         private readonly List<Error> Errors = new List<Error>();
 
         public DatabaseHealthTester(DataCenter dataCenter)
@@ -28,24 +31,10 @@ namespace JryVideo.Core.Managers
         {
             await Task.Run(async () =>
             {
+                await this.BuildFlagAsync();
                 await this.dataCenter.CoverManager.Source.CursorAsync(this.BuildCover);
-                await this.dataCenter.SeriesManager.Source.CursorAsync(z =>
-                {
-                    this.seriesRefs.Add(z.Id, new SeriesRef(z));
-                    foreach (var jryVideoInfo in z.Videos)
-                    {
-                        List<VideoInfoRef> videoInfoRefs;
-                        if (!this.videoInfoRefs.TryGetValue(jryVideoInfo.Id, out videoInfoRefs))
-                        {
-                            videoInfoRefs = new List<VideoInfoRef>();
-                            this.videoInfoRefs.Add(jryVideoInfo.Id, videoInfoRefs);
-                        }
-                        videoInfoRefs.Add(new VideoInfoRef(z.Id, jryVideoInfo));
-                    }
-
-                    z.Videos.ForEach(x => this.ConnectToCover(z.Id, x));
-                    z.Videos.Select(x => x.BackgroundImageAsCoverParent()).ForEach(x => this.ConnectToCover(z.Id, x));
-                });
+                await this.BuildSeriesAsync();
+                await this.BuildVideoAsync();
                 await this.dataCenter.VideoRoleManager.Source.CursorAsync(z =>
                 {
                     if (!this.videoInfoRefs.ContainsKey(z.Id) &&
@@ -60,6 +49,19 @@ namespace JryVideo.Core.Managers
                 {
                     this.ConnectToCover(z.Id, z);
                 });
+
+                foreach (var flagRef in this.flagRefs)
+                {
+                    var dict = this.originFlagRefs[flagRef.Key];
+                    foreach (var i in flagRef.Value)
+                    {
+                        if (i.Value != 0)
+                        {
+                            var co = dict[i.Key];
+                            this.Errors.Add(new FlagError(ErrorType.FlagCount, (JryFlagType)flagRef.Key, i.Key, co - i.Value, co));
+                        }
+                    }
+                }
 
                 foreach (var coverRef in this.coverRefs.Values)
                 {
@@ -92,7 +94,7 @@ namespace JryVideo.Core.Managers
                     }
                 }
 
-                this.Errors.Reset(this.Errors.OrderBy(z => z.Id).ToArray());
+                this.Errors.Reset(this.Errors.OrderBy(z => z.GetOrderCode()).ToArray());
                 // show message
                 if (Debugger.IsAttached)
                 {
@@ -140,6 +142,122 @@ namespace JryVideo.Core.Managers
                     Log.Write(this.messages.Count + this.Errors.Count == 0 ? "db safe!" : this.messages.AsLines());
                 }
             });
+        }
+
+        private async Task BuildFlagAsync()
+        {
+            await this.dataCenter.FlagManager.Source.CursorAsync(z =>
+            {
+                var type = (int)z.Type;
+                var dest = this.flagRefs.GetOrCreateValue(type);
+                if (string.IsNullOrEmpty(z.Value) || z.Id != JryFlag.BuildCounterId(z.Type, z.Value))
+                {
+                    if (Debugger.IsAttached) Debugger.Break();
+                    Debug.Assert(false);
+                }
+                dest.Add(z.Value, z.Count);
+            });
+            foreach (var dictPair in this.flagRefs)
+            {
+                var d = new Dictionary<string, int>(dictPair.Value.Count);
+                d.AddRange(dictPair.Value.ToList());
+                this.originFlagRefs[dictPair.Key] = d;
+            }
+        }
+
+        private async Task BuildSeriesAsync()
+        {
+            await this.dataCenter.SeriesManager.Source.CursorAsync(z =>
+            {
+                this.seriesRefs.Add(z.Id, new SeriesRef(z));
+                if (z.Tags != null)
+                {
+                    this.ConnectToFlag(JryFlagType.SeriesTag, z.Tags);
+                }
+                foreach (var jryVideoInfo in z.Videos)
+                {
+                    List<VideoInfoRef> videoInfoRefs;
+                    if (!this.videoInfoRefs.TryGetValue(jryVideoInfo.Id, out videoInfoRefs))
+                    {
+                        videoInfoRefs = new List<VideoInfoRef>();
+                        this.videoInfoRefs.Add(jryVideoInfo.Id, videoInfoRefs);
+                    }
+                    videoInfoRefs.Add(new VideoInfoRef(z.Id, jryVideoInfo));
+                    this.ConnectToCover(z.Id, jryVideoInfo);
+
+                    if (jryVideoInfo.Tags != null)
+                    {
+                        this.ConnectToFlag(JryFlagType.VideoTag, jryVideoInfo.Tags);
+                    }
+
+                    this.ConnectToFlag(JryFlagType.VideoYear, jryVideoInfo.Year.ToString());
+                    this.ConnectToFlag(JryFlagType.VideoType, jryVideoInfo.Type);
+                }
+
+                z.Videos.Select(x => x.BackgroundImageAsCoverParent()).ForEach(x => this.ConnectToCover(z.Id, x));
+            });
+        }
+
+        private async Task BuildVideoAsync()
+        {
+            await this.dataCenter.VideoManager.Source.CursorAsync(z =>
+            {
+                foreach (var entity in z.Entities)
+                {
+                    this.ConnectToFlag(JryFlagType.EntityResolution, entity.Resolution);
+                    if (!string.IsNullOrEmpty(entity.Quality)) this.ConnectToFlag(JryFlagType.EntityQuality, entity.Quality);
+                    if (!string.IsNullOrEmpty(entity.AudioSource)) this.ConnectToFlag(JryFlagType.EntityAudioSource, entity.AudioSource);
+                    this.ConnectToFlag(JryFlagType.EntityExtension, entity.Extension);
+                    this.ConnectToFlag(JryFlagType.EntityFansub, entity.Fansubs);
+                    this.ConnectToFlag(JryFlagType.EntitySubTitleLanguage, entity.SubTitleLanguages);
+                    this.ConnectToFlag(JryFlagType.EntityTrackLanguage, entity.TrackLanguages);
+                }
+            });
+        }
+
+        private void ConnectToFlag(JryFlagType type, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                if (Debugger.IsAttached) Debugger.Break();
+                Debug.Assert(false);
+            }
+
+            var t = (int)type;
+            var d = this.flagRefs.GetOrCreateValue(t);
+            int n;
+            if (d.TryGetValue(value, out n))
+            {
+                d[value] = n - 1;
+            }
+            else
+            {
+                this.Errors.Add(new FlagError(ErrorType.MissingFlag, type, value));
+            }
+        }
+
+        private void ConnectToFlag(JryFlagType type, IEnumerable<string> value)
+        {
+            var t = (int)type;
+            var d = this.flagRefs.GetOrCreateValue(t);
+            int n;
+            foreach (var v in value)
+            {
+                if (string.IsNullOrWhiteSpace(v))
+                {
+                    if (Debugger.IsAttached) Debugger.Break();
+                    Debug.Assert(false);
+                }
+
+                if (d.TryGetValue(v, out n))
+                {
+                    d[v] = n - 1;
+                }
+                else
+                {
+                    this.Errors.Add(new FlagError(ErrorType.MissingFlag, type, v));
+                }
+            }
         }
 
         private void BuildCover(JryCover cover)
@@ -263,7 +381,12 @@ namespace JryVideo.Core.Managers
             public string Id { get; }
         }
 
-        private class Error
+        private interface IError : IOrderable
+        {
+            Task FixAsync(DataCenter dataCenter);
+        }
+
+        private class Error : IError
         {
             public ErrorType Type { get; }
 
@@ -304,6 +427,8 @@ namespace JryVideo.Core.Managers
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            public int GetOrderCode() => this.Id.GetHashCode();
         }
 
         private class MissingCoverError : Error
@@ -377,14 +502,12 @@ namespace JryVideo.Core.Managers
                 : base(errorType)
             {
                 this.cover = cover;
-                switch (errorType)
-                {
-                    case ErrorType.CoverMissingRef:
-                        break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(errorType), errorType, null);
+                if (errorType != ErrorType.CoverMissingRef)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(errorType), errorType, null);
                 }
+
                 switch (cover.CoverType)
                 {
                     case JryCoverType.Role:
@@ -450,13 +573,81 @@ namespace JryVideo.Core.Managers
             }
         }
 
+        private class FlagError : Error
+        {
+            private readonly JryFlagType type;
+            private readonly string value;
+            private readonly int count;
+            private readonly int actualCount;
+
+            public FlagError(ErrorType errorType, JryFlagType type, string value)
+                : base(errorType)
+            {
+                this.type = type;
+                this.value = value;
+                this.Id = type.ToString();
+            }
+
+            public FlagError(ErrorType errorType, JryFlagType type, string value, int count, int actualCount)
+                : base(errorType)
+            {
+                this.type = type;
+                this.value = value;
+                this.count = count;
+                this.actualCount = actualCount;
+                this.Id = type.ToString();
+            }
+
+            public override async Task FixAsync(DataCenter dataCenter)
+            {
+                switch (this.Type)
+                {
+                    case ErrorType.FlagCount:
+                        var flag = await dataCenter.FlagManager.FindAsync(JryFlag.BuildCounterId(this.type, this.value));
+                        if (flag != null)
+                        {
+                            flag.Count = this.count;
+                            await dataCenter.FlagManager.UpdateAsync(flag);
+                        }
+                        else
+                        {
+                            Debug.Assert(false);
+                        }
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            public override string ToString()
+            {
+                var flagStr = $"{this.type}.{this.value}";
+                switch (this.Type)
+                {
+                    case ErrorType.MissingFlag:
+                        return "missing flag " + flagStr;
+
+                    case ErrorType.FlagCount:
+                        return $"flag {flagStr} count error, [{this.actualCount}] should be [{this.count}].";
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
         private enum ErrorType
         {
             RoleMissingSource,
 
             CoverMissingRef,
 
-            MissingCover
+            MissingCover,
+
+            MissingFlag,
+
+            FlagCount
         }
     }
 }

@@ -29,7 +29,7 @@ namespace JryVideo.Controls.EditFlag
 
         public async Task<JryFlag> CommitAsync(JryFlagType type)
         {
-            var manager = JryVideoCore.Current.CurrentDataCenter.FlagManager;
+            var manager = this.GetManagers().FlagManager;
 
             var obj = new JryFlag(); // 不管是修改还是创建都是创建一个新的
             obj.Type = type;

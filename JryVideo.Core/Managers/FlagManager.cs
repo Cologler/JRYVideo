@@ -17,6 +17,8 @@ namespace JryVideo.Core.Managers
 
         public void Initialize(DataCenter dataCenter)
         {
+            dataCenter.SeriesManager.ItemCreated += this.SeriesManager_ItemCreated;
+            dataCenter.SeriesManager.ItemUpdated += this.SeriesManager_ItemUpdated;
             dataCenter.SeriesManager.VideoInfoCreated += this.SeriesManager_VideoInfoCreated;
             dataCenter.SeriesManager.VideoInfoUpdated += this.SeriesManager_VideoInfoUpdated;
             dataCenter.SeriesManager.VideoInfoRemoved += this.SeriesManager_VideoInfoRemoved;
@@ -25,10 +27,19 @@ namespace JryVideo.Core.Managers
             dataCenter.VideoManager.EntitiesRemoved += this.VideoManager_EntitiesRemoved;
         }
 
-        public async Task<IEnumerable<JryFlag>> LoadAsync(JryFlagType type)
+        private async void SeriesManager_ItemUpdated(object sender, ChangingEventArgs<JrySeries> e)
         {
-            return await this.Source.QueryAsync(type);
+            var dict = CalcFlagDictionary(BuildFlagDictionary(e.New), BuildFlagDictionary(e.Old));
+            await this.ApplyFlagDictionaryAsync(dict);
         }
+
+        private async void SeriesManager_ItemCreated(object sender, JrySeries e)
+        {
+            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
+            await this.ApplyFlagDictionaryAsync(dict);
+        }
+
+        public async Task<IEnumerable<JryFlag>> LoadAsync(JryFlagType type) => await this.Source.QueryAsync(type);
 
         private async Task ApplyFlagDictionaryAsync(Dictionary<JryFlagType, Dictionary<string, int>> dict)
         {
@@ -41,6 +52,24 @@ namespace JryVideo.Core.Managers
             }
         }
 
+        private static Dictionary<JryFlagType, List<string>> BuildFlagDictionary(JrySeries series)
+        {
+            if (series.Tags != null)
+            {
+                return new Dictionary<JryFlagType, List<string>>()
+                {
+                    {
+                        JryFlagType.SeriesTag,
+                        series.Tags.ToList()
+                    }
+                };
+            }
+            else
+            {
+                return new Dictionary<JryFlagType, List<string>>();
+            }
+        }
+
         private static Dictionary<JryFlagType, List<string>> BuildFlagDictionary(IEnumerable<JryVideoInfo> infos)
         {
             return new Dictionary<JryFlagType, List<string>>()
@@ -48,11 +77,15 @@ namespace JryVideo.Core.Managers
                 // single in video
                 {
                     JryFlagType.VideoType,
-                    infos.Select(z => z.Type.ToString()).ToList()
+                    infos.Select(z => z.Type).ToList()
                 },
                 {
                     JryFlagType.VideoYear,
                     infos.Select(z => z.Year.ToString()).ToList()
+                },
+                {
+                    JryFlagType.VideoTag,
+                    infos.Where(z => z.Tags != null).SelectMany(z => z.Tags).ToList()
                 }
             };
         }
@@ -141,7 +174,6 @@ namespace JryVideo.Core.Managers
         private async void SeriesManager_VideoInfoUpdated(object sender, IEnumerable<ChangingEventArgs<JryVideoInfo>> e)
         {
             var dict = CalcFlagDictionary(BuildFlagDictionary(e.Select(z => z.New)), BuildFlagDictionary(e.Select(z => z.Old)));
-
             await this.ApplyFlagDictionaryAsync(dict);
         }
 

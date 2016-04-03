@@ -18,7 +18,7 @@ namespace JryVideo.Common
         public SeriesViewModel(JrySeries source, int version)
             : base(source)
         {
-            this.Version = new DataVersion<JrySeries>(source, version);
+            this.Version = new ObjectDataVersion<JrySeries>(source, version);
             this.PropertiesMapper = Mapper;
             this.NameViewModel = new NameableViewModel<JrySeries>(source);
 
@@ -79,6 +79,6 @@ namespace JryVideo.Common
             return false;
         }
 
-        public DataVersion<JrySeries> Version { get; }
+        public ObjectDataVersion<JrySeries> Version { get; }
     }
 }

@@ -2,6 +2,8 @@ using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +15,7 @@ namespace JryVideo.Core.Managers
     {
         public event EventHandler<T> ItemCreated;
         public event EventHandler<T> ItemCreatedOrUpdated;
-        public event EventHandler<T> ItemUpdated;
+        public event EventHandler<ChangingEventArgs<T>> ItemUpdated;
         public event EventHandler<string> ItemRemoved;
         public event EventHandler<IJryCoverParent> CoverParentRemoving;
 
@@ -25,19 +27,13 @@ namespace JryVideo.Core.Managers
         public TProvider Source { get; }
 
         public async Task<IEnumerable<T>> LoadAsync()
-        {
-            return await this.Source.ListAsync(0, Int32.MaxValue);
-        }
+            => await this.Source.ListAsync(0, Int32.MaxValue);
 
         public async Task<IEnumerable<T>> LoadAsync(int skip, int take)
-        {
-            return await this.Source.ListAsync(skip, take);
-        }
+            => await this.Source.ListAsync(skip, take);
 
         public virtual async Task<T> FindAsync(string id)
-        {
-            return await this.Source.FindAsync(id);
-        }
+            => await this.Source.FindAsync(id);
 
         public virtual async Task<bool> InsertAsync(T obj)
         {
@@ -84,9 +80,11 @@ namespace JryVideo.Core.Managers
             obj.Saving();
             if (obj.HasError()) return false;
 
+            var old = await this.Source.FindAsync(obj.Id);
+            Debug.Assert(obj != null);
             if (await this.Source.UpdateAsync(obj))
             {
-                this.ItemUpdated?.BeginInvoke(this, obj);
+                this.ItemUpdated?.BeginInvoke(this, new ChangingEventArgs<T>(old, obj));
                 return true;
             }
             return false;

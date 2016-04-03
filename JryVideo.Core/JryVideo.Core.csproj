@@ -51,6 +51,7 @@
     <Compile Include="Managers\CombineResult.cs" />
     <Compile Include="Managers\DatabaseHealthTester.cs" />
     <Compile Include="Managers\Journals\FlagChangedJournal.cs" />
+    <Compile Include="Managers\Journals\FlagCreatedJournal.cs" />
     <Compile Include="Managers\Journals\IDataJournal.cs" />
     <Compile Include="Managers\Journals\DataJournalType.cs" />
     <Compile Include="Managers\Journals\DataJournal.cs" />
