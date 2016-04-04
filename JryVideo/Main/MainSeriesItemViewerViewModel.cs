@@ -20,6 +20,7 @@ namespace JryVideo.Main
         private bool isOnlyTracking;
         private SearchResult searchResultView;
         private FilterInfo filter;
+        private SeriesViewModel[] serieses;
 
         public MainSeriesItemViewerViewModel()
         {
@@ -83,7 +84,6 @@ namespace JryVideo.Main
                 this.PageIndex = 0;
             }
 
-            var ver = dataCenter.Journal.Version;
             search = this.IsOnlyTracking
                 ? await SearchResult.OnlyTrackingAsync(dataCenter)
                 : await SearchResult.SearchAsync(dataCenter, this.SearchText, this.PageIndex, this.PageSize);
@@ -94,7 +94,7 @@ namespace JryVideo.Main
             this.HasNext = search.HasNext;
 
             JasilyDebug.Pointer();
-            var svm = search.Items.Select(z => new SeriesViewModel(z, ver)).ToArray();
+            var svm = search.Items.Select(z => new SeriesViewModel(z)).ToArray();
             svm.ForEach(z =>
             {
                 z.NameViewModel.IsBuildQueryStrings = true;
@@ -107,6 +107,7 @@ namespace JryVideo.Main
             {
                 this.RebuildGroupFactoryAndRefreshItems(r);
             }
+            this.serieses = svm;
             JasilyDebug.Pointer();
 
             return r;
@@ -167,6 +168,8 @@ namespace JryVideo.Main
                 this.Items.View.Refresh();
             }
         }
+
+        public void AllObsoleted() => this.serieses?.ForEach(z => z.SetObsoleted());
 
         private class FilterInfo : IEquatable<FilterInfo>
         {

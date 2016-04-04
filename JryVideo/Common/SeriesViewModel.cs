@@ -15,10 +15,9 @@ namespace JryVideo.Common
         private static readonly RefreshPropertiesMapper Mapper = new RefreshPropertiesMapper(typeof(SeriesViewModel));
         private readonly List<VideoInfoViewModel> videoViewModels = new List<VideoInfoViewModel>();
 
-        public SeriesViewModel(JrySeries source, int version)
+        public SeriesViewModel(JrySeries source)
             : base(source)
         {
-            this.Version = new ObjectDataVersion<JrySeries>(source, version);
             this.PropertiesMapper = Mapper;
             this.NameViewModel = new NameableViewModel<JrySeries>(source);
 
@@ -46,7 +45,7 @@ namespace JryVideo.Common
 
         public bool OpenEditorWindows(Window parent)
         {
-            if (this.IsVersionObsolete(parent))
+            if (this.TestVersionObsolete(parent))
             {
                 return false;
             }
@@ -68,9 +67,15 @@ namespace JryVideo.Common
             await new SeriesAutoComplete().AutoCompleteAsync(this.GetManagers().SeriesManager, this.Source);
         }
 
-        public bool IsVersionObsolete(Window parent)
+        private bool isObsolete;
+
+        public bool IsObsolete => this.isObsolete;
+
+        public void SetObsoleted() => this.isObsolete = true;
+
+        public bool TestVersionObsolete(Window parent)
         {
-            if (this.Version.IsObsolete())
+            if (this.IsObsolete)
             {
                 parent?.ShowJryVideoMessage("error", "data was obsolete, please refresh.");
                 return true;
@@ -78,7 +83,5 @@ namespace JryVideo.Common
 
             return false;
         }
-
-        public ObjectDataVersion<JrySeries> Version { get; }
     }
 }

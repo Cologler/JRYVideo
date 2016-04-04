@@ -19,7 +19,6 @@ namespace JryVideo.Viewer.VideoViewer
     public sealed class VideoViewerViewModel : JasilyViewModel
     {
         private VideoViewModel video;
-        private int dataVersion;
 
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
@@ -70,22 +69,7 @@ namespace JryVideo.Viewer.VideoViewer
                     .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g.OrderBy(this.CompareEntityViewModel))));
             }
 
-            this.dataVersion = this.GetManagers().Journal.Version;
             this.ReloadEpisodes();
-        }
-
-        public async void UpdateVersion()
-        {
-            var ver = this.dataVersion;
-            if (ver == this.GetManagers().Journal.Version) return;
-
-            var logs = this.GetManagers().Journal.GetChanged(ver, out ver);
-            if (logs.Any(z => z.IsObsolete(typeof(JryEntity))))
-            {
-                await this.ReloadVideoAsync();
-                return;
-            }
-            this.dataVersion = ver;
         }
 
         public async Task AutoCompleteAsync()

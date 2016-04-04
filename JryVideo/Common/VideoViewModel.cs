@@ -10,6 +10,8 @@ namespace JryVideo.Common
 {
     public sealed class VideoViewModel : JasilyViewModel<Model.JryVideo>
     {
+        private bool isObsolete;
+
         public JasilyCollectionView<EntityViewModel> EntityViews { get; private set; }
 
         public VideoViewModel(Model.JryVideo source)
@@ -27,5 +29,9 @@ namespace JryVideo.Common
             this.EntityViews.Collection.Remove(entity);
             return true;
         }
+
+        public bool IsObsolete => this.isObsolete;
+
+        public void SetObsoleted() => this.isObsolete = true;
     }
 }

@@ -116,13 +116,9 @@ namespace JryVideo.Viewer.VideoViewer
                 Owner = w
             }.CreateOrCloneMode(this.ViewModel.Video.Source);
 
-            if (dlg.ShowDialog() == true)
+            if (dlg.ShowDialog() == true || this.ViewModel.Video.IsObsolete)
             {
                 await this.ViewModel.ReloadVideoAsync();
-            }
-            else
-            {
-                this.ViewModel.UpdateVersion();
             }
         }
 

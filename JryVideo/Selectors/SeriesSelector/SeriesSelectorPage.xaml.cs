@@ -26,12 +26,11 @@ namespace JryVideo.Selectors.SeriesSelector
 
         void EditSeriesUserControl_ViewModel_Created(object sender, JrySeries e)
         {
-            var ver = this.SelectorViewModel.GetManagers().Journal.Version;
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.EditSeriesUserControl_ViewModel_Created, sender, e))
             {
                 if (this.SelectorViewModel != null)
                 {
-                    var vm = new SeriesViewModel(e, ver);
+                    var vm = new SeriesViewModel(e);
                     this.SelectorViewModel.Items.Collection.Add(vm);
                     this.SelectorViewModel.Items.Selected = vm;
                     this.SeriesListView.ScrollIntoView(vm);

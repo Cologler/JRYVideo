@@ -29,13 +29,12 @@ namespace JryVideo.Selectors.SeriesSelector
         public async Task LoadAsync()
         {
             var seriesManager = this.GetManagers().SeriesManager;
-            var ver = this.GetManagers().Journal.Version;
 
             JasilyDebug.Pointer();
             this.Items.Collection.AddRange(
                 await Task.Run(async () =>
                     (await seriesManager.LoadAsync())
-                    .Select(z => new SeriesViewModel(z, ver))));
+                    .Select(z => new SeriesViewModel(z))));
             JasilyDebug.Pointer();
         }
     }

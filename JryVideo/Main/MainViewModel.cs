@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JryVideo.Main
 {
@@ -30,7 +31,11 @@ namespace JryVideo.Main
 
         private void MainViewModel_FlagChanged(object sender, EventArgs<Tuple<JryFlagType, string, string>> e)
         {
-
+            var type = e.Value.Item1;
+            if ((int)type < 20)
+            {
+                this.GetUIDispatcher().BeginInvoke(() => this.VideosViewModel.AllObsoleted());
+            }
         }
 
         public MainSeriesItemViewerViewModel VideosViewModel { get; } = new MainSeriesItemViewerViewModel();
