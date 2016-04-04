@@ -1,5 +1,4 @@
 ﻿using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
 using System;
@@ -101,8 +100,7 @@ namespace JryVideo.Selectors.FlagSelector
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            var manager = JryVideoCore.Current.CurrentDataCenter.FlagManager;
-            if (await manager.RemoveAsync(item.Source.Id))
+            if (await this.GetManagers().FlagManager.RemoveAsync(item.Source.Id))
             {
                 this.Items.Collection.Remove(item);
             }

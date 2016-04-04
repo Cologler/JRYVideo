@@ -3,7 +3,6 @@ using Jasily.SDK.Douban.Entities;
 using JryVideo.Common;
 using JryVideo.Common.ValidationRules;
 using JryVideo.Controls.SelectFlag;
-using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Model;
@@ -362,7 +361,7 @@ namespace JryVideo.Controls.EditVideo
                 .Select(z => new NameValuePair<string, DayOfWeek?>(z.GetLocalizeString(), z)));
 
             // type
-            var types = (await JryVideoCore.Current.CurrentDataCenter.FlagManager.LoadAsync(JryFlagType.VideoType)).ToArray();
+            var types = (await this.GetManagers().FlagManager.LoadAsync(JryFlagType.VideoType)).ToArray();
             this.TypeCollection.AddRange(types.Select(z => z.Value));
             if (this.Type.IsNullOrWhiteSpace())
                 this.Type = this.TypeCollection.FirstOrDefault();
@@ -370,7 +369,7 @@ namespace JryVideo.Controls.EditVideo
             // initialize cover
             if (this.Source?.CoverId != null)
             {
-                var cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.FindAsync(this.Source.CoverId);
+                var cover = await this.GetManagers().CoverManager.FindAsync(this.Source.CoverId);
                 if (cover != null)
                 {
                     this.ImageViewModel = ImageViewModel.Build(cover.BinaryData);
@@ -416,9 +415,7 @@ namespace JryVideo.Controls.EditVideo
                 obj.CoverId = cover.Id;
             }
 
-            var videoManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(parent);
-
-            if (await base.CommitAsync(videoManager, obj) == null)
+            if (await base.CommitAsync(this.GetManagers().SeriesManager.GetVideoInfoManager(parent), obj) == null)
             {
                 await window.ShowMessageAsync("error", "commit failed.");
             }

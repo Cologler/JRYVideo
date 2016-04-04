@@ -24,6 +24,13 @@ namespace JryVideo.Main
                     nameof(JryVideoDataSourceProviderManagerMode.Private)),
             };
             this.selectedMode = this.ModeCollection[0];
+
+            this.GetAgent().FlagChanged += this.MainViewModel_FlagChanged;
+        }
+
+        private void MainViewModel_FlagChanged(object sender, EventArgs<Tuple<JryFlagType, string, string>> e)
+        {
+
         }
 
         public MainSeriesItemViewerViewModel VideosViewModel { get; } = new MainSeriesItemViewerViewModel();

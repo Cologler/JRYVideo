@@ -276,6 +276,6 @@ namespace JryVideo.Core.Managers
             return ret;
         }
 
-        public event EventHandler<EventArgs<JryFlagType, string, string>> FlagChanged;
+        internal event EventHandler<EventArgs<JryFlagType, string, string>> FlagChanged;
     }
 }

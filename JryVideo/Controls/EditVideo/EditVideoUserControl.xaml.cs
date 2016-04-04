@@ -1,6 +1,5 @@
 ﻿using JryVideo.Common;
 using JryVideo.Common.Dialogs;
-using JryVideo.Core;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Managers.FlagManager;
 using JryVideo.Selectors.ArtistSelector;
@@ -58,7 +57,7 @@ namespace JryVideo.Controls.EditVideo
                 }
                 else
                 {
-                    var cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.FindAsync(this.ViewModel.Source.CoverId);
+                    var cover = await this.ViewModel.GetManagers().CoverManager.FindAsync(this.ViewModel.Source.CoverId);
                     if (cover == null) // database error ?
                     {
                         this.ShowJryVideoMessage("error", "get cover fail");

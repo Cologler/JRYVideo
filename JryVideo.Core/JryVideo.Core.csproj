@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAgent.cs" />
     <Compile Include="Douban\DoubanHelper.cs" />
     <Compile Include="Douban\DoubanMovieParser.cs" />
     <Compile Include="JryVideoCore.cs" />

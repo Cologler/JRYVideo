@@ -12,9 +12,9 @@ namespace JryVideo.Core.Managers
 {
     public class SeriesManager : JryObjectManager<JrySeries, ISeriesSet>
     {
-        public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoCreated;
-        public event EventHandler<IEnumerable<ChangingEventArgs<JryVideoInfo>>> VideoInfoUpdated;
-        public event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoRemoved;
+        internal event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoCreated;
+        internal event EventHandler<IEnumerable<ChangingEventArgs<JryVideoInfo>>> VideoInfoUpdated;
+        internal event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoRemoved;
 
         public DataCenter DataCenter { get; private set; }
 

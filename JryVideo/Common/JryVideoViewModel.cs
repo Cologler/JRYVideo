@@ -8,8 +8,11 @@ namespace JryVideo.Common
 {
     public static class JryVideoViewModel
     {
+        public static DataAgent GetAgent(this JasilyViewModel vm)
+            => JryVideoCore.Current.DataAgent;
+
         public static DataCenter GetManagers(this JasilyViewModel vm)
-            => JryVideoCore.Current.CurrentDataCenter;
+            => JryVideoCore.Current.DataAgent.CurrentDataCenter;
 
         public static TheTVDBClient GetTVDBClient(this JasilyViewModel vm)
             => JryVideoCore.Current.TheTVDBHost.LastClientInstance;

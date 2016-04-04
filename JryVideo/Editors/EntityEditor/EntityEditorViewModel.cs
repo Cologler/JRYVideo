@@ -1,7 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Controls.SelectFlag;
-using JryVideo.Core;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -85,7 +84,7 @@ namespace JryVideo.Editors.EntityEditor
 
         public async Task LoadAsync()
         {
-            var manager = JryVideoCore.Current.CurrentDataCenter.FlagManager;
+            var manager = this.GetManagers().FlagManager;
 
             this.Resolutions.AddRange((await manager.LoadAsync(JryFlagType.EntityResolution)).Select(z => z.Value));
             this.FilmSources.AddRange((await manager.LoadAsync(JryFlagType.EntityQuality)).Select(z => z.Value));
@@ -210,7 +209,7 @@ namespace JryVideo.Editors.EntityEditor
 
             this.WriteToObject(entity);
 
-            var provider = JryVideoCore.Current.CurrentDataCenter.VideoManager.GetEntityManager(this.Video);
+            var provider = this.GetManagers().VideoManager.GetEntityManager(this.Video);
 
             if (this.Action == ObjectChangedAction.Create)
             {

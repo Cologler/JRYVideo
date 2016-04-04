@@ -21,7 +21,7 @@ namespace JryVideo.Common
 
         public async Task<bool> RemoveAsync(EntityViewModel entity)
         {
-            var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager.GetEntityManager(this.Source);
+            var manager = this.GetManagers().VideoManager.GetEntityManager(this.Source);
             Log.BeginWrite($"DELETE {entity.Source.ObjectToJson()} FROM {this.Source.Id}");
             if (!await manager.RemoveAsync(entity.Source.Id)) return false;
             this.EntityViews.Collection.Remove(entity);

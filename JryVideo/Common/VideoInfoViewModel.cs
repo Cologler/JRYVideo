@@ -1,5 +1,4 @@
 ﻿using Jasily.ComponentModel;
-using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Models;
 using JryVideo.Editors.VideoEditor;
@@ -68,8 +67,7 @@ namespace JryVideo.Common
                 {
                     var isWatched = await Task.Run(async () =>
                     {
-                        var manager = JryVideoCore.Current.CurrentDataCenter.VideoManager;
-                        var video = await manager.FindAsync(this.Source.Id);
+                        var video = await this.GetManagers().VideoManager.FindAsync(this.Source.Id);
                         return video?.Watcheds?.Contains(playing.Episode.Value);
                     });
 
@@ -186,7 +184,7 @@ namespace JryVideo.Common
             var guid = await this.AutoGenerateCoverAsync();
             if (guid == null) return false;
             this.Source.CoverId = guid;
-            var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
             return await manager.UpdateAsync(this.Source);
         }
 

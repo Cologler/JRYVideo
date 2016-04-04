@@ -1,13 +1,11 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Common;
 using JryVideo.Controls.SelectFlag;
-using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using static JryVideo.Common.Helper;
 
@@ -25,7 +23,7 @@ namespace JryVideo.Controls.EditSeries
         public override void ReadFromObject(JrySeries obj)
         {
             base.ReadFromObject(obj);
-            
+
             this.NamesViewModel.ReadFromObject(obj);
             this.TagsViewModel.ReadTags(obj);
         }
@@ -91,9 +89,7 @@ namespace JryVideo.Controls.EditSeries
 
             SeriesManager.BuildSeriesMetaData(series);
 
-            var seriesManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager;
-
-            return await this.CommitAsync(seriesManager, series);
+            return await this.CommitAsync(this.GetManagers().SeriesManager, series);
         }
 
         public override void Clear()

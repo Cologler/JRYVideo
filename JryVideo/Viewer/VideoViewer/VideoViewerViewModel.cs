@@ -322,10 +322,10 @@ namespace JryVideo.Viewer.VideoViewer
                 if (bgId == null) return;
                 await Task.Run(async () =>
                 {
-                    var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
+                    var coverManager = this.GetManagers().CoverManager;
                     if (await coverManager.RemoveAsync(bgId))
                     {
-                        var videoManager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(
+                        var videoManager = this.GetManagers().SeriesManager.GetVideoInfoManager(
                             this.VideoInfo.SeriesView.Source);
                         videoInfo.BackgroundImageId = null;
                         await videoManager.UpdateAsync(videoInfo);
@@ -405,7 +405,7 @@ namespace JryVideo.Viewer.VideoViewer
                 var cover = await manager.LoadCoverAsync(this.Source.CoverId);
                 if (cover != null)
                 {
-                    var o = this.GetSaveValue();;
+                    var o = this.GetSaveValue(); ;
                     if (cover.Opacity != o)
                     {
                         cover.Opacity = o;

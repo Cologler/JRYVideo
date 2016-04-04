@@ -92,7 +92,7 @@ namespace JryVideo.Common
             var builder = jrySeries != null
                 ? CoverBuilder.CreateRole(jrySeries, url, this.Source)
                 : CoverBuilder.CreateRole((JryVideoInfo)this.ImdbItem, url, this.Source);
-            var guid = await JryVideoCore.Current.CurrentDataCenter.CoverManager.BuildCoverAsync(builder);
+            var guid = await this.GetManagers().CoverManager.BuildCoverAsync(builder);
             if (guid != null)
             {
                 this.Source.CoverId = guid;

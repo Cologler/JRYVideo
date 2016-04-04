@@ -1,7 +1,6 @@
 ﻿using Jasily.ComponentModel;
 using Jasily.Net;
 using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Core.Douban;
 using JryVideo.Model;
 using JryVideo.Selectors.WebImageSelector;
@@ -107,7 +106,7 @@ namespace JryVideo.Editors.CoverEditor
 
         public async Task<JryCover> CommitAsync()
         {
-            var coverManager = JryVideoCore.Current.CurrentDataCenter.CoverManager;
+            var coverManager = this.GetManagers().CoverManager;
 
             var obj = this.GetCommitObject();
 

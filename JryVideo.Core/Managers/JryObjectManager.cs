@@ -13,11 +13,11 @@ namespace JryVideo.Core.Managers
         where T : JryObject
         where TProvider : IJasilyEntitySetProvider<T, string>
     {
-        public event EventHandler<T> ItemCreated;
-        public event EventHandler<T> ItemCreatedOrUpdated;
-        public event EventHandler<ChangingEventArgs<T>> ItemUpdated;
-        public event EventHandler<string> ItemRemoved;
-        public event EventHandler<IJryCoverParent> CoverParentRemoving;
+        internal event EventHandler<T> ItemCreated;
+        internal event EventHandler<T> ItemCreatedOrUpdated;
+        internal event EventHandler<ChangingEventArgs<T>> ItemUpdated;
+        internal event EventHandler<string> ItemRemoved;
+        internal event EventHandler<IJryCoverParent> CoverParentRemoving;
 
         protected JryObjectManager(TProvider source)
         {

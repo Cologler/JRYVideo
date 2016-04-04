@@ -232,12 +232,12 @@ namespace JryVideo.Main
 
             if (selected.Value == JryVideoDataSourceProviderManagerMode.Public)
             {
-                JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Public);
+                JryVideoCore.Current.DataAgent.Switch(JryVideoDataSourceProviderManagerMode.Public);
                 await this.ViewModel.ReloadIfInitializedAsync();
             }
             else
             {
-                var secure = JryVideoCore.Current.SecureDataCenter;
+                var secure = JryVideoCore.Current.DataAgent.SecureDataCenter;
 
                 if (!secure.IsWork)
                 {
@@ -276,7 +276,7 @@ namespace JryVideo.Main
                     var hash = JasilyHash.Create(HashType.SHA1).ComputeHashString(password);
                     if (await secure.ProviderManager.PasswordAsync(hash))
                     {
-                        JryVideoCore.Current.Switch(JryVideoDataSourceProviderManagerMode.Private);
+                        JryVideoCore.Current.DataAgent.Switch(JryVideoDataSourceProviderManagerMode.Private);
                         await this.ViewModel.ReloadIfInitializedAsync();
                         return;
                     }
@@ -330,8 +330,8 @@ namespace JryVideo.Main
                 if (!result.IsAccept) return;
                 var video = result.Value;
                 if (video == null) return;
-                var manager = JryVideoCore.Current.CurrentDataCenter.SeriesManager.GetVideoInfoManager(vm.SeriesView);
-                var can = await JryVideoCore.Current.CurrentDataCenter.CanCombineAsync(manager, vm, video);
+                var manager = this.ViewModel.GetManagers().SeriesManager.GetVideoInfoManager(vm.SeriesView);
+                var can = await this.ViewModel.GetManagers().CanCombineAsync(manager, vm, video);
                 if (!can.CanCombine)
                 {
                     this.ShowJryVideoMessage("can not combine", can.Message);
@@ -340,7 +340,7 @@ namespace JryVideo.Main
                 {
                     this.CombineConfirm(async () =>
                     {
-                        await JryVideoCore.Current.CurrentDataCenter.CombineAsync(manager, vm, video);
+                        await this.ViewModel.GetManagers().CombineAsync(manager, vm, video);
                     });
                 }
             }
@@ -354,7 +354,7 @@ namespace JryVideo.Main
                 var series = SeriesSelectorWindow.Select(this.TryFindParent<Window>(),
                     without: vm.SeriesView);
                 if (series == null) return;
-                var can = await JryVideoCore.Current.CurrentDataCenter.CanCombineAsync(vm.SeriesView, series);
+                var can = await this.ViewModel.GetManagers().CanCombineAsync(vm.SeriesView, series);
                 if (!can.CanCombine)
                 {
                     this.ShowJryVideoMessage("can not combine", can.Message);
@@ -363,7 +363,7 @@ namespace JryVideo.Main
                 {
                     this.CombineConfirm(async () =>
                     {
-                        await JryVideoCore.Current.CurrentDataCenter.CombineAsync(vm.SeriesView, series);
+                        await this.ViewModel.GetManagers().CombineAsync(vm.SeriesView, series);
                     });
                 }
             }

@@ -1,9 +1,8 @@
-﻿using JryVideo.Common;
-using JryVideo.Core;
+﻿using Jasily.ComponentModel;
+using JryVideo.Common;
 using JryVideo.Model;
 using System;
 using System.Linq;
-using Jasily.ComponentModel;
 
 namespace JryVideo.Editors.RoleEditor
 {
@@ -12,7 +11,7 @@ namespace JryVideo.Editors.RoleEditor
         private string roleName;
         private ImageViewModel imageViewModel;
         private string actorName;
-        
+
         [EditableField]
         public string ActorName
         {
@@ -40,7 +39,7 @@ namespace JryVideo.Editors.RoleEditor
 
             if (obj.CoverId != null)
             {
-                var cover = await JryVideoCore.Current.CurrentDataCenter.CoverManager.FindAsync(obj.CoverId);
+                var cover = await this.GetManagers().CoverManager.FindAsync(obj.CoverId);
                 if (cover != null)
                 {
                     this.ImageViewModel = ImageViewModel.Build(cover.BinaryData);

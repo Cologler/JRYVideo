@@ -1,6 +1,5 @@
 ﻿using Jasily.ComponentModel;
 using JryVideo.Common;
-using JryVideo.Core;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,7 +21,7 @@ namespace JryVideo.Viewer.ArtistViewer
             this.ArtistView = null;
             this.RoleViews.Clear();
 
-            var dataCenter = JryVideoCore.Current.CurrentDataCenter;
+            var dataCenter = this.GetManagers();
             var artist = await dataCenter.ArtistManager.FindAsync(artistId);
             if (artist == null) return;
             this.ArtistView = new ArtistViewModel(artist);
