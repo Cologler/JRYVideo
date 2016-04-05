@@ -139,10 +139,7 @@ namespace JryVideo.Core.Managers
                 {
                     foreach (var value in selector.Value)
                     {
-                        if (dic[selector.Key].ContainsKey(value))
-                            dic[selector.Key][value]++;
-                        else
-                            dic[selector.Key].Add(value, 1);
+                        dic[selector.Key].ValueMoveNext(value, 1, z => z + 1);
                     }
                 }
             }
@@ -153,10 +150,7 @@ namespace JryVideo.Core.Managers
                 {
                     foreach (var value in selector.Value)
                     {
-                        if (dic[selector.Key].ContainsKey(value))
-                            dic[selector.Key][value]--;
-                        else
-                            dic[selector.Key].Add(value, -1);
+                        dic[selector.Key].ValueMoveNext(value, -1, z => z - 1);
                     }
                 }
             }

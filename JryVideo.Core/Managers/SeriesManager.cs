@@ -24,16 +24,13 @@ namespace JryVideo.Core.Managers
             this.DataCenter = dataCenter;
         }
 
-        public override Task<bool> InsertAsync(JrySeries series) => this.InsertAsync(series, true);
-
-        private async Task<bool> InsertAsync(JrySeries series, bool isRaiseEvent)
+        public override async Task<bool> InsertAsync(JrySeries series)
         {
             if (await base.InsertAsync(series))
             {
-                if (isRaiseEvent)
+                if (series.Videos.Count > 0)
                 {
-                    if (series.Videos.Count > 0)
-                        this.VideoInfoCreated?.BeginFire(this, series.Videos.ToArray());
+                    this.VideoInfoCreated.BeginFire(this, series.Videos.ToArray());
                 }
 
                 return true;
@@ -42,18 +39,15 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        protected override Task<bool> InsertAsync(IEnumerable<JrySeries> objs) => this.InsertAsync(objs, true);
-
-        private async Task<bool> InsertAsync(IEnumerable<JrySeries> objs, bool isRaiseEvent)
+        protected override async Task<bool> InsertAsync(IEnumerable<JrySeries> objs)
         {
             if (await base.InsertAsync(objs))
             {
-                if (isRaiseEvent)
-                {
-                    var videos = objs.SelectMany(z => z.Videos).ToArray();
+                var videos = objs.SelectMany(z => z.Videos).ToArray();
 
-                    if (videos.Length > 0)
-                        this.VideoInfoCreated.BeginFire(this, videos.ToArray());
+                if (videos.Length > 0)
+                {
+                    this.VideoInfoCreated.BeginFire(this, videos.ToArray());
                 }
 
                 return true;

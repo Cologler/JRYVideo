@@ -27,7 +27,7 @@ namespace JryVideo.Core.Managers
         public TProvider Source { get; }
 
         public async Task<IEnumerable<T>> LoadAsync()
-            => await this.Source.ListAsync(0, Int32.MaxValue);
+            => await this.Source.ListAsync(0, int.MaxValue);
 
         public async Task<IEnumerable<T>> LoadAsync(int skip, int take)
             => await this.Source.ListAsync(skip, take);
@@ -40,13 +40,15 @@ namespace JryVideo.Core.Managers
             obj.Saving();
             if (obj.HasError()) return false;
 
-            if (await this.Source.InsertAsync(obj))
+            if (await this.InsertCoreAsync(obj))
             {
                 this.ItemCreated?.BeginInvoke(this, obj);
                 return true;
             }
             return false;
         }
+
+        protected virtual async Task<bool> InsertCoreAsync(T obj) => await this.Source.InsertAsync(obj);
 
         public async Task<bool> InsertOrUpdateAsync(T obj)
         {
