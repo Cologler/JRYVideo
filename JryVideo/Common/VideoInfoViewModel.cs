@@ -1,4 +1,5 @@
-﻿using Jasily.ComponentModel;
+﻿using Jasily;
+using Jasily.ComponentModel;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Models;
 using JryVideo.Editors.VideoEditor;
@@ -59,7 +60,7 @@ namespace JryVideo.Common
             if (!this.Source.IsTracking) return;
 
             int? episode;
-            this.VideoGroup = groupFactory.Build(this.Source, out episode);
+            this.VideoGroup = groupFactory.GetGroup(this.Source, out episode);
             Debug.Assert(this.VideoGroup != null);
 
             if (this.VideoGroup.Mode == GroupMode.Today)
@@ -106,9 +107,7 @@ namespace JryVideo.Common
                 }
                 if (ret == 0 && x.VideoGroup.Mode == GroupMode.AllAired)
                 {
-                    Debug.Assert(x.Source.StartDate != null, "x.Source.StartDate != null");
-                    Debug.Assert(y.Source.StartDate != null, "y.Source.StartDate != null");
-                    ret = y.Source.StartDate.Value.CompareTo(x.Source.StartDate.Value);
+                    return JasilyNullable.Compare(y.Source.StartDate, x.Source.StartDate);
                 }
                 return ret == 0 ? y.Source.Created.CompareTo(x.Source.Created) : ret;
             }
@@ -354,21 +353,21 @@ namespace JryVideo.Common
                 RebuildCurrent();
             }
 
-            public static Group Today(DayOfWeek dayOfWeek) => Todays[(int)dayOfWeek];
+            private static Group Today(DayOfWeek dayOfWeek) => Todays[(int)dayOfWeek];
 
-            public static Group AllAired { get; } = new Group(GroupMode.AllAired, Resources.DateTime_AllAired);
+            private static Group AllAired { get; } = new Group(GroupMode.AllAired, Resources.DateTime_AllAired);
 
-            public static Group Unknown { get; } = new Group(GroupMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
+            private static Group Unknown { get; } = new Group(GroupMode.Unknown, $"{Resources.DayOfWeek_Unknown} (unknown start)");
 
-            public static Group ThisWeek(DayOfWeek dayOfWeek) => ThisWeeks[(int)dayOfWeek];
+            private static Group ThisWeek(DayOfWeek dayOfWeek) => ThisWeeks[(int)dayOfWeek];
 
-            public static Group NextWeek(DayOfWeek dayOfWeek) => NextWeeks[(int)dayOfWeek];
+            private static Group NextWeek(DayOfWeek dayOfWeek) => NextWeeks[(int)dayOfWeek];
 
-            public static Group FewWeek(int day, int week) => new Group(GroupMode.FewWeek, string.Format(Resources.DateTime_AfterWeek, week), day);
+            private static Group FewWeek(int day, int week) => new Group(GroupMode.FewWeek, string.Format(Resources.DateTime_AfterWeek, week), day);
 
-            public static Group FewMonth(int day, int month) => new Group(GroupMode.FewMonth, string.Format(Resources.DateTime_AfterMonth, month), day);
+            private static Group FewMonth(int day, int month) => new Group(GroupMode.FewMonth, string.Format(Resources.DateTime_AfterMonth, month), day);
 
-            public static Group Future(int day) => new Group(GroupMode.Future, Resources.DateTime_Future, day);
+            private static Group Future(int day) => new Group(GroupMode.Future, Resources.DateTime_Future, day);
 
             private readonly DateTime today;
             private readonly DateTime nextSunday;
@@ -382,7 +381,7 @@ namespace JryVideo.Common
                 this.nextNextSunday = this.nextSunday.AddDays(7);
             }
 
-            public Group Build(JryVideoInfo video, out int? episode)
+            public Group GetGroup(JryVideoInfo video, out int? episode)
             {
                 episode = null;
                 if (video.IsAllAired) return AllAired;

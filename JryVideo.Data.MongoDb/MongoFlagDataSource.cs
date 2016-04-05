@@ -26,28 +26,31 @@ namespace JryVideo.Data.MongoDb
                 .OrderByDescending(z => z.Count);
         }
 
-        public async Task<bool> RefMathAsync(JryFlagType type, string value, int count)
+        private readonly FindOneAndUpdateOptions<JryFlag, JryFlag> incrementOptions = new FindOneAndUpdateOptions<JryFlag, JryFlag>()
+        {
+            IsUpsert = true
+        };
+
+        public async Task<bool> IncrementAsync(JryFlagType type, string value, int count)
         {
             if (count == 0) return true;
 
-            var flagName = String.Format("<{0}>[{1}]", type, value);
+            var flagName = string.Format("<{0}>[{1}]", type, value);
             this.Log(JasilyLogger.LoggerMode.Debug, String.Format("calc flag {0} => {1}", flagName, count));
 
             var id = JryFlag.BuildCounterId(type, value);
             var filter = Builders<JryFlag>.Filter;
             var update = Builders<JryFlag>.Update;
 
-            var flag = await this.Collection.FindOneAndUpdateAsync(
-                filter.Eq(z => z.Id, id),
-                update.Inc(z => z.Count, count),
-                new FindOneAndUpdateOptions<JryFlag, JryFlag>() { IsUpsert = true });
+            var flag = await this.Collection.FindOneAndUpdateAsync(filter.Eq(z => z.Id, id),
+                update.Inc(z => z.Count, count), this.incrementOptions);
 
             if (flag == null)
             {
-                this.Log(JasilyLogger.LoggerMode.Debug, String.Format("new flag {0} was inserted.", flagName));
+                this.Log(JasilyLogger.LoggerMode.Debug, string.Format("new flag {0} was inserted.", flagName));
                 if (count < 1)
                 {
-                    this.Log(JasilyLogger.LoggerMode.Debug, String.Format("flag {0} was less than 0, ignore.", flagName));
+                    this.Log(JasilyLogger.LoggerMode.Debug, string.Format("flag {0} was less than 0, ignore.", flagName));
                     return true;
                 }
 
@@ -63,14 +66,13 @@ namespace JryVideo.Data.MongoDb
             {
                 this.Log(JasilyLogger.LoggerMode.Debug, String.Format("flag {0} was exists.", flagName));
 
-                if (flag.Count + count < 0)
+                var cx = flag.Count + count;
+                if (cx <= 0)
                 {
-                    this.Log(JasilyLogger.LoggerMode.Debug, String.Format("flag {0} count less than 0, db error.", flagName));
-                    await this.Collection.FindOneAndDeleteAsync(filter.Lt(z => z.Count, 0));
-                }
-                else if (flag.Count + count == 0)
-                {
-                    this.Log(JasilyLogger.LoggerMode.Debug, String.Format("flag {0} count was 0, removed.", flagName));
+                    this.Log(JasilyLogger.LoggerMode.Debug, cx < 0
+                            ? $"flag {flagName} count less than 0, db error."
+                            : $"flag {flagName} count was 0, removed.");
+
                     await this.Collection.FindOneAndDeleteAsync(filter.Lt(z => z.Count, 0));
                 }
             }

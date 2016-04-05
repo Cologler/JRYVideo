@@ -9,6 +9,6 @@ namespace JryVideo.Data.DataSources
     {
         Task<IEnumerable<JryFlag>> QueryAsync(JryFlagType type);
 
-        Task<bool> RefMathAsync(JryFlagType type, string value, int count);
+        Task<bool> IncrementAsync(JryFlagType type, string value, int count);
     }
 }

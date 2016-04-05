@@ -47,7 +47,7 @@ namespace JryVideo.Core.Managers
             {
                 foreach (var value in item.Value)
                 {
-                    await this.Source.RefMathAsync(item.Key, value.Key, value.Value);
+                    await this.Source.IncrementAsync(item.Key, value.Key, value.Value);
                 }
             }
         }
@@ -250,7 +250,7 @@ namespace JryVideo.Core.Managers
             bool ret;
             if (flag != null)
             {
-                ret = await this.Source.RefMathAsync(type, newName, count);
+                ret = await this.Source.IncrementAsync(type, newName, count);
             }
             else
             {
