@@ -1,4 +1,4 @@
-﻿using System.Data;
+﻿using Jasily.Data;
 
 namespace JryVideo.Model
 {
