@@ -50,7 +50,7 @@ namespace JryVideo.Selectors.WebImageSelector
             }
             else
             {
-                var urls = (await videos[0].GetBannersAsync(JryVideoCore.Current.TheTVDBClient))
+                var urls = (await videos[0].GetBannersAsync(JryVideoCore.Current.GetTheTVDBClient()))
                     .Where(z => z.BannerType == BannerType.Poster)
                     .Select(z => z.BuildUrl(client))
                     .ToArray();

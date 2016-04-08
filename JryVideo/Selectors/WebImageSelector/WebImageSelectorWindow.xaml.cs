@@ -1,9 +1,9 @@
-﻿using System;
-using JryVideo.Common.Dialogs;
+﻿using JryVideo.Common.Dialogs;
 using JryVideo.Core;
+using JryVideo.Model;
+using System;
 using System.Collections.Generic;
 using System.Windows;
-using JryVideo.Model;
 
 namespace JryVideo.Selectors.WebImageSelector
 {
@@ -60,7 +60,7 @@ namespace JryVideo.Selectors.WebImageSelector
 
         public static string StartSelectByImdbId(Window parent, string imdbId)
         {
-            var client = JryVideoCore.Current.TheTVDBClient;
+            var client = JryVideoCore.Current.GetTheTVDBClient();
             if (client == null)
             {
                 parent.ShowJryVideoMessage("error", "TheTVDB init failed, try again.");
@@ -73,7 +73,7 @@ namespace JryVideo.Selectors.WebImageSelector
 
         public static string StartSelectFanartByImdbId(Window parent, string index, params RemoteId[] ids)
         {
-            var client = JryVideoCore.Current.TheTVDBClient;
+            var client = JryVideoCore.Current.GetTheTVDBClient();
             if (client == null)
             {
                 parent.ShowJryVideoMessage("error", "TheTVDB init failed, try again.");

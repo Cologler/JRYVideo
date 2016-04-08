@@ -16,7 +16,7 @@ namespace JryVideo.AutoComplete
             if (series.TheTVDBId.IsNullOrWhiteSpace())
             {
                 var imdbId = series.GetValidImdbId();
-                var client = JryVideoCore.Current.TheTVDBClient;
+                var client = JryVideoCore.Current.GetTheTVDBClient();
                 if (client != null && imdbId != null)
                 {
                     var item = (await client.GetSeriesByImdbIdAsync(imdbId)).FirstOrDefault();

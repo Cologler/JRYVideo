@@ -35,14 +35,11 @@ namespace JryVideo.Core
             this.BeginLazyInitialize();
         }
 
-        public TheTVDBClient TheTVDBClient
+        public TheTVDBClient GetTheTVDBClient()
         {
-            get
-            {
-                var client = this.theTVDBClient;
-                if (client == null) this.InitializeTheTVDBClient();
-                return client;
-            }
+            var client = this.theTVDBClient;
+            if (client == null) this.InitializeTheTVDBClient();
+            return client;
         }
 
         private async void InitializeTheTVDBClient()

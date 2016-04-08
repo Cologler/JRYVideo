@@ -54,7 +54,7 @@ namespace JryVideo.Common
         protected override async Task<bool> TryAutoAddCoverAsync()
         {
             if (this.parent.VideoViewerViewModel == null) return false;
-            var client = JryVideoCore.Current.TheTVDBClient;
+            var client = JryVideoCore.Current.GetTheTVDBClient();
             if (client == null) return false;
 
             var theTVDBItem = this.ImdbItem as ITheTVDBItem;

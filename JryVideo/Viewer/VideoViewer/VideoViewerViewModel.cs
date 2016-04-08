@@ -238,7 +238,7 @@ namespace JryVideo.Viewer.VideoViewer
             {
                 if (await this.TrySetByExistsAsync()) return true;
 
-                var client = JryVideoCore.Current.TheTVDBClient;
+                var client = JryVideoCore.Current.GetTheTVDBClient();
                 if (client == null) return false;
 
                 var guid = (await this.AutoGenerateCoverAsync(client, this.VideoInfo.Source) ??
