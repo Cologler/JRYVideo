@@ -223,6 +223,23 @@ namespace JryVideo.Common
             return false;
         }
 
+        public async Task<bool> UntrackAndStarAsync(int star)
+        {
+            Debug.Assert(1 <= star && star <= 5);
+            this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;
+            var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
+            this.Source.IsTracking = false;
+            this.Source.Star = star;
+
+            if (await manager.UpdateAsync(this.Source))
+            {
+                this.IsTrackButtonEnable = true;
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<bool> UntrackAsync()
         {
             this.IsTrackButtonEnable = this.IsUntrackButtonEnable = false;

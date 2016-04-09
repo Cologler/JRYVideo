@@ -233,6 +233,15 @@
                                         <MenuItem Visibility="{Binding IsUntrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                   Header="untrack"
                                                   Click="UntrackMenuItem_OnClick" />
+                                        <MenuItem Visibility="{Binding IsUntrackButtonEnable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                  Header="untrack and star"
+                                                  Click="UntrackAndStarMenuItem_OnClick">
+                                            <MenuItem Header="1" />
+                                            <MenuItem Header="2" />
+                                            <MenuItem Header="3" />
+                                            <MenuItem Header="4" />
+                                            <MenuItem Header="5" />
+                                        </MenuItem>
                                         <MenuItem Header="series">
                                             <MenuItem Header="only show this series"
                                                       Click="FilterSeries_OnClick" />

@@ -12,6 +12,7 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows;
@@ -386,6 +387,17 @@ namespace JryVideo.Main
         {
             this.ViewModel.OnClickGrouping(((FrameworkElement)e.OriginalSource).DataContext);
             this.StartSearch();
+        }
+
+        private async void UntrackAndStarMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
+            Debug.Assert(vm != null);
+            var star = int.Parse((string)((MenuItem) e.OriginalSource).Header);
+            if (await vm.UntrackAndStarAsync(star) && this.ViewModel.VideosViewModel.IsOnlyTracking)
+            {
+                this.ViewModel.VideosViewModel.Items.Collection.Remove(vm);
+            }
         }
     }
 }
