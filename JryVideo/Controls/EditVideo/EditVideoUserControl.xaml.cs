@@ -112,10 +112,7 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
-        private async void LoadDoubanButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            await this.ViewModel.LoadDoubanAsync();
-        }
+        private void LoadDoubanButton_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.LoadFromDouban();
 
         private void SelectLastVideoButton_OnClick(object sender, RoutedEventArgs e)
         {

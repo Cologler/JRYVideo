@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Jasily.SDK.Douban.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Jasily.SDK.Douban.Entities;
 
 namespace JryVideo.Core.Douban
 {

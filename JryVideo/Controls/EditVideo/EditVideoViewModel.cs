@@ -1,5 +1,4 @@
 ﻿using Jasily.ComponentModel;
-using Jasily.SDK.Douban.Entities;
 using JryVideo.Common;
 using JryVideo.Common.ValidationRules;
 using JryVideo.Controls.SelectFlag;
@@ -223,15 +222,72 @@ namespace JryVideo.Controls.EditVideo
             set { this.SetPropertyRef(ref this.episodeOffset, value); }
         }
 
-        public async Task LoadDoubanAsync()
+        public void LoadFromDouban()
         {
             if (this.DoubanId.IsNullOrWhiteSpace()) return;
+            this.BeginLoadDoubanMeta(this.DoubanId);
+            this.BeginLoadDoubanHtml(this.DoubanId);
+        }
 
-            var info = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
-
+        private async void BeginLoadDoubanMeta(string doubanId)
+        {
+            var info = await DoubanHelper.TryGetMovieInfoAsync(doubanId);
             if (info != null)
             {
-                this.LoadDouban(info);
+                var parser = DoubanMovieParser.Parse(info);
+                this.NamesViewModel.AddRange(parser.EntityNames);
+
+                var defaultValue = (Application.Current as App)?.UserConfig?.DefaultValue;
+                if (defaultValue != null)
+                {
+                    if (parser.IsMovie)
+                    {
+                        if (!defaultValue.MovieType.IsNullOrWhiteSpace())
+                        {
+                            this.Type = defaultValue.MovieType;
+                        }
+                    }
+                    else
+                    {
+                        if (!defaultValue.SeasonType.IsNullOrWhiteSpace())
+                        {
+                            this.Type = defaultValue.SeasonType;
+                        }
+                    }
+                }
+
+                if (this.Year.IsNullOrWhiteSpace())
+                {
+                    this.Year = info.Year;
+                }
+
+                if (this.Index.IsNullOrWhiteSpace())
+                {
+                    this.Index = info.CurrentSeason ?? parser.Index;
+                }
+
+                if (this.EpisodesCount.IsNullOrWhiteSpace())
+                {
+                    this.EpisodesCount = parser.EpisodesCount ?? string.Empty;
+                }
+            }
+        }
+
+        private async void BeginLoadDoubanHtml(string doubanId)
+        {
+            if (this.ImdbId.IsNullOrWhiteSpace() || this.StartLocalDate == null)
+            {
+                var html = await DoubanHelper.TryGetMovieHtmlAsync(doubanId);
+
+                if (this.ImdbId.IsNullOrWhiteSpace())
+                {
+                    this.ImdbId = DoubanHelper.TryParseImdbId(html) ?? string.Empty;
+                }
+
+                if (this.StartLocalDate == null)
+                {
+                    this.StartLocalDate = DoubanHelper.TryParseReleaseDate(html);
+                }
             }
         }
 
@@ -301,46 +357,6 @@ namespace JryVideo.Controls.EditVideo
             }
 
             this.TagsViewModel.ReadTags(obj);
-        }
-
-        public void LoadDouban(Movie info)
-        {
-            var parser = DoubanMovieParser.Parse(info);
-            this.NamesViewModel.AddRange(parser.EntityNames);
-
-            var defaultValue = (Application.Current as App)?.UserConfig?.DefaultValue;
-            if (defaultValue != null)
-            {
-                if (parser.IsMovie)
-                {
-                    if (!defaultValue.MovieType.IsNullOrWhiteSpace())
-                    {
-                        this.Type = defaultValue.MovieType;
-                    }
-                }
-                else
-                {
-                    if (!defaultValue.SeasonType.IsNullOrWhiteSpace())
-                    {
-                        this.Type = defaultValue.SeasonType;
-                    }
-                }
-            }
-
-            if (this.Year.IsNullOrWhiteSpace())
-            {
-                this.Year = info.Year;
-            }
-
-            if (this.Index.IsNullOrWhiteSpace())
-            {
-                this.Index = info.CurrentSeason ?? parser.Index;
-            }
-
-            if (this.EpisodesCount.IsNullOrWhiteSpace())
-            {
-                this.EpisodesCount = parser.EpisodesCount ?? string.Empty;
-            }
         }
 
         public async Task LoadAsync()

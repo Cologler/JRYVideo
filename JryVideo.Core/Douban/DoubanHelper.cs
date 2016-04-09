@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace JryVideo.Core.Douban
@@ -14,20 +15,89 @@ namespace JryVideo.Core.Douban
         public static async Task<Movie> TryGetMovieInfoAsync(string doubanId)
         {
             var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/subject/" + doubanId);
-            var result = await request.GetResultAsBytesAsync();
-            PrintInDebug(result);
-            if (result.IsSuccess)
+            using (var result = await request.GetResultAsBytesAsync())
             {
-                try
-                {
-                    return result.AsJson<Movie>().Result;
-                }
-                catch
-                {
-                    // ignored
-                }
+                PrintInDebug(result);
+                return result.TryAsJson<Movie>().Result;
             }
+        }
 
+        public static async Task<string> TryGetImdbIdAsync(string doubanId)
+        {
+            var request = WebRequest.CreateHttp("https://movie.douban.com/subject/" + doubanId);
+            using (var result = await request.GetResultAsBytesAsync().AsText())
+            {
+                if (result.Result == null) return null;
+                var match = Regex.Match(result.Result, "href=\"http://www.imdb.com/title/(tt\\d*)\"");
+                return match.Success ? match.Groups[1].Value : null;
+            }
+        }
+
+        public static async Task<string> TryGetMovieHtmlAsync(string doubanId)
+        {
+            var request = WebRequest.CreateHttp("https://movie.douban.com/subject/" + doubanId);
+            using (var result = await request.GetResultAsBytesAsync().AsText())
+            {
+                return result.Result;
+            }
+        }
+
+        public static string TryParseImdbId(string html)
+        {
+            var match = Regex.Match(html, "href=\"http://www.imdb.com/title/(tt\\d*)\"");
+            return match.Success ? match.Groups[1].Value : null;
+        }
+
+        public static DateTime? TryParseReleaseDate(string html)
+        {
+            Debug.Assert(html != null);
+            var str = TryParseReleaseDateString(html);
+            if (str == null) return null;
+            var match = Regex.Match(str, "(\\d{4})-(\\d{2})-(\\d{2})");
+            var year = int.Parse(match.Groups[1].Value);
+            var month = int.Parse(match.Groups[2].Value);
+            var day = int.Parse(match.Groups[3].Value);
+            return DateTime.SpecifyKind(new DateTime(year, month, day), DateTimeKind.Local);
+        }
+
+        private static string TryParseReleaseDateString(string html)
+        {
+            Debug.Assert(html != null);
+            var matchs = Regex.Matches(html, "property=\"v:initialReleaseDate\" content=\"(\\d{4}-\\d{2}-\\d{2})([^\"]*)?\"");
+            if (matchs.Count == 1)
+            {
+                return matchs[0].Groups[1].Value;
+            }
+            else
+            {
+                var f = 0;
+                string value = null;
+                foreach (Match match in matchs)
+                {
+                    if (match.Groups.Count == 1) return match.Groups[1].Value;
+
+                    int fx;
+                    switch (match.Groups[2].Value)
+                    {
+                        case "(美国)":
+                            fx = 10;
+                            break;
+                        case "(日本)":
+                            fx = 9;
+                            break;
+                        default:
+                            fx = 1;
+                            break;
+                    }
+
+                    if (f < fx)
+                    {
+                        f = fx;
+                        value = match.Groups[1].Value;
+                    }
+                }
+                return value;
+            }
             return null;
         }
 
