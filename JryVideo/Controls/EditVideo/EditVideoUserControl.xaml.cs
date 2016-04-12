@@ -2,7 +2,6 @@
 using JryVideo.Common.Dialogs;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Managers.FlagManager;
-using JryVideo.Selectors.ArtistSelector;
 using JryVideo.Selectors.VideoSelector;
 using MahApps.Metro.Controls;
 using System;
@@ -100,16 +99,6 @@ namespace JryVideo.Controls.EditVideo
         {
             var window = this.TryFindParent<MetroWindow>();
             await this.ViewModel.CommitAsync(window);
-        }
-
-        private void SelectArtistButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var dlg = new ArtistSelectorWindow();
-
-            if (dlg.ShowDialog() == true)
-            {
-
-            }
         }
 
         private void LoadDoubanButton_OnClick(object sender, RoutedEventArgs e) => this.ViewModel.LoadFromDouban();
