@@ -1,5 +1,4 @@
 ﻿using JryVideo.Common;
-using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.EntityEditor;
 using JryVideo.SearchEngine;
 using JryVideo.Viewer.FilesViewer;
@@ -85,27 +84,7 @@ namespace JryVideo.Viewer.VideoViewer
         }
 
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
-        {
-            var vm = this.ViewModel.InfoView;
-
-            var dlg = new CoverEditorWindow();
-            var cover = await vm.TryGetCoverAsync();
-            if (cover != null)
-            {
-                dlg.ViewModel.ModifyMode(cover);
-                dlg.UpdateRadioButtonCheckedStatus();
-            }
-            else
-            {
-                dlg.ViewModel.CreateMode();
-            }
-
-            if (dlg.ShowDialog() == true)
-            {
-                await dlg.ViewModel.CommitAsync();
-                vm.BeginUpdateCover();
-            }
-        }
+            => await this.ViewModel.InfoView.OpenCoverEditorWindows(this.TryFindParent<Window>());
 
         private async void AddEntityMenuItem_OnClick(object sender, RoutedEventArgs e)
         {

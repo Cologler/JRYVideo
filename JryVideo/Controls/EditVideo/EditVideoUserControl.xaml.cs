@@ -74,9 +74,16 @@ namespace JryVideo.Controls.EditVideo
                 dlg.ViewModel.DoubanId = this.ViewModel.DoubanId;
             }
 
-            if (dlg.ViewModel.ImdbId.IsNullOrWhiteSpace() && !this.ViewModel.ImdbId.IsNullOrWhiteSpace())
+            if (dlg.ViewModel.ImdbId.IsNullOrWhiteSpace())
             {
-                dlg.ViewModel.ImdbId = this.ViewModel.ImdbId;
+                if (!this.ViewModel.Parent.Source.ImdbId.IsNullOrWhiteSpace())
+                {
+                    dlg.ViewModel.ImdbId = this.ViewModel.Parent.Source.ImdbId;
+                }
+                else if (!this.ViewModel.ImdbId.IsNullOrWhiteSpace())
+                {
+                    dlg.ViewModel.ImdbId = this.ViewModel.ImdbId;
+                }
             }
 
             dlg.UpdateRadioButtonCheckedStatus();

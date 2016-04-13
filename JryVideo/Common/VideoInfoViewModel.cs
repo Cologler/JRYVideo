@@ -2,6 +2,7 @@
 using Jasily.ComponentModel;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Models;
+using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.VideoEditor;
 using JryVideo.Model;
 using JryVideo.Properties;
@@ -345,6 +346,49 @@ namespace JryVideo.Common
                 return true;
             }
             return false;
+        }
+
+        public async Task OpenCoverEditorWindows(Window parent)
+        {
+            if (this.SeriesView.TestVersionObsolete(parent))
+            {
+                return;
+            }
+
+            var dlg = new CoverEditorWindow();
+            var cover = await this.TryGetCoverAsync();
+            if (cover != null)
+            {
+                dlg.ViewModel.ModifyMode(cover);
+                dlg.UpdateRadioButtonCheckedStatus();
+            }
+            else
+            {
+                dlg.ViewModel.CreateMode();
+            }
+
+            if (dlg.ViewModel.DoubanId.IsNullOrWhiteSpace() && !this.Source.DoubanId.IsNullOrWhiteSpace())
+            {
+                dlg.ViewModel.DoubanId = this.Source.DoubanId;
+            }
+
+            if (dlg.ViewModel.ImdbId.IsNullOrWhiteSpace())
+            {
+                if (!this.SeriesView.Source.ImdbId.IsNullOrWhiteSpace())
+                {
+                    dlg.ViewModel.ImdbId = this.SeriesView.Source.ImdbId;
+                }
+                else if (!this.Source.ImdbId.IsNullOrWhiteSpace())
+                {
+                    dlg.ViewModel.ImdbId = this.Source.ImdbId;
+                }
+            }
+
+            if (dlg.ShowDialog() == true)
+            {
+                await dlg.ViewModel.CommitAsync();
+                this.BeginUpdateCover();
+            }
         }
 
         public class GroupFactory

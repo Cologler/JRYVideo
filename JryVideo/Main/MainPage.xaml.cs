@@ -4,7 +4,6 @@ using JryVideo.Common;
 using JryVideo.Common.Dialogs;
 using JryVideo.Core;
 using JryVideo.Data;
-using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.PasswordEditor;
 using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Selectors.VideoSelector;
@@ -75,25 +74,8 @@ namespace JryVideo.Main
         private async void EditCover_OnClick(object sender, RoutedEventArgs e)
         {
             var vm = (sender as FrameworkElement)?.DataContext as VideoInfoViewModel;
-            if (vm == null) return;
-
-            var dlg = new CoverEditorWindow();
-            var cover = await vm.TryGetCoverAsync();
-            if (cover != null)
-            {
-                dlg.ViewModel.ModifyMode(cover);
-                dlg.UpdateRadioButtonCheckedStatus();
-            }
-            else
-            {
-                dlg.ViewModel.CreateMode();
-            }
-
-            if (dlg.ShowDialog() == true)
-            {
-                await dlg.ViewModel.CommitAsync();
-                vm.BeginUpdateCover();
-            }
+            Debug.Assert(vm != null);
+            await vm.OpenCoverEditorWindows(this.TryFindParent<Window>());
         }
 
         private async void AddMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -393,7 +375,7 @@ namespace JryVideo.Main
         {
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             Debug.Assert(vm != null);
-            var star = int.Parse((string)((MenuItem) e.OriginalSource).Header);
+            var star = int.Parse((string)((MenuItem)e.OriginalSource).Header);
             if (await vm.UntrackAndStarAsync(star) && this.ViewModel.VideosViewModel.IsOnlyTracking)
             {
                 this.ViewModel.VideosViewModel.Items.Collection.Remove(vm);
