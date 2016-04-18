@@ -1,12 +1,12 @@
-﻿using Jasily.Net;
-using Jasily.SDK.Douban.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Jasily.Net;
+using Jasily.SDK.Douban.Entities;
 
 namespace JryVideo.Core.Douban
 {
@@ -44,6 +44,7 @@ namespace JryVideo.Core.Douban
 
         public static string TryParseImdbId(string html)
         {
+            Debug.Assert(html != null);
             var match = Regex.Match(html, "href=\"http://www.imdb.com/title/(tt\\d*)\"");
             return match.Success ? match.Groups[1].Value : null;
         }

@@ -1,8 +1,6 @@
-﻿using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using JryVideo.Model;
 
 namespace JryVideo.Configs
 {
@@ -18,7 +16,7 @@ namespace JryVideo.Configs
 
         public List<MapperValue> ExtendSubTitleLanguages { get; set; }
 
-        private IEnumerable<MapperValue> GetSource(JryFlagType type)
+        public IEnumerable<MapperValue> GetByFlagType(JryFlagType type)
         {
             switch (type)
             {
@@ -33,24 +31,6 @@ namespace JryVideo.Configs
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-        }
-
-        public async Task<string[]> TryFireAsync(JryFlagType type, string name, Func<string, bool> filter = null)
-            => await Task.Run(() => this.TryFire(this.GetSource(type), name, filter));
-
-        public string[] TryFire(IEnumerable<MapperValue> mapper, string name, Func<string, bool> filter = null)
-        {
-            var source = mapper?
-                    .Where(z => z.From != null && z.To != null)
-                    .Where(item => item.From.Where(z => z.Length > 0).FirstOrDefault(z => name.Contains(z, StringComparison.OrdinalIgnoreCase)) != null)
-                    .SelectMany(item => item.To)
-                    .Distinct();
-            if (source == null) return new string[0];
-            if (filter != null)
-            {
-                source = source.Where(filter);
-            }
-            return source.ToArray();
         }
     }
 }

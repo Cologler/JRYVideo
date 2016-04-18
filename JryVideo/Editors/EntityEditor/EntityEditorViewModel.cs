@@ -1,10 +1,4 @@
-﻿using Jasily.ComponentModel;
-using JryVideo.Common;
-using JryVideo.Controls.SelectFlag;
-using JryVideo.Model;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -14,6 +8,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using Jasily.ComponentModel;
+using JryVideo.Common;
+using JryVideo.Configs;
+using JryVideo.Controls.SelectFlag;
+using JryVideo.Model;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Editors.EntityEditor
 {
@@ -294,7 +295,6 @@ namespace JryVideo.Editors.EntityEditor
             var mapper = ((App)Application.Current).UserConfig?.Mapper;
             if (mapper != null)
             {
-                var filter = new Func<string, bool>(z => !z.IsNullOrWhiteSpace());
                 foreach (var flagTemplate in new[]
                 {
                     new { Type = JryFlagType.EntityFansub, Flags = this.fansubFlags },
@@ -305,11 +305,30 @@ namespace JryVideo.Editors.EntityEditor
                 {
                     var col = this[flagTemplate.Type];
                     col.Reset(col.ToArray()
-                        .Concat(await mapper.TryFireAsync(flagTemplate.Type, format, filter))
+                        .Concat(await TryFindByUserConfigAsync(mapper, flagTemplate.Type, format))
                         .Concat(flagTemplate.Flags.Where(z => format.Contains(z, StringComparison.OrdinalIgnoreCase)))
                         .Distinct());
                 }
             }
+        }
+
+        public static async Task<string[]> TryFindByUserConfigAsync(MapperConfig mc, JryFlagType type, string name)
+        {
+            if (mc == null) return Empty<string>.Array;
+            return await Task.Run(() => TryFindByUserConfigAsync(mc.GetByFlagType(type), name));
+        }
+
+        public static string[] TryFindByUserConfigAsync(IEnumerable<MapperValue> mapper, string name)
+        {
+            if (mapper == null) return Empty<string>.Array;
+            return mapper
+                    .Where(z => z.From != null && z.To != null)
+                    .Where(z => z.From.Where(x => x.Length > 0).FirstOrDefault(x => name.Contains(x, StringComparison.OrdinalIgnoreCase)) != null)
+                    .SelectMany(z => z.To)
+                    .Select(z => z.Trim())
+                    .Distinct()
+                    .Where(z => !string.IsNullOrEmpty(z))
+                    .ToArray();
         }
 
         private static readonly Regex Crc32 = new Regex(@"(.*)(\[[a-f0-9]{7,8}\]|\([a-f0-9]{7,8}\))$", RegexOptions.IgnoreCase);
@@ -338,14 +357,13 @@ namespace JryVideo.Editors.EntityEditor
                 var mapper = ((App)Application.Current).UserConfig?.Mapper;
                 if (mapper != null && subTitles.Count > 0)
                 {
-                    var filter = new Func<string, bool>(z => !z.IsNullOrWhiteSpace());
                     var sttags = subTitles.Select(Path.GetExtension).Distinct().ToArray();
                     var langs = sttags
-                        .SelectMany(z => mapper.TryFire(mapper.ExtendSubTitleLanguages, z, filter))
+                        .SelectMany(z => TryFindByUserConfigAsync(mapper.ExtendSubTitleLanguages, z))
                         .Distinct()
                         .ToArray();
                     var fansubs = sttags
-                        .SelectMany(z => mapper.TryFire(mapper.Fansubs, z, filter))
+                        .SelectMany(z => TryFindByUserConfigAsync(mapper.Fansubs, z))
                         .Distinct()
                         .ToArray();
                     this.GetUIDispatcher().BeginInvoke(() =>

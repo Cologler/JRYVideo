@@ -278,6 +278,7 @@ namespace JryVideo.Controls.EditVideo
             if (this.ImdbId.IsNullOrWhiteSpace() || this.StartLocalDate == null)
             {
                 var html = await DoubanHelper.TryGetMovieHtmlAsync(doubanId);
+                if (html == null) return;
 
                 if (this.ImdbId.IsNullOrWhiteSpace())
                 {
