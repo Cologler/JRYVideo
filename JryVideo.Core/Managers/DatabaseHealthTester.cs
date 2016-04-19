@@ -133,13 +133,28 @@ namespace JryVideo.Core.Managers
                     foreach (var error in this.Errors) await error.FixAsync(this.dataCenter);
                 }
 
-                if (Debugger.IsAttached)
+                if (this.messages.Count + this.Errors.Count == 0)
                 {
-                    Debug.WriteLine(this.messages.Count + this.Errors.Count == 0 ? "db safe!" : this.messages.AsLines());
+                    if (Debugger.IsAttached)
+                    {
+                        Debug.WriteLine("db safe!");
+                    }
+                    else
+                    {
+                        Log.Write("db safe!");
+                    }
                 }
                 else
                 {
-                    Log.Write(this.messages.Count + this.Errors.Count == 0 ? "db safe!" : this.messages.AsLines());
+                    if (Debugger.IsAttached)
+                    {
+                        Debug.WriteLine(this.messages.AsLines());
+                        Debugger.Break();
+                    }
+                    else
+                    {
+                        Log.Write(this.messages.AsLines());
+                    }
                 }
             });
         }
