@@ -60,7 +60,7 @@
                 <TextBox Grid.Column="1"
                          VerticalAlignment="Center"
                          Height="28"
-                         Text="{Binding ImdbId}"
+                         Text="{Binding ImdbId.Value}"
                          Margin="6,2"/>
 
                 <TextBlock Grid.Row="1"
@@ -71,7 +71,7 @@
                          Grid.Row="1"
                          VerticalAlignment="Center"
                          Height="28"
-                         Text="{Binding TheTVDBId}"
+                         Text="{Binding TheTVDBId.Value}"
                          Margin="6,2" />
 
                 <TextBlock Text="douban id"
@@ -81,7 +81,7 @@
                 <TextBox x:Name="DoubanIdTextBox"
                          Grid.Column="1"
                          Grid.Row="2"
-                         Text="{Binding DoubanId, Mode=TwoWay}"
+                         Text="{Binding DoubanId.Value, Mode=TwoWay}"
                          Margin="6,2" />
 
                 <Button x:Name="LoadFromDoubanButton"

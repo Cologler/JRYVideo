@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Jasily.ComponentModel;
 using Jasily.ComponentModel.Editable;
 using JryVideo.Common;
 using JryVideo.Controls.SelectFlag;
@@ -13,26 +14,19 @@ namespace JryVideo.Controls.EditSeries
 {
     public class EditSeriesViewModel : EditorItemViewModel<JrySeries>
     {
-        private string doubanId;
-        private string imdbId;
-        private string theTVDBId;
-
+        [EditableField(IsSubEditableViewModel = true)]
         public NameEditableViewModel<JrySeries> NamesViewModel { get; }
             = new NameEditableViewModel<JrySeries>(false);
 
         public override void ReadFromObject(JrySeries obj)
         {
             base.ReadFromObject(obj);
-
-            this.NamesViewModel.ReadFromObject(obj);
             this.TagsViewModel.ReadTags(obj);
         }
 
         public override void WriteToObject(JrySeries obj)
         {
             base.WriteToObject(obj);
-
-            this.NamesViewModel.WriteToObject(obj);
             obj.ImdbId = obj.ImdbId.IsNullOrWhiteSpace() ? null : obj.ImdbId.Trim();
             obj.TheTVDBId = obj.TheTVDBId.IsNullOrWhiteSpace() ? null : obj.TheTVDBId.Trim();
             this.TagsViewModel.WriteTags(obj, true);
@@ -40,33 +34,13 @@ namespace JryVideo.Controls.EditSeries
 
         public SelectFlagViewModel TagsViewModel { get; } = new SelectFlagViewModel(JryFlagType.SeriesTag);
 
-        public string DoubanId
-        {
-            get { return this.doubanId; }
-            set
-            {
-                value = TryGetDoubanId(value);
-                this.SetPropertyRef(ref this.doubanId, value);
-            }
-        }
+        public Property<string> DoubanId { get; } = new Property<string> { SetterConverter = TryGetDoubanId };
 
         [EditableField]
-        public string ImdbId
-        {
-            get { return this.imdbId; }
-            set
-            {
-                value = TryGetImdbId(value);
-                this.SetPropertyRef(ref this.imdbId, value);
-            }
-        }
+        public Property<string> ImdbId { get; } = new Property<string> { SetterConverter = TryGetImdbId };
 
         [EditableField]
-        public string TheTVDBId
-        {
-            get { return this.theTVDBId; }
-            set { this.SetPropertyRef(ref this.theTVDBId, value); }
-        }
+        public Property<string> TheTVDBId { get; } = new Property<string>();
 
         public async Task LoadDoubanAsync()
         {
@@ -95,7 +69,7 @@ namespace JryVideo.Controls.EditSeries
         public override void Clear()
         {
             this.NamesViewModel.Names = "";
-            this.DoubanId = "";
+            this.DoubanId.Value = "";
         }
     }
 }

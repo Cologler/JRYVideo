@@ -14,6 +14,7 @@ namespace JryVideo.Editors.ArtistEditor
         private string doubanId;
         private string imdbId;
 
+        [EditableField(IsSubEditableViewModel = true)]
         public NameEditableViewModel<Artist> Names { get; }
             = new NameEditableViewModel<Artist>(false);
 
@@ -36,18 +37,6 @@ namespace JryVideo.Editors.ArtistEditor
         {
             get { return this.imdbId; }
             set { this.SetPropertyRef(ref this.imdbId, TryGetImdbId(value)); }
-        }
-
-        public override void ReadFromObject(Artist obj)
-        {
-            base.ReadFromObject(obj);
-            this.Names.ReadFromObject(obj);
-        }
-
-        public override void WriteToObject(Artist obj)
-        {
-            base.WriteToObject(obj);
-            this.Names.WriteToObject(obj);
         }
 
         public async Task LoadFromDoubanAsync()

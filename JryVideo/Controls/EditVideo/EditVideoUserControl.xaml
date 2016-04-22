@@ -105,7 +105,7 @@
                           ItemsSource="{Binding YearCollection}"
                           IsEditable="True">
                     <ComboBox.Text>
-                        <Binding Path="Year"
+                        <Binding Path="Year.Value"
                                  Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <validationRules:VideoYearValidationRule />
@@ -125,7 +125,7 @@
                           IsEditable="True"
                           ItemsSource="{Binding IndexCollection}">
                     <ComboBox.Text>
-                        <Binding Path="Index"
+                        <Binding Path="Index.Value"
                                  Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <validationRules:VideoIndexValidationRule />
@@ -179,7 +179,7 @@
                           ItemsSource="{Binding EpisodesCountCollection}"
                           IsEditable="True">
                     <ComboBox.Text>
-                        <Binding Path="EpisodesCount"
+                        <Binding Path="EpisodesCount.Value"
                                  Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <validationRules:VideoEpisodesCountValidationRule />

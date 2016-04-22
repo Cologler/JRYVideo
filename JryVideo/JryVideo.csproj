@@ -87,6 +87,7 @@
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Common\JryVideoViewModel.cs" />
     <Compile Include="Common\LocalizationHelper.cs" />
+    <Compile Include="Common\MulitLineConverter.cs" />
     <Compile Include="Common\NameableViewModel.cs" />
     <Compile Include="Common\SeriesViewModel.cs" />
     <Compile Include="Common\ValidationRules\FlagValueValidationRule.cs" />

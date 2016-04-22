@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Enums;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Jasily.ComponentModel;
 using Jasily.ComponentModel.Editable;
+using Jasily.ComponentModel.Editable.Converters;
 using JryVideo.Common;
 using JryVideo.Common.ValidationRules;
 using JryVideo.Controls.SelectFlag;
@@ -25,11 +28,8 @@ namespace JryVideo.Controls.EditVideo
         private ImageViewModel imageViewModel;
         private string selectedType;
         private CoverEditorViewModel cover;
-        private string year;
-        private string index;
         private string imdbId;
         private string doubanId;
-        private string episodesCount;
         private bool isTracking;
         private bool isAllAired;
         private int episodeOffset;
@@ -54,15 +54,15 @@ namespace JryVideo.Controls.EditVideo
             private set { this.SetPropertyRef(ref this.imageViewModel, value); }
         }
 
-        public ObservableCollection<string> TypeCollection { get; private set; }
+        public ObservableCollection<string> TypeCollection { get; }
 
-        public ObservableCollection<string> YearCollection { get; private set; }
+        public ObservableCollection<string> YearCollection { get; }
 
-        public ObservableCollection<string> IndexCollection { get; private set; }
+        public ObservableCollection<string> IndexCollection { get; }
 
-        public ObservableCollection<string> EpisodesCountCollection { get; private set; }
+        public ObservableCollection<string> EpisodesCountCollection { get; }
 
-        public ObservableCollection<NameValuePair<string, DayOfWeek?>> DayOfWeekCollection { get; private set; }
+        public ObservableCollection<NameValuePair<string, DayOfWeek?>> DayOfWeekCollection { get; }
 
         [EditableField]
         public string Type
@@ -71,11 +71,8 @@ namespace JryVideo.Controls.EditVideo
             set { this.SetPropertyRef(ref this.selectedType, value); }
         }
 
-        public string Year
-        {
-            get { return this.year; }
-            set { this.SetPropertyRef(ref this.year, value); }
-        }
+        [EditableField(Converter = typeof(Int32ToStringConverter))]
+        public Property<string> Year { get; } = new Property<string>();
 
         [EditableField]
         public string DoubanId
@@ -201,20 +198,14 @@ namespace JryVideo.Controls.EditVideo
             set { this.ImageViewModel = (this.cover = value) != null ? value.ImageViewModel : null; }
         }
 
-        public string Index
-        {
-            get { return this.index; }
-            set { this.SetPropertyRef(ref this.index, value); }
-        }
+        [EditableField(Converter = typeof(Int32ToStringConverter))]
+        public Property<string> Index { get; } = new Property<string>();
 
-        public NameEditableViewModel<JryVideoInfo> NamesViewModel { get; }
-            = new NameEditableViewModel<JryVideoInfo>(false);
+        [EditableField(IsSubEditableViewModel = true)]
+        public NameEditableViewModel<JryVideoInfo> NamesViewModel { get; } = new NameEditableViewModel<JryVideoInfo>(false);
 
-        public string EpisodesCount
-        {
-            get { return this.episodesCount; }
-            set { this.SetPropertyRef(ref this.episodesCount, value); }
-        }
+        [EditableField(Converter = typeof(Int32ToStringConverter))]
+        public Property<string> EpisodesCount { get; } = new Property<string>();
 
         public int EpisodeOffset
         {
@@ -256,19 +247,19 @@ namespace JryVideo.Controls.EditVideo
                     }
                 }
 
-                if (this.Year.IsNullOrWhiteSpace())
+                if (this.Year.Value.IsNullOrWhiteSpace())
                 {
-                    this.Year = info.Year;
+                    this.Year.Value = info.Year;
                 }
 
-                if (this.Index.IsNullOrWhiteSpace())
+                if (this.Index.Value.IsNullOrWhiteSpace())
                 {
-                    this.Index = info.CurrentSeason ?? parser.Index;
+                    this.Index.Value = info.CurrentSeason ?? parser.Index;
                 }
 
-                if (this.EpisodesCount.IsNullOrWhiteSpace())
+                if (this.EpisodesCount.Value.IsNullOrWhiteSpace())
                 {
-                    this.EpisodesCount = parser.EpisodesCount ?? string.Empty;
+                    this.EpisodesCount.Value = parser.EpisodesCount ?? string.Empty;
                 }
             }
         }
@@ -297,16 +288,14 @@ namespace JryVideo.Controls.EditVideo
 
         public override void WriteToObject(JryVideoInfo obj)
         {
+            var series = this.Parent?.Source;
+            Debug.Assert(series != null);
+
             base.WriteToObject(obj);
 
-            obj.Year = int.Parse(this.Year);
-            obj.Index = int.Parse(this.Index);
-            obj.EpisodesCount = int.Parse(this.EpisodesCount);
-            this.NamesViewModel.WriteToObject(obj);
             obj.DayOfWeek = this.DayOfWeek?.Value;
             obj.EpisodeOffset = this.EpisodeOffset == 0 ? (int?)null : this.EpisodeOffset;
 
-            var series = this.Parent.ThrowIfNull().Source;
             var lastVideoId = this.LastVideoViewModel?.Source.Id;
             if (obj.LastVideoId != lastVideoId)
             {
@@ -333,27 +322,24 @@ namespace JryVideo.Controls.EditVideo
 
         public override void ReadFromObject(JryVideoInfo obj)
         {
-            base.ReadFromObject(obj);
+            var series = this.Parent?.Source;
+            Debug.Assert(series != null);
 
-            this.Index = obj.Index.ToString();
-            this.Year = obj.Year.ToString();
-            this.NamesViewModel.ReadFromObject(obj);
-            this.EpisodesCount = obj.EpisodesCount.ToString();
+            base.ReadFromObject(obj);
 
             this.DayOfWeek = this.GetDayOfWeekValue(obj.DayOfWeek);
             this.EpisodeOffset = obj.EpisodeOffset ?? 0;
 
-            var parent = this.Parent.ThrowIfNull().Source;
             var lastId = obj.LastVideoId;
             if (lastId != null)
             {
-                var lastVideo = parent.Videos.FirstOrDefault(z => z.Id == lastId);
+                var lastVideo = series.Videos.FirstOrDefault(z => z.Id == lastId);
                 if (lastVideo != null) this.LastVideoViewModel = new VideoInfoReadonlyViewModel(lastVideo);
             }
             var nextId = obj.NextVideoId;
             if (nextId != null)
             {
-                var nextVideo = parent.Videos.FirstOrDefault(z => z.Id == nextId);
+                var nextVideo = series.Videos.FirstOrDefault(z => z.Id == nextId);
                 if (nextVideo != null) this.NextVideoViewModel = new VideoInfoReadonlyViewModel(nextVideo);
             }
 
@@ -394,7 +380,8 @@ namespace JryVideo.Controls.EditVideo
             }
         }
 
-        private static async Task<bool> IsInvalid<T>(MetroWindow window, object obj, string fieldName) where T : ValidationRule, new()
+        private static async Task<bool> IsInvalid<T>(MetroWindow window, object obj, string fieldName)
+            where T : ValidationRule, new()
         {
             var error = new T().Validate(obj, CultureInfo.CurrentCulture);
             if (error.IsValid) return false;
@@ -412,9 +399,9 @@ namespace JryVideo.Controls.EditVideo
                 return;
             }
 
-            if (await IsInvalid<VideoYearValidationRule>(window, this.Year, "year") ||
-                await IsInvalid<VideoIndexValidationRule>(window, this.Index, "index") ||
-                await IsInvalid<VideoEpisodesCountValidationRule>(window, this.EpisodesCount, "episodes count"))
+            if (await IsInvalid<VideoYearValidationRule>(window, this.Year.Value, "year") ||
+                await IsInvalid<VideoIndexValidationRule>(window, this.Index.Value, "index") ||
+                await IsInvalid<VideoEpisodesCountValidationRule>(window, this.EpisodesCount.Value, "episodes count"))
             {
                 return;
             }
