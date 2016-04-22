@@ -1,8 +1,8 @@
-﻿using Jasily.ComponentModel;
+﻿using System;
+using System.Linq;
+using Jasily.ComponentModel.Editable;
 using JryVideo.Common;
 using JryVideo.Model;
-using System;
-using System.Linq;
 
 namespace JryVideo.Editors.RoleEditor
 {

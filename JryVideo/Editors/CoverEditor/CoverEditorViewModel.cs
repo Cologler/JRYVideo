@@ -1,13 +1,13 @@
-﻿using Jasily.ComponentModel;
+﻿using System.Enums;
+using System.Net;
+using System.Threading.Tasks;
+using System.Windows;
+using Jasily.ComponentModel.Editable;
 using Jasily.Net;
 using JryVideo.Common;
 using JryVideo.Core.Douban;
 using JryVideo.Model;
 using JryVideo.Selectors.WebImageSelector;
-using System.Enums;
-using System.Net;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace JryVideo.Editors.CoverEditor
 {

@@ -1,12 +1,12 @@
-﻿using Jasily.ComponentModel;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Jasily.ComponentModel.Editable;
 using JryVideo.Common;
 using JryVideo.Controls.SelectFlag;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using static JryVideo.Common.Helper;
 
 namespace JryVideo.Controls.EditSeries

@@ -1,4 +1,12 @@
-﻿using Jasily.Desktop.Windows.Navigation;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Jasily.Desktop.Windows.Navigation;
 using JryVideo.Add;
 using JryVideo.Common;
 using JryVideo.Common.Dialogs;
@@ -9,14 +17,6 @@ using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Selectors.VideoSelector;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace JryVideo.Main
 {

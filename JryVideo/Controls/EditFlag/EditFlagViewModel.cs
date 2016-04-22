@@ -1,9 +1,8 @@
-﻿using Jasily.ComponentModel;
+﻿using System.Threading.Tasks;
+using Jasily.ComponentModel.Editable;
 using JryVideo.Common;
-using JryVideo.Core;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
-using System.Threading.Tasks;
 
 namespace JryVideo.Controls.EditFlag
 {

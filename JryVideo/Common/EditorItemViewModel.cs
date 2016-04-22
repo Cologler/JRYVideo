@@ -1,12 +1,13 @@
-﻿using Jasily.ComponentModel;
-using JryVideo.Core.Managers;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Enums;
 using System.Linq;
 using System.Threading.Tasks;
+using Jasily.ComponentModel.Editable;
+using Jasily.Diagnostics;
+using JryVideo.Core.Managers;
+using JryVideo.Model;
 
 namespace JryVideo.Common
 {
@@ -114,6 +115,24 @@ namespace JryVideo.Common
 
         }
 
+        #region Overrides of JasilyEditableViewModel<T>
+
+        public override void ReadFromObject(T obj)
+        {
+            JasilyDebug.Pointer();
+            base.ReadFromObject(obj);
+            JasilyDebug.Pointer();
+        }
+
+        public override void WriteToObject(T obj)
+        {
+            JasilyDebug.Pointer();
+            base.WriteToObject(obj);
+            JasilyDebug.Pointer();
+        }
+
+        #endregion
+
         public class NameEditableViewModel<TNameable> : JasilyEditableViewModel<TNameable>
             where TNameable : INameable
         {
@@ -126,39 +145,48 @@ namespace JryVideo.Common
                 this.nullIfEmpty = nullIfEmpty;
             }
 
+            [EditableField(Converter = typeof(MulitLineConverter))]
             public string Names
             {
                 get { return this.names; }
                 set { this.SetPropertyRef(ref this.names, value); }
             }
 
-            public override void ReadFromObject(TNameable obj)
-            {
-                base.ReadFromObject(obj);
-
-                this.Names = obj.Names == null ? string.Empty : obj.Names.AsLines();
-            }
-
             public override void WriteToObject(TNameable obj)
             {
                 base.WriteToObject(obj);
-
-                if (!string.IsNullOrWhiteSpace(this.Names))
-                {
-                    obj.Names = this.Names.AsLines()
-                        .Where(z => !string.IsNullOrWhiteSpace(z))
-                        .Select(z => z.Trim())
-                        .Distinct()
-                        .ToList();
-                }
-                else
-                {
-                    obj.Names = this.nullIfEmpty ? null : new List<string>();
-                }
+                if (obj.Names == null && !this.nullIfEmpty) obj.Names = new List<string>();
             }
 
             public void AddRange(IEnumerable<string> items)
                 => this.Names = this.Names.AsLines(StringSplitOptions.RemoveEmptyEntries).Concat(items).AsLines();
         }
+    }
+
+    public class MulitLineConverter : Jasily.Converter<List<string>, string>
+    {
+        #region Overrides of Converter<List<string>,string>
+
+        public override bool CanConvert(List<string> value) => true;
+
+        public override string Convert(List<string> value)
+        {
+            return value == null ? string.Empty : value.AsLines();
+        }
+
+        public override bool CanConvertBack(string value) => true;
+
+        public override List<string> ConvertBack(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return null;
+
+            return value.AsLines()
+                .Where(z => !string.IsNullOrWhiteSpace(z))
+                .Select(z => z.Trim())
+                .Distinct()
+                .ToList();
+        }
+
+        #endregion
     }
 }

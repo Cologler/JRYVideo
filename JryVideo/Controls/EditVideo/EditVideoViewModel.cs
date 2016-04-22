@@ -1,13 +1,4 @@
-﻿using Jasily.ComponentModel;
-using JryVideo.Common;
-using JryVideo.Common.ValidationRules;
-using JryVideo.Controls.SelectFlag;
-using JryVideo.Core.Douban;
-using JryVideo.Editors.CoverEditor;
-using JryVideo.Model;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Enums;
@@ -16,6 +7,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Jasily.ComponentModel.Editable;
+using JryVideo.Common;
+using JryVideo.Common.ValidationRules;
+using JryVideo.Controls.SelectFlag;
+using JryVideo.Core.Douban;
+using JryVideo.Editors.CoverEditor;
+using JryVideo.Model;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using static JryVideo.Common.Helper;
 
 namespace JryVideo.Controls.EditVideo

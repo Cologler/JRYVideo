@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using Jasily.ComponentModel;
+using Jasily.ComponentModel.Editable;
 using JryVideo.Common;
 using JryVideo.Configs;
 using JryVideo.Controls.SelectFlag;

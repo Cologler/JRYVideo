@@ -1,9 +1,9 @@
-using Jasily.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Jasily.ComponentModel.Editable;
 using JryVideo.Common;
 using JryVideo.Core.Douban;
 using JryVideo.Model;
-using System.Linq;
-using System.Threading.Tasks;
 using static JryVideo.Common.Helper;
 
 namespace JryVideo.Editors.ArtistEditor
