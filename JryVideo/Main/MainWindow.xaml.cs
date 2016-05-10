@@ -89,11 +89,11 @@ namespace JryVideo.Main
                 {
                     using (var p = Process.GetCurrentProcess())
                     {
-                        var bs = p.WorkingSet64.GetByteSize();
+                        var bs = (ByteSize)p.WorkingSet64;
                         if (bs.OriginValue > 1024 * 1024 * 500)
                         {
                             GC.Collect();
-                            bs = p.WorkingSet64.GetByteSize();
+                            bs = p.WorkingSet64;
                         }
                         await this.Dispatcher.BeginInvoke(() => this.MemoryTextBlock.Text = bs.ToString());
                     }
