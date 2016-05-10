@@ -1,7 +1,6 @@
-﻿using JryVideo.Common;
-using JryVideo.Controls.SelectVideo;
+﻿using System.Windows;
+using JryVideo.Common;
 using JryVideo.Model;
-using System.Windows;
 
 namespace JryVideo.Selectors.VideoSelector
 {
@@ -15,19 +14,20 @@ namespace JryVideo.Selectors.VideoSelector
             this.InitializeComponent();
         }
 
-        public SelectVideoViewModel SelectVideoViewModel => this.SelectVideoControl.ViewModel;
+        public void Initialize(SeriesViewModel series, string defaultId = null)
+            => this.SelectVideoControl.Initialize(series, defaultId);
 
         public static SelectResult<JryVideoInfo> Select(Window parent, SeriesViewModel source, JryVideoInfo without = null, string defaultId = null)
         {
             var dialog = new VideoSelectorWindow() { Owner = parent };
             if (without != null)
             {
-                dialog.SelectVideoViewModel.Withouts.Add(without.Id);
+                dialog.SelectVideoControl.ViewModel.Withouts.Add(without.Id);
             }
-            dialog.SelectVideoViewModel.Initialize(source, defaultId);
+            dialog.SelectVideoControl.Initialize(source, defaultId);
 
             return dialog.ShowDialog() == true
-                ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoViewModel.Items.Selected?.Source)
+                ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoControl.ViewModel.Items.Selected?.Source)
                 : SelectResult<JryVideoInfo>.NonAccept;
         }
 
@@ -35,6 +35,6 @@ namespace JryVideo.Selectors.VideoSelector
             => this.DialogResult = true;
 
         private void RemoveSelectButton_OnClick(object sender, RoutedEventArgs e)
-            => this.SelectVideoViewModel.Items.Selected = null;
+            => this.SelectVideoControl.ViewModel.Items.Selected = null;
     }
 }

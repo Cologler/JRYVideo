@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using Jasily.Diagnostics;
 using JryVideo.Add.VideoCreator;
@@ -76,13 +77,14 @@ namespace JryVideo.Add
 
         private void NavigateToSeriesItemViewerPage(SeriesViewModel series)
         {
+            Debug.Assert(series != null);
             this.TitleTextBlock.Text = "sure video was not exists";
             this.LastButton.Visibility = this.NextButton.Visibility = Visibility.Visible;
 
-            if (this.seriesItemViewerPage == null || this.seriesItemViewerPage.ViewModel.Series != series)
+            if (this.seriesItemViewerPage?.GetCurrentSeriesViewModel() != series)
             {
                 var page = new SeriesItemViewerPage();
-                page.ViewModel.Initialize(series);
+                page.Initialize(series);
                 this.seriesItemViewerPage = page;
             }
 

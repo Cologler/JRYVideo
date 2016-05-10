@@ -14,7 +14,7 @@
                   ItemsSource="{Binding Items.View}"
                   SelectedItem="{Binding Items.Selected, Mode=TwoWay}"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>

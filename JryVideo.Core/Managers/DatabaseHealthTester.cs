@@ -101,13 +101,13 @@ namespace JryVideo.Core.Managers
                     string id = null;
                     foreach (var error in this.Errors)
                     {
+                        Debug.Assert(error.Id != null);
                         if (error.Id != id)
                         {
                             Debug.WriteLine("");
                             id = error.Id;
                             Debug.WriteLine($"---id [{id}]");
                         }
-                        Debug.Assert(id != null);
                         Debug.WriteLine(error.ToString());
                     }
                 }
@@ -443,7 +443,7 @@ namespace JryVideo.Core.Managers
                 }
             }
 
-            public int GetOrderCode() => this.Id.GetHashCode();
+            public int GetOrderCode() => this.Id?.GetHashCode() ?? 0;
         }
 
         private class MissingCoverError : Error
@@ -539,6 +539,8 @@ namespace JryVideo.Core.Managers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                if (this.Id == null && Debugger.IsAttached) Debugger.Break();
             }
 
             public override async Task FixAsync(DataCenter dataCenter)
