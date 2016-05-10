@@ -9,8 +9,30 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:SelectVideoViewModel}">
+    <UserControl.Resources>
+        <GroupStyle x:Key="GroupIndexGroupStyle">
+            <GroupStyle.HeaderTemplate>
+                <DataTemplate>
+                    <Grid HorizontalAlignment="Left"
+                          MinWidth="110"
+                          Height="36"
+                          Margin="0,4,0,0">
+                        <TextBlock FontSize="18"
+                                   Margin="4"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">
+                            <Run Text="group " />
+                            <Run Text="{Binding Name, Mode=OneWay}" />
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </GroupStyle.HeaderTemplate>
+        </GroupStyle>
+    </UserControl.Resources>
+    
     <Grid>
         <ListView BorderThickness="0"
+                  x:Name="VideosListView"
                   ItemsSource="{Binding Items.View}"
                   SelectedItem="{Binding Items.Selected, Mode=TwoWay}"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -26,12 +48,24 @@
                 <DataTemplate>
                     <Grid d:DataContext="{d:DesignInstance common:VideoInfoViewModel}"
                           Margin="3"
-                          Width="150">
+                          Width="150"
+                          Background="Transparent"
+                          AllowDrop="True">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="200" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem ItemsSource="{Binding Source={x:Reference VideosListView}, Path=DataContext.(local:SelectVideoViewModel.TargetGroups)}"
+                                          DisplayMemberPath="DisplayMoveHeader"
+                                          Header="group"
+                                          Click="MoveToGroupMenuItem_OnClick">
+                                    
+                                </MenuItem>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
 
                         <Grid>
                             <Grid>

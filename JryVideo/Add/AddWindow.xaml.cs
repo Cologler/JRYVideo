@@ -84,12 +84,15 @@ namespace JryVideo.Add
             if (this.seriesItemViewerPage?.GetCurrentSeriesViewModel() != series)
             {
                 var page = new SeriesItemViewerPage();
+                page.SelectVideoControl.OnCommited += this.SelectVideoControl_OnCommited;
                 page.Initialize(series);
                 this.seriesItemViewerPage = page;
             }
 
             this.ContentFrame.Navigate(this.seriesItemViewerPage);
         }
+
+        private void SelectVideoControl_OnCommited(object sender, EventArgs e) => this.IsCommited = true;
 
         private void NavigateToCreateVideoPage(SeriesViewModel series)
         {

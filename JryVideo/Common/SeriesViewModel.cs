@@ -21,7 +21,10 @@ namespace JryVideo.Common
             this.PropertiesMapper = Mapper;
             this.NameViewModel = new NameableViewModel<JrySeries>(source);
 
-            this.videoViewModels.AddRange(source.Videos.Select(z => new VideoInfoViewModel(this, z)));
+            this.videoViewModels.AddRange(source.Videos
+                .OrderBy(z => z.GroupIndex)
+                .ThenBy(z => z.Index)
+                .Select(z => new VideoInfoViewModel(this, z)));
         }
 
         public NameableViewModel<JrySeries> NameViewModel { get; }
@@ -61,6 +64,8 @@ namespace JryVideo.Common
             }
             return false;
         }
+
+        public async Task SaveAsync() => await this.GetManagers().SeriesManager.UpdateAsync(this.Source);
 
         public async Task AutoCompleteAsync()
         {
