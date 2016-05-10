@@ -1,8 +1,8 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Controls.EditSeries
 {
@@ -11,13 +11,12 @@ namespace JryVideo.Controls.EditSeries
     /// </summary>
     public partial class EditSeriesUserControl : UserControl
     {
-        public EditSeriesViewModel ViewModel { get; private set; }
+        public EditSeriesViewModel ViewModel { get; } = new EditSeriesViewModel();
 
         public EditSeriesUserControl()
         {
             this.InitializeComponent();
-
-            this.DataContext = this.ViewModel = new EditSeriesViewModel();
+            this.DataContext = this.ViewModel;
         }
 
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)

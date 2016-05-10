@@ -24,7 +24,7 @@ namespace JryVideo.Selectors.VideoSelector
             {
                 dialog.SelectVideoViewModel.Withouts.Add(without.Id);
             }
-            dialog.SelectVideoViewModel.SetSeries(source, defaultId);
+            dialog.SelectVideoViewModel.Initialize(source, defaultId);
 
             return dialog.ShowDialog() == true
                 ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoViewModel.Items.Selected?.Source)

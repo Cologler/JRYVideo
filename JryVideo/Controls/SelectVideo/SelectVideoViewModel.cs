@@ -1,9 +1,9 @@
-using JryVideo.Common;
-using JryVideo.Model;
-using JryVideo.Selectors.Common;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using JryVideo.Common;
+using JryVideo.Model;
+using JryVideo.Selectors.Common;
 
 namespace JryVideo.Controls.SelectVideo
 {
@@ -11,7 +11,7 @@ namespace JryVideo.Controls.SelectVideo
     {
         public SeriesViewModel Series { get; private set; }
 
-        public void SetSeries(SeriesViewModel series, string defaultId = null)
+        public void Initialize(SeriesViewModel series, string defaultId = null)
         {
             Debug.Assert(series != null);
             this.Series = series;

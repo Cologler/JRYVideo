@@ -1,4 +1,6 @@
-﻿using Jasily.Diagnostics;
+﻿using System;
+using System.Windows;
+using Jasily.Diagnostics;
 using JryVideo.Add.VideoCreator;
 using JryVideo.Common;
 using JryVideo.Model;
@@ -6,8 +8,6 @@ using JryVideo.Selectors.SeriesSelector;
 using JryVideo.Viewer.SeriesItemViewer;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using System;
-using System.Windows;
 
 namespace JryVideo.Add
 {
@@ -21,6 +21,8 @@ namespace JryVideo.Add
         private VideoCreatorPage videoCreatorPage;
 
         public JryVideoInfo DialogResultObject { get; set; }
+
+        public bool IsCommited { get; set; }
 
         public AddWindow()
         {
@@ -80,7 +82,7 @@ namespace JryVideo.Add
             if (this.seriesItemViewerPage == null || this.seriesItemViewerPage.ViewModel.Series != series)
             {
                 var page = new SeriesItemViewerPage();
-                page.ViewModel.SetSeries(series);
+                page.ViewModel.Initialize(series);
                 this.seriesItemViewerPage = page;
             }
 

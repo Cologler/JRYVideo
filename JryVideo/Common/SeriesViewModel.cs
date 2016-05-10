@@ -1,12 +1,12 @@
-﻿using Jasily.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using Jasily.ComponentModel;
 using JryVideo.AutoComplete;
 using JryVideo.Common.Dialogs;
 using JryVideo.Editors.SeriesEditor;
 using JryVideo.Model;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace JryVideo.Common
 {
@@ -50,10 +50,10 @@ namespace JryVideo.Common
                 return false;
             }
 
-            var dlg = new SeriesEditorWindow(this)
+            var dlg = new SeriesEditorWindow()
             {
                 Owner = parent
-            };
+            }.Initialize(this);
             if (dlg.ShowDialog() == true)
             {
                 this.RefreshProperties();

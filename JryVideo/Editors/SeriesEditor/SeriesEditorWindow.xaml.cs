@@ -1,8 +1,8 @@
-﻿using JryVideo.Common;
+﻿using System.Windows;
+using Jasily.Diagnostics;
+using JryVideo.Common;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
-using System.Windows;
-using Jasily.Diagnostics;
 
 namespace JryVideo.Editors.SeriesEditor
 {
@@ -16,14 +16,14 @@ namespace JryVideo.Editors.SeriesEditor
             this.InitializeComponent();
         }
 
-        public SeriesEditorWindow(SeriesViewModel series)
-            : this()
+        public SeriesEditorWindow Initialize(SeriesViewModel series)
         {
             JasilyDebug.Pointer();
             this.EditSeriesUserControl.ViewModel.Updated += this.ViewModel_Updated;
             JasilyDebug.Pointer();
             this.EditSeriesUserControl.ViewModel.ModifyMode(series);
             JasilyDebug.Pointer();
+            return this;
         }
 
         void ViewModel_Updated(object sender, JrySeries e)

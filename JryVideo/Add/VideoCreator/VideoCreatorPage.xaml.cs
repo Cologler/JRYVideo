@@ -1,8 +1,8 @@
-﻿using JryVideo.Common;
+﻿using System.Windows;
+using System.Windows.Controls;
+using JryVideo.Common;
 using JryVideo.Model;
 using MahApps.Metro.Controls;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace JryVideo.Add.VideoCreator
 {
@@ -31,6 +31,7 @@ namespace JryVideo.Add.VideoCreator
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.ViewModel_Created, sender, e))
             {
                 var win = this.TryFindParent<AddWindow>();
+                win.IsCommited = true;
                 win.DialogResultObject = e;
                 win.DialogResult = true;
             }

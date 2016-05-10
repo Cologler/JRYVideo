@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -13,6 +13,9 @@ namespace JryVideo.Model
         {
             this.Names = new List<string>();
         }
+
+        [BsonIgnoreIfDefault]
+        public int GroupIndex { get; set; }
 
         public string Type { get; set; }
 

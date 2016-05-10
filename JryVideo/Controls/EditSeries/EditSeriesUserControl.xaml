@@ -21,97 +21,103 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition />
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="name (each line one name)"
-                       Style="{StaticResource TitleStyle}" />
-
-            <TextBox x:Name="NameTextBox"
-                     Text="{Binding NamesViewModel.Names}"
-                     Grid.Row="1"
-                     AcceptsReturn="True"
-                     VerticalScrollBarVisibility="Auto"
-                     HorizontalScrollBarVisibility="Auto" />
-            
-            <Grid Grid.Row="2"
-                  Margin="0,4,0,0">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
 
-                <TextBlock Text="imdb id"
+                <TextBlock Text="name (each line one name)"
                            Style="{StaticResource TitleStyle}" />
 
-                <TextBox Grid.Column="1"
-                         VerticalAlignment="Center"
-                         Height="28"
-                         Text="{Binding ImdbId.Value}"
-                         Margin="6,2"/>
-
-                <TextBlock Grid.Row="1"
-                           Text="tvdb id"
-                           Style="{StaticResource TitleStyle}" />
-
-                <TextBox Grid.Column="1"
+                <TextBox x:Name="NameTextBox"
+                         Text="{Binding NamesViewModel.Names}"
                          Grid.Row="1"
-                         VerticalAlignment="Center"
-                         Height="28"
-                         Text="{Binding TheTVDBId.Value}"
-                         Margin="6,2" />
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Auto" />
 
-                <TextBlock Text="douban id"
-                           Grid.Row="2"
-                           Style="{StaticResource TitleStyle}" />
+                <Grid Grid.Row="2"
+                      Margin="0,4,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="DoubanIdTextBox"
-                         Grid.Column="1"
-                         Grid.Row="2"
-                         Text="{Binding DoubanId.Value, Mode=TwoWay}"
-                         Margin="6,2" />
+                    <TextBlock Text="imdb id"
+                               Style="{StaticResource TitleStyle}" />
 
-                <Button x:Name="LoadFromDoubanButton"
-                        Grid.Column="2"
-                        Grid.Row="2"
-                        Height="28"
-                        Content="{x:Static properties:Resources.Button_Load_Text}"
-                        Click="LoadFromDoubanButton_OnClick" />
+                    <TextBox Grid.Column="1"
+                             VerticalAlignment="Center"
+                             Height="28"
+                             Text="{Binding ImdbId.Value}"
+                             Margin="6,2" />
 
-                <TextBlock Text="tags"
-                           Grid.Row="4"
-                           Style="{StaticResource TitleStyle}" />
+                    <TextBlock Grid.Row="1"
+                               Text="tvdb id"
+                               Style="{StaticResource TitleStyle}" />
 
-                <SelectFlag:SelectFlagControl Grid.Row="4"
-                                              Grid.Column="1"
-                                              Grid.ColumnSpan="2"
-                                              Margin="6,2,0,0"
-                                              Height="50"
-                                              DataContext="{Binding TagsViewModel}"/>
-                
+                    <TextBox Grid.Column="1"
+                             Grid.Row="1"
+                             VerticalAlignment="Center"
+                             Height="28"
+                             Text="{Binding TheTVDBId.Value}"
+                             Margin="6,2" />
+
+                    <TextBlock Text="douban id"
+                               Grid.Row="2"
+                               Style="{StaticResource TitleStyle}" />
+
+                    <TextBox x:Name="DoubanIdTextBox"
+                             Grid.Column="1"
+                             Grid.Row="2"
+                             Text="{Binding DoubanId.Value, Mode=TwoWay}"
+                             Margin="6,2" />
+
+                    <Button x:Name="LoadFromDoubanButton"
+                            Grid.Column="2"
+                            Grid.Row="2"
+                            Height="28"
+                            Content="{x:Static properties:Resources.Button_Load_Text}"
+                            Click="LoadFromDoubanButton_OnClick" />
+
+                    <TextBlock Text="tags"
+                               Grid.Row="4"
+                               Style="{StaticResource TitleStyle}" />
+
+                    <SelectFlag:SelectFlagControl Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="6,2,0,0"
+                                                  Height="50"
+                                                  DataContext="{Binding TagsViewModel}" />
+
+                </Grid>
+
             </Grid>
 
             <Button x:Name="CommitButton"
                     Content="{x:Static properties:Resources.Button_Commit_Text}"
                     HorizontalAlignment="Right"
-                    Grid.Row="5"
+                    Grid.Row="1"
                     Margin="0,8,0,0"
                     Style="{StaticResource CommintButtonStyle}"
-                    Click="CommitButton_OnClick"/>
-
+                    Click="CommitButton_OnClick" />
         </Grid>
 
     </Grid>

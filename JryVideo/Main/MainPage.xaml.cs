@@ -84,7 +84,8 @@ namespace JryVideo.Main
             {
                 Owner = this.TryFindParent<Window>()
             };
-            if (adder.ShowDialog() == true)
+            adder.ShowDialog();
+            if (adder.IsCommited)
             {
                 await this.ViewModel.ReloadIfInitializedAsync();
             }
