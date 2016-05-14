@@ -37,7 +37,6 @@ namespace JryVideo.Controls.SelectVideo
                 .OrderBy(z => z.Key)
                 .ToArray();
             var groupsViewModels = groups.Select(z => new Group(z.Key) { Count = z.Count() }).ToArray();
-            Debug.Assert(groups.Length > 0);
             this.TargetGroups.AddRange(groupsViewModels);
             this.TargetGroups.Add(new Group(this.TargetGroups.Count));
 
