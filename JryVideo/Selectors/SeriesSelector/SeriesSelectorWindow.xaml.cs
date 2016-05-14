@@ -1,6 +1,6 @@
-﻿using JryVideo.Model;
-using System;
+﻿using System;
 using System.Windows;
+using JryVideo.Model;
 
 namespace JryVideo.Selectors.SeriesSelector
 {
@@ -27,17 +27,18 @@ namespace JryVideo.Selectors.SeriesSelector
             this.ContentFrame.Navigate(this.seriesSelectorPage);
         }
 
-        private void AcceptButton_OnClick(object sender, System.Windows.RoutedEventArgs e)
+        private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
             => this.DialogResult = true;
 
         public static JrySeries Select(Window parent, JrySeries without = null)
         {
-            var window = new SeriesSelectorWindow() { Owner = parent };
+            var window = new SeriesSelectorWindow { Owner = parent };
             if (without != null)
             {
                 window.seriesSelectorPage.SelectorViewModel.Withouts.Add(without.Id);
             }
-            return window.ShowDialog() == true ? window.seriesSelectorPage.SelectorViewModel.Items.Selected : null;
+            if (window.ShowDialog() == true) return window.seriesSelectorPage.SelectorViewModel.Items.Selected;
+            return null;
         }
     }
 }
