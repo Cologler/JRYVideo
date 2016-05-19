@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Jasily.Desktop.Windows;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Common.Dialogs
@@ -12,6 +13,7 @@ namespace JryVideo.Common.Dialogs
 
         public static void ShowJryVideoMessage(this Window self, string caption, string message)
         {
+            if (new WindowStatusCached(self).IsClosed) self = null;
             var dlg = new MessageWindow()
             {
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
