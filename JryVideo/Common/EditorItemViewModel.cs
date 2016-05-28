@@ -19,10 +19,7 @@ namespace JryVideo.Common
         public event EventHandler<T> Created;
         public event EventHandler<T> Updated;
 
-        public EditorItemViewModel()
-            : base(null)
-        {
-        }
+        public T Source { get; private set; }
 
         public virtual void CreateMode()
         {
@@ -140,7 +137,6 @@ namespace JryVideo.Common
             private string names = string.Empty;
 
             public NameEditableViewModel(bool nullIfEmpty)
-                : base(default(TNameable))
             {
                 this.nullIfEmpty = nullIfEmpty;
             }
