@@ -1,10 +1,10 @@
-﻿using Jasily;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Jasily;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -18,6 +18,7 @@ namespace JryVideo.Core.Managers
         private readonly Dictionary<int, Dictionary<string, int>> flagRefs = new Dictionary<int, Dictionary<string, int>>();
         private readonly Dictionary<int, Dictionary<string, int>> originFlagRefs = new Dictionary<int, Dictionary<string, int>>();
         private readonly List<Error> Errors = new List<Error>();
+        private readonly Dictionary<string, string> videoIdFromSeries = new Dictionary<string, string>();
 
         public DatabaseHealthTester(DataCenter dataCenter)
         {
@@ -191,6 +192,7 @@ namespace JryVideo.Core.Managers
                 }
                 foreach (var jryVideoInfo in z.Videos)
                 {
+                    this.videoIdFromSeries.Add(jryVideoInfo.Id, z.Id);
                     List<VideoInfoRef> videoInfoRefs;
                     if (!this.videoInfoRefs.TryGetValue(jryVideoInfo.Id, out videoInfoRefs))
                     {
@@ -217,15 +219,22 @@ namespace JryVideo.Core.Managers
         {
             await this.dataCenter.VideoManager.Source.CursorAsync(z =>
             {
-                foreach (var entity in z.Entities)
+                if (!this.videoIdFromSeries.ContainsKey(z.Id))
                 {
-                    this.ConnectToFlag(JryFlagType.EntityResolution, entity.Resolution);
-                    if (!string.IsNullOrEmpty(entity.Quality)) this.ConnectToFlag(JryFlagType.EntityQuality, entity.Quality);
-                    if (!string.IsNullOrEmpty(entity.AudioSource)) this.ConnectToFlag(JryFlagType.EntityAudioSource, entity.AudioSource);
-                    this.ConnectToFlag(JryFlagType.EntityExtension, entity.Extension);
-                    this.ConnectToFlag(JryFlagType.EntityFansub, entity.Fansubs);
-                    this.ConnectToFlag(JryFlagType.EntitySubTitleLanguage, entity.SubTitleLanguages);
-                    this.ConnectToFlag(JryFlagType.EntityTrackLanguage, entity.TrackLanguages);
+                    this.Errors.Add(new MissingVideoError(z.Id, z.GetType()));
+                }
+                else
+                {
+                    foreach (var entity in z.Entities)
+                    {
+                        this.ConnectToFlag(JryFlagType.EntityResolution, entity.Resolution);
+                        if (!string.IsNullOrEmpty(entity.Quality)) this.ConnectToFlag(JryFlagType.EntityQuality, entity.Quality);
+                        if (!string.IsNullOrEmpty(entity.AudioSource)) this.ConnectToFlag(JryFlagType.EntityAudioSource, entity.AudioSource);
+                        this.ConnectToFlag(JryFlagType.EntityExtension, entity.Extension);
+                        this.ConnectToFlag(JryFlagType.EntityFansub, entity.Fansubs);
+                        this.ConnectToFlag(JryFlagType.EntitySubTitleLanguage, entity.SubTitleLanguages);
+                        this.ConnectToFlag(JryFlagType.EntityTrackLanguage, entity.TrackLanguages);
+                    }
                 }
             });
         }
@@ -410,7 +419,7 @@ namespace JryVideo.Core.Managers
                 this.Type = errorType;
             }
 
-            public string Id { get; protected set; }
+            public string Id { get; protected set; } = string.Empty;
 
             public static Error RoleMissingSource(string roleCollectionId) => new Error(ErrorType.RoleMissingSource) { Id = roleCollectionId };
 
@@ -654,8 +663,51 @@ namespace JryVideo.Core.Managers
             }
         }
 
+        private sealed class MissingVideoError : Error
+        {
+            private readonly string id;
+            private readonly Type type;
+
+            public MissingVideoError(string id, Type type)
+                : base(ErrorType.Default)
+            {
+                this.id = id;
+                this.type = type;
+            }
+
+            #region Overrides of Error
+
+            public override async Task FixAsync(DataCenter dataCenter)
+            {
+                if (this.type == typeof(Model.JryVideo))
+                {
+                    await dataCenter.VideoManager.Source.RemoveAsync(this.id);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            #endregion
+
+            #region Overrides of Error
+
+            /// <summary>
+            /// Returns a string that represents the current object.
+            /// </summary>
+            /// <returns>
+            /// A string that represents the current object.
+            /// </returns>
+            public override string ToString() => $"{this.type.Name}[{this.id}] cannot map from series.";
+
+            #endregion
+        }
+
         private enum ErrorType
         {
+            Default,
+
             RoleMissingSource,
 
             CoverMissingRef,
