@@ -1,10 +1,10 @@
-﻿using Jasily.Data;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Attributes;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Jasily.Data;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -23,7 +23,7 @@ namespace JryVideo.Model
         {
             if (!isForce && this.Id != null) throw new Exception("can not rebuild meta data.");
 
-            this.Id = this.BuildId();
+            this.BuildId();
             this.Created = DateTime.UtcNow;
         }
 
@@ -32,13 +32,9 @@ namespace JryVideo.Model
             return !String.IsNullOrWhiteSpace(this.Id);
         }
 
-        /// <summary>
-        /// Guid.NewGuid().ToString().ToUpper()
-        /// </summary>
-        /// <returns></returns>
-        protected virtual string BuildId()
+        protected virtual void BuildId()
         {
-            return Guid.NewGuid().ToString().ToUpper();
+            this.Id = Guid.NewGuid().ToString().ToUpper();
         }
 
         public bool HasError()

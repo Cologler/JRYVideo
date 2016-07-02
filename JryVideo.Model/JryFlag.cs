@@ -11,7 +11,7 @@ namespace JryVideo.Model
 
         public int Count { get; set; }
 
-        protected override string BuildId() => BuildCounterId(this.Type, this.Value);
+        protected override void BuildId() => this.Id = BuildCounterId(this.Type, this.Value);
 
         public static string BuildCounterId(JryFlagType type, string value)
         {

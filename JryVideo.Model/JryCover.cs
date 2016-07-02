@@ -1,5 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
