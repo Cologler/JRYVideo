@@ -1,14 +1,14 @@
-﻿using Jasily.Net;
-using JryVideo.Core.Models;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
+using Jasily.Net;
+using JryVideo.Core.Models;
+using JryVideo.Data.DataSources;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -50,7 +50,7 @@ namespace JryVideo.Core.Managers
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-            using (var start = new DownloadProcess(builder.BuildDownloadId()))
+            using (var start = new DownloadProcess(builder.CustomId ?? builder.BuildDownloadId()))
             {
                 if (!start.IsOwner) return null;
 

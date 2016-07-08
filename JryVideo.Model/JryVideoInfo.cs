@@ -233,5 +233,9 @@ namespace JryVideo.Model
             this.DayOfWeek = this.DayOfWeek ?? other.DayOfWeek;
             this.StartDate = this.StartDate ?? other.StartDate;
         }
+
+        public string CreateBackgroundCoverId() => CreateBackgroundCoverId(this.Id);
+
+        public static string CreateBackgroundCoverId(string videoId) => videoId + ":Background";
     }
 }

@@ -34,7 +34,7 @@ namespace JryVideo.Core.Managers.Upgrades
                     var cover = await this.dataCenter.CoverManager.Source.FindAsync(video.BackgroundImageId);
                     if (cover != null)
                     {
-                        var newId = video.Id + ":Background";
+                        var newId = video.CreateBackgroundCoverId();
                         cover.Id = newId;
                         await this.dataCenter.CoverManager.Source.InsertOrUpdateAsync(cover);
                         video.BackgroundImageId = newId;
@@ -60,10 +60,10 @@ namespace JryVideo.Core.Managers.Upgrades
 
             if (cover.CoverType == JryCoverType.Background)
             {
-                if (cover.VideoId != null && cover.Id != cover.VideoId + ":Background")
+                if (cover.VideoId != null && cover.Id != JryVideoInfo.CreateBackgroundCoverId(cover.VideoId))
                 {
                     var oldCoverId = cover.Id;
-                    cover.Id = cover.VideoId + ":Background";
+                    cover.Id = JryVideoInfo.CreateBackgroundCoverId(cover.VideoId);
                     await this.dataCenter.CoverManager.Source.InsertOrUpdateAsync(cover);
                     await this.dataCenter.CoverManager.Source.RemoveAsync(oldCoverId);
                 }

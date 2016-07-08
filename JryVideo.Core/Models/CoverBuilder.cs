@@ -1,5 +1,5 @@
-﻿using JryVideo.Model;
-using System;
+﻿using System;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Models
 {
@@ -21,9 +21,14 @@ namespace JryVideo.Core.Models
 
         public string ActorId { get; set; }
 
+        /// <summary>
+        /// 自定义的 Cover Id
+        /// </summary>
+        public string CustomId { get; set; }
+
         public string BuildDownloadId()
         {
-            var key = ((int)this.CoverType) + "_";
+            var key = (int)this.CoverType + "_";
 
             switch (this.CoverType)
             {
@@ -61,6 +66,7 @@ namespace JryVideo.Core.Models
                 BinaryData = binaryData
             };
             cover.BuildMetaData();
+            cover.Id = this.CustomId ?? cover.Id;
             return cover;
         }
 
@@ -85,7 +91,8 @@ namespace JryVideo.Core.Models
                 CoverType = JryCoverType.Video,
                 DoubanId = video.DoubanId,
                 ImdbId = video.ImdbId,
-                VideoId = video.Id
+                VideoId = video.Id,
+                CustomId = video.Id
             };
         }
 
@@ -98,7 +105,8 @@ namespace JryVideo.Core.Models
                 DoubanId = video.DoubanId,
                 Uri = url,
                 ImdbId = video.ImdbId,
-                VideoId = video.Id
+                VideoId = video.Id,
+                CustomId = video.CreateBackgroundCoverId()
             };
         }
 
