@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
+using JryVideo.Model.Interfaces;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideoInfo : JryObject, IJryCoverParent, INameable, IImdbItem, ITagable
+    public sealed class JryVideoInfo : JryObject, IJryCoverParent, INameable, IImdbItem, ITagable, ICoverParent
     {
         public JryVideoInfo()
         {
@@ -68,6 +69,7 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public int? EpisodeOffset { get; set; }
 
+        [Obsolete]
         [CanBeNull]
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }

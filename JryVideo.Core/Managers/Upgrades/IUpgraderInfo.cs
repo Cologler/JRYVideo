@@ -5,10 +5,8 @@ namespace JryVideo.Core.Managers.Upgrades
 {
     public interface IUpgraderInfo
     {
-        int Version { get; }
+        Task<bool> UpgradeAsync(JrySeries series);
 
-        Task UpgradeAsync(JrySeries series);
-
-        Task UpgradeAsync(JryCover cover);
+        Task<bool> UpgradeAsync(JryCover cover);
     }
 }

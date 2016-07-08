@@ -1,10 +1,11 @@
-using Jasily.Data;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Jasily.Data;
+using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
@@ -23,8 +24,26 @@ namespace JryVideo.Data.MongoDb
 
         public async Task CursorAsync(Action<TEntity> callback)
         {
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
             this.Engine.TestPass();
             using (var cur = await this.Collection.FindAsync(_ => true))
+            {
+                while (await cur.MoveNextAsync())
+                {
+                    foreach (var obj in cur.Current)
+                    {
+                        callback(obj);
+                    }
+                }
+            }
+        }
+
+        public async Task CursorAsync(Expression<Func<TEntity, bool>> filter, Action<TEntity> callback)
+        {
+            if (filter == null) throw new ArgumentNullException(nameof(filter));
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+            this.Engine.TestPass();
+            using (var cur = await this.Collection.FindAsync(filter))
             {
                 while (await cur.MoveNextAsync())
                 {

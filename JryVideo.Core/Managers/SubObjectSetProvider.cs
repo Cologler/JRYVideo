@@ -1,10 +1,11 @@
-using Jasily.Data;
-using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Jasily.Data;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -55,14 +56,23 @@ namespace JryVideo.Core.Managers
         public Task<IEnumerable<TSub>> ListAsync(int skip, int take)
             => Task.FromResult((IEnumerable<TSub>)this.ObjectSet.Skip(skip).Take(take).ToArray());
 
-#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
-        public async Task CursorAsync(Action<TSub> callback)
-#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+        public Task CursorAsync(Action<TSub> callback)
         {
             foreach (var sub in this.ObjectSet)
             {
                 callback(sub);
             }
+            return Task.FromResult(0);
+        }
+
+        public Task CursorAsync(Expression<Func<TSub, bool>> filter, Action<TSub> callback)
+        {
+            var con = filter.Compile();
+            foreach (var sub in this.ObjectSet.Where(con))
+            {
+                callback(sub);
+            }
+            return Task.FromResult(0);
         }
 
         public async Task<bool> RemoveAsync(string id)

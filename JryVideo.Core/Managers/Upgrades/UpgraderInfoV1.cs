@@ -12,13 +12,13 @@ namespace JryVideo.Core.Managers.Upgrades
             this.dataCenter = dataCenter;
         }
 
-        public int Version => 1;
+#pragma warning disable CS0612 // 类型或成员已过时
 
-        public async Task UpgradeAsync(JrySeries series)
+        public async Task<bool> UpgradeAsync(JrySeries series)
         {
             foreach (var video in series.Videos)
             {
-                if (video.CoverId != null)
+                if (video.CoverId != null && video.CoverId != video.Id)
                 {
                     var cover = await this.dataCenter.CoverManager.Source.FindAsync(video.CoverId);
                     if (cover != null)
@@ -28,6 +28,7 @@ namespace JryVideo.Core.Managers.Upgrades
                         video.CoverId = video.Id;
                     }
                 }
+
                 if (video.BackgroundImageId != null)
                 {
                     var cover = await this.dataCenter.CoverManager.Source.FindAsync(video.BackgroundImageId);
@@ -40,9 +41,11 @@ namespace JryVideo.Core.Managers.Upgrades
                     }
                 }
             }
+
+            return true;
         }
 
-        public async Task UpgradeAsync(JryCover cover)
+        public async Task<bool> UpgradeAsync(JryCover cover)
         {
             if (cover.CoverType == JryCoverType.Video)
             {
@@ -65,6 +68,24 @@ namespace JryVideo.Core.Managers.Upgrades
                     await this.dataCenter.CoverManager.Source.RemoveAsync(oldCoverId);
                 }
             }
+
+            // return true to update old item, but we remove old item.
+            return false;
+        }
+
+#pragma warning restore CS0612 // 类型或成员已过时
+    }
+
+    public class UpgraderInfoV2 : IUpgraderInfo
+    {
+        public Task<bool> UpgradeAsync(JrySeries series)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> UpgradeAsync(JryCover cover)
+        {
+            return Task.FromResult(false);
         }
     }
 }
