@@ -46,7 +46,7 @@ namespace JryVideo.Common
             ? null
             : string.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);
 
-        private static string ListToLine(List<string> lines) => lines.Count > 0 ? lines.JoinWith(" / ") : "[EMPTY]";
+        private static string ListToLine(List<string> lines) => lines.Count > 0 ? lines.JoinAsString(" / ") : "[EMPTY]";
 
         public async Task<IEnumerable<string>> SearchByEveryThingAsync()
         {
