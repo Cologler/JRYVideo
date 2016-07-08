@@ -548,8 +548,8 @@ namespace JryVideo.Core.Managers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
-                if (this.Id == null && Debugger.IsAttached) Debugger.Break();
+                
+                this.Id = this.Id ?? cover.Id;
             }
 
             public override async Task FixAsync(DataCenter dataCenter)

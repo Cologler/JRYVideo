@@ -3,6 +3,7 @@ using JryVideo.Core.TheTVDB;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JryVideo.Core.Managers.Upgrades;
 
 namespace JryVideo.Core
 {
@@ -10,6 +11,11 @@ namespace JryVideo.Core
     {
         private int theTVDBClientInitializing;
         private TheTVDBClient theTVDBClient;
+#if DEBUG
+        private const bool DebugMode = true;
+#else
+        private const bool DebugMode = false;
+#endif
 
         public static JryVideoCore Current { get; private set; }
 
@@ -31,6 +37,13 @@ namespace JryVideo.Core
         public async Task InitializeAsync()
         {
             await this.DataAgent.InitializeAsync();
+
+            var args = this.RunArgs.Select(z => z.ToLower()).ToArray();
+            if (args.Contains("--upgrade") || DebugMode)
+            {
+                await new Upgrader(Current.DataAgent.CurrentDataCenter).RunAsync();
+            }
+
 
             this.BeginLazyInitialize();
         }
@@ -59,6 +72,11 @@ namespace JryVideo.Core
         {
             this.InitializeTheTVDBClient();
 
+            var debugMode = false;
+#if DEBUG
+            debugMode = true;
+#endif
+
             foreach (var dc in new[] { this.DataAgent.NormalDataCenter, /*this.SecureDataCenter*/ })
             {
                 new DatabaseHealthTester(dc).RunOnDebugAsync();
@@ -66,9 +84,11 @@ namespace JryVideo.Core
 
             if (this.RunArgs != null)
             {
-                if (this.RunArgs.Contains("--test"))
+                var args = this.RunArgs.Select(z => z.ToLower()).ToArray();
+
+                if (args.Contains("--test"))
                 {
-                    var fix = this.RunArgs.Contains("--fix");
+                    var fix = args.Contains("--fix");
                     foreach (var dc in new[] { this.DataAgent.NormalDataCenter, /*this.SecureDataCenter*/ })
                     {
                         var tester = new DatabaseHealthTester(dc);

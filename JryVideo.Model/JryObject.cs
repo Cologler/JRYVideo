@@ -3,13 +3,16 @@ using System.Attributes;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Jasily.Data;
+using JryVideo.Model.Interfaces;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public abstract class JryObject : IJasilyEntity<string>
+    public abstract class JryObject : IObject
     {
+        [BsonIgnoreIfDefault]
+        public int Version { get; set; }
+
         [Cloneable]
         public string Id { get; set; }
 

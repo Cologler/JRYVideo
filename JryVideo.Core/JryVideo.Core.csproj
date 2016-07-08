@@ -65,6 +65,10 @@
     <Compile Include="Managers\JryObjectManager.cs" />
     <Compile Include="Managers\SeriesManager.cs" />
     <Compile Include="Managers\SubObjectSetProvider.cs" />
+    <Compile Include="Managers\Upgrades\IUpgraderInfo.cs" />
+    <Compile Include="Managers\Upgrades\Upgrader.cs" />
+    <Compile Include="Managers\Upgrades\UpgraderInfoV0.cs" />
+    <Compile Include="Managers\Upgrades\UpgraderInfoV1.cs" />
     <Compile Include="Managers\VideoInfoManager.cs" />
     <Compile Include="Managers\VideoManager.cs" />
     <Compile Include="Managers\VideoRoleManager.cs" />

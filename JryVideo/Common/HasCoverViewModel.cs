@@ -60,7 +60,6 @@ namespace JryVideo.Common
             {
                 var errorMsg = $"{this.Source} missing cover [{this.Source.CoverId}].";
                 await Log.WriteAsync(errorMsg);
-                if (Debugger.IsAttached) Debugger.Break();
             }
         }
 

@@ -9,6 +9,7 @@ namespace JryVideo.Model
     {
         public JryCoverType CoverType { get; set; }
 
+        [BsonIgnoreIfDefault]
         public JryCoverSourceType CoverSourceType { get; set; }
 
         [BsonIgnoreIfDefault]
