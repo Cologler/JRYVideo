@@ -226,7 +226,6 @@ namespace JryVideo.Viewer.VideoViewer
 
             private async Task<bool> SetBackgroundIdAsync(string coverId)
             {
-                this.Source.CoverId = coverId;
                 var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.Series);
                 return await manager.UpdateAsync(this.VideoInfo);
             }

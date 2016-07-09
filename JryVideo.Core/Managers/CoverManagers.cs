@@ -51,7 +51,7 @@ namespace JryVideo.Core.Managers
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-            using (var start = new DownloadProcess(builder.CustomId ?? builder.BuildDownloadId()))
+            using (var start = new DownloadProcess(builder.Id))
             {
                 if (!start.IsOwner) return null;
 

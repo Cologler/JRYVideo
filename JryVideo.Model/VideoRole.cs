@@ -32,11 +32,7 @@ namespace JryVideo.Model
 
         CoverType ICoverParent.CoverType => CoverType.Role;
 
-        string ICoverParent.CoverId
-        {
-            get { return this.Id; }
-            set { throw new NotSupportedException(); }
-        }
+        string ICoverParent.CoverId => this.Id;
 
         public string GetMajorName() => this.RoleName?.FirstOrDefault();
 

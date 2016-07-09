@@ -61,11 +61,7 @@ namespace JryVideo.Model
 
         CoverType ICoverParent.CoverType => CoverType.Video;
 
-        string ICoverParent.CoverId
-        {
-            get { return this.Id; }
-            set { throw new NotSupportedException(); }
-        }
+        string ICoverParent.CoverId => this.Id;
 
         [CanBeNull]
         [ItemNotNull]
@@ -83,17 +79,11 @@ namespace JryVideo.Model
 
         private sealed class BackgroundCoverParent : ICoverParent
         {
-            private readonly JryVideoInfo jryVideoInfo;
+            private readonly JryVideoInfo parent;
 
-            public BackgroundCoverParent(JryVideoInfo jryVideoInfo)
+            internal BackgroundCoverParent(JryVideoInfo parent)
             {
-                this.jryVideoInfo = jryVideoInfo;
-            }
-
-            public string CoverId
-            {
-                get { return this.jryVideoInfo.BackgroundImageId; }
-                set { this.jryVideoInfo.BackgroundImageId = value; }
+                this.parent = parent;
             }
 
             /// <summary>
@@ -101,9 +91,11 @@ namespace JryVideo.Model
             /// </summary>
             public string Id
             {
-                get { return this.jryVideoInfo.Id; }
-                set { this.jryVideoInfo.Id = value; }
+                get { return this.parent.Id; }
+                set { this.parent.Id = value; }
             }
+
+            public string CoverId => this.parent.CreateBackgroundCoverId();
 
             CoverType ICoverParent.CoverType => CoverType.Background;
 

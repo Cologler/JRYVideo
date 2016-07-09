@@ -1,10 +1,17 @@
 ﻿using System;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Core.Models
 {
     public class CoverBuilder
     {
+        public CoverBuilder(ICoverParent coverParent)
+        {
+            this.Id = coverParent.Id;
+            if (this.Id == null) throw new ArgumentNullException();
+        }
+
         public CoverType CoverType { get; set; }
 
         public JryCoverSourceType CoverSourceType { get; set; }
@@ -24,26 +31,7 @@ namespace JryVideo.Core.Models
         /// <summary>
         /// 自定义的 Cover Id
         /// </summary>
-        public string CustomId { get; set; }
-
-        public string BuildDownloadId()
-        {
-            var key = (int)this.CoverType + "_";
-
-            switch (this.CoverType)
-            {
-                case CoverType.Role:
-                case CoverType.Background:
-                case CoverType.Video:
-                    return key + this.CustomId;
-
-                case CoverType.Artist:
-                    return key + this.ActorId;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        public string Id { get; }
 
         public JryCover Build(byte[] binaryData)
         {
@@ -64,7 +52,7 @@ namespace JryVideo.Core.Models
                 BinaryData = binaryData
             };
             cover.BuildMetaData();
-            cover.Id = this.CustomId ?? cover.Id;
+            cover.Id = this.Id;
             return cover;
         }
 
@@ -83,60 +71,56 @@ namespace JryVideo.Core.Models
 
         public static CoverBuilder CreateVideo(JryVideoInfo video)
         {
-            return new CoverBuilder
+            return new CoverBuilder(video)
             {
                 CoverSourceType = JryCoverSourceType.Douban,
                 CoverType = CoverType.Video,
                 DoubanId = video.DoubanId,
                 ImdbId = video.ImdbId,
-                VideoId = video.Id,
-                CustomId = video.Id
+                VideoId = video.Id
             };
         }
 
         public static CoverBuilder CreateBackground(JryVideoInfo video, string url)
         {
-            return new CoverBuilder
+            return new CoverBuilder(video.BackgroundImageAsCoverParent())
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = CoverType.Background,
                 DoubanId = video.DoubanId,
                 Uri = url,
                 ImdbId = video.ImdbId,
-                VideoId = video.Id,
-                CustomId = video.CreateBackgroundCoverId()
+                VideoId = video.Id
             };
         }
 
         public static CoverBuilder CreateRole(JrySeries series, string url, VideoRole role)
         {
-            return new CoverBuilder
+            return new CoverBuilder(role)
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = CoverType.Role,
                 Uri = url,
                 SeriesId = series.Id,
-                ActorId = role.ActorId,
-                CustomId = role.Id
+                ActorId = role.ActorId
             };
         }
 
         public static CoverBuilder CreateRole(JryVideoInfo video, string url, VideoRole role)
         {
-            return new CoverBuilder
+            return new CoverBuilder(role)
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = CoverType.Role,
                 Uri = url,
                 VideoId = video.Id,
-                ActorId = role.ActorId,
-                CustomId = role.Id
+                ActorId = role.ActorId
             };
         }
 
         public static CoverBuilder CreateArtist(string doubanId, string url, Artist artist)
         {
-            return new CoverBuilder
+            return new CoverBuilder(artist)
             {
                 CoverSourceType = JryCoverSourceType.Douban,
                 CoverType = CoverType.Artist,

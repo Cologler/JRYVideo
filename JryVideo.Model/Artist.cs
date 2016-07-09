@@ -27,11 +27,7 @@ namespace JryVideo.Model
 
         CoverType ICoverParent.CoverType => CoverType.Artist;
 
-        string ICoverParent.CoverId
-        {
-            get { return this.Id; }
-            set { throw new NotSupportedException(); }
-        }
+        string ICoverParent.CoverId => this.Id;
 
         #region remote id
 
