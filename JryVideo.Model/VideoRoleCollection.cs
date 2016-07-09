@@ -1,7 +1,7 @@
-using JetBrains.Annotations;
-using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -9,11 +9,11 @@ namespace JryVideo.Model
     {
         [CanBeNull]
         [BsonIgnoreIfDefault]
-        public List<JryVideoRole> MajorRoles { get; set; }
+        public List<VideoRole> MajorRoles { get; set; }
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
-        public List<JryVideoRole> MinorRoles { get; set; }
+        public List<VideoRole> MinorRoles { get; set; }
 
         public struct QueryParameter
         {
@@ -41,7 +41,7 @@ namespace JryVideo.Model
             }
         }
 
-        private static void Combine(ICollection<JryVideoRole> to, IEnumerable<JryVideoRole> from)
+        private static void Combine(ICollection<VideoRole> to, IEnumerable<VideoRole> from)
         {
             foreach (var role in from)
             {

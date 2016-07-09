@@ -10,7 +10,7 @@ namespace JryVideo.Model
         [Obsolete]
         [BsonIgnoreIfDefault]
         [BsonElement("ArtistIds")]
-        public List<JryVideoRole> Roles { get; set; }
+        public List<VideoRole> Roles { get; set; }
 
         [Obsolete]
         [CanBeNull]

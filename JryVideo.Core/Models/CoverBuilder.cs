@@ -110,7 +110,7 @@ namespace JryVideo.Core.Models
             };
         }
 
-        public static CoverBuilder CreateRole(JrySeries series, string url, JryVideoRole role)
+        public static CoverBuilder CreateRole(JrySeries series, string url, VideoRole role)
         {
             return new CoverBuilder
             {
@@ -122,7 +122,7 @@ namespace JryVideo.Core.Models
             };
         }
 
-        public static CoverBuilder CreateRole(JryVideoInfo video, string url, JryVideoRole role)
+        public static CoverBuilder CreateRole(JryVideoInfo video, string url, VideoRole role)
         {
             return new CoverBuilder
             {

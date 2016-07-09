@@ -1,11 +1,11 @@
 ﻿namespace JryVideo.Model
 {
-    public abstract class VideoInfoAttached : JryObject
+    /// <summary>
+    /// 附加到 VideoInfo 上的对象，其 Id 与 VideoInfo 一致
+    /// </summary>
+    public abstract class VideoInfoAttached : RootObject
     {
         protected override void BuildId() { }
-
-        public static T Build<T>(JryVideoInfo info) where T : VideoInfoAttached, new()
-            => Build<T>(info.Id);
 
         public static T Build<T>(string id) where T : VideoInfoAttached, new()
         {

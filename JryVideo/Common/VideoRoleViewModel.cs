@@ -1,12 +1,12 @@
-﻿using JryVideo.Core;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using JryVideo.Core;
 using JryVideo.Core.Models;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Editors.RoleEditor;
 using JryVideo.Model;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace JryVideo.Common
 {
@@ -14,7 +14,7 @@ namespace JryVideo.Common
     {
         private readonly VideoRoleCollectionViewModel parent;
 
-        public VideoRoleViewModel(JryVideoRole source, VideoRoleCollectionViewModel parent, IImdbItem imdbItem, bool isMajor)
+        public VideoRoleViewModel(VideoRole source, VideoRoleCollectionViewModel parent, IImdbItem imdbItem, bool isMajor)
             : base(source)
         {
             this.parent = parent;

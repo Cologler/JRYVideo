@@ -1,18 +1,16 @@
-﻿using Jasily.ComponentModel;
-using Jasily.Windows.Data;
-using JryVideo.AutoComplete;
-using JryVideo.Core;
-using JryVideo.Model;
-using JryVideo.Viewer.VideoViewer;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Markup;
+using Jasily.ComponentModel;
+using Jasily.Windows.Data;
+using JryVideo.AutoComplete;
 using JryVideo.Core.Managers;
+using JryVideo.Model;
+using JryVideo.Viewer.VideoViewer;
 
 namespace JryVideo.Common
 {
@@ -118,18 +116,18 @@ namespace JryVideo.Common
             return null;
         }
 
-        private static bool Exchange(VideoRoleCollection source, VideoRoleCollection dest, JryVideoRole role)
+        private static bool Exchange(VideoRoleCollection source, VideoRoleCollection dest, VideoRole role)
         {
             if (source.MajorRoles?.Contains(role) == true)
             {
                 source.MajorRoles.Remove(role);
-                (dest.MajorRoles ?? (dest.MajorRoles = new List<JryVideoRole>())).Add(role);
+                (dest.MajorRoles ?? (dest.MajorRoles = new List<VideoRole>())).Add(role);
                 return true;
             }
             if (source.MinorRoles?.Contains(role) == true)
             {
                 source.MinorRoles.Remove(role);
-                (dest.MinorRoles ?? (dest.MinorRoles = new List<JryVideoRole>())).Add(role);
+                (dest.MinorRoles ?? (dest.MinorRoles = new List<VideoRole>())).Add(role);
                 return true;
             }
             return false;
@@ -183,7 +181,7 @@ namespace JryVideo.Common
                 }
             }
 
-            private void CombineTo(List<JryVideoRole> source, List<JryVideoRole> dest)
+            private void CombineTo(List<VideoRole> source, List<VideoRole> dest)
             {
                 if (source == null || dest == null) return;
 
@@ -202,7 +200,7 @@ namespace JryVideo.Common
                 source.Clear();
             }
 
-            private void CombineTo(JryVideoRole source, JryVideoRole dest)
+            private void CombineTo(VideoRole source, VideoRole dest)
             {
                 Debug.Assert(source != null && dest != null);
 

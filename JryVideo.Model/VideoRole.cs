@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideoRole : JryInfo, IJasilyLoggerObject<JryVideoRole>, IEquatable<JryVideoRole>, ICoverParent, INameable
+    public sealed class VideoRole : JryInfo, IJasilyLoggerObject<VideoRole>, IEquatable<VideoRole>, ICoverParent, INameable
     {
         [BsonIgnore]
         public string ArtistId => this.Id;
@@ -26,7 +26,7 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public List<string> RoleName { get; set; }
 
-        public bool Equals(JryVideoRole other)
+        public bool Equals(VideoRole other)
         {
             if (other == null) return false;
             return this.ArtistId == other.ArtistId;
@@ -55,7 +55,7 @@ namespace JryVideo.Model
 #pragma warning restore 612
         }
 
-        public void CombineFrom(JryVideoRole other)
+        public void CombineFrom(VideoRole other)
         {
             if (this.RoleName == null)
             {

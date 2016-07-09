@@ -1,22 +1,22 @@
+using System.Linq;
+using System.Windows;
 using Jasily.ComponentModel;
 using JryVideo.Model;
 using JryVideo.Viewer.ArtistViewer;
-using System.Linq;
-using System.Windows;
 
 namespace JryVideo.Common
 {
-    public class VideoRoleReadonlyViewModel : HasCoverViewModel<JryVideoRole>
+    public class VideoRoleReadonlyViewModel : HasCoverViewModel<VideoRole>
     {
         private string actorName;
 
-        public VideoRoleReadonlyViewModel(JryVideoRole source)
+        public VideoRoleReadonlyViewModel(VideoRole source)
             : base(source)
         {
-            this.NameViewModel = new NameableViewModel<JryVideoRole>(source);
+            this.NameViewModel = new NameableViewModel<VideoRole>(source);
         }
 
-        public NameableViewModel<JryVideoRole> NameViewModel { get; }
+        public NameableViewModel<VideoRole> NameViewModel { get; }
 
         [NotifyPropertyChanged]
         public string ActorName

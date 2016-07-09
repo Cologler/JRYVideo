@@ -1,10 +1,10 @@
-﻿using JryVideo.Data.DataSources;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Data.DataSources;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -65,7 +65,7 @@ namespace JryVideo.Core.Managers
 
                 if (artist != null)
                 {
-                    var role = new JryVideoRole()
+                    var role = new VideoRole()
                     {
                         Id = artist.Id,
                     };
@@ -75,15 +75,15 @@ namespace JryVideo.Core.Managers
                     }
                     role.BuildMetaData(true);
                     (actor.SortOrder == major
-                        ? (collection.MajorRoles ?? (collection.MajorRoles = new List<JryVideoRole>()))
-                        : (collection.MinorRoles ?? (collection.MinorRoles = new List<JryVideoRole>()))).Add(role);
+                        ? (collection.MajorRoles ?? (collection.MajorRoles = new List<VideoRole>()))
+                        : (collection.MinorRoles ?? (collection.MinorRoles = new List<VideoRole>()))).Add(role);
                 }
             }
             await this.UpdateAsync(collection);
             return true;
         }
 
-        public async Task<IEnumerable<Tuple<VideoRoleCollection, JryVideoRole>>> QueryByActorIdAsync(string id)
+        public async Task<IEnumerable<Tuple<VideoRoleCollection, VideoRole>>> QueryByActorIdAsync(string id)
         {
             return (await this.Source.FindAsync(new VideoRoleCollection.QueryParameter()
             {
@@ -91,7 +91,7 @@ namespace JryVideo.Core.Managers
             })).SelectMany(z => MatchActorId(id, z)).ToArray();
         }
 
-        private static IEnumerable<Tuple<VideoRoleCollection, JryVideoRole>> MatchActorId(string id, VideoRoleCollection collection)
+        private static IEnumerable<Tuple<VideoRoleCollection, VideoRole>> MatchActorId(string id, VideoRoleCollection collection)
         {
             if (collection.MajorRoles != null)
             {

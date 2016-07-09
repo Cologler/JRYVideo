@@ -1,5 +1,5 @@
-﻿using JryVideo.Model;
-using System.Windows;
+﻿using System.Windows;
+using JryVideo.Model;
 
 namespace JryVideo.Editors.RoleEditor
 {
@@ -16,7 +16,7 @@ namespace JryVideo.Editors.RoleEditor
 
         public RoleEditorViewModel ViewModel { get; } = new RoleEditorViewModel();
 
-        public static bool Edit(Window parent, JryVideoRole role)
+        public static bool Edit(Window parent, VideoRole role)
         {
             var window = new RoleEditorWindow() { Owner = parent };
             window.ViewModel.ReadFromObject(role);

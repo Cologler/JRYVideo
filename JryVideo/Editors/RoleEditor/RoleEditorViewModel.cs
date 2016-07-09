@@ -6,7 +6,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Editors.RoleEditor
 {
-    public class RoleEditorViewModel : EditorItemViewModel<JryVideoRole>
+    public class RoleEditorViewModel : EditorItemViewModel<VideoRole>
     {
         private string roleName;
         private ImageViewModel imageViewModel;
@@ -31,7 +31,7 @@ namespace JryVideo.Editors.RoleEditor
             private set { this.SetPropertyRef(ref this.imageViewModel, value); }
         }
 
-        public override async void ReadFromObject(JryVideoRole obj)
+        public override async void ReadFromObject(VideoRole obj)
         {
             base.ReadFromObject(obj);
 
@@ -47,7 +47,7 @@ namespace JryVideo.Editors.RoleEditor
             }
         }
 
-        public override void WriteToObject(JryVideoRole obj)
+        public override void WriteToObject(VideoRole obj)
         {
             base.WriteToObject(obj);
 
