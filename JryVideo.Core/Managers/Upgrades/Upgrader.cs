@@ -20,6 +20,7 @@ namespace JryVideo.Core.Managers.Upgrades
             this.DataCenter = dataCenter;
             this.patchs.Add(new Patch0000());
             this.patchs.Add(new Patch0001(dataCenter));
+            this.patchs.Add(new Patch0002());
 
             this.seriesUpgrader = new Upgrader<JrySeries>(this.patchs);
             this.coverUpgrader = new Upgrader<JryCover>(this.patchs);

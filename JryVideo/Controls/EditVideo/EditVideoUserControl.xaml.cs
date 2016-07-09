@@ -1,14 +1,14 @@
-﻿using JryVideo.Common;
-using JryVideo.Common.Dialogs;
-using JryVideo.Editors.CoverEditor;
-using JryVideo.Managers.FlagManager;
-using JryVideo.Selectors.VideoSelector;
-using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Enums;
 using System.Windows;
 using System.Windows.Controls;
+using JryVideo.Common;
+using JryVideo.Editors.CoverEditor;
+using JryVideo.Managers.FlagManager;
+using JryVideo.Model.Interfaces;
+using JryVideo.Selectors.VideoSelector;
+using MahApps.Metro.Controls;
 
 namespace JryVideo.Controls.EditVideo
 {
@@ -49,18 +49,17 @@ namespace JryVideo.Controls.EditVideo
             else
             {
                 dlg = new CoverEditorWindow();
-                if (this.ViewModel.Action == ObjectChangedAction.Create /* create a video */ ||
-                    this.ViewModel.Source.CoverId == null /* video has not cover */)
+                var coverParent = this.ViewModel.Source as ICoverParent;
+                if (this.ViewModel.Action == ObjectChangedAction.Create)
                 {
                     dlg.ViewModel.CreateMode();
                 }
                 else
                 {
-                    var cover = await this.ViewModel.GetManagers().CoverManager.FindAsync(this.ViewModel.Source.CoverId);
-                    if (cover == null) // database error ?
+                    var cover = await this.ViewModel.GetManagers().CoverManager.FindAsync(coverParent.CoverId);
+                    if (cover == null)
                     {
-                        this.ShowJryVideoMessage("error", "get cover fail");
-                        return;
+                        dlg.ViewModel.CreateMode();
                     }
                     else
                     {

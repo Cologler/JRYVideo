@@ -17,6 +17,7 @@ using JryVideo.Controls.SelectFlag;
 using JryVideo.Core.Douban;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using static JryVideo.Common.Helper;
@@ -370,9 +371,10 @@ namespace JryVideo.Controls.EditVideo
                 this.Type = this.TypeCollection.FirstOrDefault();
 
             // initialize cover
-            if (this.Source?.CoverId != null)
+            var coverParent = this.Source as ICoverParent;
+            if (coverParent.CoverId != null)
             {
-                var cover = await this.GetManagers().CoverManager.FindAsync(this.Source.CoverId);
+                var cover = await this.GetManagers().CoverManager.FindAsync(coverParent.CoverId);
                 if (cover != null)
                 {
                     this.ImageViewModel = ImageViewModel.Build(cover.BinaryData);
@@ -415,8 +417,7 @@ namespace JryVideo.Controls.EditVideo
 
             if (this.Cover != null)
             {
-                var cover = await this.Cover.CommitAsync();
-                obj.CoverId = cover.Id;
+                await this.Cover.CommitAsync();
             }
 
             if (await base.CommitAsync(this.GetManagers().SeriesManager.GetVideoInfoManager(parent), obj) == null)

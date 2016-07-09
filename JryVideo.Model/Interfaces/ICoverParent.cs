@@ -1,8 +1,6 @@
-﻿using Jasily.Data;
-
-namespace JryVideo.Model.Interfaces
+﻿namespace JryVideo.Model.Interfaces
 {
-    public interface ICoverParent : IJasilyEntity<string>
+    public interface ICoverParent : IObject
     {
         string CoverId { get; set; }
 

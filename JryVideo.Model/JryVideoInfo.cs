@@ -61,6 +61,12 @@ namespace JryVideo.Model
 
         CoverType ICoverParent.CoverType => CoverType.Video;
 
+        string ICoverParent.CoverId
+        {
+            get { return this.Id; }
+            set { throw new NotSupportedException(); }
+        }
+
         [CanBeNull]
         [ItemNotNull]
         [BsonIgnoreIfDefault]
@@ -68,11 +74,6 @@ namespace JryVideo.Model
 
         [BsonIgnoreIfDefault]
         public int? EpisodeOffset { get; set; }
-
-        [Obsolete]
-        [CanBeNull]
-        [BsonIgnoreIfDefault]
-        public string CoverId { get; set; }
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
@@ -111,6 +112,8 @@ namespace JryVideo.Model
             /// </summary>
             /// <returns></returns>
             public override string ToString() => $"{nameof(BackgroundCoverParent)} [{this.Id}]";
+
+            int IObject.Version { get; set; }
         }
 
         [CanBeNull]
