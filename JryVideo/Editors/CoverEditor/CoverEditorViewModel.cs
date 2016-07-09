@@ -1,4 +1,5 @@
 ﻿using System.Enums;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
@@ -72,10 +73,15 @@ namespace JryVideo.Editors.CoverEditor
             this.ImageViewModel = this.BinaryData == null ? null : ImageViewModel.Build(this.BinaryData);
         }
 
-        public async Task<bool> LoadFromUrlAsync()
+        public Task<bool> LoadFromUrlAsync()
         {
-            if (string.IsNullOrWhiteSpace(this.Uri)) return false;
+            if (string.IsNullOrWhiteSpace(this.Uri)) return Task.FromResult(false);
             var request = WebRequest.CreateHttp(this.Uri);
+            return this.LoadFromRequestAsync(request);
+        }
+
+        private async Task<bool> LoadFromRequestAsync(HttpWebRequest request)
+        {
             var result = await request.GetResultAsBytesAsync();
             this.BinaryData = result.Result;
             return this.BinaryData != null;
@@ -85,9 +91,13 @@ namespace JryVideo.Editors.CoverEditor
         {
             if (string.IsNullOrWhiteSpace(this.DoubanId)) return false;
             var json = await DoubanHelper.TryGetMovieInfoAsync(this.DoubanId);
-            if (json?.Images?.Large == null) return false;
-            this.Uri = json.GetLargeImageUrl();
-            return await this.LoadFromUrlAsync();
+            if (json == null) return false;
+            var requests = json.GetMovieCoverRequest().ToArray();
+            foreach (var request in requests)
+            {
+                if (await this.LoadFromRequestAsync(request)) return true;
+            }
+            return false;
         }
 
         /// <summary>

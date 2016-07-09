@@ -99,7 +99,6 @@ namespace JryVideo.Core.Douban
                 }
                 return value;
             }
-            return null;
         }
 
         public static async Task<Artist> TryGetArtistInfoAsync(string doubanId)
@@ -166,14 +165,14 @@ namespace JryVideo.Core.Douban
             if (request != null) yield return request;
         }
 
-        public static string GetLargeImageUrl(this Movie json)
+        private static string GetLargeImageUrl(this Movie json)
         {
             // http get https://img3.doubanio.com/view/photo/raw/public/p2357519332.jpg Referer:https://www.douban.com/ work !
             if (json == null) throw new ArgumentNullException(nameof(json));
             return json.Images.Large.ThrowIfNullOrEmpty("Large");
         }
 
-        public static string GetRawImageUrl(Movie json)
+        private static string GetRawImageUrl(Movie json)
         {
             var large = GetLargeImageUrl(json);
             // large like 'http://img4.douban.com/view/movie_poster_cover/ipst/public/p2236401229.jpg'
