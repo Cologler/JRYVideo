@@ -7,10 +7,12 @@ using System.Windows;
 using Jasily;
 using Jasily.ComponentModel;
 using JryVideo.Core.Douban;
+using JryVideo.Core.Managers;
 using JryVideo.Core.Models;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Editors.VideoEditor;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 using JryVideo.Properties;
 using static System.String;
 
@@ -32,6 +34,7 @@ namespace JryVideo.Common
             this.PropertiesMapper = Mapper;
             this.SeriesView = seriesViewModel;
             this.IsTrackButtonEnable = !(this.IsUntrackButtonEnable = this.Source.IsTracking);
+            this.CoverViewModel.AutoGenerateCoverProvider = new AutoGenerateCoverProvider(this.GetManagers().CoverManager);
         }
 
         public SeriesViewModel SeriesView { get; }
@@ -179,30 +182,33 @@ namespace JryVideo.Common
             });
         }
 
-        protected override async Task<bool> TryAutoAddCoverAsync()
+        private class AutoGenerateCoverProvider : IAutoGenerateCoverProvider<ICoverParent>
         {
-            if (this.Source.DoubanId == null) return false;
+            private readonly CoverManager manager;
 
-            var guid = await this.AutoGenerateCoverAsync();
-            if (guid == null) return false;
-            var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.SeriesView.Source);
-            return await manager.UpdateAsync(this.Source);
-        }
-
-        private async Task<string> AutoGenerateCoverAsync()
-        {
-            return await Task.Run(async () =>
+            public AutoGenerateCoverProvider(CoverManager manager)
             {
-                var coverManager = this.GetManagers().CoverManager;
-                var builder = CoverBuilder.CreateVideo(this.Source);
-                var id = await coverManager.BuildCoverAsync(builder);
-                if (id != null) return id;
-                if (this.Source.DoubanId == null) return null;
-                var url = (await DoubanHelper.TryGetMovieInfoAsync(this.Source.DoubanId))?.GetLargeImageUrl();
-                if (url == null) return null;
-                builder.Uri = url;
-                return await coverManager.BuildCoverAsync(builder);
-            });
+                this.manager = manager;
+            }
+
+            /// <summary>
+            /// return true if success.
+            /// </summary>
+            /// <returns></returns>
+            public async Task<bool> GenerateAsync(ICoverParent source)
+            {
+                var video = (JryVideoInfo)source;
+                if (video.DoubanId == null) return false;
+
+                return await Task.Run(async () =>
+                {
+                    var builder = CoverBuilder.CreateVideo(video);
+                    var url = (await DoubanHelper.TryGetMovieInfoAsync(video.DoubanId))?.GetLargeImageUrl();
+                    if (url == null) return false;
+                    builder.Uri = url;
+                    return await this.manager.BuildCoverAsync(builder) != null;
+                });
+            }
         }
 
         public static IEnumerable<VideoInfoViewModel> Create(JrySeries series)
@@ -341,7 +347,7 @@ namespace JryVideo.Common
             {
                 GroupFactory.RefreshGroup(this);
                 this.RefreshProperties();
-                this.BeginUpdateCover();
+                this.CoverViewModel.BeginForceReloadCover();
                 return true;
             }
             return false;
@@ -355,7 +361,7 @@ namespace JryVideo.Common
             }
 
             var dlg = new CoverEditorWindow();
-            var cover = await this.TryGetCoverAsync();
+            var cover = this.CoverViewModel.Cover;
             if (cover != null)
             {
                 dlg.ViewModel.ModifyMode(cover);
@@ -386,7 +392,7 @@ namespace JryVideo.Common
             if (dlg.ShowDialog() == true)
             {
                 await dlg.ViewModel.CommitAsync();
-                this.BeginUpdateCover();
+                this.CoverViewModel.BeginForceReloadCover();
             }
         }
 

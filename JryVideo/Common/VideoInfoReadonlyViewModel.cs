@@ -1,19 +1,22 @@
-using Jasily.ComponentModel;
-using JryVideo.Model;
 using System;
 using System.Linq;
+using Jasily.ComponentModel;
+using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public class VideoInfoReadonlyViewModel : HasCoverViewModel<JryVideoInfo>
+    public class VideoInfoReadonlyViewModel : JasilyViewModel<JryVideoInfo>
     {
         public VideoInfoReadonlyViewModel(JryVideoInfo source)
             : base(source)
         {
             this.NameViewModel = new NameableViewModel<JryVideoInfo>(source);
+            this.CoverViewModel = new CoverViewModel(this.Source);
         }
 
         public NameableViewModel<JryVideoInfo> NameViewModel { get; }
+
+        public CoverViewModel CoverViewModel { get; }
 
         [NotifyPropertyChanged]
         public string YearWithIndex => $"({this.Source.Year}) {this.Source.Index}";

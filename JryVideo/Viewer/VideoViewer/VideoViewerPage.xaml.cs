@@ -197,9 +197,9 @@ namespace JryVideo.Viewer.VideoViewer
 
         private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.ClickCount > 1 && this.ViewModel.InfoView.Cover != null)
+            if (e.ClickCount > 1 && this.ViewModel.InfoView.CoverViewModel.Cover != null)
             {
-                var buffer = this.ViewModel.InfoView.Cover.BinaryData;
+                var buffer = this.ViewModel.InfoView.CoverViewModel.Cover.BinaryData;
                 if (buffer.Length > 0)
                 {
                     string path;

@@ -102,7 +102,7 @@
                         </ContextMenu>
                     </Grid.ContextMenu>
 
-                    <Image Source="{Binding InfoView.Cover.BinaryData}"
+                    <Image Source="{Binding InfoView.CoverViewModel.Cover.BinaryData}"
                            RenderOptions.BitmapScalingMode="Fant"
                            RenderOptions.EdgeMode="Aliased"
                            MouseLeftButtonDown="Image_MouseLeftButtonDown" />
