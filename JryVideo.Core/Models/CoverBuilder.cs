@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JryVideo.Model;
 using JryVideo.Model.Interfaces;
 
@@ -16,7 +17,7 @@ namespace JryVideo.Core.Models
 
         public JryCoverSourceType CoverSourceType { get; set; }
 
-        public string Uri { get; set; }
+        public List<string> Uri { get; } = new List<string>();
 
         public string DoubanId { get; set; }
 
@@ -39,8 +40,6 @@ namespace JryVideo.Core.Models
             {
                 CoverType = this.CoverType,
                 CoverSourceType = this.CoverSourceType,
-
-                Uri = this.Uri,
 
                 DoubanId = this.DoubanId,
                 ImdbId = this.ImdbId,
@@ -88,7 +87,10 @@ namespace JryVideo.Core.Models
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = CoverType.Background,
                 DoubanId = video.DoubanId,
-                Uri = url,
+                Uri =
+                {
+                    url
+                },
                 ImdbId = video.ImdbId,
                 VideoId = video.Id
             };
@@ -100,7 +102,10 @@ namespace JryVideo.Core.Models
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = CoverType.Role,
-                Uri = url,
+                Uri =
+                {
+                    url
+                },
                 SeriesId = series.Id,
                 ActorId = role.ActorId
             };
@@ -112,7 +117,10 @@ namespace JryVideo.Core.Models
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = CoverType.Role,
-                Uri = url,
+                Uri =
+                {
+                    url
+                },
                 VideoId = video.Id,
                 ActorId = role.ActorId
             };
@@ -125,7 +133,10 @@ namespace JryVideo.Core.Models
                 CoverSourceType = JryCoverSourceType.Douban,
                 CoverType = CoverType.Artist,
                 DoubanId = doubanId,
-                Uri = url,
+                Uri =
+                {
+                    url
+                },
                 ActorId = artist.Id
             };
         }

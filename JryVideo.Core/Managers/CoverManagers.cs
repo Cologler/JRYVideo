@@ -57,22 +57,26 @@ namespace JryVideo.Core.Managers
                 task = this.downloaders.GetValueOrDefault(builder.Id);
                 if (task == null)
                 {
-                    if (string.IsNullOrWhiteSpace(builder.Uri)) return Task.FromResult(false);
+                    if (builder.Uri.Count == 0) return Task.FromResult(false);
                     task = Task.Run(async () =>
                     {
-                        HttpWebRequest request;
-                        try
+                        foreach (var uri in builder.Uri)
                         {
-                            request = WebRequest.CreateHttp(builder.Uri);
+                            HttpWebRequest request;
+                            try
+                            {
+                                request = WebRequest.CreateHttp(uri);
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                            var result = await request.GetResultAsBytesAsync();
+                            if (!result.IsSuccess) continue;
+                            var cover = builder.Build(result.Result);
+                            if (await this.InsertAsync(cover)) return true;
                         }
-                        catch
-                        {
-                            return false;
-                        }
-                        var result = await request.GetResultAsBytesAsync();
-                        if (!result.IsSuccess) return false;
-                        var cover = builder.Build(result.Result);
-                        return await this.InsertAsync(cover);
+                        return false;
                     });
                     this.downloaders[builder.Id] = task;
                 }

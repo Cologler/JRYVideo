@@ -205,7 +205,7 @@ namespace JryVideo.Common
                     var builder = CoverBuilder.CreateVideo(video);
                     var url = (await DoubanHelper.TryGetMovieInfoAsync(video.DoubanId))?.GetLargeImageUrl();
                     if (url == null) return false;
-                    builder.Uri = url;
+                    builder.Uri.Add(url);
                     return await this.manager.BuildCoverAsync(builder) != null;
                 });
             }
