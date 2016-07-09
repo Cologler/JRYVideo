@@ -133,13 +133,42 @@ namespace JryVideo.Core.Douban
 
         public static string GetLargeImageUrl(this Artist json)
         {
-            // http get https://img3.doubanio.com/view/photo/raw/public/p2357519332.jpg Referer:https://www.douban.com/ work !
             if (json == null) throw new ArgumentNullException(nameof(json));
             return json.Images.Large.ThrowIfNullOrEmpty("Large");
         }
 
+        public static IEnumerable<HttpWebRequest> GetMovieCoverRequest(this Movie json)
+        {
+            var raw = GetRawImageUrl(json);
+            HttpWebRequest request = null;
+            try
+            {
+                request = WebRequest.CreateHttp(raw);
+            }
+            catch
+            {
+                // ignored
+            }
+            if (request != null)
+            {
+                request.Referer = "https://www.douban.com/";
+                yield return request;
+            }
+            request = null;
+            try
+            {
+                request = WebRequest.CreateHttp(GetLargeImageUrl(json));
+            }
+            catch
+            {
+                // ignored
+            }
+            if (request != null) yield return request;
+        }
+
         public static string GetLargeImageUrl(this Movie json)
         {
+            // http get https://img3.doubanio.com/view/photo/raw/public/p2357519332.jpg Referer:https://www.douban.com/ work !
             if (json == null) throw new ArgumentNullException(nameof(json));
             return json.Images.Large.ThrowIfNullOrEmpty("Large");
         }

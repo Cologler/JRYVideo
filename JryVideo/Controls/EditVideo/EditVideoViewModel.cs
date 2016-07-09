@@ -372,7 +372,7 @@ namespace JryVideo.Controls.EditVideo
 
             // initialize cover
             var coverParent = this.Source as ICoverParent;
-            if (coverParent.CoverId != null)
+            if (coverParent?.CoverId != null)
             {
                 var cover = await this.GetManagers().CoverManager.FindAsync(coverParent.CoverId);
                 if (cover != null)

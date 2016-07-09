@@ -203,10 +203,11 @@ namespace JryVideo.Common
                 return await Task.Run(async () =>
                 {
                     var builder = CoverBuilder.CreateVideo(video);
-                    var url = (await DoubanHelper.TryGetMovieInfoAsync(video.DoubanId))?.GetLargeImageUrl();
-                    if (url == null) return false;
-                    builder.Uri.Add(url);
-                    return await this.manager.BuildCoverAsync(builder) != null;
+                    var requests = (await DoubanHelper.TryGetMovieInfoAsync(video.DoubanId))?.GetMovieCoverRequest().ToArray();
+                    if (requests == null) return false;
+                    if (requests.Length == 0) return false;
+                    builder.Requests.AddRange(requests);
+                    return await this.manager.BuildCoverAsync(builder);
                 });
             }
         }

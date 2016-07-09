@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
@@ -57,20 +58,15 @@ namespace JryVideo.Core.Managers
                 task = this.downloaders.GetValueOrDefault(builder.Id);
                 if (task == null)
                 {
-                    if (builder.Uri.Count == 0) return Task.FromResult(false);
+                    if (builder.Requests.Count + builder.Uri.Count == 0) return Task.FromResult(false);
                     task = Task.Run(async () =>
                     {
-                        foreach (var uri in builder.Uri)
+                        foreach (var request in builder.Requests.Concat(builder.Uri.Select(z =>
                         {
-                            HttpWebRequest request;
-                            try
-                            {
-                                request = WebRequest.CreateHttp(uri);
-                            }
-                            catch
-                            {
-                                continue;
-                            }
+                            try { return WebRequest.CreateHttp(z); }
+                            catch { return null; }
+                        }).Where(z => z != null)))
+                        {
                             var result = await request.GetResultAsBytesAsync();
                             if (!result.IsSuccess) continue;
                             var cover = builder.Build(result.Result);

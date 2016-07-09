@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using JryVideo.Model;
 using JryVideo.Model.Interfaces;
 
@@ -16,6 +17,8 @@ namespace JryVideo.Core.Models
         public CoverType CoverType { get; set; }
 
         public JryCoverSourceType CoverSourceType { get; set; }
+
+        public List<HttpWebRequest> Requests { get; } = new List<HttpWebRequest>();
 
         public List<string> Uri { get; } = new List<string>();
 
