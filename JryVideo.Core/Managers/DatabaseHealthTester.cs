@@ -27,7 +27,7 @@ namespace JryVideo.Core.Managers
         }
 
         [Conditional("DEBUG")]
-        public async void RunOnDebugAsync() => await this.RunAsync(false);
+        public async void RunOnDebugAsync() => await this.RunAsync(true);
 
         public async Task RunAsync(bool fix)
         {
@@ -337,7 +337,7 @@ namespace JryVideo.Core.Managers
             }
             else
             {
-                this.Errors.Add(Error.MissingCover(obj, queryId));
+                this.Errors.Add(Error.FromCoverParentMissingCover(obj, queryId));
             }
         }
 
@@ -426,7 +426,8 @@ namespace JryVideo.Core.Managers
 
             public static Error CoverMissingRef(CoverRef cover) => new CoverError(ErrorType.CoverMissingRef, cover);
 
-            public static Error MissingCover(ICoverParent owner, string queryId) => new MissingCoverError(ErrorType.MissingCover, owner, queryId);
+            public static Error FromCoverParentMissingCover(ICoverParent owner, string queryId)
+                => new MissingCoverError(ErrorType.MissingCover, owner, queryId);
 
             public override string ToString()
             {
@@ -440,18 +441,7 @@ namespace JryVideo.Core.Managers
                 }
             }
 
-            public virtual async Task FixAsync(DataCenter dataCenter)
-            {
-                switch (this.Type)
-                {
-                    case ErrorType.RoleMissingSource:
-                        await dataCenter.VideoRoleManager.RemoveAsync(this.Id);
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            public virtual Task FixAsync(DataCenter dataCenter) => Task.FromResult(0);
 
             public int GetOrderCode() => this.Id?.GetHashCode() ?? 0;
         }
@@ -475,43 +465,6 @@ namespace JryVideo.Core.Managers
                 {
                     case ErrorType.MissingCover:
                         return $"missing cover [{this.owner.CoverId}] (type [{this.owner.CoverType}]) ext (id [{this.owner.Id}])";
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            public override async Task FixAsync(DataCenter dataCenter)
-            {
-                switch (this.Type)
-                {
-                    case ErrorType.MissingCover:
-                        switch (this.owner.CoverType)
-                        {
-                            case CoverType.Artist:
-                                break;
-                            case CoverType.Video:
-                                break;
-                            case CoverType.Background:
-                                break;
-                            case CoverType.Role:
-                                var item = await dataCenter.VideoRoleManager.FindAsync(this.queryId);
-                                if (item != null)
-                                {
-                                    var role = item.MajorRoles?.Find(z => (z as ICoverParent).CoverId == this.owner.CoverId) ??
-                                               item.MinorRoles?.Find(z => (z as ICoverParent).CoverId == this.owner.CoverId);
-                                    if (role != null)
-                                    {
-                                        //(role as ICoverParent).CoverId = null;
-                                        //await dataCenter.VideoRoleManager.UpdateAsync(item);
-                                    }
-                                }
-                                break;
-
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
-                        break;
 
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -555,10 +508,55 @@ namespace JryVideo.Core.Managers
 
             public override async Task FixAsync(DataCenter dataCenter)
             {
+                var oldId = this.cover.Id;
+
                 switch (this.Type)
                 {
                     case ErrorType.CoverMissingRef:
-                        await dataCenter.CoverManager.RemoveAsync(this.cover.Id);
+                        switch (this.cover.CoverType)
+                        {
+                            case CoverType.Artist:
+                                break;
+
+                            case CoverType.Video:
+                                break;
+
+                            case CoverType.Background:
+                                break;
+
+                            case CoverType.Role:
+                                if (this.cover.ActorId != null)
+                                {
+                                    if (this.cover.VideoId != null)
+                                    {
+                                        if (this.cover.SeriesId != null)
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            var roleCol = await dataCenter.VideoRoleManager.FindAsync(this.cover.VideoId);
+                                            var matchs = roleCol.Roles().Where(z => z.ActorId == this.cover.ActorId).ToArray();
+                                            if (matchs.Length != 1) return;
+                                            var cover = await dataCenter.CoverManager.FindAsync((matchs[0] as ICoverParent).CoverId);
+                                            if (cover != null) return;
+                                            cover = await dataCenter.CoverManager.FindAsync(this.cover.Id);
+                                            cover.Id = (matchs[0] as ICoverParent).CoverId;
+                                            await dataCenter.CoverManager.InsertOrUpdateAsync(cover);
+                                            await dataCenter.CoverManager.RemoveAsync(oldId);
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+
+                                break;
+
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                         break;
 
                     default:
@@ -675,22 +673,6 @@ namespace JryVideo.Core.Managers
                 this.id = id;
                 this.type = type;
             }
-
-            #region Overrides of Error
-
-            public override async Task FixAsync(DataCenter dataCenter)
-            {
-                if (this.type == typeof(Model.JryVideo))
-                {
-                    await dataCenter.VideoManager.Source.RemoveAsync(this.id);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            #endregion
 
             #region Overrides of Error
 
