@@ -281,8 +281,7 @@ namespace JryVideo.Viewer.VideoViewer
             private async Task RemoveAsync()
             {
                 var videoInfo = this.VideoInfo.Source;
-                var bgId = videoInfo.BackgroundImageId;
-                if (bgId == null) return;
+                var bgId = videoInfo.BackgroundImageAsCoverParent().CoverId;
                 await Task.Run(async () =>
                 {
                     var coverManager = this.GetManagers().CoverManager;
@@ -290,7 +289,6 @@ namespace JryVideo.Viewer.VideoViewer
                     {
                         var videoManager = this.GetManagers().SeriesManager.GetVideoInfoManager(
                             this.VideoInfo.SeriesView.Source);
-                        videoInfo.BackgroundImageId = null;
                         await videoManager.UpdateAsync(videoInfo);
                     }
                 });

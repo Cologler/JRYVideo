@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Enums;
 using System.Threading.Tasks;
 using Jasily.ComponentModel;
 using Jasily.ComponentModel.Editable;
@@ -7,6 +8,7 @@ using JryVideo.Common;
 using JryVideo.Controls.SelectFlag;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Managers;
+using JryVideo.Core.Managers.Upgrades;
 using JryVideo.Model;
 using static JryVideo.Common.Helper;
 
@@ -58,7 +60,7 @@ namespace JryVideo.Controls.EditSeries
         {
             var series = this.GetCommitObject();
             Debug.Assert(series != null);
-
+            if (this.Action == ObjectChangedAction.Create) series.Version = Upgrader<JrySeries>.MaxVersion;
             this.WriteToObject(series);
 
             SeriesManager.BuildSeriesMetaData(series);

@@ -21,6 +21,7 @@ namespace JryVideo.Core.Managers.Upgrades
             Patchs.Add(new Patch0001());
             Patchs.Add(new Patch0002());
             Patchs.Add(new Patch0003());
+            Patchs.Add(new Patch0004());
         }
 
         public Upgrader(DataCenter dataCenter)

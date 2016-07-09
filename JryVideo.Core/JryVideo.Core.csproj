@@ -70,6 +70,7 @@
     <Compile Include="Managers\Upgrades\IPatch.cs" />
     <Compile Include="Managers\Upgrades\Patchs\Patch0001.cs" />
     <Compile Include="Managers\Upgrades\Patchs\Patch0003.cs" />
+    <Compile Include="Managers\Upgrades\Patchs\Patch0004.cs" />
     <Compile Include="Managers\Upgrades\Upgrader.cs" />
     <Compile Include="Managers\Upgrades\Patchs\Patch0000.cs" />
     <Compile Include="Managers\Upgrades\Patchs\Patch0002.cs" />

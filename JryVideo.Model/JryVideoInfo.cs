@@ -71,10 +71,6 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public int? EpisodeOffset { get; set; }
 
-        [CanBeNull]
-        [BsonIgnoreIfDefault]
-        public string BackgroundImageId { get; set; }
-
         public ICoverParent BackgroundImageAsCoverParent() => new BackgroundCoverParent(this);
 
         private sealed class BackgroundCoverParent : ICoverParent

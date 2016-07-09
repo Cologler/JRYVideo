@@ -22,6 +22,12 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         [BsonElement("Version")]
         public int Version { get; set; }
+
+        [Obsolete]
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        [BsonElement("BackgroundImageId")]
+        public string BackgroundImageId { get; set; }
     }
 
     public partial class VideoRole

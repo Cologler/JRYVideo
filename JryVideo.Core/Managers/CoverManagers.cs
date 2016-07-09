@@ -70,7 +70,7 @@ namespace JryVideo.Core.Managers
                             var result = await request.GetResultAsBytesAsync();
                             if (!result.IsSuccess) continue;
                             var cover = builder.Build(result.Result);
-                            if (await this.InsertAsync(cover)) return true;
+                            if (await this.InsertOrUpdateAsync(cover)) return true;
                         }
                         return false;
                     });
