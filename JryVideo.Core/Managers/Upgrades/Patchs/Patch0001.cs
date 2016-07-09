@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JryVideo.Model;
@@ -6,7 +7,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
-    public class Patch0001 : IGlobalPatch<JrySeries>, IGlobalPatch<JryCover>, IGlobalPatch<VideoRoleCollection>
+    public class Patch0001 : IGlobalPatch<JrySeries>, IGlobalPatch<JryCover>, IGlobalPatch<VideoRoleCollection>, IGlobalPatch<Artist>
     {
         public async Task<bool> UpgradeAsync(DataCenter dataCenter, JrySeries series)
         {
@@ -83,15 +84,42 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
                     role.Id = VideoRole.NewGuid();
                     if (role.CoverId != null)
                     {
-                        var cover = await dataCenter.CoverManager.Source.FindAsync(role.CoverId);
-                        cover.Id = role.Id;
-                        await dataCenter.CoverManager.Source.InsertOrUpdateAsync(cover);
-                        await dataCenter.CoverManager.Source.RemoveAsync(role.CoverId);
+                        await CoverRenamekeyAsync(dataCenter, role.CoverId, role.Id);
                         role.CoverId = null;
                     }
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// return true if upgrade success
+        /// </summary>
+        /// <param name="dataCenter"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task<bool> UpgradeAsync(DataCenter dataCenter, Artist item)
+        {
+            if (item.CoverId != null)
+            {
+                if (item.CoverId != item.Id)
+                {
+                    await CoverRenamekeyAsync(dataCenter, item.CoverId, item.Id);
+                    item.CoverId = null;
+                }
+                item.CoverId = null;
+            }
+            return true;
+        }
+
+        private static async Task CoverRenamekeyAsync(DataCenter dataCenter, string oldKey, string newKey)
+        {
+            Debug.Assert(oldKey != null);
+            var cover = await dataCenter.CoverManager.Source.FindAsync(oldKey);
+            if (cover == null) return;
+            cover.Id = newKey;
+            await dataCenter.CoverManager.Source.InsertAsync(cover);
+            await dataCenter.CoverManager.Source.RemoveAsync(oldKey);
         }
 
         /// <summary>
@@ -120,6 +148,11 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
         /// <param name="item"></param>
         /// <returns></returns>
         Task<bool> IPatch<VideoRoleCollection>.UpgradeAsync(VideoRoleCollection item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IPatch<Artist>.UpgradeAsync(Artist item)
         {
             throw new NotImplementedException();
         }

@@ -1,10 +1,10 @@
-﻿using JryVideo.Common.Windows;
-using JryVideo.Editors.ArtistEditor;
-using JryVideo.Model;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
+using JryVideo.Common.Windows;
 using JryVideo.Core.Douban;
 using JryVideo.Core.Models;
+using JryVideo.Editors.ArtistEditor;
+using JryVideo.Model;
 
 namespace JryVideo.Common
 {
@@ -51,7 +51,6 @@ namespace JryVideo.Common
             var coverBuilder = CoverBuilder.CreateArtist(doubanId, url, this.Source);
             var id = await this.GetManagers().CoverManager.BuildCoverAsync(coverBuilder);
             if (id == null) return false;
-            this.Source.CoverId = id;
             await this.GetManagers().ArtistManager.UpdateAsync(this.Source);
             return true;
         }

@@ -38,6 +38,8 @@ namespace JryVideo.Core.Managers.Upgrades
                 .ExecuteAsync(this.DataCenter.CoverManager.Source, this.DataCenter.CoverManager);
             await new Upgrader<VideoRoleCollection>(this.DataCenter)
                 .ExecuteAsync(this.DataCenter.VideoRoleManager.Source, this.DataCenter.VideoRoleManager);
+            await new Upgrader<Artist>(this.DataCenter)
+                .ExecuteAsync(this.DataCenter.ArtistManager.Source, this.DataCenter.ArtistManager);
 
             Debug.WriteLine("upgrade completed.");
         }

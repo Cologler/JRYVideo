@@ -36,4 +36,12 @@ namespace JryVideo.Model
         [BsonElement("CoverId")]
         public string CoverId { get; set; }
     }
+
+    public partial class Artist
+    {
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        [BsonElement("CoverId")]
+        public string CoverId { get; set; }
+    }
 }

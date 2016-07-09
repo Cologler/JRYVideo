@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public class Artist : JryObject, IEquatable<Artist>, ICoverParent, INameable, ITheTVDBItem,
+    public sealed partial class Artist : RootObject, IEquatable<Artist>, ICoverParent, INameable, ITheTVDBItem,
         IImdbItem
     {
         public Artist()
@@ -25,10 +25,13 @@ namespace JryVideo.Model
 
         public string GetMajorName() => this.Names[0];
 
-        [BsonIgnoreIfDefault]
-        public string CoverId { get; set; }
-
         CoverType ICoverParent.CoverType => CoverType.Artist;
+
+        string ICoverParent.CoverId
+        {
+            get { return this.Id; }
+            set { throw new NotSupportedException(); }
+        }
 
         #region remote id
 
