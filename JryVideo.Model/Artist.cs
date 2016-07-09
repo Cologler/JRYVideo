@@ -1,11 +1,12 @@
-﻿using JetBrains.Annotations;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using JryVideo.Model.Interfaces;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public class Artist : JryObject, IEquatable<Artist>, IJryCoverParent, INameable, ITheTVDBItem,
+    public class Artist : JryObject, IEquatable<Artist>, ICoverParent, INameable, ITheTVDBItem,
         IImdbItem
     {
         public Artist()
@@ -27,7 +28,7 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 
-        JryCoverType IJryCoverParent.CoverType => JryCoverType.Artist;
+        JryCoverType ICoverParent.CoverType => JryCoverType.Artist;
 
         #region remote id
 

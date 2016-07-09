@@ -1,18 +1,19 @@
-﻿using Jasily.ComponentModel;
-using Jasily.Windows.Data;
-using JryVideo.Common;
-using JryVideo.Core;
-using JryVideo.Core.Models;
-using JryVideo.Core.TheTVDB;
-using JryVideo.Model;
-using JryVideo.Selectors.WebImageSelector;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Jasily.ComponentModel;
+using Jasily.Windows.Data;
+using JryVideo.Common;
+using JryVideo.Core;
+using JryVideo.Core.Models;
+using JryVideo.Core.TheTVDB;
+using JryVideo.Model;
+using JryVideo.Model.Interfaces;
+using JryVideo.Selectors.WebImageSelector;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -211,7 +212,7 @@ namespace JryVideo.Viewer.VideoViewer
             }
         }
 
-        public sealed class BackgroundViewModel : HasCoverViewModel<IJryCoverParent>
+        public sealed class BackgroundViewModel : HasCoverViewModel<ICoverParent>
         {
             private const double DefaultOpacity = 0.2;
             private readonly VideoViewerViewModel parent;

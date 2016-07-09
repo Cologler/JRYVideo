@@ -9,6 +9,7 @@ using Jasily.Net;
 using JryVideo.Core.Models;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Core.Managers
 {
@@ -101,7 +102,7 @@ namespace JryVideo.Core.Managers
             return result;
         }
 
-        private async void Manager_CoverParentRemoving(object sender, IJryCoverParent e)
+        private async void Manager_CoverParentRemoving(object sender, ICoverParent e)
         {
             var id = e.CoverId;
             if (id != null)

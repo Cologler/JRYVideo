@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Jasily;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Core.Managers
 {
@@ -325,7 +326,7 @@ namespace JryVideo.Core.Managers
 
         private void AddMessage(string msg) => this.messages.Add(msg);
 
-        private void ConnectToCover(string queryId, IJryCoverParent obj)
+        private void ConnectToCover(string queryId, ICoverParent obj)
         {
             var coverId = obj.CoverId;
             if (coverId == null) return;
@@ -394,7 +395,7 @@ namespace JryVideo.Core.Managers
 
         private class RefSource
         {
-            public RefSource(IJryCoverParent obj)
+            public RefSource(ICoverParent obj)
             {
                 this.Id = obj.Id;
                 this.Type = obj.GetType().Name;
@@ -425,7 +426,7 @@ namespace JryVideo.Core.Managers
 
             public static Error CoverMissingRef(CoverRef cover) => new CoverError(ErrorType.CoverMissingRef, cover);
 
-            public static Error MissingCover(IJryCoverParent owner, string queryId) => new MissingCoverError(ErrorType.MissingCover, owner, queryId);
+            public static Error MissingCover(ICoverParent owner, string queryId) => new MissingCoverError(ErrorType.MissingCover, owner, queryId);
 
             public override string ToString()
             {
@@ -457,10 +458,10 @@ namespace JryVideo.Core.Managers
 
         private class MissingCoverError : Error
         {
-            private readonly IJryCoverParent owner;
+            private readonly ICoverParent owner;
             private readonly string queryId;
 
-            public MissingCoverError(ErrorType errorType, IJryCoverParent owner, string queryId)
+            public MissingCoverError(ErrorType errorType, ICoverParent owner, string queryId)
                 : base(errorType)
             {
                 this.owner = owner;
@@ -548,7 +549,7 @@ namespace JryVideo.Core.Managers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
+
                 this.Id = this.Id ?? cover.Id;
             }
 

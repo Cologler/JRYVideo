@@ -1,11 +1,12 @@
-using Jasily.Data;
-using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
+using Jasily.Data;
+using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Core.Managers
 {
@@ -17,7 +18,7 @@ namespace JryVideo.Core.Managers
         internal event EventHandler<T> ItemCreatedOrUpdated;
         internal event EventHandler<ChangingEventArgs<T>> ItemUpdated;
         internal event EventHandler<string> ItemRemoved;
-        internal event EventHandler<IJryCoverParent> CoverParentRemoving;
+        internal event EventHandler<ICoverParent> CoverParentRemoving;
 
         protected JryObjectManager(TProvider source)
         {
@@ -102,7 +103,7 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        protected void OnCoverParentRemoving(IJryCoverParent parent, object sender = null)
+        protected void OnCoverParentRemoving(ICoverParent parent, object sender = null)
             => this.CoverParentRemoving?.Invoke(sender ?? this, parent);
 
         internal async Task<CombineResult> CanCombineAsync(string to, string from)

@@ -1,13 +1,14 @@
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Jasily.ComponentModel;
 using JryVideo.Core;
 using JryVideo.Model;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Common
 {
     public abstract class HasCoverViewModel<T> : JasilyViewModel<T>
-        where T : IJryCoverParent
+        where T : ICoverParent
     {
         private JryCover cover;
 

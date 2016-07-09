@@ -58,10 +58,9 @@
     <Compile Include="ArtistType.cs" />
     <Compile Include="IImdbItem.cs" />
     <Compile Include="IJryChild.cs" />
-    <Compile Include="IJryCoverParent.cs" />
+    <Compile Include="Interfaces\ICoverParent.cs" />
     <Compile Include="INameable.cs" />
     <Compile Include="InterfaceExtension.cs" />
-    <Compile Include="Interfaces\ICoverParent.cs" />
     <Compile Include="Interfaces\IExtraCoverParent.cs" />
     <Compile Include="Interfaces\IObject.cs" />
     <Compile Include="ITagable.cs" />
@@ -83,6 +82,7 @@
     <Compile Include="JryVideo.cs" />
     <Compile Include="JryVideoRole.cs" />
     <Compile Include="JryVideoInfo.cs" />
+    <Compile Include="Obsolete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteId.cs" />
     <Compile Include="RemoteIdType.cs" />

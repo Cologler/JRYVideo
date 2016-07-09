@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideoInfo : JryObject, IJryCoverParent, INameable, IImdbItem, ITagable, ICoverParent
+    public sealed partial class JryVideoInfo : JryObject, ICoverParent, INameable, IImdbItem, ITagable
     {
         public JryVideoInfo()
         {
@@ -59,7 +59,7 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public int EpisodesCount { get; set; }
 
-        JryCoverType IJryCoverParent.CoverType => JryCoverType.Video;
+        JryCoverType ICoverParent.CoverType => JryCoverType.Video;
 
         [CanBeNull]
         [ItemNotNull]
@@ -78,9 +78,9 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string BackgroundImageId { get; set; }
 
-        public IJryCoverParent BackgroundImageAsCoverParent() => new BackgroundCoverParent(this);
+        public ICoverParent BackgroundImageAsCoverParent() => new BackgroundCoverParent(this);
 
-        private sealed class BackgroundCoverParent : IJryCoverParent
+        private sealed class BackgroundCoverParent : ICoverParent
         {
             private readonly JryVideoInfo jryVideoInfo;
 
@@ -104,7 +104,7 @@ namespace JryVideo.Model
                 set { this.jryVideoInfo.Id = value; }
             }
 
-            JryCoverType IJryCoverParent.CoverType => JryCoverType.Background;
+            JryCoverType ICoverParent.CoverType => JryCoverType.Background;
 
             /// <summary>
             /// return 'type [id]'
@@ -181,16 +181,6 @@ namespace JryVideo.Model
         public static bool IsIndexValid(int index) => index > 0;
 
         public static bool IsEpisodesCountValid(int episodesCount) => episodesCount >= 0;
-
-
-        #region Obsolete
-
-        [BsonIgnoreIfDefault]
-        [BsonElement("ArtistIds")]
-        [Obsolete]
-        public List<JryVideoRole> Roles { get; set; }
-
-        #endregion
 
         public override void Saving()
         {

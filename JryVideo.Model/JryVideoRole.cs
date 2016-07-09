@@ -1,13 +1,14 @@
-using JetBrains.Annotations;
-using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using JetBrains.Annotations;
+using JryVideo.Model.Interfaces;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideoRole : JryInfo, IJasilyLoggerObject<JryVideoRole>, IEquatable<JryVideoRole>, IJryCoverParent, INameable
+    public sealed class JryVideoRole : JryInfo, IJasilyLoggerObject<JryVideoRole>, IEquatable<JryVideoRole>, ICoverParent, INameable
     {
         [BsonIgnore]
         public string ArtistId => this.Id;
@@ -42,7 +43,7 @@ namespace JryVideo.Model
             set { this.RoleName = value; }
         }
 
-        JryCoverType IJryCoverParent.CoverType => JryCoverType.Role;
+        JryCoverType ICoverParent.CoverType => JryCoverType.Role;
 
         public string GetMajorName() => this.RoleName?.FirstOrDefault();
 
