@@ -28,7 +28,7 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
 
-        JryCoverType ICoverParent.CoverType => JryCoverType.Artist;
+        CoverType ICoverParent.CoverType => CoverType.Artist;
 
         #region remote id
 

@@ -289,24 +289,24 @@ namespace JryVideo.Core.Managers
         {
             switch (cover.CoverType)
             {
-                case JryCoverType.Artist:
+                case CoverType.Artist:
                     break;
 
-                case JryCoverType.Video:
+                case CoverType.Video:
                     if (cover.VideoId == null)
                     {
                         this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video Id.");
                     }
                     break;
 
-                case JryCoverType.Background:
+                case CoverType.Background:
                     if (cover.VideoId == null)
                     {
                         this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video Id.");
                     }
                     break;
 
-                case JryCoverType.Role:
+                case CoverType.Role:
                     if (cover.VideoId == null && cover.SeriesId == null)
                     {
                         this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video/series Id.");
@@ -365,7 +365,7 @@ namespace JryVideo.Core.Managers
 
             public List<RefSource> RefSources { get; }
 
-            public JryCoverType CoverType { get; }
+            public CoverType CoverType { get; }
 
             public string SeriesId { get; }
 
@@ -488,13 +488,13 @@ namespace JryVideo.Core.Managers
                     case ErrorType.MissingCover:
                         switch (this.owner.CoverType)
                         {
-                            case JryCoverType.Artist:
+                            case CoverType.Artist:
                                 break;
-                            case JryCoverType.Video:
+                            case CoverType.Video:
                                 break;
-                            case JryCoverType.Background:
+                            case CoverType.Background:
                                 break;
-                            case JryCoverType.Role:
+                            case CoverType.Role:
                                 var item = await dataCenter.VideoRoleManager.FindAsync(this.queryId);
                                 if (item != null)
                                 {
@@ -535,14 +535,14 @@ namespace JryVideo.Core.Managers
 
                 switch (cover.CoverType)
                 {
-                    case JryCoverType.Role:
-                    case JryCoverType.Artist:
+                    case CoverType.Role:
+                    case CoverType.Artist:
                         this.Id = cover.ActorId;
                         this.Id = cover.ActorId;
                         break;
 
-                    case JryCoverType.Video:
-                    case JryCoverType.Background:
+                    case CoverType.Video:
+                    case CoverType.Background:
                         this.Id = cover.VideoId;
                         break;
 
@@ -573,16 +573,16 @@ namespace JryVideo.Core.Managers
                     case ErrorType.CoverMissingRef:
                         switch (this.cover.CoverType)
                         {
-                            case JryCoverType.Artist:
+                            case CoverType.Artist:
                                 break;
 
-                            case JryCoverType.Video:
+                            case CoverType.Video:
                                 break;
 
-                            case JryCoverType.Background:
+                            case CoverType.Background:
                                 return $"cover [{this.cover.Id}] has no ref (type [{this.cover.CoverType}]) ext (video [{this.cover.VideoId}]).";
 
-                            case JryCoverType.Role:
+                            case CoverType.Role:
                                 if (this.cover.SeriesId != null)
                                     return $"cover [{this.cover.Id}] has no ref (type [{this.cover.CoverType}]) ext (series [{this.cover.SeriesId}], actor [{this.cover.ActorId}]).";
                                 else if (this.cover.VideoId != null)

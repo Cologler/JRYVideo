@@ -1,8 +1,8 @@
-﻿using JryVideo.Data.DataSources;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using MongoDB.Driver;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace JryVideo.Data.MongoDb
 {
@@ -33,7 +33,7 @@ namespace JryVideo.Data.MongoDb
                 }
                 else // artist
                 {
-                    Debug.Assert(parameter.CoverType == JryCoverType.Artist);
+                    Debug.Assert(parameter.CoverType == CoverType.Artist);
                     yield return Builders<JryCover>.Filter.And(baseFilter,
                         Builders<JryCover>.Filter.Eq(t => t.ActorId, parameter.ActorId));
                 }

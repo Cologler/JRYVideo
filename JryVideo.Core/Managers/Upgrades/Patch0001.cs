@@ -47,7 +47,7 @@ namespace JryVideo.Core.Managers.Upgrades
 
         public async Task<bool> UpgradeAsync(JryCover cover)
         {
-            if (cover.CoverType == JryCoverType.Video)
+            if (cover.CoverType == CoverType.Video)
             {
                 if (cover.VideoId != null && cover.Id != cover.VideoId)
                 {
@@ -58,7 +58,7 @@ namespace JryVideo.Core.Managers.Upgrades
                 }
             }
 
-            if (cover.CoverType == JryCoverType.Background)
+            if (cover.CoverType == CoverType.Background)
             {
                 if (cover.VideoId != null && cover.Id != JryVideoInfo.CreateBackgroundCoverId(cover.VideoId))
                 {

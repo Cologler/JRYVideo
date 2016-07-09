@@ -5,7 +5,7 @@ namespace JryVideo.Core.Models
 {
     public class CoverBuilder
     {
-        public JryCoverType CoverType { get; set; }
+        public CoverType CoverType { get; set; }
 
         public JryCoverSourceType CoverSourceType { get; set; }
 
@@ -32,14 +32,14 @@ namespace JryVideo.Core.Models
 
             switch (this.CoverType)
             {
-                case JryCoverType.Role:
+                case CoverType.Role:
                     return key + (this.VideoId ?? this.SeriesId) + "_" + this.ActorId;
 
-                case JryCoverType.Background:
-                case JryCoverType.Video:
+                case CoverType.Background:
+                case CoverType.Video:
                     return key + this.VideoId;
 
-                case JryCoverType.Artist:
+                case CoverType.Artist:
                     return key + this.ActorId;
 
                 default:
@@ -88,7 +88,7 @@ namespace JryVideo.Core.Models
             return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Douban,
-                CoverType = JryCoverType.Video,
+                CoverType = CoverType.Video,
                 DoubanId = video.DoubanId,
                 ImdbId = video.ImdbId,
                 VideoId = video.Id,
@@ -101,7 +101,7 @@ namespace JryVideo.Core.Models
             return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = JryCoverType.Background,
+                CoverType = CoverType.Background,
                 DoubanId = video.DoubanId,
                 Uri = url,
                 ImdbId = video.ImdbId,
@@ -115,7 +115,7 @@ namespace JryVideo.Core.Models
             return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = JryCoverType.Role,
+                CoverType = CoverType.Role,
                 Uri = url,
                 SeriesId = series.Id,
                 ActorId = role.Id
@@ -127,7 +127,7 @@ namespace JryVideo.Core.Models
             return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = JryCoverType.Role,
+                CoverType = CoverType.Role,
                 Uri = url,
                 VideoId = video.Id,
                 ActorId = role.Id
@@ -139,7 +139,7 @@ namespace JryVideo.Core.Models
             return new CoverBuilder
             {
                 CoverSourceType = JryCoverSourceType.Douban,
-                CoverType = JryCoverType.Artist,
+                CoverType = CoverType.Artist,
                 DoubanId = doubanId,
                 Uri = url,
                 ActorId = artist.Id

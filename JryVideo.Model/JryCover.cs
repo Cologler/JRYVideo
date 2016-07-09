@@ -7,7 +7,7 @@ namespace JryVideo.Model
         JryCover.ISeriesRoleCover,
         JryCover.IVideoRoleCover
     {
-        public JryCoverType CoverType { get; set; }
+        public CoverType CoverType { get; set; }
 
         [BsonIgnoreIfDefault]
         public JryCoverSourceType CoverSourceType { get; set; }
@@ -54,7 +54,7 @@ namespace JryVideo.Model
 
         public struct QueryParameter
         {
-            public JryCoverType CoverType { get; set; }
+            public CoverType CoverType { get; set; }
 
             public string VideoId { get; set; }
 
@@ -65,7 +65,7 @@ namespace JryVideo.Model
 
         public interface ICover
         {
-            JryCoverType CoverType { get; set; }
+            CoverType CoverType { get; set; }
 
             JryCoverSourceType CoverSourceType { get; set; }
 

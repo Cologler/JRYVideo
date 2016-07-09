@@ -6,6 +6,6 @@ namespace JryVideo.Model.Interfaces
     {
         string CoverId { get; set; }
 
-        JryCoverType CoverType { get; }
+        CoverType CoverType { get; }
     }
 }
