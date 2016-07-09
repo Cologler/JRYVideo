@@ -56,5 +56,24 @@ namespace JryVideo.Model
                 }
             }
         }
+
+        public IEnumerable<VideoRole> Roles()
+        {
+            if (this.MajorRoles != null)
+            {
+                foreach (var role in this.MajorRoles)
+                {
+                    yield return role;
+                }
+            }
+
+            if (this.MinorRoles != null)
+            {
+                foreach (var role in this.MinorRoles)
+                {
+                    yield return role;
+                }
+            }
+        }
     }
 }
