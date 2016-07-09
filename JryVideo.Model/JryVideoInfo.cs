@@ -112,8 +112,6 @@ namespace JryVideo.Model
             /// </summary>
             /// <returns></returns>
             public override string ToString() => $"{nameof(BackgroundCoverParent)} [{this.Id}]";
-
-            int IObject.Version { get; set; }
         }
 
         [CanBeNull]

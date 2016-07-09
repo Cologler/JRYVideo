@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JryCover : JryObject,
+    public sealed class JryCover : RootObject,
         JryCover.ISeriesRoleCover,
         JryCover.IVideoRoleCover
     {

@@ -68,6 +68,7 @@
     <Compile Include="Managers\Upgrades\IEveryTimePatch.cs" />
     <Compile Include="Managers\Upgrades\IPatch.cs" />
     <Compile Include="Managers\Upgrades\Patch0001.cs" />
+    <Compile Include="Managers\Upgrades\Patch0003.cs" />
     <Compile Include="Managers\Upgrades\Upgrader.cs" />
     <Compile Include="Managers\Upgrades\Patch0000.cs" />
     <Compile Include="Managers\Upgrades\Patch0002.cs" />

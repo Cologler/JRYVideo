@@ -7,7 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JrySeries : JryObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem, ITagable
+    public sealed class JrySeries : RootObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem, ITagable
     {
         public JrySeries()
         {

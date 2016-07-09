@@ -7,14 +7,18 @@ namespace JryVideo.Model
 {
     public partial class JryVideoInfo
     {
+        [Obsolete]
         [BsonIgnoreIfDefault]
         [BsonElement("ArtistIds")]
-        [Obsolete]
         public List<JryVideoRole> Roles { get; set; }
 
         [Obsolete]
         [CanBeNull]
         [BsonIgnoreIfDefault]
         public string CoverId { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public int Version { get; set; }
     }
 }

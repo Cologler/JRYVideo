@@ -3,15 +3,13 @@ using System.Attributes;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using JryVideo.Model.Interfaces;
+using Jasily.Data;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public abstract class JryObject : IObject
+    public abstract class JryObject : IJasilyEntity<string>
     {
-        public int Version { get; set; }
-
         [Cloneable]
         public string Id { get; set; }
 
@@ -34,10 +32,9 @@ namespace JryVideo.Model
             return !String.IsNullOrWhiteSpace(this.Id);
         }
 
-        protected virtual void BuildId()
-        {
-            this.Id = Guid.NewGuid().ToString().ToUpper();
-        }
+        protected virtual void BuildId() => this.Id = NewGuid();
+
+        public static string NewGuid() => Guid.NewGuid().ToString().ToUpper();
 
         public bool HasError()
         {
