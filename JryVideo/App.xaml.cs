@@ -1,12 +1,12 @@
-﻿using JryVideo.Configs;
-using JryVideo.Core;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using JryVideo.Configs;
+using JryVideo.Core;
 
 namespace JryVideo
 {
@@ -24,7 +24,7 @@ namespace JryVideo
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            Log.Write(e.Exception.ToString());
+            Log.WriteLine(e.Exception.ToString());
         }
 
         private const string UserConfigPath = @"UserConfig.json";

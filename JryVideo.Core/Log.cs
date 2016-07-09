@@ -10,11 +10,11 @@ namespace JryVideo.Core
         private const string LogFileName = "history.log";
         private static readonly object rootSync = new object();
 
-        public static void BeginWrite(string log) => Task.Run(() => Write(log));
+        public static void BeginWrite(string log) => Task.Run(() => WriteLine(log));
 
-        public static async Task WriteAsync(string log) => await Task.Run(() => Write(log));
+        public static async Task WriteAsync(string log) => await Task.Run(() => WriteLine(log));
 
-        public static void Write(string log)
+        public static void WriteLine(string log)
         {
             if (Debugger.IsAttached)
             {

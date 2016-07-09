@@ -65,7 +65,7 @@ namespace JryVideo.Core.Managers
                     }
                     catch (InvalidOperationException)
                     {
-                        Log.Write($"series [{builder.SeriesId}] video [{builder.VideoId}] cover [{builder.CoverType}] has more then 1 result.");
+                        Log.WriteLine($"series [{builder.SeriesId}] video [{builder.VideoId}] cover [{builder.CoverType}] has more then 1 result.");
                         return null;
                     }
                     if (string.IsNullOrWhiteSpace(builder.Uri)) return null;
