@@ -3,11 +3,11 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades
 {
-    public class UpgraderInfoV1 : IUpgraderInfo
+    public class Patch0001 : IPatch<JrySeries>, IPatch<JryCover>
     {
         private readonly DataCenter dataCenter;
 
-        public UpgraderInfoV1(DataCenter dataCenter)
+        public Patch0001(DataCenter dataCenter)
         {
             this.dataCenter = dataCenter;
         }
@@ -74,18 +74,5 @@ namespace JryVideo.Core.Managers.Upgrades
         }
 
 #pragma warning restore CS0612 // 类型或成员已过时
-    }
-
-    public class UpgraderInfoV2 : IUpgraderInfo
-    {
-        public Task<bool> UpgradeAsync(JrySeries series)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<bool> UpgradeAsync(JryCover cover)
-        {
-            return Task.FromResult(false);
-        }
     }
 }

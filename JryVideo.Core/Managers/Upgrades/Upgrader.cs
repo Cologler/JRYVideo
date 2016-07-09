@@ -1,36 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using Jasily.Data;
+using JryVideo.Model;
 using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Core.Managers.Upgrades
 {
     public class Upgrader
     {
+        private readonly List<IPatch> patchs = new List<IPatch>();
+        private readonly Upgrader<JrySeries> seriesUpgrader;
+        private readonly Upgrader<JryCover> coverUpgrader;
+
         public Upgrader(DataCenter dataCenter)
         {
             this.DataCenter = dataCenter;
-            this.Patchs.Add(new UpgraderInfoV0());
-            this.Patchs.Add(new UpgraderInfoV1(dataCenter));
-        }
+            this.patchs.Add(new Patch0000());
+            this.patchs.Add(new Patch0001(dataCenter));
 
-        public int MaxVersion => this.Patchs.Count - 1;
+            this.seriesUpgrader = new Upgrader<JrySeries>(this.patchs);
+            this.coverUpgrader = new Upgrader<JryCover>(this.patchs);
+        }
 
         public DataCenter DataCenter { get; }
 
-        public List<IUpgraderInfo> Patchs { get; } = new List<IUpgraderInfo>();
-
-        private async Task CallbackAsync<T>(IObjectEditProvider<T> provider, T item, Func<IUpgraderInfo, T, Task<bool>> callback)
-            where T : IObject
+        public async Task RunAsync()
         {
-            if (item.Version < this.MaxVersion)
+            await this.seriesUpgrader.ExecuteAsync(this.DataCenter.SeriesManager.Source, this.DataCenter.SeriesManager);
+            await this.coverUpgrader.ExecuteAsync(this.DataCenter.CoverManager.Source, this.DataCenter.CoverManager);
+
+            Debug.WriteLine("upgrade completed.");
+        }
+    }
+
+    public class Upgrader<T>
+        where T : class, IObject
+    {
+        private readonly IPatch<T>[] patchs;
+        private readonly int maxVersion;
+
+        public Upgrader(IEnumerable<IPatch> patchs)
+        {
+            this.patchs = patchs.OfType<IPatch<T>>().ToArray();
+            this.maxVersion = this.patchs.Length - 1;
+        }
+
+        public async Task ExecuteAsync(IJasilyEntitySetReader<T, string> reader, IObjectEditProvider<T> provider)
+        {
+            await reader.CursorAsync(z => z.Version < this.maxVersion, async z => await this.ExecuteAsync(provider, z));
+        }
+
+        private async Task ExecuteAsync(IObjectEditProvider<T> provider, T item)
+        {
+            Debug.Assert(item.Version < this.maxVersion);
+
+            if (item.Version < this.maxVersion)
             {
                 var upgrade = false;
-                for (var i = item.Version + 1; i < this.Patchs.Count; i++)
+                for (var i = item.Version + 1; i < this.patchs.Length; i++)
                 {
-                    var info = this.Patchs[i];
-                    if (await callback(info, item))
+                    var patch = this.patchs[i];
+                    if (await patch.UpgradeAsync(item))
                     {
                         upgrade = true;
                         item.Version = i;
@@ -42,21 +75,6 @@ namespace JryVideo.Core.Managers.Upgrades
                 }
                 if (upgrade) await provider.UpdateAsync(item);
             }
-        }
-
-        public async Task RunAsync()
-        {
-            await this.DataCenter.SeriesManager.Source.CursorAsync(z => z.Version < this.MaxVersion, async z =>
-            {
-                await this.CallbackAsync(this.DataCenter.SeriesManager, z, async (info, series) => await info.UpgradeAsync(series));
-            });
-
-            await this.DataCenter.CoverManager.Source.CursorAsync(z => z.Version < this.MaxVersion, async z =>
-            {
-                await this.CallbackAsync(this.DataCenter.CoverManager, z, async (info, cover) => await info.UpgradeAsync(cover));
-            });
-
-            Debug.WriteLine("upgrade completed.");
         }
     }
 }

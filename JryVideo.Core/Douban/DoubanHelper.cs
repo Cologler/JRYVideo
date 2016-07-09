@@ -133,6 +133,7 @@ namespace JryVideo.Core.Douban
 
         public static string GetLargeImageUrl(this Artist json)
         {
+            // http get https://img3.doubanio.com/view/photo/raw/public/p2357519332.jpg Referer:https://www.douban.com/ work !
             if (json == null) throw new ArgumentNullException(nameof(json));
             return json.Images.Large.ThrowIfNullOrEmpty("Large");
         }

@@ -3,7 +3,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades
 {
-    public class UpgraderInfoV0 : IUpgraderInfo
+    public class Patch0000 : IPatch<JrySeries>, IPatch<JryCover>
     {
         public Task<bool> UpgradeAsync(JrySeries series) => Task.FromResult(true);
 

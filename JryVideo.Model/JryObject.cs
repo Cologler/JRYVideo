@@ -10,7 +10,6 @@ namespace JryVideo.Model
 {
     public abstract class JryObject : IObject
     {
-        [BsonIgnoreIfDefault]
         public int Version { get; set; }
 
         [Cloneable]

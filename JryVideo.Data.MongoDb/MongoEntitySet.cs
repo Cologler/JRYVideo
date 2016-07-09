@@ -60,7 +60,7 @@ namespace JryVideo.Data.MongoDb
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async virtual Task<TEntity> FindAsync(string id)
+        public virtual async Task<TEntity> FindAsync(string id)
         {
             this.Engine.TestPass();
             return (await (await this.Collection.FindAsync(
