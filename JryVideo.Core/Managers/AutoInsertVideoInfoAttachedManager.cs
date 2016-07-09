@@ -1,6 +1,7 @@
-using Jasily.Data;
-using JryVideo.Model;
 using System.Threading.Tasks;
+using Jasily.Data;
+using JryVideo.Core.Managers.Upgrades;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -21,6 +22,11 @@ namespace JryVideo.Core.Managers
             return await base.FindAsync(id);
         }
 
-        protected override T BuildItem(string id) => VideoInfoAttached.Build<T>(id);
+        protected override T BuildItem(string id)
+        {
+            var ret = VideoInfoAttached.Build<T>(id);
+            ret.Version = Upgrader<T>.MaxVersion;
+            return ret;
+        }
     }
 }

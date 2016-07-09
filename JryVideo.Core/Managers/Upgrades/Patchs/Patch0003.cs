@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using JryVideo.Model;
 
-namespace JryVideo.Core.Managers.Upgrades
+namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
     public class Patch0003 : IPatch<JrySeries>
     {
@@ -14,7 +14,7 @@ namespace JryVideo.Core.Managers.Upgrades
 #pragma warning restore 612
             }
 
-            return Task.FromResult(true);
+            return Patch0000.TrueTask;
         }
     }
 }

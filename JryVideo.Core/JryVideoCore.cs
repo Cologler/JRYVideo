@@ -1,9 +1,9 @@
-﻿using JryVideo.Core.Managers;
-using JryVideo.Core.TheTVDB;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JryVideo.Core.Managers;
 using JryVideo.Core.Managers.Upgrades;
+using JryVideo.Core.TheTVDB;
 
 namespace JryVideo.Core
 {
@@ -43,7 +43,6 @@ namespace JryVideo.Core
             {
                 await new Upgrader(Current.DataAgent.CurrentDataCenter).RunAsync();
             }
-
 
             this.BeginLazyInitialize();
         }

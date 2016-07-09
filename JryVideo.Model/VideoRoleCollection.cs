@@ -45,7 +45,7 @@ namespace JryVideo.Model
         {
             foreach (var role in from)
             {
-                var same = to.FirstOrDefault(z => z.ArtistId == role.ArtistId);
+                var same = to.FirstOrDefault(z => z.ActorId == role.ActorId);
                 if (same == null)
                 {
                     to.Add(role);

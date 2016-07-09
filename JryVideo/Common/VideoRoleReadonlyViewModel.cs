@@ -42,16 +42,16 @@ namespace JryVideo.Common
         {
             base.RefreshProperties();
 
-            var actor = await this.GetManagers().ArtistManager.FindAsync(this.Source.ArtistId);
+            var actor = await this.GetManagers().ArtistManager.FindAsync(this.Source.ActorId);
             this.ActorName = actor?.GetMajorName() ?? string.Empty;
         }
 
         public void ShowActor(Window window)
         {
-            if (this.Source.ArtistId == null) return;
+            if (this.Source.ActorId == null) return;
             var w = new ArtistViewerWindow() { Owner = window };
             w.TitleTextBlock.Text = "actor";
-            w.ViewModel.LoadAsync(this.Source.ArtistId);
+            w.ViewModel.LoadAsync(this.Source.ActorId);
             w.ShowDialog();
         }
     }

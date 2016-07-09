@@ -65,15 +65,13 @@ namespace JryVideo.Core.Managers
 
                 if (artist != null)
                 {
-                    var role = new VideoRole()
-                    {
-                        Id = artist.Id,
-                    };
+                    var role = VideoRole.Create();
+                    role.ActorId = artist.Id;
                     if (!actor.Role.IsNullOrWhiteSpace())
                     {
                         role.RoleName = new List<string>() { actor.Role.Trim() };
                     }
-                    role.BuildMetaData(true);
+
                     (actor.SortOrder == major
                         ? (collection.MajorRoles ?? (collection.MajorRoles = new List<VideoRole>()))
                         : (collection.MinorRoles ?? (collection.MinorRoles = new List<VideoRole>()))).Add(role);
@@ -95,14 +93,14 @@ namespace JryVideo.Core.Managers
         {
             if (collection.MajorRoles != null)
             {
-                foreach (var role in collection.MajorRoles.Where(role => role.ArtistId == id))
+                foreach (var role in collection.MajorRoles.Where(role => role.ActorId == id))
                 {
                     yield return Tuple.Create(collection, role);
                 }
             }
             if (collection.MinorRoles != null)
             {
-                foreach (var role in collection.MinorRoles.Where(role => role.ArtistId == id))
+                foreach (var role in collection.MinorRoles.Where(role => role.ActorId == id))
                 {
                     yield return Tuple.Create(collection, role);
                 }

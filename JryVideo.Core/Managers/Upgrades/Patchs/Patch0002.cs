@@ -1,9 +1,10 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using JryVideo.Model;
+
 #pragma warning disable 612
 
-namespace JryVideo.Core.Managers.Upgrades
+namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
     public class Patch0002 : IPatch<JrySeries>
     {

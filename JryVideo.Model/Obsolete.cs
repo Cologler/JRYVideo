@@ -15,10 +15,25 @@ namespace JryVideo.Model
         [Obsolete]
         [CanBeNull]
         [BsonIgnoreIfDefault]
+        [BsonElement("CoverId")]
         public string CoverId { get; set; }
 
         [Obsolete]
         [BsonIgnoreIfDefault]
+        [BsonElement("Version")]
         public int Version { get; set; }
+    }
+
+    public partial class VideoRole
+    {
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        [BsonElement("ActorName")]
+        public string ActorName { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        [BsonElement("CoverId")]
+        public string CoverId { get; set; }
     }
 }

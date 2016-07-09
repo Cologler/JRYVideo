@@ -10,6 +10,7 @@ using Jasily.Windows.Data;
 using JryVideo.AutoComplete;
 using JryVideo.Core.Managers;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 using JryVideo.Viewer.VideoViewer;
 
 namespace JryVideo.Common
@@ -93,7 +94,7 @@ namespace JryVideo.Common
             {
                 this.Roles.Collection.Remove(role);
                 await this.GetManagers().VideoRoleManager.UpdateAsync(collection);
-                var id = role.Source.CoverId;
+                var id = (role.Source as ICoverParent).CoverId;
                 if (!string.IsNullOrWhiteSpace(id))
                 {
                     await this.GetManagers().CoverManager.RemoveAsync(id);
@@ -204,16 +205,10 @@ namespace JryVideo.Common
             {
                 Debug.Assert(source != null && dest != null);
 
-                if (source.CoverId != null)
+                var coverId = (source as ICoverParent).CoverId;
+                if (coverId != null)
                 {
-                    if (dest.CoverId == null)
-                    {
-                        dest.CoverId = source.CoverId;
-                    }
-                    else
-                    {
-                        this.RemovedCoverId.Add(source.CoverId);
-                    }
+                    this.RemovedCoverId.Add(coverId);
                 }
 
                 if (source.RoleName != null)

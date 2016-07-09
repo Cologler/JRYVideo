@@ -498,12 +498,12 @@ namespace JryVideo.Core.Managers
                                 var item = await dataCenter.VideoRoleManager.FindAsync(this.queryId);
                                 if (item != null)
                                 {
-                                    var role = item.MajorRoles?.Find(z => z.CoverId == this.owner.CoverId) ??
-                                               item.MinorRoles?.Find(z => z.CoverId == this.owner.CoverId);
+                                    var role = item.MajorRoles?.Find(z => (z as ICoverParent).CoverId == this.owner.CoverId) ??
+                                               item.MinorRoles?.Find(z => (z as ICoverParent).CoverId == this.owner.CoverId);
                                     if (role != null)
                                     {
-                                        role.CoverId = null;
-                                        await dataCenter.VideoRoleManager.UpdateAsync(item);
+                                        //(role as ICoverParent).CoverId = null;
+                                        //await dataCenter.VideoRoleManager.UpdateAsync(item);
                                     }
                                 }
                                 break;

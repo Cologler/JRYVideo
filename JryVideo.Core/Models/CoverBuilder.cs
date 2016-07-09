@@ -33,11 +33,9 @@ namespace JryVideo.Core.Models
             switch (this.CoverType)
             {
                 case CoverType.Role:
-                    return key + (this.VideoId ?? this.SeriesId) + "_" + this.ActorId;
-
                 case CoverType.Background:
                 case CoverType.Video:
-                    return key + this.VideoId;
+                    return key + this.CustomId;
 
                 case CoverType.Artist:
                     return key + this.ActorId;
@@ -118,7 +116,8 @@ namespace JryVideo.Core.Models
                 CoverType = CoverType.Role,
                 Uri = url,
                 SeriesId = series.Id,
-                ActorId = role.Id
+                ActorId = role.ActorId,
+                CustomId = role.Id
             };
         }
 
@@ -130,7 +129,8 @@ namespace JryVideo.Core.Models
                 CoverType = CoverType.Role,
                 Uri = url,
                 VideoId = video.Id,
-                ActorId = role.Id
+                ActorId = role.ActorId,
+                CustomId = role.Id
             };
         }
 

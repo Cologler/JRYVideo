@@ -8,19 +8,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class VideoRole : JryInfo, IJasilyLoggerObject<VideoRole>, IEquatable<VideoRole>, ICoverParent, INameable
+    public sealed partial class VideoRole : JryObject, IJasilyLoggerObject<VideoRole>, IEquatable<VideoRole>, ICoverParent, INameable
     {
-        [BsonIgnore]
-        public string ArtistId => this.Id;
-
-        #region obsolete
-
-        [Obsolete]
-        [BsonIgnoreIfDefault]
-        [BsonElement("ActorName")]
-        public string ActorName { get; set; }
-
-        #endregion
+        public string ActorId { get; set; }
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
@@ -29,11 +19,8 @@ namespace JryVideo.Model
         public bool Equals(VideoRole other)
         {
             if (other == null) return false;
-            return this.ArtistId == other.ArtistId;
+            return this.ActorId == other.ActorId;
         }
-
-        [BsonIgnoreIfDefault]
-        public string CoverId { get; set; }
 
         [CanBeNull]
         [BsonIgnore]
@@ -45,15 +32,13 @@ namespace JryVideo.Model
 
         CoverType ICoverParent.CoverType => CoverType.Role;
 
-        public string GetMajorName() => this.RoleName?.FirstOrDefault();
-
-        public override void Saving()
+        string ICoverParent.CoverId
         {
-            base.Saving();
-#pragma warning disable 612
-            this.ActorName = null;
-#pragma warning restore 612
+            get { return this.Id; }
+            set { throw new NotSupportedException(); }
         }
+
+        public string GetMajorName() => this.RoleName?.FirstOrDefault();
 
         public void CombineFrom(VideoRole other)
         {
@@ -65,6 +50,13 @@ namespace JryVideo.Model
             {
                 this.RoleName = this.RoleName.Concat(other.RoleName).Distinct().ToList();
             }
+        }
+
+        public static VideoRole Create()
+        {
+            var role = new VideoRole();
+            role.BuildMetaData();
+            return role;
         }
     }
 }

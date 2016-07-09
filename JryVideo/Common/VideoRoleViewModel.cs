@@ -79,7 +79,7 @@ namespace JryVideo.Common
         {
             var theTVDBId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(removeId);
             if (theTVDBId == null) return false;
-            var artist = await this.GetManagers().ArtistManager.FindAsync(this.Source.ArtistId);
+            var artist = await this.GetManagers().ArtistManager.FindAsync(this.Source.ActorId);
             if (artist == null) return false;
             var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).ToArray();
             actors = actors.Where(z => z.Id == artist.TheTVDBId)
@@ -95,7 +95,6 @@ namespace JryVideo.Common
             var guid = await this.GetManagers().CoverManager.BuildCoverAsync(builder);
             if (guid != null)
             {
-                this.Source.CoverId = guid;
                 await this.parent.CommitAsync();
                 return true;
             }

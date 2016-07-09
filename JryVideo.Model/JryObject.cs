@@ -52,7 +52,7 @@ namespace JryVideo.Model
 
         protected virtual bool InnerTestHasError()
         {
-            if (String.IsNullOrWhiteSpace(this.Id) || this.Created == DateTime.MinValue)
+            if (string.IsNullOrWhiteSpace(this.Id) || this.Created == DateTime.MinValue)
                 throw new Exception("forgot to build meta data.");
 
             return false;
