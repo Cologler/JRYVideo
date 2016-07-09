@@ -40,16 +40,24 @@ namespace JryVideo.Core.Managers.Upgrades
         where T : class, IObject
     {
         private readonly IPatch<T>[] patchs;
+        private readonly IEveryTimePatch<T>[] everyTimePatchs;
         private readonly int maxVersion;
 
         public Upgrader(IEnumerable<IPatch> patchs)
         {
-            this.patchs = patchs.OfType<IPatch<T>>().ToArray();
+            var ps = patchs.ToArray();
+            this.patchs = ps.OfType<IPatch<T>>().ToArray();
             this.maxVersion = this.patchs.Length - 1;
+            this.everyTimePatchs = ps.OfType<IEveryTimePatch<T>>().ToArray();
         }
 
         public async Task ExecuteAsync(IJasilyEntitySetReader<T, string> reader, IObjectEditProvider<T> provider)
         {
+            foreach (var patch in this.everyTimePatchs)
+            {
+                await patch.ExecuteAsync(reader, provider);
+            }
+
             await reader.CursorAsync(z => z.Version < this.maxVersion, async z => await this.ExecuteAsync(provider, z));
         }
 

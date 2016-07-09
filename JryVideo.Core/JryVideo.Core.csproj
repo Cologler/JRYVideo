@@ -65,6 +65,7 @@
     <Compile Include="Managers\JryObjectManager.cs" />
     <Compile Include="Managers\SeriesManager.cs" />
     <Compile Include="Managers\SubObjectSetProvider.cs" />
+    <Compile Include="Managers\Upgrades\IEveryTimePatch.cs" />
     <Compile Include="Managers\Upgrades\IPatch.cs" />
     <Compile Include="Managers\Upgrades\Patch0001.cs" />
     <Compile Include="Managers\Upgrades\Upgrader.cs" />

@@ -55,6 +55,24 @@ namespace JryVideo.Data.MongoDb
             }
         }
 
+        public async Task NotExistsFieldCursorAsync(string field, Action<TEntity> callback)
+        {
+            if (field == null) throw new ArgumentNullException(nameof(field));
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+            this.Engine.TestPass();
+            var filter = Builders<TEntity>.Filter.Exists(field, false);
+            using (var cur = await this.Collection.FindAsync(filter))
+            {
+                while (await cur.MoveNextAsync())
+                {
+                    foreach (var obj in cur.Current)
+                    {
+                        callback(obj);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// return null if not found.
         /// </summary>
