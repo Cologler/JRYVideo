@@ -224,58 +224,38 @@ namespace JryVideo.Viewer.VideoViewer
                 this.parent = parent;
             }
 
-            private async Task<bool> SetBackgroundIdAsync(string coverId)
-            {
-                var manager = this.GetManagers().SeriesManager.GetVideoInfoManager(this.Series);
-                return await manager.UpdateAsync(this.VideoInfo);
-            }
-
             public SeriesViewModel Series => this.parent.InfoView.SeriesView;
 
             public VideoInfoViewModel VideoInfo => this.parent.InfoView;
 
             protected override async Task<bool> TryAutoAddCoverAsync()
             {
-                if (await this.TrySetByExistsAsync()) return true;
-
                 var client = JryVideoCore.Current.GetTheTVDBClient();
                 if (client == null) return false;
 
-                var guid = (await this.AutoGenerateCoverAsync(client, this.VideoInfo.Source) ??
-                            await this.AutoGenerateCoverOverTheTVDBIdAsync(client, this.Series.Source.TheTVDBId, this.VideoInfo.Source.Index.ToString())) ??
-                           await this.AutoGenerateCoverAsync(client, this.Series.Source);
-
-                if (guid != null)
-                {
-                    return await this.SetBackgroundIdAsync(guid);
-                }
-
-                return false;
+                return (await this.AutoGenerateCoverAsync(client, this.VideoInfo.Source) ||
+                        await this.AutoGenerateCoverOverTheTVDBIdAsync(client,
+                            this.Series.Source.TheTVDBId, this.VideoInfo.Source.Index.ToString())) ||
+                       await this.AutoGenerateCoverAsync(client, this.Series.Source);
             }
 
-            private async Task<bool> TrySetByExistsAsync()
-            {
-                var id = await this.DownloadAsync(null);
-                if (id == null) return false;
-                return await this.SetBackgroundIdAsync(id);
-            }
-
-            private async Task<string> AutoGenerateCoverAsync(TheTVDBClient client, IImdbItem item)
+            private async Task<bool> AutoGenerateCoverAsync(TheTVDBClient client, IImdbItem item)
             {
                 var imdbId = item.GetValidImdbId();
-                if (imdbId == null) return null;
+                if (imdbId == null) return false;
 
                 foreach (var series in await client.GetSeriesByImdbIdAsync(imdbId))
                 {
-                    var guid = await this.AutoGenerateCoverOverTheTVDBIdAsync(client, series.SeriesId, this.VideoInfo.Source.Index.ToString());
-                    if (guid != null) return guid;
+                    if (await this.AutoGenerateCoverOverTheTVDBIdAsync(client, series.SeriesId,
+                        this.VideoInfo.Source.Index.ToString()))
+                        return true;
                 }
-                return null;
+                return false;
             }
 
-            private async Task<string> AutoGenerateCoverOverTheTVDBIdAsync(TheTVDBClient client, string theTVDBId, string index)
+            private async Task<bool> AutoGenerateCoverOverTheTVDBIdAsync(TheTVDBClient client, string theTVDBId, string index)
             {
-                if (theTVDBId.IsNullOrWhiteSpace()) return null;
+                if (theTVDBId.IsNullOrWhiteSpace()) return false;
 
                 return await Task.Run(async () =>
                 {
@@ -284,10 +264,9 @@ namespace JryVideo.Viewer.VideoViewer
                         .Concat(array.Where(z => z.Season != index).RandomSort())
                         .Where(banner => banner.BannerType == BannerType.Fanart))
                     {
-                        var guid = await this.DownloadAsync(banner.BuildUrl(client));
-                        if (guid != null) return guid;
+                        if (await this.DownloadAsync(banner.BuildUrl(client))) return true;
                     }
-                    return null;
+                    return false;
                 });
             }
 
@@ -317,7 +296,7 @@ namespace JryVideo.Viewer.VideoViewer
                 });
             }
 
-            private async Task<string> DownloadAsync(string url)
+            private async Task<bool> DownloadAsync(string url)
             {
                 var builder = CoverBuilder.CreateBackground(this.VideoInfo.Source, url);
                 return await this.GetManagers().CoverManager.BuildCoverAsync(builder);

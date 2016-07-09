@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
@@ -16,6 +15,7 @@ namespace JryVideo.Core.Managers
     public class CoverManager : JryObjectManager<JryCover, ICoverSet>, IJasilyLoggerObject<CoverManager>
     {
         private readonly MemoryCache MemoryCache;
+        private readonly Dictionary<string, Task<bool>> downloaders = new Dictionary<string, Task<bool>>();
 
         public CoverManager(ICoverSet source)
             : base(source)
@@ -47,45 +47,37 @@ namespace JryVideo.Core.Managers
             });
         }
 
-        public async Task<string> BuildCoverAsync(CoverBuilder builder)
+        public Task<bool> BuildCoverAsync(CoverBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-            using (var start = new DownloadProcess(builder.Id))
+            Task<bool> task;
+            lock (this.downloaders)
             {
-                if (!start.IsOwner) return null;
-
-                return await Task.Run(async () =>
+                task = this.downloaders.GetValueOrDefault(builder.Id);
+                if (task == null)
                 {
-                    var covers = (await this.Source.FindAsync(builder.BuildQueryParameter())).ToArray();
-                    try
+                    if (string.IsNullOrWhiteSpace(builder.Uri)) return Task.FromResult(false);
+                    task = Task.Run(async () =>
                     {
-                        var cover = covers.SingleOrDefault();
-                        if (cover != null) return cover.Id;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        Log.WriteLine($"series [{builder.SeriesId}] video [{builder.VideoId}] cover [{builder.CoverType}] has more then 1 result.");
-                        return null;
-                    }
-                    if (string.IsNullOrWhiteSpace(builder.Uri)) return null;
-
-                    HttpWebRequest request;
-                    try { request = WebRequest.CreateHttp(builder.Uri); }
-                    catch { return null; }
-                    var result = await request.GetResultAsBytesAsync();
-                    if (result.IsSuccess)
-                    {
-                        var cover = builder.Build(result.Result);
-                        if (await this.InsertAsync(cover))
+                        HttpWebRequest request;
+                        try
                         {
-                            return cover.Id;
+                            request = WebRequest.CreateHttp(builder.Uri);
                         }
-                    }
-
-                    return null;
-                });
+                        catch
+                        {
+                            return false;
+                        }
+                        var result = await request.GetResultAsBytesAsync();
+                        if (!result.IsSuccess) return false;
+                        var cover = builder.Build(result.Result);
+                        return await this.InsertAsync(cover);
+                    });
+                    this.downloaders[builder.Id] = task;
+                }
             }
+            return task;
         }
 
         public override async Task<bool> UpdateAsync(JryCover obj)
