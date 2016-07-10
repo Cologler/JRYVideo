@@ -216,5 +216,15 @@ namespace JryVideo.Model
         public string CreateBackgroundCoverId() => CreateBackgroundCoverId(this.Id);
 
         public static string CreateBackgroundCoverId(string videoId) => videoId + ":Background";
+
+        public override void CheckError()
+        {
+            base.CheckError();
+            DataChecker.NotNull(this.Names);
+            DataChecker.NotEmpty(this.Type);
+            DataChecker.True(IsYearValid(this.Year));
+            DataChecker.True(IsIndexValid(this.Index));
+            DataChecker.True(IsEpisodesCountValid(this.EpisodesCount));
+        }
     }
 }

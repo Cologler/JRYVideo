@@ -5,12 +5,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Jasily.Data;
+using JryVideo.Model.Interfaces;
 using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
     public class MongoEntitySet<TEntity> : IJasilyEntitySetProvider<TEntity, string>, IJasilyLoggerObject<TEntity>
-        where TEntity : class, IJasilyEntity<string>
+        where TEntity : class, IObject
     {
         internal IMongoCollection<TEntity> Collection { get; }
 
@@ -118,15 +119,13 @@ namespace JryVideo.Data.MongoDb
         protected virtual SortDefinition<TEntity> BuildDefaultSort() => null;
 
         protected void Print(TEntity entity, string @operator)
-        {
-            this.Log(JasilyLogger.LoggerMode.Release, String.Format("{0} \r\n{1}\r\n", @operator, entity.Print()));
-        }
+            => this.Log(JasilyLogger.LoggerMode.Release, $"{@operator} \r\n{entity.Print()}\r\n");
 
         public async Task<bool> InsertAsync(TEntity entity)
         {
             this.Engine.TestPass();
             this.Print(entity, "insert");
-
+            entity.CheckError();
             await this.Collection.InsertOneAsync(entity);
             return true;
         }
@@ -136,8 +135,10 @@ namespace JryVideo.Data.MongoDb
             this.Engine.TestPass();
             var entities = items as TEntity[] ?? items.ToArray();
             foreach (var item in entities)
+            {
                 this.Print(item, "insert");
-
+                item.CheckError();
+            }
             await this.Collection.InsertManyAsync(entities);
             return true;
         }
@@ -145,6 +146,8 @@ namespace JryVideo.Data.MongoDb
         public async Task<bool> InsertOrUpdateAsync(TEntity entity)
         {
             this.Engine.TestPass();
+            this.Print(entity, "insertOrUpdate");
+            entity.CheckError();
             await this.Collection.FindOneAndReplaceAsync(
                 Builders<TEntity>.Filter.Eq(z => z.Id, entity.Id),
                 entity,
@@ -156,6 +159,7 @@ namespace JryVideo.Data.MongoDb
         {
             this.Engine.TestPass();
             this.Print(entity, "update");
+            entity.CheckError();
             this.Log(JasilyLogger.LoggerMode.Release, "update \r\n" + entity.Print() + "\r\n");
             var filter = Builders<TEntity>.Filter;
             return (await this.Collection.ReplaceOneAsync(

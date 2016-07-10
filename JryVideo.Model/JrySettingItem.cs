@@ -1,8 +1,8 @@
-﻿using Jasily.Data;
+﻿using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Model
 {
-    public class JrySettingItem : IJasilyEntity<string>
+    public class JrySettingItem : IObject
     {
         public JrySettingItem(string key, string value)
         {
@@ -16,5 +16,11 @@ namespace JryVideo.Model
         public string Id { get; set; }
 
         public string Value { get; set; }
+
+        public int Version { get; set; }
+
+        public void CheckError()
+        {
+        }
     }
 }

@@ -1,13 +1,14 @@
-﻿using JryVideo.Model;
-using MongoDB.Driver;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Model;
+using JryVideo.Model.Interfaces;
+using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
     public class MongoJryEntitySet<T> : MongoEntitySet<T>
-        where T : JryObject
+        where T : JryObject, IObject
     {
         public MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
             : base(engine, collection)
@@ -21,7 +22,7 @@ namespace JryVideo.Data.MongoDb
     }
 
     public abstract class MongoJryEntitySet<T, TFilterParameters> : MongoJryEntitySet<T>
-        where T : JryObject
+        where T : JryObject, IObject
     {
         protected MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
             : base(engine, collection)

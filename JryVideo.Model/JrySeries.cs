@@ -79,6 +79,16 @@ namespace JryVideo.Model
             if (this.Tags?.Count == 0) this.Tags = null;
         }
 
+        public override void CheckError()
+        {
+            base.CheckError();
+            DataChecker.NotNull(this.Names);
+            DataChecker.NotNull(this.Videos);
+            DataChecker.NotEmpty(this.Names);
+            this.Names.ForEach(z => DataChecker.NotEmpty(z));
+            this.Videos.ForEach(z => z.CheckError());
+        }
+
         public struct QueryParameter
         {
             public string OriginText { get; }

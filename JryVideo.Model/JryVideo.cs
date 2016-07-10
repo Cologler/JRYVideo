@@ -1,6 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -11,6 +12,7 @@ namespace JryVideo.Model
             this.Entities = new List<JryEntity>();
         }
 
+        [NotNull]
         public List<JryEntity> Entities { get; set; }
 
         /// <summary>
@@ -31,6 +33,12 @@ namespace JryVideo.Model
             }
 
             return false;
+        }
+
+        public override void CheckError()
+        {
+            base.CheckError();
+            DataChecker.NotNull(this.Entities);
         }
     }
 }

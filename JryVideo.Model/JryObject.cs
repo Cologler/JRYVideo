@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Jasily.Data;
+using JetBrains.Annotations;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
@@ -16,6 +17,7 @@ namespace JryVideo.Model
         [Cloneable]
         public DateTime Created { get; set; }
 
+        [CanBeNull]
         [BsonIgnoreIfDefault]
         public string Description { get; set; }
 
@@ -84,6 +86,12 @@ namespace JryVideo.Model
         protected static bool CanCombineField(string left, string right)
         {
             return left == null || right == null || left == right;
+        }
+
+        public virtual void CheckError()
+        {
+            DataChecker.NotEmpty(this.Id);
+            if (this.Created == null) throw new DataCheckerException("Created is not initialize.");
         }
     }
 }

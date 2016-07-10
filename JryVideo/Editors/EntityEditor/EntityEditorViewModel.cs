@@ -214,8 +214,6 @@ namespace JryVideo.Editors.EntityEditor
 
             if (this.Action == ObjectChangedAction.Create)
             {
-                entity.BuildMetaData();
-
                 if (provider.IsExists(entity))
                 {
                     await window.ShowMessageAsync("error", "had same entity.");

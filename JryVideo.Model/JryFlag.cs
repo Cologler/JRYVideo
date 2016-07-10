@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace JryVideo.Model
 {
-    public class JryFlag : JryObject, IJasilyLoggerObject<JryFlag>
+    public class JryFlag : RootObject, IJasilyLoggerObject<JryFlag>
     {
         public JryFlagType Type { get; set; }
 
