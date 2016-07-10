@@ -55,11 +55,9 @@ namespace JryVideo.Core.Managers
                     if (builder.Requests.Count + builder.Uri.Count == 0) return Task.FromResult(false);
                     task = Task.Run(async () =>
                     {
-                        foreach (var request in builder.Requests.Concat(builder.Uri.Select(z =>
-                        {
-                            try { return WebRequest.CreateHttp(z); }
-                            catch { return null; }
-                        }).Where(z => z != null)))
+                        foreach (var request in builder.Requests.Concat(builder.Uri
+                            .Select(WebRequest.CreateHttp)
+                            .As2().Ignore<Exception>()))
                         {
                             var result = await request.GetResultAsBytesAsync();
                             if (!result.IsSuccess) continue;

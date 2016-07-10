@@ -5,10 +5,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using JryVideo.Common;
+using JryVideo.Common.Dialogs;
 using JryVideo.Core.Managers;
 using JryVideo.Editors.FlagEditor;
 using JryVideo.Model;
-using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Selectors.FlagSelector
@@ -16,9 +16,9 @@ namespace JryVideo.Selectors.FlagSelector
     /// <summary>
     /// FlagSelectorWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class FlagSelectorWindow : MetroWindow
+    public partial class FlagSelectorWindow
     {
-        public FlagSelectorViewModel ViewModel { get; private set; }
+        public FlagSelectorViewModel ViewModel { get; }
 
         public FlagSelectorWindow()
         {
@@ -28,7 +28,7 @@ namespace JryVideo.Selectors.FlagSelector
         public FlagSelectorWindow(JryFlagType type, IEnumerable<string> readySelected = null)
             : this()
         {
-            this.TitleTextBlock.Text = String.Format(
+            this.TitleTextBlock.Text = string.Format(
                 Properties.Resources.FlagSelectorWindow_Title_Format,
                 type.GetLocalizeString());
 
@@ -41,17 +41,19 @@ namespace JryVideo.Selectors.FlagSelector
             {
                 this.ViewModel.SelectedStrings.AddRange(readySelected);
             }
+#pragma warning disable 4014
             this.ViewModel.LoadAsync();
+#pragma warning restore 4014
         }
 
         public void EditFlagUserControl_ViewModel_Creating(object sender, RequestActionEventArgs<JryFlag> e)
         {
-            this.Dispatcher.Invoke(async () =>
+            this.Dispatcher.Invoke(() =>
             {
                 if (this.ViewModel.Items.Collection.FirstOrDefault(z => z.Source.Value == e.Arg.Value) != null)
                 {
                     e.IsAccept = false;
-                    await this.ShowMessageAsync("error", String.Format("the '{0}' was ready in {1}", e.Arg.Value, this.ViewModel.Type.GetLocalizeString()));
+                    this.ShowJryVideoMessage("ERROR", $"the '{e.Arg.Value}' was ready in {this.ViewModel.Type.GetLocalizeString()}");
                 }
             });
         }
@@ -87,7 +89,7 @@ namespace JryVideo.Selectors.FlagSelector
 
         private async void DeleteFlagMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (await this.ShowMessageAsync("warnning", "are you sure you want to delete it?\r\n(whitout delete entity)",
+            if (await this.ShowMessageAsync("WARN", "are you sure you want to delete it?\r\n(whitout delete entity)",
                 MessageDialogStyle.AffirmativeAndNegative)
                 == MessageDialogResult.Affirmative)
             {
