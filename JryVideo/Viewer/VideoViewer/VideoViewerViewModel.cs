@@ -280,13 +280,6 @@ namespace JryVideo.Viewer.VideoViewer
                 this.RefreshProperties();
             }
 
-            private async Task RemoveAsync()
-            {
-                var bgId = this.Source.CoverId;
-                if (bgId == null) return;
-                await this.GetManagers().CoverManager.RemoveAsync(bgId);
-            }
-
             public async Task<bool?> StartSelect(Window window)
             {
                 var parameters = new List<RemoteId>();

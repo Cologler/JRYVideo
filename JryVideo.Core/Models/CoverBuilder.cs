@@ -10,7 +10,7 @@ namespace JryVideo.Core.Models
     {
         public CoverBuilder(ICoverParent coverParent)
         {
-            this.Id = coverParent.Id;
+            this.Id = coverParent.CoverId;
             if (this.Id == null) throw new ArgumentNullException();
         }
 
