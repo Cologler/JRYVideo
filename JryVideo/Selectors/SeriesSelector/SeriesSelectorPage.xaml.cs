@@ -1,10 +1,11 @@
-﻿using Jasily.Diagnostics;
-using JryVideo.Common;
-using JryVideo.Model;
-using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Jasily.Diagnostics;
+using JryVideo.Common;
+using JryVideo.Common.Dialogs;
+using JryVideo.Model;
+using MahApps.Metro.Controls;
 
 namespace JryVideo.Selectors.SeriesSelector
 {
@@ -54,10 +55,24 @@ namespace JryVideo.Selectors.SeriesSelector
             JasilyDebug.Pointer();
         }
 
-        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void EditMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var seriesViewModel = ((FrameworkElement)sender).DataContext as SeriesViewModel;
             seriesViewModel?.OpenEditorWindows(this.TryFindParent<Window>());
+        }
+
+        private void RemoveMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var series = ((FrameworkElement)sender).DataContext as SeriesViewModel;
+            if (series == null) return;
+            if (series.Source.Videos.Count > 0)
+            {
+                this.ShowJryVideoMessage("ERROR", "before remove series, please remove all video in the series.");
+            }
+            else
+            {
+                this.SelectorViewModel.Remove(series);
+            }
         }
     }
 }

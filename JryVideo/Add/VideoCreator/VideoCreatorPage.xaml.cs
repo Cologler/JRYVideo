@@ -23,6 +23,7 @@ namespace JryVideo.Add.VideoCreator
         {
             this.DataContext = this.CreatorViewModel = new VideoCreatorViewModel(series);
             this.EditVideoUserControl.ViewModel.Parent = series;
+            this.EditVideoUserControl.ViewModel.CreateMode();
             this.EditVideoUserControl.ViewModel.Created += this.ViewModel_Created;
         }
 

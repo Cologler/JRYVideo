@@ -12,6 +12,7 @@ using Jasily.ComponentModel;
 using Jasily.ComponentModel.Editable;
 using Jasily.ComponentModel.Editable.Converters;
 using JryVideo.Common;
+using JryVideo.Common.Dialogs;
 using JryVideo.Common.ValidationRules;
 using JryVideo.Controls.SelectFlag;
 using JryVideo.Core.Douban;
@@ -397,7 +398,7 @@ namespace JryVideo.Controls.EditVideo
 
             if (this.Type.IsNullOrWhiteSpace())
             {
-                await window.ShowMessageAsync("error", "must set a type.");
+                window.ShowJryVideoMessage("ERROR", "must set a type.");
                 return;
             }
 
@@ -409,23 +410,15 @@ namespace JryVideo.Controls.EditVideo
             }
 
             var obj = this.GetCommitObject();
-
-            if (this.Action == ObjectChangedAction.Create)
-            {
-                obj.BuildMetaData();
-                obj.ResetCreated();
-            }
-
             this.WriteToObject(obj);
 
-            if (this.Cover != null)
-            {
-                await this.Cover.CommitAsync();
-            }
-
-            if (await base.CommitAsync(this.GetManagers().SeriesManager.GetVideoInfoManager(parent), obj) == null)
+            if (await this.CommitAsync(this.GetManagers().SeriesManager.GetVideoInfoManager(parent), obj) == null)
             {
                 await window.ShowMessageAsync("error", "commit failed.");
+            }
+            else if (this.Cover != null)
+            {
+                await this.Cover.CommitAsync();
             }
         }
     }

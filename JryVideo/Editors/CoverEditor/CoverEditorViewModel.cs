@@ -124,10 +124,6 @@ namespace JryVideo.Editors.CoverEditor
             }
 
             this.WriteToObject(obj);
-
-            if (this.Action == ObjectChangedAction.Create)
-                obj.BuildMetaData();
-
             return await this.CommitAsync(coverManager, obj);
         }
 

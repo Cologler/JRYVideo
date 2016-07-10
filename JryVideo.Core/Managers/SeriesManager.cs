@@ -1,12 +1,12 @@
-﻿using JryVideo.Data.DataSources;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Data.DataSources;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -103,7 +103,12 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        public override Task<bool> RemoveAsync(string id) => this.RemoveAsync(id, true);
+        public override Task<bool> RemoveAsync(string id)
+        {
+
+
+            return this.RemoveAsync(id, true);
+        }
 
         private async Task<bool> RemoveAsync(string id, bool isRaiseEvent)
         {

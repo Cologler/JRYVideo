@@ -32,13 +32,14 @@ namespace JryVideo.Common
         {
             this.Action = ObjectChangedAction.Create;
             this.editingObject = new T();
-            this.ReadFromObject(this.editingObject);
+            this.editingObject.BuildMetaData();
         }
 
         public virtual void CloneMode(T source)
         {
             this.Action = ObjectChangedAction.Create;
             this.editingObject = new T();
+            this.editingObject.BuildMetaData();
             this.ReadFromObject(source);
         }
 
@@ -51,7 +52,7 @@ namespace JryVideo.Common
 
         public T GetCommitObject() => this.editingObject;
 
-        public ObjectChangedAction Action { get; private set; }
+        public ObjectChangedAction? Action { get; private set; }
 
         /// <summary>
         /// please sure call obj.BuildMetaData() before call this.

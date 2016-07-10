@@ -45,7 +45,10 @@
                                     <ContextMenu>
                                         <MenuItem Header="edit"
                                                   x:Name="EditSeriesMenuItem"
-                                                  Click="MenuItem_OnClick"/>
+                                                  Click="EditMenuItem_OnClick"/>
+                                        <MenuItem Header="remove"
+                                                  x:Name="RemoveMenuItem"
+                                                  Click="RemoveMenuItem_OnClick" />
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 <TextBlock Text="{Binding DisplayNameInfo}"

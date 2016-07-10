@@ -9,7 +9,7 @@
                  WindowStartupLocation="CenterOwner"
                  GlowBrush="{StaticResource AccentColorBrush}"
                  BorderThickness="1"
-                 MinWidth="200">
+                 Width="400" >
     <Grid Style="{StaticResource ParentPanelStyle}">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -23,10 +23,11 @@
         </Grid>
 
         <Grid Grid.Row="1"
-              Margin="4">
+              Margin="16,8,16,16">
             <TextBlock x:Name="ContentTextBlock"
                        Text="content"
-                       FontSize="14" />
+                       FontSize="14" 
+                       TextWrapping="WrapWithOverflow" />
         </Grid>
 
     </Grid>
