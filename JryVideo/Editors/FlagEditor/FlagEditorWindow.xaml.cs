@@ -1,6 +1,6 @@
-﻿using JryVideo.Common;
+﻿using System.Windows;
+using JryVideo.Common;
 using JryVideo.Model;
-using System.Windows;
 
 namespace JryVideo.Editors.FlagEditor
 {
@@ -20,7 +20,7 @@ namespace JryVideo.Editors.FlagEditor
         {
             this.OriginFlag = flag;
 
-            this.EditFlagUserControl.FlagType = flag.Type;
+            this.EditFlagUserControl.ViewModel.FlagType = flag.Type;
             this.EditFlagUserControl.ViewModel.ModifyMode(flag);
             this.EditFlagUserControl.ViewModel.Updated += (z, x) =>
                 this.GetUIDispatcher().BeginInvoke(() => this.DialogResult = true);

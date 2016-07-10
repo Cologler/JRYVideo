@@ -31,16 +31,21 @@ namespace JryVideo.Common
         public virtual void CreateMode()
         {
             this.Action = ObjectChangedAction.Create;
-            this.editingObject = new T();
-            this.editingObject.BuildMetaData();
+            this.editingObject = this.NewInstance();
         }
 
         public virtual void CloneMode(T source)
         {
             this.Action = ObjectChangedAction.Create;
-            this.editingObject = new T();
-            this.editingObject.BuildMetaData();
+            this.editingObject = this.NewInstance();
             this.ReadFromObject(source);
+        }
+
+        protected virtual T NewInstance()
+        {
+            var obj = new T();
+            obj.BuildMetaData();
+            return obj;
         }
 
         [EditableField]

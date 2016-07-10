@@ -1,11 +1,8 @@
-﻿using JryVideo.Model;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Enums;
 using System.Windows;
 using System.Windows.Controls;
+using JryVideo.Common.Dialogs;
 
 namespace JryVideo.Controls.EditFlag
 {
@@ -14,7 +11,7 @@ namespace JryVideo.Controls.EditFlag
     /// </summary>
     public partial class EditFlagUserControl : UserControl
     {
-        public EditFlagViewModel ViewModel { get; private set; }
+        public EditFlagViewModel ViewModel { get; }
 
         public EditFlagUserControl()
         {
@@ -22,27 +19,26 @@ namespace JryVideo.Controls.EditFlag
             this.DataContext = this.ViewModel = new EditFlagViewModel();
         }
 
-        public JryFlagType? FlagType { get; set; }
-
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Debug.Assert(this.FlagType.HasValue);
-
             if (this.ViewModel.Value.IsNullOrWhiteSpace())
             {
-                await this.TryFindParent<MetroWindow>().ShowMessageAsync("error", "name can not be empty.");
+                this.ShowJryVideoMessage("ERROR", "name can not be empty.");
                 return;
             }
 
             this.ViewModel.Value = this.ViewModel.Value.Trim();
 
-            if (this.ViewModel.Action == ObjectChangedAction.Modify && this.ViewModel.Value == this.ViewModel.OldValue)
+            if (this.ViewModel.Action == ObjectChangedAction.Modify)
             {
-                await this.TryFindParent<MetroWindow>().ShowMessageAsync("error", "old name was same with new name.");
-                return;
+                if (this.ViewModel.Value == this.ViewModel.OldValue)
+                {
+                    this.ShowJryVideoMessage("ERROR", "old name was same with new name.");
+                    return;
+                }
             }
 
-            await this.ViewModel.CommitAsync(this.FlagType.Value);
+            await this.ViewModel.CommitAsync();
         }
     }
 }

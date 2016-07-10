@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Jasily.ComponentModel.Editable;
 using JryVideo.Common;
 using JryVideo.Core.Managers;
@@ -19,23 +20,26 @@ namespace JryVideo.Controls.EditFlag
 
         public string OldValue { get; set; }
 
+        public JryFlagType? FlagType { get; set; }
+
         public override void ModifyMode(JryFlag source)
         {
             this.OldValue = source.Value;
-
             base.ModifyMode(source);
         }
 
-        public async Task<JryFlag> CommitAsync(JryFlagType type)
-        {
-            var manager = this.GetManagers().FlagManager;
+        protected override JryFlag NewInstance() => new JryFlag { Value = "_" };
 
-            var obj = new JryFlag(); // 不管是修改还是创建都是创建一个新的
-            obj.Type = type;
+        public async Task<JryFlag> CommitAsync()
+        {
+            var flagType = this.FlagType;
+            if (!flagType.HasValue) throw new Exception();
+            // 不管是修改还是创建都是创建一个新的
+            var obj = new JryFlag();
+            obj.Type = flagType.Value;
             this.WriteToObject(obj);
             obj.BuildMetaData();
-
-            return await base.CommitAsync(manager, obj);
+            return await base.CommitAsync(this.GetManagers().FlagManager, obj);
         }
 
         protected override async Task<bool> OnUpdateAsync(IObjectEditProvider<JryFlag> provider, JryFlag obj)

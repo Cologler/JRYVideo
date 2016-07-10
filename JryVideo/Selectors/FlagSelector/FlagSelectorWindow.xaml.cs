@@ -1,15 +1,15 @@
-﻿using JryVideo.Common;
-using JryVideo.Core.Managers;
-using JryVideo.Editors.FlagEditor;
-using JryVideo.Model;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using JryVideo.Common;
+using JryVideo.Core.Managers;
+using JryVideo.Editors.FlagEditor;
+using JryVideo.Model;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Selectors.FlagSelector
 {
@@ -33,7 +33,8 @@ namespace JryVideo.Selectors.FlagSelector
                 type.GetLocalizeString());
 
             this.DataContext = this.ViewModel = new FlagSelectorViewModel(type);
-            this.EditFlagUserControl.FlagType = type;
+            this.EditFlagUserControl.ViewModel.FlagType = type;
+            this.EditFlagUserControl.ViewModel.CreateMode();
             this.EditFlagUserControl.ViewModel.Creating += this.EditFlagUserControl_ViewModel_Creating;
             this.EditFlagUserControl.ViewModel.Created += this.ViewModel.EditFlagUserControl_ViewModel_Created;
             if (readySelected != null)

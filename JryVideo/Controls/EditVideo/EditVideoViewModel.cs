@@ -125,7 +125,7 @@ namespace JryVideo.Controls.EditVideo
             get { return this.startDate; }
             set
             {
-                if (value.HasValue && this.Action == ObjectChangedAction.Create)
+                if (this.Action == ObjectChangedAction.Create && value.HasValue)
                 {
                     if (this.DayOfWeek == null)
                     {
@@ -135,7 +135,7 @@ namespace JryVideo.Controls.EditVideo
                             : (DayOfWeek)(((int)value.Value.DayOfWeek + offset) % 7));
                     }
                     var today = DateTime.Today;
-                    if (value.Value >= today.AddDays(-(int)today.DayOfWeek)) // this week
+                    if (value.Value >= today.AddDays(-1)) // this week
                     {
                         this.IsTracking = true;
                     }
