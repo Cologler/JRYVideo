@@ -195,7 +195,7 @@ namespace JryVideo.Common
             /// return true if success.
             /// </summary>
             /// <returns></returns>
-            public async Task<bool> GenerateAsync(ICoverParent source)
+            public async Task<bool> GenerateAsync(DataCenter dataCenter, ICoverParent source)
             {
                 var video = (JryVideoInfo)source;
                 if (video.DoubanId == null) return false;

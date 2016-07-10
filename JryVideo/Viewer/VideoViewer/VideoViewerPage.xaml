@@ -631,7 +631,7 @@
                                     </Grid.ContextMenu>
 
                                     <Grid>
-                                        <Image Source="{Binding Cover.BinaryData}"
+                                        <Image Source="{Binding CoverViewModel.BitmapImage}"
                                                RenderOptions.BitmapScalingMode="Fant"
                                                RenderOptions.EdgeMode="Aliased" />
                                     </Grid>

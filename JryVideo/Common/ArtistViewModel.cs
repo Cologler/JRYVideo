@@ -48,7 +48,8 @@ namespace JryVideo.Common
             var info = await DoubanHelper.TryGetArtistInfoAsync(doubanId);
             if (info == null) return false;
             var url = info.GetLargeImageUrl();
-            var coverBuilder = CoverBuilder.CreateArtist(doubanId, url, this.Source);
+            var coverBuilder = CoverBuilder.CreateArtist(this.Source);
+            coverBuilder.Uri.Add(url);
             var id = await this.GetManagers().CoverManager.BuildCoverAsync(coverBuilder);
             if (id == null) return false;
             await this.GetManagers().ArtistManager.UpdateAsync(this.Source);

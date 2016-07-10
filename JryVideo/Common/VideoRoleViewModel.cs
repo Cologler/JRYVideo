@@ -3,10 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using JryVideo.Core;
+using JryVideo.Core.Managers;
 using JryVideo.Core.Models;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Editors.RoleEditor;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Common
 {
@@ -20,6 +22,12 @@ namespace JryVideo.Common
             this.parent = parent;
             this.ImdbItem = imdbItem;
             this.IsMajor = isMajor;
+
+            this.CoverViewModel.AutoGenerateCoverProvider = new AutoGenerateCoverProvider()
+            {
+                ImdbItem = imdbItem,
+                TheTVDBItem = this.ImdbItem as ITheTVDBItem
+            };
         }
 
         public IImdbItem ImdbItem { get; private set; }
@@ -51,56 +59,6 @@ namespace JryVideo.Common
             this.NameViewModel.RefreshProperties();
         }
 
-        protected override async Task<bool> TryAutoAddCoverAsync()
-        {
-            if (this.parent.VideoViewerViewModel == null) return false;
-            var client = JryVideoCore.Current.GetTheTVDBClient();
-            if (client == null) return false;
-
-            var theTVDBItem = this.ImdbItem as ITheTVDBItem;
-            if (theTVDBItem != null &&
-                !theTVDBItem.TheTVDBId.IsNullOrWhiteSpace() &&
-                await this.TryAutoAddCoverAsync(client, new RemoteId(RemoteIdType.TheTVDB, theTVDBItem.TheTVDBId)))
-            {
-                return true;
-            }
-
-            var imdb = this.ImdbItem.GetValidImdbId();
-            if (imdb != null &&
-                await this.TryAutoAddCoverAsync(client, new RemoteId(RemoteIdType.Imdb, imdb)))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private async Task<bool> TryAutoAddCoverAsync(TheTVDBClient client, RemoteId removeId)
-        {
-            var theTVDBId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(removeId);
-            if (theTVDBId == null) return false;
-            var artist = await this.GetManagers().ArtistManager.FindAsync(this.Source.ActorId);
-            if (artist == null) return false;
-            var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).ToArray();
-            actors = actors.Where(z => z.Id == artist.TheTVDBId)
-                .ToArray();
-            if (actors.Length != 1) return false;
-            if (!actors[0].HasBanner) return false;
-            var url = actors[0].BuildUrl(client);
-
-            var jrySeries = this.ImdbItem as JrySeries;
-            var builder = jrySeries != null
-                ? CoverBuilder.CreateRole(jrySeries, url, this.Source)
-                : CoverBuilder.CreateRole((JryVideoInfo)this.ImdbItem, url, this.Source);
-            var guid = await this.GetManagers().CoverManager.BuildCoverAsync(builder);
-            if (guid != null)
-            {
-                await this.parent.CommitAsync();
-                return true;
-            }
-            return false;
-        }
-
         public async void BegionMoveToAnotherCollection()
         {
             var dest = await this.parent.MoveToAnotherCollectionAsync(this);
@@ -118,6 +76,61 @@ namespace JryVideo.Common
             {
                 this.RefreshProperties();
                 await this.parent.CommitAsync();
+            }
+        }
+
+        private class AutoGenerateCoverProvider : IAutoGenerateCoverProvider<ICoverParent>
+        {
+            public IImdbItem ImdbItem { get; set; }
+
+            public ITheTVDBItem TheTVDBItem { get; set; }
+
+            /// <summary>
+            /// return true if success.
+            /// </summary>
+            /// <returns></returns>
+            public async Task<bool> GenerateAsync(DataCenter dataCenter, ICoverParent source)
+            {
+                var client = JryVideoCore.Current.GetTheTVDBClient();
+                if (client == null) return false;
+
+                var role = (VideoRole)source;
+
+                var tvdb = this.TheTVDBItem;
+                if (tvdb != null && !tvdb.TheTVDBId.IsNullOrWhiteSpace())
+                {
+                    if (await this.TryAutoAddCoverAsync(dataCenter, client, new RemoteId(RemoteIdType.TheTVDB, tvdb.TheTVDBId), role))
+                    {
+                        return true;
+                    }
+                }
+
+                var imdb = this.ImdbItem.GetValidImdbId();
+                if (imdb != null)
+                {
+                    if (await this.TryAutoAddCoverAsync(dataCenter, client, new RemoteId(RemoteIdType.Imdb, imdb), role))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            private async Task<bool> TryAutoAddCoverAsync(DataCenter dataCenter, TheTVDBClient client, RemoteId removeId, VideoRole role)
+            {
+                var theTVDBId = await client.TryGetTheTVDBSeriesIdByRemoteIdAsync(removeId);
+                if (theTVDBId == null) return false;
+                var actor = await dataCenter.ArtistManager.FindAsync(role.ActorId);
+                if (actor == null) return false;
+                var actors = (await client.GetActorsBySeriesIdAsync(theTVDBId)).ToArray();
+                actors = actors.Where(z => z.Id == actor.TheTVDBId).ToArray();
+                if (actors.Length != 1) return false;
+                if (!actors[0].HasBanner) return false;
+                var url = actors[0].BuildUrl(client);
+                var builder = CoverBuilder.CreateRole(role);
+                builder.Uri.Add(url);
+                return await dataCenter.CoverManager.BuildCoverAsync(builder);
             }
         }
     }

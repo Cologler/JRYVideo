@@ -16,21 +16,9 @@ namespace JryVideo.Core.Models
 
         public CoverType CoverType { get; set; }
 
-        public JryCoverSourceType CoverSourceType { get; set; }
-
         public List<HttpWebRequest> Requests { get; } = new List<HttpWebRequest>();
 
         public List<string> Uri { get; } = new List<string>();
-
-        public string DoubanId { get; set; }
-
-        public string ImdbId { get; set; }
-
-        public string VideoId { get; set; }
-
-        public string SeriesId { get; set; }
-
-        public string ActorId { get; set; }
 
         /// <summary>
         /// 自定义的 Cover Id
@@ -53,11 +41,7 @@ namespace JryVideo.Core.Models
         {
             return new CoverBuilder(video)
             {
-                CoverSourceType = JryCoverSourceType.Douban,
                 CoverType = CoverType.Video,
-                DoubanId = video.DoubanId,
-                ImdbId = video.ImdbId,
-                VideoId = video.Id
             };
         }
 
@@ -65,60 +49,27 @@ namespace JryVideo.Core.Models
         {
             return new CoverBuilder(video.BackgroundImageAsCoverParent())
             {
-                CoverSourceType = JryCoverSourceType.Imdb,
                 CoverType = CoverType.Background,
-                DoubanId = video.DoubanId,
                 Uri =
                 {
                     url
                 },
-                ImdbId = video.ImdbId,
-                VideoId = video.Id
             };
         }
 
-        public static CoverBuilder CreateRole(JrySeries series, string url, VideoRole role)
+        public static CoverBuilder CreateRole(VideoRole role)
         {
             return new CoverBuilder(role)
             {
-                CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = CoverType.Role,
-                Uri =
-                {
-                    url
-                },
-                SeriesId = series.Id,
-                ActorId = role.ActorId
+                CoverType = CoverType.Role
             };
         }
 
-        public static CoverBuilder CreateRole(JryVideoInfo video, string url, VideoRole role)
-        {
-            return new CoverBuilder(role)
-            {
-                CoverSourceType = JryCoverSourceType.Imdb,
-                CoverType = CoverType.Role,
-                Uri =
-                {
-                    url
-                },
-                VideoId = video.Id,
-                ActorId = role.ActorId
-            };
-        }
-
-        public static CoverBuilder CreateArtist(string doubanId, string url, Artist artist)
+        public static CoverBuilder CreateArtist(Artist artist)
         {
             return new CoverBuilder(artist)
             {
-                CoverSourceType = JryCoverSourceType.Douban,
-                CoverType = CoverType.Artist,
-                DoubanId = doubanId,
-                Uri =
-                {
-                    url
-                },
-                ActorId = artist.Id
+                CoverType = CoverType.Artist
             };
         }
     }

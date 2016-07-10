@@ -6,7 +6,7 @@ using JryVideo.Viewer.ArtistViewer;
 
 namespace JryVideo.Common
 {
-    public class VideoRoleReadonlyViewModel : HasCoverViewModel<VideoRole>
+    public class VideoRoleReadonlyViewModel : JasilyViewModel<VideoRole>
     {
         private string actorName;
 
@@ -14,9 +14,12 @@ namespace JryVideo.Common
             : base(source)
         {
             this.NameViewModel = new NameableViewModel<VideoRole>(source);
+            this.CoverViewModel = new CoverViewModel(this.Source);
         }
 
         public NameableViewModel<VideoRole> NameViewModel { get; }
+
+        public CoverViewModel CoverViewModel { get; }
 
         [NotifyPropertyChanged]
         public string ActorName

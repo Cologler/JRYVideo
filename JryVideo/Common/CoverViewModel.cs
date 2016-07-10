@@ -41,6 +41,9 @@ namespace JryVideo.Common
             }
         }
 
+        /// <summary>
+        /// small version of Cover (PixelWidth = 300)
+        /// </summary>
         public BitmapImage BitmapImage
         {
             get
@@ -92,7 +95,7 @@ namespace JryVideo.Common
             if (cover == null)
             {
                 var generater = this.AutoGenerateCoverProvider;
-                if (generater == null || !await generater.GenerateAsync(this.Source))
+                if (generater == null || !await generater.GenerateAsync(this.GetManagers(), this.Source))
                 {
                     this.containCover = false;
                     return;

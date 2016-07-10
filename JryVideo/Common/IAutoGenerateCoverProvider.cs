@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using JryVideo.Core.Managers;
 
 namespace JryVideo.Common
 {
@@ -7,7 +8,9 @@ namespace JryVideo.Common
         /// <summary>
         /// return true if success.
         /// </summary>
+        /// <param name="dataCenter"></param>
+        /// <param name="source"></param>
         /// <returns></returns>
-        Task<bool> GenerateAsync(T source);
+        Task<bool> GenerateAsync(DataCenter dataCenter, T source);
     }
 }
