@@ -43,6 +43,7 @@ namespace JryVideo.Common
         {
             base.RefreshProperties();
             this.NameViewModel.RefreshProperties();
+            this.CoverViewModel.RefreshProperties();
         }
     }
 }

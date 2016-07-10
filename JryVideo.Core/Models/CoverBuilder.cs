@@ -45,15 +45,11 @@ namespace JryVideo.Core.Models
             };
         }
 
-        public static CoverBuilder CreateBackground(JryVideoInfo video, string url)
+        public static CoverBuilder CreateBackground(JryVideoInfo video)
         {
             return new CoverBuilder(video.BackgroundImageAsCoverParent())
             {
-                CoverType = CoverType.Background,
-                Uri =
-                {
-                    url
-                },
+                CoverType = CoverType.Background
             };
         }
 

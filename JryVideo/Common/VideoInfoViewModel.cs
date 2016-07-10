@@ -182,7 +182,7 @@ namespace JryVideo.Common
             });
         }
 
-        private class AutoGenerateCoverProvider : IAutoGenerateCoverProvider<ICoverParent>
+        private class AutoGenerateCoverProvider : IAutoGenerateCoverProvider
         {
             private readonly CoverManager manager;
 
@@ -348,7 +348,6 @@ namespace JryVideo.Common
             {
                 GroupFactory.RefreshGroup(this);
                 this.RefreshProperties();
-                this.CoverViewModel.BeginForceReloadCover();
                 return true;
             }
             return false;
@@ -386,7 +385,7 @@ namespace JryVideo.Common
             if (dlg.ShowDialog() == true)
             {
                 await dlg.ViewModel.CommitAsync();
-                this.CoverViewModel.BeginForceReloadCover();
+                this.CoverViewModel.RefreshProperties();
             }
         }
 

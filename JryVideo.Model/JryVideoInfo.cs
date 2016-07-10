@@ -83,7 +83,7 @@ namespace JryVideo.Model
             }
 
             /// <summary>
-            /// key of entity
+            /// key of Video
             /// </summary>
             public string Id
             {

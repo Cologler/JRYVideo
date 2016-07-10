@@ -9,6 +9,7 @@ using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using JryVideo.Common;
 using JryVideo.Core;
+using JryVideo.Core.Managers;
 using JryVideo.Core.Models;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Model;
@@ -25,7 +26,7 @@ namespace JryVideo.Viewer.VideoViewer
         {
             this.InfoView = info;
             this.EntitesView = new JasilyCollectionView<ObservableCollectionGroup<string, EntityViewModel>>();
-            this.Background = new BackgroundViewModel(this);
+            this.Background = new BackgroundImageViewModel(this);
             this.VideoRoleCollection = new VideoRoleCollectionViewModel(info.SeriesView.Source, info.Source)
             {
                 VideoViewerViewModel = this
@@ -40,7 +41,7 @@ namespace JryVideo.Viewer.VideoViewer
             private set { this.SetPropertyRef(ref this.video, value); }
         }
 
-        public BackgroundViewModel Background { get; }
+        public BackgroundImageViewModel Background { get; }
 
         public VideoRoleCollectionViewModel VideoRoleCollection { get; }
 
@@ -187,7 +188,7 @@ namespace JryVideo.Viewer.VideoViewer
                 this.InfoView.RefreshProperties();
             }
 
-            this.Background.Flush();
+            this.Background.SaveOpacity();
         }
 
         public sealed class WatchedEpisodeChecker : NotifyPropertyChangedObject
@@ -212,31 +213,140 @@ namespace JryVideo.Viewer.VideoViewer
             }
         }
 
-        public sealed class BackgroundViewModel : HasCoverViewModel<ICoverParent>
+        public sealed class BackgroundImageViewModel : CoverViewModel
         {
-            private const double DefaultOpacity = 0.2;
-            private readonly VideoViewerViewModel parent;
-            private double opacity = DefaultOpacity;
+            private readonly VideoViewerViewModel videoViewer;
+            private const int OpacityMax = 8;
+            private const int OpacityMin = 2;
+            private const int DefaultOpacity = OpacityMin;
+            private const double DefaultOpacityDouble = (double)DefaultOpacity / 10;
+            private double opacity = DefaultOpacityDouble;
 
-            public BackgroundViewModel(VideoViewerViewModel parent)
-                : base(parent.InfoView.Source.BackgroundImageAsCoverParent())
+            public BackgroundImageViewModel(VideoViewerViewModel source)
+                : base(source.InfoView.Source.BackgroundImageAsCoverParent())
             {
-                this.parent = parent;
+                this.videoViewer = source;
+                this.AutoGenerateCoverProvider = new BackgroundAutoGenerateCoverProvider(source);
+                this.IsDelayLoad = true;
             }
 
-            public SeriesViewModel Series => this.parent.InfoView.SeriesView;
+            public double Opacity
+            {
+                get { return this.opacity; }
+                set { this.SetPropertyRef(ref this.opacity, value); }
+            }
 
-            public VideoInfoViewModel VideoInfo => this.parent.InfoView;
+            public int? OpacityData
+            {
+                get
+                {
+                    var intValue = checked((int)(this.Opacity * 10));
+                    intValue = Math.Max(OpacityMin, Math.Min(OpacityMax, intValue));
+                    return intValue == DefaultOpacity ? (int?)null : intValue;
+                }
+                set
+                {
+                    if (!value.HasValue) return;
+                    var o = (double)value;
+                    o = Math.Max(Math.Min((double)OpacityMax / 10, o / 10), (double)OpacityMin / 10);
+                    this.Opacity = o;
+                }
+            }
 
-            protected override async Task<bool> TryAutoAddCoverAsync()
+            public async void SaveOpacity()
+            {
+                var manager = this.GetManagers().CoverManager;
+                var cover = await manager.LoadCoverAsync(this.Source.CoverId);
+                if (cover == null) return;
+                {
+                    var o = this.OpacityData;
+                    if (cover.Opacity != o)
+                    {
+                        cover.Opacity = o;
+                        await manager.UpdateAsync(cover);
+                    }
+                }
+            }
+
+            protected override void OnLoadCoverEnd(JryCover cover)
+            {
+                this.OpacityData = cover?.Opacity;
+                base.OnLoadCoverEnd(cover);
+            }
+
+            public async void Reset()
+            {
+                await this.AutoGenerateCoverProvider.GenerateAsync(this.GetManagers(), this.Source);
+                this.RefreshProperties();
+            }
+
+            private async Task RemoveAsync()
+            {
+                var bgId = this.Source.CoverId;
+                if (bgId == null) return;
+                await this.GetManagers().CoverManager.RemoveAsync(bgId);
+            }
+
+            public async Task<bool?> StartSelect(Window window)
+            {
+                var parameters = new List<RemoteId>();
+
+                var imdbId = this.videoViewer.InfoView.Source.GetValidImdbId();
+                if (imdbId != null)
+                {
+                    parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
+                }
+
+                var theTVDBId = this.videoViewer.InfoView.SeriesView.Source.TheTVDBId;
+                if (!theTVDBId.IsNullOrWhiteSpace())
+                {
+                    parameters.Add(new RemoteId(RemoteIdType.TheTVDB, theTVDBId));
+                }
+
+                imdbId = this.videoViewer.InfoView.SeriesView.Source.GetValidImdbId();
+                if (imdbId != null)
+                {
+                    parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
+                }
+
+                var url = WebImageSelectorWindow.StartSelectFanartByImdbId(window,
+                    this.videoViewer.InfoView.Source.Index.ToString(), parameters.ToArray());
+                if (string.IsNullOrWhiteSpace(url)) return null;
+                var builder = CoverBuilder.CreateBackground(this.videoViewer.InfoView.Source);
+                builder.Uri.Add(url);
+                await this.GetManagers().CoverManager.BuildCoverAsync(builder);
+                this.RefreshProperties();
+                return false;
+            }
+        }
+
+        public class BackgroundAutoGenerateCoverProvider : IAutoGenerateCoverProvider
+        {
+            private readonly VideoViewerViewModel source;
+            private CoverManager coverManager;
+
+            public BackgroundAutoGenerateCoverProvider(VideoViewerViewModel source)
+            {
+                this.source = source;
+            }
+
+            /// <summary>
+            /// return true if success.
+            /// </summary>
+            /// <param name="dataCenter"></param>
+            /// <param name="source"></param>
+            /// <returns></returns>
+            public async Task<bool> GenerateAsync(DataCenter dataCenter, ICoverParent source)
             {
                 var client = JryVideoCore.Current.GetTheTVDBClient();
                 if (client == null) return false;
 
-                return (await this.AutoGenerateCoverAsync(client, this.VideoInfo.Source) ||
-                        await this.AutoGenerateCoverOverTheTVDBIdAsync(client,
-                            this.Series.Source.TheTVDBId, this.VideoInfo.Source.Index.ToString())) ||
-                       await this.AutoGenerateCoverAsync(client, this.Series.Source);
+                this.coverManager = dataCenter.CoverManager;
+                return await this.AutoGenerateCoverAsync(client, this.source.InfoView.Source) ||
+                       await this.AutoGenerateCoverOverTheTVDBIdAsync(client,
+                           this.source.InfoView.SeriesView.Source.TheTVDBId,
+                           this.source.InfoView.Source.Index.ToString()) ||
+                       await this.AutoGenerateCoverAsync(client, this.source.InfoView.SeriesView.Source);
             }
 
             private async Task<bool> AutoGenerateCoverAsync(TheTVDBClient client, IImdbItem item)
@@ -247,7 +357,7 @@ namespace JryVideo.Viewer.VideoViewer
                 foreach (var series in await client.GetSeriesByImdbIdAsync(imdbId))
                 {
                     if (await this.AutoGenerateCoverOverTheTVDBIdAsync(client, series.SeriesId,
-                        this.VideoInfo.Source.Index.ToString()))
+                        this.source.InfoView.Source.Index.ToString()))
                         return true;
                 }
                 return false;
@@ -260,119 +370,16 @@ namespace JryVideo.Viewer.VideoViewer
                 return await Task.Run(async () =>
                 {
                     var array = (await client.GetBannersBySeriesIdAsync(theTVDBId)).ToArray();
-                    foreach (var banner in array.Where(z => z.Season == index).RandomSort()
+                    var urls = array.Where(z => z.Season == index).RandomSort()
                         .Concat(array.Where(z => z.Season != index).RandomSort())
-                        .Where(banner => banner.BannerType == BannerType.Fanart))
-                    {
-                        if (await this.DownloadAsync(banner.BuildUrl(client))) return true;
-                    }
-                    return false;
+                        .Where(banner => banner.BannerType == BannerType.Fanart)
+                        .Select(z => z.BuildUrl(client))
+                        .ToArray();
+                    if (urls.Length == 0) return false;
+                    var builder = CoverBuilder.CreateBackground(this.source.InfoView.Source);
+                    builder.Uri.AddRange(urls);
+                    return await this.coverManager.BuildCoverAsync(builder);
                 });
-            }
-
-            private void Refresh() => base.BeginUpdateCover();
-
-            public async void Reset()
-            {
-                await this.RemoveAsync();
-                this.Refresh();
-            }
-
-            private async Task RemoveAsync()
-            {
-                var videoInfo = this.VideoInfo.Source;
-                var bgId = videoInfo.BackgroundImageAsCoverParent().CoverId;
-                await Task.Run(async () =>
-                {
-                    var coverManager = this.GetManagers().CoverManager;
-                    if (await coverManager.RemoveAsync(bgId))
-                    {
-                        var videoManager = this.GetManagers().SeriesManager.GetVideoInfoManager(
-                            this.VideoInfo.SeriesView.Source);
-                        await videoManager.UpdateAsync(videoInfo);
-                    }
-                });
-            }
-
-            private async Task<bool> DownloadAsync(string url)
-            {
-                var builder = CoverBuilder.CreateBackground(this.VideoInfo.Source, url);
-                return await this.GetManagers().CoverManager.BuildCoverAsync(builder);
-            }
-
-            public async Task<bool?> StartSelect(Window window)
-            {
-                var parameters = new List<RemoteId>();
-
-                var imdbId = this.VideoInfo.Source.GetValidImdbId();
-                if (imdbId != null)
-                {
-                    parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
-                }
-
-                if (!this.Series.Source.TheTVDBId.IsNullOrWhiteSpace())
-                {
-                    parameters.Add(new RemoteId(RemoteIdType.TheTVDB, this.Series.Source.TheTVDBId));
-                }
-
-                imdbId = this.Series.Source.GetValidImdbId();
-                if (imdbId != null)
-                {
-                    parameters.Add(new RemoteId(RemoteIdType.Imdb, imdbId));
-                }
-
-                var url = WebImageSelectorWindow.StartSelectFanartByImdbId(window, this.VideoInfo.Source.Index.ToString(), parameters.ToArray());
-                if (string.IsNullOrWhiteSpace(url)) return null;
-                await this.RemoveAsync();
-                await this.DownloadAsync(url);
-                this.Refresh();
-                return false;
-            }
-
-            protected override bool IsDelayLoad => true;
-
-            public double Opacity
-            {
-                get { return this.opacity; }
-                set { this.SetPropertyRef(ref this.opacity, value); }
-            }
-
-            public int? GetSaveValue()
-            {
-                var intValue = checked((int)(this.Opacity * 10));
-                Debug.Assert(intValue >= 2 && intValue <= 8);
-                return intValue < 3 || intValue > 8 ? (int?)null : intValue;
-            }
-
-            protected override void SetCover(JryCover cover)
-            {
-                if (cover?.Opacity != null)
-                {
-                    var o = (double)cover.Opacity.Value;
-                    o = Math.Max(Math.Min(0.8, o / 10), 0.2);
-                    this.Opacity = o;
-                }
-                else
-                {
-                    this.Opacity = DefaultOpacity;
-                }
-                base.SetCover(cover);
-            }
-
-            public async void Flush()
-            {
-                if (this.IsCoverEmpty) return;
-                var manager = this.GetManagers().CoverManager;
-                var cover = await manager.LoadCoverAsync(this.Source.CoverId);
-                if (cover != null)
-                {
-                    var o = this.GetSaveValue(); ;
-                    if (cover.Opacity != o)
-                    {
-                        cover.Opacity = o;
-                        await manager.UpdateAsync(cover);
-                    }
-                }
             }
         }
     }

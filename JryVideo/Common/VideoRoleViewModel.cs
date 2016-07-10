@@ -79,7 +79,7 @@ namespace JryVideo.Common
             }
         }
 
-        private class AutoGenerateCoverProvider : IAutoGenerateCoverProvider<ICoverParent>
+        private class AutoGenerateCoverProvider : IAutoGenerateCoverProvider
         {
             public IImdbItem ImdbItem { get; set; }
 

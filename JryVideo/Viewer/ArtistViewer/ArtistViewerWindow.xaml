@@ -42,7 +42,7 @@
 
                     <Image Height="180"
                            Width="140"
-                           Source="{Binding Cover.BinaryData}"
+                           Source="{Binding CoverViewModel.BitmapImage}"
                            RenderOptions.BitmapScalingMode="Fant"
                            RenderOptions.EdgeMode="Aliased"
                            VerticalAlignment="Top" />

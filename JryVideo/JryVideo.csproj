@@ -183,7 +183,6 @@
     <Compile Include="Add\VideoCreator\VideoCreatorViewModel.cs" />
     <Compile Include="Common\ArtistViewModel.cs" />
     <Compile Include="Common\FlagViewModel.cs" />
-    <Compile Include="Common\HasCoverViewModel.cs" />
     <Compile Include="Common\ImageViewModel.cs" />
     <Compile Include="Common\EditorItemViewModel.cs" />
     <Compile Include="Common\ValidationRules\VideoEpisodesCountValidationRule.cs" />

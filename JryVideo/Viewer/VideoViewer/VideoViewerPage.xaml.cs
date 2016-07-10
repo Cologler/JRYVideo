@@ -106,7 +106,7 @@ namespace JryVideo.Viewer.VideoViewer
             if (this.ViewModel.InfoView.OpenEditorWindows(this.TryFindParent<Window>()))
             {
                 this.ViewModel.ReloadEpisodes();
-                this.ViewModel.Background.BeginUpdateCoverIfEmpty();
+                this.ViewModel.Background.RefreshProperties();
             }
         }
 
@@ -191,7 +191,7 @@ namespace JryVideo.Viewer.VideoViewer
             var seriesViewModel = this.ViewModel.InfoView.SeriesView;
             if (seriesViewModel.OpenEditorWindows(this.TryFindParent<Window>()))
             {
-                this.ViewModel.Background.BeginUpdateCoverIfEmpty();
+                this.ViewModel.Background.RefreshProperties();
             }
         }
 
