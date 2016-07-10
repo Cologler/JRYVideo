@@ -26,21 +26,14 @@ namespace JryVideo.Common
         {
             get
             {
-                try
+                if (this.containCover != false)
                 {
-                    if (this.containCover != false)
+                    if (this.cover == null)
                     {
-                        if (this.cover == null)
-                        {
-                            this.BeginForceReloadCover();
-                        }
+                        this.BeginForceReloadCover();
                     }
-                    return this.cover;
                 }
-                finally
-                {
-                    this.cover = null;
-                }
+                return this.cover;
             }
             private set
             {
