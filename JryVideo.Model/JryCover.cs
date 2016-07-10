@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
@@ -9,6 +11,9 @@ namespace JryVideo.Model
 
         [BsonIgnoreIfDefault]
         public byte[] BinaryData { get; set; }
+
+        [BsonIgnore]
+        public Stream BinaryStream => this.BinaryData.ToMemoryStream();
 
         /// <summary>
         /// (value / 10) was opacity.

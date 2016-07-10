@@ -1,10 +1,4 @@
-﻿using JryVideo.Common;
-using JryVideo.Editors.EntityEditor;
-using JryVideo.SearchEngine;
-using JryVideo.Viewer.FilesViewer;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -13,6 +7,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using JryVideo.Common;
+using JryVideo.Editors.EntityEditor;
+using JryVideo.SearchEngine;
+using JryVideo.Viewer.FilesViewer;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Viewer.VideoViewer
 {
@@ -195,11 +195,13 @@ namespace JryVideo.Viewer.VideoViewer
             }
         }
 
-        private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.ClickCount > 1 && this.ViewModel.InfoView.CoverViewModel.Cover != null)
+            if (e.ClickCount > 1)
             {
-                var buffer = this.ViewModel.InfoView.CoverViewModel.Cover.BinaryData;
+                var cover = await this.ViewModel.InfoView.CoverViewModel.GetCoverAsync();
+                if (cover == null) return;
+                var buffer = cover.BinaryData;
                 if (buffer.Length > 0)
                 {
                     string path;
@@ -214,7 +216,7 @@ namespace JryVideo.Viewer.VideoViewer
                         file.Write(buffer);
                     }
 
-                    Task.Run(() =>
+                    await Task.Run(() =>
                     {
                         using (var p = Process.Start(path))
                         {

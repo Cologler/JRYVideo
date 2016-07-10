@@ -54,14 +54,9 @@ namespace JryVideo.Common
             this.SetCover(await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId));
         }
 
-        protected virtual async void SetCover(JryCover cover)
+        protected virtual void SetCover(JryCover cover)
         {
             this.Cover = cover;
-            if (cover == null)
-            {
-                var errorMsg = $"{this.Source} missing cover [{this.Source.CoverId}].";
-                await Log.WriteAsync(errorMsg);
-            }
         }
 
         protected virtual bool IsDelayLoad => false;

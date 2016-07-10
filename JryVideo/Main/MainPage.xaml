@@ -265,9 +265,16 @@
                                       Margin="0,4">
                                     <Grid HorizontalAlignment="Center"
                                           VerticalAlignment="Center">
-                                        <Image Source="{Binding CoverViewModel.Cover.BinaryData}"
+                                        <!--<Image Source="{Binding CoverViewModel.Cover.BinaryData}"
                                                RenderOptions.BitmapScalingMode="Fant"
-                                               RenderOptions.EdgeMode="Aliased" />
+                                               RenderOptions.EdgeMode="Aliased">
+                                            
+                                        </Image>-->
+
+                                        <Image RenderOptions.BitmapScalingMode="Fant"
+                                               RenderOptions.EdgeMode="Aliased"
+                                               Source="{Binding CoverViewModel.BitmapImage}">
+                                        </Image>
 
                                         <Grid Width="150"
                                               Height="150"

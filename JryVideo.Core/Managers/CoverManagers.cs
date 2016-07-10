@@ -27,24 +27,17 @@ namespace JryVideo.Core.Managers
 
         public async Task<JryCover> LoadCoverAsync(string coverId)
         {
-            if (coverId == null) return null;
+            if (coverId == null) throw new ArgumentNullException(nameof(coverId));
 
             return await Task.Run(async () =>
             {
                 var obj = this.MemoryCache.Get(coverId);
                 if (obj != null) return (JryCover)obj;
-
                 var cover = await this.Source.FindAsync(coverId);
-
                 if (cover != null)
                 {
-                    lock (this.MemoryCache)
-                    {
-                        obj = this.MemoryCache.AddOrGetExisting(coverId, cover, DateTimeOffset.UtcNow.AddHours(1));
-                        return obj != null ? (JryCover)obj : cover;
-                    }
+                    return (JryCover)this.MemoryCache.AddOrGetExisting(coverId, cover, DateTimeOffset.UtcNow.AddHours(1)) ?? cover;
                 }
-
                 return null;
             });
         }

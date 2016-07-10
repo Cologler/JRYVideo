@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Media.Imaging;
 using Jasily.ComponentModel;
 
@@ -28,6 +27,7 @@ namespace JryVideo.Common
                 var image = new BitmapImage();
                 image.BeginInit();
                 image.StreamSource = data.ToMemoryStream();
+                image.CacheOption = BitmapCacheOption.OnLoad;
                 image.EndInit();
                 return new ImageViewModel(image);
             }

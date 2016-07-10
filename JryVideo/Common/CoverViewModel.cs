@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Jasily.ComponentModel;
 using JryVideo.Model;
 
@@ -8,35 +10,78 @@ namespace JryVideo.Common
     public class CoverViewModel : JasilyViewModel<Model.Interfaces.ICoverParent>
     {
         private JryCover cover;
+        private BitmapImage bitmapImage;
 
         public CoverViewModel(Model.Interfaces.ICoverParent source)
             : base(source)
         {
         }
 
+        /// <summary>
+        /// only work on UI thread.
+        /// </summary>
         [NotifyPropertyChanged]
         public JryCover Cover
         {
             get
             {
-                if (this.cover == null)
+                try
                 {
-                    this.BeginForceReloadCover();
+                    if (this.cover == null)
+                    {
+                        this.BeginForceReloadCover();
+                    }
+                    else
+                    {
+
+                    }
+                    return this.cover;
                 }
-                return this.cover;
+                finally
+                {
+                    this.cover = null;
+                }
             }
-            private set { this.SetPropertyRef(ref this.cover, value); }
+            private set
+            {
+                this.SetPropertyRef(ref this.cover, value);
+            }
         }
 
-        public async Task<JryCover> TryGetCoverAsync()
+        public BitmapImage BitmapImage
         {
-            if (this.Source.CoverId == null) return null;
-
-            return await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId);
+            get
+            {
+                if (this.bitmapImage == null)
+                {
+                    this.BeginLoadCover(z =>
+                    {
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.StreamSource = z.BinaryStream;
+                        image.CacheOption = BitmapCacheOption.OnDemand;
+                        //image.CreateOptions = BitmapCreateOptions.DelayCreation;
+                        image.DecodePixelWidth = 300;
+                        image.EndInit();
+                        this.BitmapImage = image;
+                    });
+                }
+                return this.bitmapImage;
+            }
+            set { this.SetPropertyRef(ref this.bitmapImage, value); }
         }
 
-        public async void BeginForceReloadCover()
+        /// <summary>
+        /// return null if get failed.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<JryCover> GetCoverAsync() => await this.GetManagers().CoverManager.LoadCoverAsync(this.Source.CoverId);
+
+        public void BeginForceReloadCover() => this.BeginLoadCover(z => this.Cover = z);
+
+        public async void BeginLoadCover(Action<JryCover> callback)
         {
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
             var coverId = this.Source.CoverId;
             JryCover cover = null;
             if (coverId != null)
@@ -55,7 +100,7 @@ namespace JryVideo.Common
                 Debug.Assert(cover != null);
             }
             if (this.IsDelayLoad) await Task.Yield();
-            this.Cover = cover;
+            callback(cover);
         }
 
         public bool IsDelayLoad { get; set; }

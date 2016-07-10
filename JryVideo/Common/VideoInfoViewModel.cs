@@ -361,10 +361,7 @@ namespace JryVideo.Common
                 return;
             }
 
-            var cover = this.CoverViewModel.Cover;
-            var viewModel = cover != null
-                ? CoverEditorViewModel.From(cover)
-                : await CoverEditorViewModel.FromAsync(this.GetManagers().CoverManager, this.Source);
+            var viewModel = await CoverEditorViewModel.FromAsync(this.GetManagers().CoverManager, this.Source);
             viewModel.DoubanId = this.Source.DoubanId ?? string.Empty;
             viewModel.ImdbId = this.SeriesView.Source.ImdbId ?? this.Source.ImdbId ?? string.Empty;
             var dlg = new CoverEditorWindow(viewModel);
