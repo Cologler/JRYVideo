@@ -11,6 +11,7 @@ namespace JryVideo.Common
     {
         private JryCover cover;
         private BitmapImage bitmapImage;
+        private bool? containCover;
 
         public CoverViewModel(Model.Interfaces.ICoverParent source)
             : base(source)
@@ -27,13 +28,12 @@ namespace JryVideo.Common
             {
                 try
                 {
-                    if (this.cover == null)
+                    if (this.containCover != false)
                     {
-                        this.BeginForceReloadCover();
-                    }
-                    else
-                    {
-
+                        if (this.cover == null)
+                        {
+                            this.BeginForceReloadCover();
+                        }
                     }
                     return this.cover;
                 }
@@ -52,19 +52,27 @@ namespace JryVideo.Common
         {
             get
             {
-                if (this.bitmapImage == null)
+                if (this.containCover != false)
                 {
-                    this.BeginLoadCover(z =>
+                    if (this.bitmapImage == null)
                     {
-                        var image = new BitmapImage();
-                        image.BeginInit();
-                        image.StreamSource = z.BinaryStream;
-                        image.CacheOption = BitmapCacheOption.OnDemand;
-                        //image.CreateOptions = BitmapCreateOptions.DelayCreation;
-                        image.DecodePixelWidth = 300;
-                        image.EndInit();
-                        this.BitmapImage = image;
-                    });
+                        this.BeginLoadCover(async z =>
+                        {
+                            BitmapImage image = null;
+                            await Task.Run(() =>
+                            {
+                                image = new BitmapImage();
+                                image.BeginInit();
+                                image.StreamSource = z.BinaryStream;
+                                image.CacheOption = BitmapCacheOption.OnDemand;
+                                image.DecodePixelWidth = 300; // make memory small
+                                image.EndInit();
+                                image.Freeze(); // cross thread
+                            });
+                            //var 
+                            this.BitmapImage = image;
+                        });
+                    }
                 }
                 return this.bitmapImage;
             }
@@ -93,12 +101,14 @@ namespace JryVideo.Common
                 var generater = this.AutoGenerateCoverProvider;
                 if (generater == null || !await generater.GenerateAsync(this.Source))
                 {
+                    this.containCover = false;
                     return;
                 }
                 Debug.Assert(this.Source.CoverId != null);
                 cover = await this.GetManagers().CoverManager.LoadCoverAsync(coverId);
                 Debug.Assert(cover != null);
             }
+            this.containCover = true;
             if (this.IsDelayLoad) await Task.Yield();
             callback(cover);
         }
