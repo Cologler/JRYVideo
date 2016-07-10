@@ -68,7 +68,7 @@ namespace JryVideo.Controls.EditSeries
             return await this.CommitAsync(this.GetManagers().SeriesManager, series);
         }
 
-        public override void Clear()
+        protected override void Clear()
         {
             this.NamesViewModel.Names = "";
             this.DoubanId.Value = "";

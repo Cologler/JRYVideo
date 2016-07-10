@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Jasily;
+using Jasily.Collections.Generic;
 using JryVideo.Model;
 using JryVideo.Model.Interfaces;
-using Jasily.Collections.Generic;
 
 namespace JryVideo.Core.Managers
 {
@@ -273,44 +273,7 @@ namespace JryVideo.Core.Managers
             }
         }
 
-        private void BuildCover(JryCover cover)
-        {
-            switch (cover.CoverType)
-            {
-                case CoverType.Artist:
-                    break;
-
-                case CoverType.Video:
-                    if (cover.VideoId == null)
-                    {
-                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video Id.");
-                    }
-                    break;
-
-                case CoverType.Background:
-                    if (cover.VideoId == null)
-                    {
-                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video Id.");
-                    }
-                    break;
-
-                case CoverType.Role:
-                    if (cover.VideoId == null && cover.SeriesId == null)
-                    {
-                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing video/series Id.");
-                    }
-                    if (cover.ActorId == null)
-                    {
-                        this.AddMessage($"cover [{cover.Id}] type [{cover.CoverType}] missing actor Id.");
-                    }
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            this.covers.Add(cover.Id, new CoverRef(cover));
-        }
+        private void BuildCover(JryCover cover) => this.covers.Add(cover.Id, new CoverRef(cover));
 
         private void AddMessage(string msg) => this.messages.Add(msg);
 
@@ -341,9 +304,6 @@ namespace JryVideo.Core.Managers
                 : base(obj)
             {
                 this.CoverType = obj.CoverType;
-                this.SeriesId = obj.SeriesId;
-                this.VideoId = obj.VideoId;
-                this.ActorId = obj.ActorId;
             }
 
             public List<CoverParentRef> CoverParents { get; } = new List<CoverParentRef>();

@@ -18,21 +18,27 @@ namespace JryVideo.Common
         public event EventHandler<RequestActionEventArgs<T>> Creating;
         public event EventHandler<T> Created;
         public event EventHandler<T> Updated;
-
-        public T Source { get; private set; }
-
-        public virtual void CreateMode()
-        {
-            this.Source = new T();
-            this.Action = ObjectChangedAction.Create;
-        }
+        private T editingObject;
 
         public virtual void ModifyMode(T source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            this.Source = source;
             this.Action = ObjectChangedAction.Modify;
+            this.editingObject = source;
+            this.ReadFromObject(this.editingObject);
+        }
 
+        public virtual void CreateMode()
+        {
+            this.Action = ObjectChangedAction.Create;
+            this.editingObject = new T();
+            this.ReadFromObject(this.editingObject);
+        }
+
+        public virtual void CloneMode(T source)
+        {
+            this.Action = ObjectChangedAction.Create;
+            this.editingObject = new T();
             this.ReadFromObject(source);
         }
 
@@ -43,18 +49,7 @@ namespace JryVideo.Common
             set { this.SetPropertyRef(ref this.description, value); }
         }
 
-        public virtual void CloneMode(T source)
-        {
-            this.Source = new T();
-            this.Action = ObjectChangedAction.Create;
-
-            this.ReadFromObject(source);
-        }
-
-        protected virtual T GetCommitObject()
-        {
-            return this.Action == ObjectChangedAction.Create ? new T() : this.Source;
-        }
+        public T GetCommitObject() => this.editingObject;
 
         public ObjectChangedAction Action { get; private set; }
 
@@ -75,6 +70,7 @@ namespace JryVideo.Common
             switch (this.Action)
             {
                 case ObjectChangedAction.Create:
+                    obj.ResetCreated();
                     var arg = new RequestActionEventArgs<T>(obj) { IsAccept = true };
                     this.Creating.Fire(this, arg);
                     if (arg.IsAccept && await provider.InsertAsync(obj))
@@ -107,7 +103,7 @@ namespace JryVideo.Common
         protected virtual async Task<bool> OnUpdateAsync(IObjectEditProvider<T> provider, T obj)
             => await provider.UpdateAsync(obj);
 
-        public virtual void Clear()
+        protected virtual void Clear()
         {
 
         }

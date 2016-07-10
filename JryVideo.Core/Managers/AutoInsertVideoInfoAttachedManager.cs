@@ -25,7 +25,7 @@ namespace JryVideo.Core.Managers
         protected override T BuildItem(string id)
         {
             var ret = VideoInfoAttached.Build<T>(id);
-            ret.Version = Upgrader<T>.MaxVersion;
+            ret.Version = Upgrader<T>.MaxVersion; // for jryvideo & video role collection
             return ret;
         }
     }

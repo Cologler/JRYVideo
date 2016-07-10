@@ -6,6 +6,7 @@ using System.Net;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Jasily.Net;
+using JryVideo.Core.Managers.Upgrades;
 using JryVideo.Core.Models;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
@@ -70,6 +71,7 @@ namespace JryVideo.Core.Managers
                             var result = await request.GetResultAsBytesAsync();
                             if (!result.IsSuccess) continue;
                             var cover = builder.Build(result.Result);
+                            cover.Version = Upgrader<JryCover>.MaxVersion;
                             if (await this.InsertOrUpdateAsync(cover)) return true;
                         }
                         return false;

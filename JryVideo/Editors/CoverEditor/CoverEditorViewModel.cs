@@ -1,4 +1,5 @@
-﻿using System.Enums;
+﻿using System;
+using System.Enums;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -7,7 +8,9 @@ using Jasily.ComponentModel.Editable;
 using Jasily.Net;
 using JryVideo.Common;
 using JryVideo.Core.Douban;
+using JryVideo.Core.Managers;
 using JryVideo.Model;
+using JryVideo.Model.Interfaces;
 using JryVideo.Selectors.WebImageSelector;
 
 namespace JryVideo.Editors.CoverEditor
@@ -20,13 +23,6 @@ namespace JryVideo.Editors.CoverEditor
         private byte[] binaryData;
         private ImageViewModel imageViewModel;
         private bool isChanged;
-
-        [EditableField]
-        public string DoubanId
-        {
-            get { return this.doubanId; }
-            set { this.SetPropertyRef(ref this.doubanId, value); }
-        }
 
         [EditableField]
         public string Uri
@@ -52,15 +48,17 @@ namespace JryVideo.Editors.CoverEditor
             }
         }
 
-        [EditableField]
+        public string DoubanId
+        {
+            get { return this.doubanId; }
+            set { this.SetPropertyRef(ref this.doubanId, value); }
+        }
+
         public string ImdbId
         {
             get { return this.imdbId; }
             set { this.SetPropertyRef(ref this.imdbId, value); }
         }
-
-        [EditableField]
-        public JryCoverSourceType CoverSourceType { get; set; }
 
         public ImageViewModel ImageViewModel
         {
@@ -131,6 +129,37 @@ namespace JryVideo.Editors.CoverEditor
                 obj.BuildMetaData();
 
             return await this.CommitAsync(coverManager, obj);
+        }
+
+        public static CoverEditorViewModel From(JryCover cover)
+        {
+            if (cover == null) throw new ArgumentNullException(nameof(cover));
+            var viewModel = new CoverEditorViewModel();
+            viewModel.ModifyMode(cover);
+            return viewModel;
+        }
+
+        public static async Task<CoverEditorViewModel> FromAsync(CoverManager manager, ICoverParent coverParent)
+        {
+            var viewModel = new CoverEditorViewModel();
+            if (coverParent.CoverId == null) // since cover id equal id, new object may contain null cover id.
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                var cover = await manager.FindAsync(coverParent.CoverId);
+
+                if (cover == null)
+                {
+                    viewModel.CreateMode();
+                }
+                else
+                {
+                    viewModel.ModifyMode(cover);
+                }
+            }
+            return viewModel;
         }
     }
 }

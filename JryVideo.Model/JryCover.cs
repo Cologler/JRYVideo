@@ -3,32 +3,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JryCover : RootObject,
-        JryCover.ISeriesRoleCover,
-        JryCover.IVideoRoleCover
+    public sealed partial class JryCover : RootObject
     {
         public CoverType CoverType { get; set; }
-
-        [BsonIgnoreIfDefault]
-        public JryCoverSourceType CoverSourceType { get; set; }
-
-        [BsonIgnoreIfDefault]
-        public string DoubanId { get; set; }
-
-        [BsonIgnoreIfDefault]
-        public string ImdbId { get; set; }
-
-        [BsonIgnoreIfDefault]
-        public string VideoId { get; set; }
-
-        [BsonIgnoreIfDefault]
-        public string SeriesId { get; set; }
-
-        [BsonIgnoreIfDefault]
-        public string ActorId { get; set; }
-
-        [BsonIgnoreIfDefault]
-        public string Uri { get; set; }
 
         [BsonIgnoreIfDefault]
         public byte[] BinaryData { get; set; }
@@ -54,37 +31,7 @@ namespace JryVideo.Model
 
         public struct QueryParameter
         {
-            public CoverType CoverType { get; set; }
-
-            public string VideoId { get; set; }
-
-            public string SeriesId { get; set; }
-
-            public string ActorId { get; set; }
-        }
-
-        public interface ICover
-        {
-            CoverType CoverType { get; set; }
-
-            JryCoverSourceType CoverSourceType { get; set; }
-
-            byte[] BinaryData { get; set; }
-        }
-
-        public interface IRoleCover : ICover
-        {
-            string ActorId { get; set; }
-        }
-
-        public interface IVideoRoleCover : IRoleCover
-        {
-            string VideoId { get; set; }
-        }
-
-        public interface ISeriesRoleCover : IRoleCover
-        {
-            string SeriesId { get; set; }
+            public string Id { get; set; }
         }
     }
 }

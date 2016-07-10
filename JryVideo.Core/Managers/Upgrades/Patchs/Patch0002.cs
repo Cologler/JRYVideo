@@ -6,7 +6,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
-    public class Patch0002 : IPatch<JrySeries>
+    public class Patch0002 : IPatch<JrySeries>, IPatch<JryCover>
     {
         public Task<bool> UpgradeAsync(JrySeries series)
         {
@@ -18,6 +18,18 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
             }
 
             return Task.FromResult(true);
+        }
+
+        public Task<bool> UpgradeAsync(JryCover item)
+        {
+            item.CoverSourceType = default(JryCoverSourceType);
+            item.DoubanId = null;
+            item.ImdbId = null;
+            item.SeriesId = null;
+            item.VideoId = null;
+            item.ActorId = null;
+            item.Uri = null;
+            return Patch0000.TrueTask;
         }
     }
 }

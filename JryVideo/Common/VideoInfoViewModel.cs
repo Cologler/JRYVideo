@@ -361,17 +361,13 @@ namespace JryVideo.Common
                 return;
             }
 
-            var dlg = new CoverEditorWindow();
             var cover = this.CoverViewModel.Cover;
-            if (cover != null)
-            {
-                dlg.ViewModel.ModifyMode(cover);
-                dlg.UpdateRadioButtonCheckedStatus();
-            }
-            else
-            {
-                dlg.ViewModel.CreateMode();
-            }
+            var viewModel = cover != null
+                ? CoverEditorViewModel.From(cover)
+                : await CoverEditorViewModel.FromAsync(this.GetManagers().CoverManager, this.Source);
+            viewModel.DoubanId = this.Source.DoubanId ?? string.Empty;
+            viewModel.ImdbId = this.SeriesView.Source.ImdbId ?? this.Source.ImdbId ?? string.Empty;
+            var dlg = new CoverEditorWindow(viewModel);
 
             if (dlg.ViewModel.DoubanId.IsNullOrWhiteSpace() && !this.Source.DoubanId.IsNullOrWhiteSpace())
             {

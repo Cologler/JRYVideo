@@ -42,26 +42,33 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
 
         public async Task<bool> UpgradeAsync(DataCenter dataCenter, JryCover cover)
         {
-            if (cover.CoverType == CoverType.Video)
+            string oldCoverId;
+            switch (cover.CoverType)
             {
-                if (cover.VideoId != null && cover.Id != cover.VideoId)
-                {
-                    var oldCoverId = cover.Id;
+                case CoverType.Artist:
+
+                    break;
+
+                case CoverType.Video:
+                    if (cover.VideoId == null || cover.VideoId == cover.Id) return true;
+                    oldCoverId = cover.Id;
                     cover.Id = cover.VideoId;
                     await dataCenter.CoverManager.Source.InsertOrUpdateAsync(cover);
                     await dataCenter.CoverManager.Source.RemoveAsync(oldCoverId);
-                }
-            }
+                    return true;
 
-            if (cover.CoverType == CoverType.Background)
-            {
-                if (cover.VideoId != null && cover.Id != JryVideoInfo.CreateBackgroundCoverId(cover.VideoId))
-                {
-                    var oldCoverId = cover.Id;
+                case CoverType.Background:
+                    if (cover.VideoId == null || JryVideoInfo.CreateBackgroundCoverId(cover.VideoId) == cover.Id)
+                        return true;
+                    oldCoverId = cover.Id;
                     cover.Id = JryVideoInfo.CreateBackgroundCoverId(cover.VideoId);
                     await dataCenter.CoverManager.Source.InsertOrUpdateAsync(cover);
                     await dataCenter.CoverManager.Source.RemoveAsync(oldCoverId);
-                }
+                    return true;
+
+                case CoverType.Role:
+
+                    break;
             }
 
             // return true to update old item, but we remove old item.

@@ -50,4 +50,35 @@ namespace JryVideo.Model
         [BsonElement("CoverId")]
         public string CoverId { get; set; }
     }
+
+    public partial class JryCover
+    {
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public JryCoverSourceType CoverSourceType { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public string DoubanId { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public string ImdbId { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public string VideoId { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public string SeriesId { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public string ActorId { get; set; }
+
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public string Uri { get; set; }
+    }
 }

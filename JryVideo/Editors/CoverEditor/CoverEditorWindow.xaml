@@ -51,12 +51,19 @@
                 <RowDefinition Height="70" />
                 <RowDefinition Height="70" />
             </Grid.RowDefinitions>
-
-            <RadioButton x:Name="DoubanRadioButton"
-                         Content="douban" 
-                         VerticalAlignment="Top"
-                         Margin="6"
-                         Checked="DoubanRadioButton_OnChecked"/>
+            <Grid.Resources>
+                <Style x:Key="LabelTextBlockStyle"
+                       TargetType="TextBlock"
+                       BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Margin"
+                            Value="6" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Top" />
+                </Style>
+            </Grid.Resources>
+            
+            <TextBlock Text="from douban"
+                       Style="{StaticResource LabelTextBlockStyle}" />
 
             <Grid Grid.Column="1"
                   VerticalAlignment="Top">
@@ -85,12 +92,9 @@
                         Click="LoadFromDoubanButton_OnClick"/>
             </Grid>
 
-            <RadioButton Grid.Column="2"
-                         x:Name="ImdbRadioButton"
-                         Content="imdb"
-                         VerticalAlignment="Top"
-                         Margin="6"
-                         Checked="ImdbRadioButton_OnChecked" />
+            <TextBlock Grid.Column="2"
+                       Text="from imdb"
+                       Style="{StaticResource LabelTextBlockStyle}" />
 
             <Grid Grid.Column="3"
                   VerticalAlignment="Top">
@@ -118,13 +122,10 @@
                         Click="LoadFromImdbButton_OnClick" />
             </Grid>
 
-            <RadioButton x:Name="UrlRadioButton"
-                         Grid.Row="1"
-                         Grid.Column="0"
-                         Content="url"
-                         VerticalAlignment="Top"
-                         Margin="6"
-                         Click="UrlRadioButton_OnClick"/>
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="from url"
+                       Style="{StaticResource LabelTextBlockStyle}" />
 
             <Grid Grid.Row="1"
                   Grid.Column="1"
@@ -155,14 +156,10 @@
                         Click="LoadFromUrlButton_OnClick"/>
             </Grid>
 
-            <RadioButton x:Name="ChooseRadioButton"
-                         Grid.Row="2"
-                         Grid.Column="0"
-                         Content="choose"
-                         VerticalAlignment="Top"
-                         Margin="6" 
-                         Checked="ChooseRadioButton_OnChecked"
-                         Unchecked="ChooseRadioButton_OnUnchecked"/>
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="from file"
+                       Style="{StaticResource LabelTextBlockStyle}" />
 
             <Button x:Name="ChooseButton"
                     Grid.Row="2"

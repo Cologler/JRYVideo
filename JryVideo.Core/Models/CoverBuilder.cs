@@ -42,33 +42,11 @@ namespace JryVideo.Core.Models
             var cover = new JryCover()
             {
                 CoverType = this.CoverType,
-                CoverSourceType = this.CoverSourceType,
-
-                DoubanId = this.DoubanId,
-                ImdbId = this.ImdbId,
-
-                VideoId = this.VideoId,
-                SeriesId = this.SeriesId,
-                ActorId = this.ActorId,
-
                 BinaryData = binaryData
             };
             cover.BuildMetaData();
             cover.Id = this.Id;
             return cover;
-        }
-
-        public JryCover.QueryParameter BuildQueryParameter()
-        {
-            var queryParameter = new JryCover.QueryParameter()
-            {
-                CoverType = this.CoverType,
-                VideoId = this.VideoId,
-                SeriesId = this.SeriesId,
-                ActorId = this.ActorId
-            };
-
-            return queryParameter;
         }
 
         public static CoverBuilder CreateVideo(JryVideoInfo video)

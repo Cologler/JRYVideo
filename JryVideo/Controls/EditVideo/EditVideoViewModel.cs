@@ -371,7 +371,7 @@ namespace JryVideo.Controls.EditVideo
                 this.Type = this.TypeCollection.FirstOrDefault();
 
             // initialize cover
-            var coverParent = this.Source as ICoverParent;
+            var coverParent = this.GetCommitObject() as ICoverParent;
             if (coverParent?.CoverId != null)
             {
                 var cover = await this.GetManagers().CoverManager.FindAsync(coverParent.CoverId);
@@ -411,7 +411,10 @@ namespace JryVideo.Controls.EditVideo
             var obj = this.GetCommitObject();
 
             if (this.Action == ObjectChangedAction.Create)
+            {
                 obj.BuildMetaData();
+                obj.ResetCreated();
+            }
 
             this.WriteToObject(obj);
 

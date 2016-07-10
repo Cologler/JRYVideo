@@ -24,8 +24,10 @@ namespace JryVideo.Model
             if (!isForce && this.Id != null) throw new Exception("can not rebuild meta data.");
 
             this.BuildId();
-            this.Created = DateTime.UtcNow;
+            this.ResetCreated();
         }
+
+        public void ResetCreated() => this.Created = DateTime.UtcNow;
 
         public bool IsMetaDataBuilded()
         {

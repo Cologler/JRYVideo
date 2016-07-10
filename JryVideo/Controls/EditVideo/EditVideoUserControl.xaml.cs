@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Enums;
 using System.Windows;
 using System.Windows.Controls;
 using JryVideo.Common;
 using JryVideo.Editors.CoverEditor;
 using JryVideo.Managers.FlagManager;
-using JryVideo.Model.Interfaces;
 using JryVideo.Selectors.VideoSelector;
 using MahApps.Metro.Controls;
 
@@ -48,24 +46,7 @@ namespace JryVideo.Controls.EditVideo
             }
             else
             {
-                dlg = new CoverEditorWindow();
-                var coverParent = this.ViewModel.Source as ICoverParent;
-                if (this.ViewModel.Action == ObjectChangedAction.Create)
-                {
-                    dlg.ViewModel.CreateMode();
-                }
-                else
-                {
-                    var cover = await this.ViewModel.GetManagers().CoverManager.FindAsync(coverParent.CoverId);
-                    if (cover == null)
-                    {
-                        dlg.ViewModel.CreateMode();
-                    }
-                    else
-                    {
-                        dlg.ViewModel.ModifyMode(cover);
-                    }
-                }
+                dlg = new CoverEditorWindow(await CoverEditorViewModel.FromAsync(this.ViewModel.GetManagers().CoverManager, this.ViewModel.GetCommitObject()));
             }
 
             if (dlg.ViewModel.DoubanId.IsNullOrWhiteSpace() && !this.ViewModel.DoubanId.IsNullOrWhiteSpace())
@@ -84,8 +65,6 @@ namespace JryVideo.Controls.EditVideo
                     dlg.ViewModel.ImdbId = this.ViewModel.ImdbId;
                 }
             }
-
-            dlg.UpdateRadioButtonCheckedStatus();
 
             if (dlg.ShowDialog() == true)
             {
@@ -113,7 +92,7 @@ namespace JryVideo.Controls.EditVideo
         {
             var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
                 this.ViewModel.Parent,
-                without: this.ViewModel.Source,
+                without: this.ViewModel.GetCommitObject(),
                 defaultId: this.ViewModel.LastVideoViewModel?.Source.Id);
             if (result.IsAccept)
             {
@@ -125,7 +104,7 @@ namespace JryVideo.Controls.EditVideo
         {
             var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
                 this.ViewModel.Parent,
-                without: this.ViewModel.Source,
+                without: this.ViewModel.GetCommitObject(),
                 defaultId: this.ViewModel.NextVideoViewModel?.Source.Id);
             if (result.IsAccept)
             {
