@@ -1,13 +1,13 @@
-﻿using JryVideo.Common;
-using JryVideo.Model;
-using JryVideo.Selectors.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using JryVideo.Common;
+using JryVideo.Model;
+using JryVideo.Selectors.Common;
 
 namespace JryVideo.Selectors.FlagSelector
 {
@@ -55,10 +55,10 @@ namespace JryVideo.Selectors.FlagSelector
             this.SelectedItems.Reset(await flags
                 .Where(z => this.SelectedStrings.Contains(z.Source.Value))
                 .ToArrayAsync());
-            
+
             this.Items.Collection.Reset(await flags
                 .OrderByDescending(z => z.Source.Updated)
-                .ThenBy(z => z.Source.Count)
+                .ThenByDescending(z => z.Source.Count)
                 .ToArrayAsync());
         }
 
