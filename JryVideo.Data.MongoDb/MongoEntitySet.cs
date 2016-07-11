@@ -125,7 +125,7 @@ namespace JryVideo.Data.MongoDb
         {
             this.Engine.TestPass();
             this.Print(entity, "insert");
-            entity.CheckError();
+            this.BeforeSave(entity);
             await this.Collection.InsertOneAsync(entity);
             return true;
         }
@@ -137,7 +137,7 @@ namespace JryVideo.Data.MongoDb
             foreach (var item in entities)
             {
                 this.Print(item, "insert");
-                item.CheckError();
+                this.BeforeSave(item);
             }
             await this.Collection.InsertManyAsync(entities);
             return true;
@@ -147,7 +147,7 @@ namespace JryVideo.Data.MongoDb
         {
             this.Engine.TestPass();
             this.Print(entity, "insertOrUpdate");
-            entity.CheckError();
+            this.BeforeSave(entity);
             await this.Collection.FindOneAndReplaceAsync(
                 Builders<TEntity>.Filter.Eq(z => z.Id, entity.Id),
                 entity,
@@ -159,7 +159,7 @@ namespace JryVideo.Data.MongoDb
         {
             this.Engine.TestPass();
             this.Print(entity, "update");
-            entity.CheckError();
+            this.BeforeSave(entity);
             this.Log(JasilyLogger.LoggerMode.Release, "update \r\n" + entity.Print() + "\r\n");
             var filter = Builders<TEntity>.Filter;
             return (await this.Collection.ReplaceOneAsync(
@@ -173,6 +173,13 @@ namespace JryVideo.Data.MongoDb
             this.Log(JasilyLogger.LoggerMode.Release, "remove \r\n" + id);
             var filter = Builders<TEntity>.Filter;
             return (await this.Collection.DeleteOneAsync(filter.Eq(t => t.Id, id))).DeletedCount == 1;
+        }
+
+        protected void BeforeSave(TEntity obj)
+        {
+            obj.CheckError();
+            var updated = obj as IUpdated;
+            if (updated != null) updated.Updated = DateTime.UtcNow;
         }
     }
 }

@@ -155,7 +155,7 @@ namespace JryVideo.Core.Managers
             {
                 var type = (int)z.Type;
                 var dest = this.flagRefs.GetOrCreateValue(type);
-                if (string.IsNullOrEmpty(z.Value) || z.Id != JryFlag.BuildCounterId(z.Type, z.Value))
+                if (string.IsNullOrEmpty(z.Value) || z.Id != JryFlag.BuildFlagId(z.Type, z.Value))
                 {
                     if (Debugger.IsAttached) Debugger.Break();
                     Debug.Assert(false);
@@ -542,7 +542,7 @@ namespace JryVideo.Core.Managers
                 switch (this.Type)
                 {
                     case ErrorType.FlagCount:
-                        var flag = await dataCenter.FlagManager.FindAsync(JryFlag.BuildCounterId(this.type, this.value));
+                        var flag = await dataCenter.FlagManager.FindAsync(JryFlag.BuildFlagId(this.type, this.value));
                         if (flag != null)
                         {
                             flag.Count = this.count;

@@ -29,6 +29,12 @@ namespace JryVideo.Model
             }
         }
 
+        /// <summary>
+        /// not NullOrWhiteSpace
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="path"></param>
+        /// <param name="line"></param>
         public static void NotEmpty([NotNull] string value,
             [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
         {

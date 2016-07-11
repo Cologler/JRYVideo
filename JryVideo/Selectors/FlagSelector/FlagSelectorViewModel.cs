@@ -23,9 +23,7 @@ namespace JryVideo.Selectors.FlagSelector
         }
 
         protected override bool OnFilter(FlagViewModel obj)
-        {
-            return base.OnFilter(obj) && this.FilterBySelected(obj) && this.FilterByText(obj);
-        }
+            => base.OnFilter(obj) && this.FilterBySelected(obj) && this.FilterByText(obj);
 
         private bool FilterByText(FlagViewModel obj)
         {
@@ -34,10 +32,7 @@ namespace JryVideo.Selectors.FlagSelector
                    this.filters.Any(z => obj.Source.Value.Contains(z, StringComparison.OrdinalIgnoreCase));
         }
 
-        private bool FilterBySelected(FlagViewModel obj)
-        {
-            return !this.SelectedItems.Contains(obj);
-        }
+        private bool FilterBySelected(FlagViewModel obj) => !this.SelectedItems.Contains(obj);
 
         protected override bool OnResetFilter(string filterText)
         {
@@ -50,26 +45,24 @@ namespace JryVideo.Selectors.FlagSelector
 
         public ObservableCollection<FlagViewModel> SelectedItems { get; } = new ObservableCollection<FlagViewModel>();
 
-        public List<string> SelectedStrings { get; } = new List<string>();
+        public HashSet<string> SelectedStrings { get; } = new HashSet<string>();
 
         public async Task LoadAsync()
         {
             var items = (await this.GetManagers().FlagManager.LoadAsync(this.Type)).ToArray();
+            var flags = items.Select(z => new FlagViewModel(z)).ToArray();
 
-            this.Items.Collection.Clear();
-            foreach (var item in items.Select(z => new FlagViewModel(z)))
-            {
-                if (this.SelectedStrings.Contains(item.Source.Value))
-                    this.SelectedItems.Add(item);
-
-                this.Items.Collection.Add(item);
-            }
+            this.SelectedItems.Reset(await flags
+                .Where(z => this.SelectedStrings.Contains(z.Source.Value))
+                .ToArrayAsync());
+            
+            this.Items.Collection.Reset(await flags
+                .OrderByDescending(z => z.Source.Updated)
+                .ThenBy(z => z.Source.Count)
+                .ToArrayAsync());
         }
 
-        public void Sync()
-        {
-            this.SelectedStrings.Reset(this.SelectedItems.Select(z => z.Source.Value));
-        }
+        public void Sync() => this.SelectedStrings.Reset(this.SelectedItems.Select(z => z.Source.Value));
 
         public void SelectItem(FlagViewModel item)
         {

@@ -1,10 +1,10 @@
-﻿using JryVideo.Data.DataSources;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.EventArgses;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Data.DataSources;
+using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
@@ -236,7 +236,7 @@ namespace JryVideo.Core.Managers
             if (oldName == newName) return true;
 
             // old
-            var oldId = JryFlag.BuildCounterId(type, oldName);
+            var oldId = JryFlag.BuildFlagId(type, oldName);
             var oldFlag = await this.FindAsync(oldId);
             var count = oldFlag?.Count ?? 0;
             if (oldFlag != null)
@@ -245,7 +245,7 @@ namespace JryVideo.Core.Managers
             }
 
             // new
-            var newId = JryFlag.BuildCounterId(type, newName);
+            var newId = JryFlag.BuildFlagId(type, newName);
             var flag = await this.FindAsync(newId);
             bool ret;
             if (flag != null)

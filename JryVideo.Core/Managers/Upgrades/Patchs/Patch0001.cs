@@ -7,7 +7,11 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
-    public class Patch0001 : IGlobalPatch<JrySeries>, IGlobalPatch<JryCover>, IGlobalPatch<VideoRoleCollection>, IGlobalPatch<Artist>
+    public class Patch0001 :
+        IGlobalPatch<JrySeries>,
+        IGlobalPatch<JryCover>,
+        IGlobalPatch<VideoRoleCollection>,
+        IGlobalPatch<Artist>
     {
         public async Task<bool> UpgradeAsync(DataCenter dataCenter, JrySeries series)
         {
@@ -129,31 +133,16 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
             await dataCenter.CoverManager.Source.RemoveAsync(oldKey);
         }
 
-        /// <summary>
-        /// return true if upgrade success
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
         Task<bool> IPatch<JrySeries>.UpgradeAsync(JrySeries item)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// return true if upgrade success
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
         Task<bool> IPatch<JryCover>.UpgradeAsync(JryCover item)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// return true if upgrade success
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
         Task<bool> IPatch<VideoRoleCollection>.UpgradeAsync(VideoRoleCollection item)
         {
             throw new NotImplementedException();

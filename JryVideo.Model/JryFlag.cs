@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Model
 {
-    public class JryFlag : RootObject, IJasilyLoggerObject<JryFlag>
+    public class JryFlag : RootObject, IJasilyLoggerObject<JryFlag>, IUpdated
     {
         public JryFlagType Type { get; set; }
 
@@ -11,12 +12,10 @@ namespace JryVideo.Model
 
         public int Count { get; set; }
 
-        protected override void BuildId() => this.Id = BuildCounterId(this.Type, this.Value);
+        protected override void BuildId() => this.Id = BuildFlagId(this.Type, this.Value);
 
-        public static string BuildCounterId(JryFlagType type, string value)
-        {
-            return String.Format("{0}/{1}", (int)type, value.ThrowIfNullOrEmpty("value"));
-        }
+        public static string BuildFlagId(JryFlagType type, string value)
+            => $"{(int)type}/{value.ThrowIfNullOrEmpty("value")}";
 
         protected override bool InnerTestHasError()
         {
@@ -37,9 +36,15 @@ namespace JryVideo.Model
             return false;
         }
 
-        public static bool IsValueInvalid(string value)
+        public static bool IsValueInvalid(string value) => value.IsNullOrWhiteSpace();
+
+        public DateTime Updated { get; set; }
+
+        public override void CheckError()
         {
-            return value.IsNullOrWhiteSpace();
+            base.CheckError();
+            DataChecker.True(this.Count >= 0);
+            DataChecker.NotEmpty(this.Value);
         }
     }
 }
