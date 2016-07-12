@@ -77,6 +77,6 @@ namespace JryVideo.Data.MongoDb
         }
 
         private Task CollectAsync()
-            => this.Collection.FindOneAndDeleteAsync(Builders<JryFlag>.Filter.Lt(z => z.Count, 0));
+            => this.Collection.FindOneAndDeleteAsync(Builders<JryFlag>.Filter.Lt(z => z.Count, 1));
     }
 }
