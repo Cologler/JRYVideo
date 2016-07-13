@@ -143,11 +143,11 @@ namespace JryVideo.Editors.EntityEditor
             {
                 if (this.SetPropertyRef(ref this.format, value))
                 {
-                    this.formatArray = value?.Split(new[] {"[", "]", "."}, StringSplitOptions.RemoveEmptyEntries) ?? Empty<string>.Array;
+                    this.formatArray = value?.Split(new[] { "[", "]", "." }, StringSplitOptions.RemoveEmptyEntries) ?? Empty<string>.Array;
                 }
-                using (var releaser = this.readingSemaphore.Acquire())
+
+                using (this.readingSemaphore.Acquire().AcquiredCallback(this.TryParseFromFormatString))
                 {
-                    releaser.AcquiredCallback(this.TryParseFromFormatString);
                 }
             }
         }
@@ -306,7 +306,7 @@ namespace JryVideo.Editors.EntityEditor
             var mapper = ((App)Application.Current).UserConfig?.Mapper;
             if (mapper != null)
             {
-                
+
                 foreach (var flagTemplate in new[]
                 {
                     new { Type = JryFlagType.EntityFansub, Flags = this.fansubFlags },
