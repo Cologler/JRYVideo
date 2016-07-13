@@ -21,13 +21,17 @@ namespace JryVideo.Configs
             switch (type)
             {
                 case JryFlagType.EntityFansub:
-                    return this.Fansubs;
+                    return this.Fansubs ?? Empty<MapperValue>.Enumerable;
+
                 case JryFlagType.EntitySubTitleLanguage:
-                    return this.SubTitleLanguages;
+                    return this.SubTitleLanguages ?? Empty<MapperValue>.Enumerable;
+
                 case JryFlagType.EntityTrackLanguage:
-                    return this.TrackLanguages;
+                    return this.TrackLanguages ?? Empty<MapperValue>.Enumerable;
+
                 case JryFlagType.EntityTag:
-                    return this.Tags;
+                    return this.Tags ?? Empty<MapperValue>.Enumerable;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

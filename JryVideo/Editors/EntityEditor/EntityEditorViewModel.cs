@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Jasily.ComponentModel.Editable;
+using Jasily.Threading;
 using JryVideo.Common;
 using JryVideo.Configs;
 using JryVideo.Controls.SelectFlag;
@@ -27,6 +28,8 @@ namespace JryVideo.Editors.EntityEditor
         private bool isWildcardChecked = true;
         private bool isRegexChecked;
         private string format;
+        private string[] formatArray;
+        private ThreadUnsafeSemaphore readingSemaphore = new ThreadUnsafeSemaphore(1);
 
         public EntityEditorViewModel()
         {
@@ -138,36 +141,45 @@ namespace JryVideo.Editors.EntityEditor
             get { return this.format; }
             set
             {
-                this.SetPropertyRef(ref this.format, value);
-                this.TryParseFromFormatString();
+                if (this.SetPropertyRef(ref this.format, value))
+                {
+                    this.formatArray = value?.Split(new[] {"[", "]", "."}, StringSplitOptions.RemoveEmptyEntries) ?? Empty<string>.Array;
+                }
+                using (var releaser = this.readingSemaphore.Acquire())
+                {
+                    releaser.AcquiredCallback(this.TryParseFromFormatString);
+                }
             }
         }
 
         public override void ReadFromObject(JryEntity obj)
         {
-            base.ReadFromObject(obj);
-
-            this[JryFlagType.EntityFansub].Reset(obj.Fansubs);
-            this[JryFlagType.EntitySubTitleLanguage].Reset(obj.SubTitleLanguages);
-            this[JryFlagType.EntityTrackLanguage].Reset(obj.TrackLanguages);
-            this[JryFlagType.EntityTag].Reset(obj.Tags);
-
-            if (obj.Format != null)
+            using (this.readingSemaphore.Acquire())
             {
-                switch (obj.Format.Type)
+                base.ReadFromObject(obj);
+
+                this[JryFlagType.EntityFansub].Reset(obj.Fansubs);
+                this[JryFlagType.EntitySubTitleLanguage].Reset(obj.SubTitleLanguages);
+                this[JryFlagType.EntityTrackLanguage].Reset(obj.TrackLanguages);
+                this[JryFlagType.EntityTag].Reset(obj.Tags);
+
+                if (obj.Format != null)
                 {
-                    case JryFormatType.Regex:
-                        this.IsRegexChecked = true;
-                        break;
+                    switch (obj.Format.Type)
+                    {
+                        case JryFormatType.Regex:
+                            this.IsRegexChecked = true;
+                            break;
 
-                    case JryFormatType.Wildcard:
-                        this.IsWildcardChecked = true;
-                        break;
+                        case JryFormatType.Wildcard:
+                            this.IsWildcardChecked = true;
+                            break;
+                    }
+
+                    Debug.Assert(this.IsRegexChecked != this.IsWildcardChecked);
+
+                    this.Format = obj.Format.Value;
                 }
-
-                Debug.Assert(this.IsRegexChecked != this.IsWildcardChecked);
-
-                this.Format = obj.Format.Value;
             }
         }
 
@@ -241,6 +253,7 @@ namespace JryVideo.Editors.EntityEditor
         private async void TryParseFromFormatString()
         {
             var format = this.Format;
+            var formatArray = this.formatArray;
             if (format.IsNullOrWhiteSpace() || this.Action != ObjectChangedAction.Create) return;
 
             if (this.Resolution.IsNullOrWhiteSpace())
@@ -293,6 +306,7 @@ namespace JryVideo.Editors.EntityEditor
             var mapper = ((App)Application.Current).UserConfig?.Mapper;
             if (mapper != null)
             {
+                
                 foreach (var flagTemplate in new[]
                 {
                     new { Type = JryFlagType.EntityFansub, Flags = this.fansubFlags },
@@ -302,32 +316,28 @@ namespace JryVideo.Editors.EntityEditor
                 })
                 {
                     var col = this[flagTemplate.Type];
-                    col.Reset(col.ToArray()
-                        .Concat(await TryFindByUserConfigAsync(mapper, flagTemplate.Type, format))
-                        .Concat(flagTemplate.Flags.Where(z => format.Contains(z, StringComparison.OrdinalIgnoreCase)))
-                        .Distinct());
+                    col.Reset(await col.ToArray()
+                        .Concat(await FindByUserConfigAsync(mapper.GetByFlagType(flagTemplate.Type), format))
+                        .Concat(flagTemplate.Flags.Where(z =>
+                            formatArray.Any(x => z.Contains(x, StringComparison.OrdinalIgnoreCase)) ||
+                            format.Contains(z, StringComparison.OrdinalIgnoreCase)))
+                        .Distinct()
+                        .ToArrayAsync());
                 }
             }
         }
 
-        public static async Task<string[]> TryFindByUserConfigAsync(MapperConfig mc, JryFlagType type, string name)
-        {
-            if (mc == null) return Empty<string>.Array;
-            return await Task.Run(() => TryFindByUserConfigAsync(mc.GetByFlagType(type), name));
-        }
+        public static Task<string[]> FindByUserConfigAsync(IEnumerable<MapperValue> mapper, string name)
+            => FindByUserConfig(mapper, name).ToArrayAsync();
 
-        public static string[] TryFindByUserConfigAsync(IEnumerable<MapperValue> mapper, string name)
-        {
-            if (mapper == null) return Empty<string>.Array;
-            return mapper
-                    .Where(z => z.From != null && z.To != null)
-                    .Where(z => z.From.Where(x => x.Length > 0).FirstOrDefault(x => name.Contains(x, StringComparison.OrdinalIgnoreCase)) != null)
-                    .SelectMany(z => z.To)
-                    .Select(z => z.Trim())
-                    .Distinct()
-                    .Where(z => !string.IsNullOrEmpty(z))
-                    .ToArray();
-        }
+        public static IEnumerable<string> FindByUserConfig(IEnumerable<MapperValue> mapper, string name)
+            => mapper.Where(z => z.From != null && z.To != null)
+                .Where(z => z.From.Where(x => x.Length > 0)
+                    .FirstOrDefault(x => name.Contains(x, StringComparison.OrdinalIgnoreCase)) != null)
+                .SelectMany(z => z.To)
+                .Select(z => z.Trim())
+                .Distinct()
+                .Where(z => !string.IsNullOrEmpty(z));
 
         private static readonly Regex Crc32 = new Regex(@"(.*)(\[[a-f0-9]{7,8}\]|\([a-f0-9]{7,8}\))$", RegexOptions.IgnoreCase);
 
@@ -357,11 +367,11 @@ namespace JryVideo.Editors.EntityEditor
                 {
                     var sttags = subTitles.Select(Path.GetExtension).Distinct().ToArray();
                     var langs = sttags
-                        .SelectMany(z => TryFindByUserConfigAsync(mapper.ExtendSubTitleLanguages, z))
+                        .SelectMany(z => FindByUserConfig(mapper.ExtendSubTitleLanguages, z))
                         .Distinct()
                         .ToArray();
                     var fansubs = sttags
-                        .SelectMany(z => TryFindByUserConfigAsync(mapper.Fansubs, z))
+                        .SelectMany(z => FindByUserConfig(mapper.Fansubs, z))
                         .Distinct()
                         .ToArray();
                     this.GetUIDispatcher().BeginInvoke(() =>

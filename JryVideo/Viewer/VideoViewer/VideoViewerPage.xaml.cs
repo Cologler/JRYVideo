@@ -88,11 +88,11 @@ namespace JryVideo.Viewer.VideoViewer
 
         private async void AddEntityMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var w = this.TryFindParent<MetroWindow>();
+            if (this.ViewModel.Video == null) return;
 
             var dlg = new EntityEditorWindow()
             {
-                Owner = w
+                Owner = this.TryFindParent<MetroWindow>()
             }.CreateOrCloneMode(this.ViewModel.Video.Source);
 
             if (dlg.ShowDialog() == true || this.ViewModel.Video.IsObsolete)
