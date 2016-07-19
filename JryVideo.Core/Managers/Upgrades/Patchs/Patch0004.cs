@@ -3,14 +3,14 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
-    public class Patch0004 : IPatch<JrySeries>
+    public class Patch0004 : IPatch<Series>
     {
         /// <summary>
         /// return true if upgrade success
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public Task<bool> UpgradeAsync(JrySeries item)
+        public Task<bool> UpgradeAsync(Series item)
         {
             foreach (var video in item.Videos)
             {

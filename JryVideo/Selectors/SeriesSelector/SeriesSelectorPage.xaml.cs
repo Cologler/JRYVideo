@@ -25,7 +25,7 @@ namespace JryVideo.Selectors.SeriesSelector
 
         public SeriesSelectorViewModel SelectorViewModel { get; } = new SeriesSelectorViewModel();
 
-        void EditSeriesUserControl_ViewModel_Created(object sender, JrySeries e)
+        void EditSeriesUserControl_ViewModel_Created(object sender, Series e)
         {
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.EditSeriesUserControl_ViewModel_Created, sender, e))
             {

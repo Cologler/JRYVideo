@@ -17,10 +17,10 @@ namespace JryVideo.Common
 {
     public class VideoRoleCollectionViewModel : JasilyViewModel, IComparer
     {
-        private readonly JrySeries series;
+        private readonly Series series;
         private readonly JryVideoInfo video;
 
-        public VideoRoleCollectionViewModel(JrySeries series, JryVideoInfo video)
+        public VideoRoleCollectionViewModel(Series series, JryVideoInfo video)
         {
             this.series = series;
             this.video = video;

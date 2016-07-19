@@ -33,7 +33,7 @@ namespace JryVideo.Core.Managers.Upgrades
 
         public async Task RunAsync()
         {
-            await new Upgrader<JrySeries>(this.DataCenter)
+            await new Upgrader<Series>(this.DataCenter)
                 .ExecuteAsync(this.DataCenter.SeriesManager.Source, this.DataCenter.SeriesManager);
             await new Upgrader<JryCover>(this.DataCenter)
                 .ExecuteAsync(this.DataCenter.CoverManager.Source, this.DataCenter.CoverManager);

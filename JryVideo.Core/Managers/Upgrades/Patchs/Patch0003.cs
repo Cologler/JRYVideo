@@ -3,9 +3,9 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
-    public class Patch0003 : IPatch<JrySeries>
+    public class Patch0003 : IPatch<Series>
     {
-        public Task<bool> UpgradeAsync(JrySeries series)
+        public Task<bool> UpgradeAsync(Series series)
         {
             foreach (var video in series.Videos)
             {

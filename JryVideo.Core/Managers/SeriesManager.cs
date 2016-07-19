@@ -10,7 +10,7 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers
 {
-    public class SeriesManager : JryObjectManager<JrySeries, ISeriesSet>
+    public class SeriesManager : JryObjectManager<Series, ISeriesSet>
     {
         internal event EventHandler<IEnumerable<JryVideoInfo>> VideoInfoCreated;
         internal event EventHandler<IEnumerable<ChangingEventArgs<JryVideoInfo>>> VideoInfoUpdated;
@@ -24,7 +24,7 @@ namespace JryVideo.Core.Managers
             this.DataCenter = dataCenter;
         }
 
-        public override async Task<bool> InsertAsync(JrySeries series)
+        public override async Task<bool> InsertAsync(Series series)
         {
             if (await base.InsertAsync(series))
             {
@@ -39,7 +39,7 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        protected override async Task<bool> InsertAsync(IEnumerable<JrySeries> objs)
+        protected override async Task<bool> InsertAsync(IEnumerable<Series> objs)
         {
             if (await base.InsertAsync(objs))
             {
@@ -56,9 +56,9 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        public override Task<bool> UpdateAsync(JrySeries series) => this.UpdateAsync(series, true);
+        public override Task<bool> UpdateAsync(Series series) => this.UpdateAsync(series, true);
 
-        private async Task<bool> UpdateAsync(JrySeries series, bool isRaiseEvent)
+        private async Task<bool> UpdateAsync(Series series, bool isRaiseEvent)
         {
             var old = await this.FindAsync(series.Id);
 
@@ -121,14 +121,14 @@ namespace JryVideo.Core.Managers
             return await base.RemoveAsync(id);
         }
 
-        public async Task<IEnumerable<JrySeries>> QueryAsync(string searchText, int skip, int take)
+        public async Task<IEnumerable<Series>> QueryAsync(string searchText, int skip, int take)
             => await this.GetQuery(searchText).StartQuery(skip, take);
 
         public Query GetQuery(string searchText) => new Query(this, searchText);
 
-        public async Task<IEnumerable<JrySeries>> ListTrackingAsync() => await this.Source.ListTrackingAsync();
+        public async Task<IEnumerable<Series>> ListTrackingAsync() => await this.Source.ListTrackingAsync();
 
-        public static void BuildSeriesMetaData(JrySeries series)
+        public static void BuildSeriesMetaData(Series series)
         {
             BuildObjectMetaData(series);
             series.Videos.ForEach(BuildObjectMetaData);
@@ -139,14 +139,14 @@ namespace JryVideo.Core.Managers
             if (obj?.IsMetaDataBuilded() == false) obj.BuildMetaData();
         }
 
-        public VideoInfoManager GetVideoInfoManager(JrySeries obj)
+        public VideoInfoManager GetVideoInfoManager(Series obj)
         {
-            var manager = new VideoInfoManager(new SubObjectSetProvider<JrySeries, JryVideoInfo>(this, obj));
+            var manager = new VideoInfoManager(new SubObjectSetProvider<Series, JryVideoInfo>(this, obj));
             manager.CoverParentRemoving += (sender, parent) => this.OnCoverParentRemoving(parent, sender);
             return manager;
         }
 
-        internal override Task<CombineResult> CanCombineAsync(JrySeries to, JrySeries @from)
+        internal override Task<CombineResult> CanCombineAsync(Series to, Series @from)
         {
             if (to == null) throw new ArgumentNullException(nameof(to));
             if (from == null) throw new ArgumentNullException(nameof(from));
@@ -154,7 +154,7 @@ namespace JryVideo.Core.Managers
             return Task.FromResult(this.CanCombine(to, from));
         }
 
-        private CombineResult CanCombine(JrySeries to, JrySeries @from)
+        private CombineResult CanCombine(Series to, Series @from)
         {
             if (to.TheTVDBId != null && from.TheTVDBId != null && to.TheTVDBId != from.TheTVDBId)
             {
@@ -169,7 +169,7 @@ namespace JryVideo.Core.Managers
             return CombineResult.True;
         }
 
-        internal override async Task<CombineResult> CombineAsync(JrySeries to, JrySeries @from)
+        internal override async Task<CombineResult> CombineAsync(Series to, Series @from)
         {
             if (to == null) throw new ArgumentNullException(nameof(to));
             if (from == null) throw new ArgumentNullException(nameof(from));
@@ -196,19 +196,19 @@ namespace JryVideo.Core.Managers
             {
                 this.seriesManager = seriesManager;
                 this.QueryParameter = ParseQueryParameter(originText);
-                if (this.QueryParameter.Mode == JrySeries.QueryMode.Star)
+                if (this.QueryParameter.Mode == Series.QueryMode.Star)
                 {
-                    this.starArray = JrySeries.QueryParameter.GetStar(this.QueryParameter.Keyword);
+                    this.starArray = Series.QueryParameter.GetStar(this.QueryParameter.Keyword);
                 }
             }
 
-            public JrySeries.QueryParameter QueryParameter { get; }
+            public Series.QueryParameter QueryParameter { get; }
 
-            private static JrySeries.QueryParameter ParseQueryParameter(string originText)
+            private static Series.QueryParameter ParseQueryParameter(string originText)
             {
                 if (string.IsNullOrWhiteSpace(originText))
                 {
-                    return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.Any, originText);
+                    return new Series.QueryParameter(originText, Series.QueryMode.Any, originText);
                 }
 
                 var p = ParseQueryParameterWithKeyword(originText);
@@ -217,10 +217,10 @@ namespace JryVideo.Core.Managers
                     return p.Value;
                 }
 
-                return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.OriginText, originText);
+                return new Series.QueryParameter(originText, Series.QueryMode.OriginText, originText);
             }
 
-            private static JrySeries.QueryParameter? ParseQueryParameterWithKeyword(string originText)
+            private static Series.QueryParameter? ParseQueryParameterWithKeyword(string originText)
             {
                 var index = originText.IndexOf(':');
 
@@ -229,47 +229,47 @@ namespace JryVideo.Core.Managers
                     switch (originText.Substring(0, index).ToLower())
                     {
                         case "series-id":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.SeriesId,
+                            return new Series.QueryParameter(originText, Series.QueryMode.SeriesId,
                                 originText.Substring(index + 1));
 
                         case "video-id":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.VideoId,
+                            return new Series.QueryParameter(originText, Series.QueryMode.VideoId,
                                 originText.Substring(index + 1));
 
                         case "entity-id":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.EntityId,
+                            return new Series.QueryParameter(originText, Series.QueryMode.EntityId,
                                 originText.Substring(index + 1));
 
                         case "douban-id":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.DoubanId,
+                            return new Series.QueryParameter(originText, Series.QueryMode.DoubanId,
                                 originText.Substring(index + 1));
 
                         case "tag":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.Tag,
+                            return new Series.QueryParameter(originText, Series.QueryMode.Tag,
                                 originText.Substring(index + 1));
 
                         case "type":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.VideoType,
+                            return new Series.QueryParameter(originText, Series.QueryMode.VideoType,
                                 originText.Substring(index + 1));
 
                         case "year":
                             var year = originText.Substring(index + 1);
-                            if (JrySeries.QueryParameter.CanBeYear(year))
+                            if (Series.QueryParameter.CanBeYear(year))
                             {
-                                return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.VideoYear,
+                                return new Series.QueryParameter(originText, Series.QueryMode.VideoYear,
                                     year);
                             }
                             break;
 
                         case "imdb-id":
-                            return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.ImdbId,
+                            return new Series.QueryParameter(originText, Series.QueryMode.ImdbId,
                                 originText.Substring(index + 1));
 
                         case "star":
                             var star = originText.Substring(index + 1);
-                            if (JrySeries.QueryParameter.CanBeStar(star))
+                            if (Series.QueryParameter.CanBeStar(star))
                             {
-                                return new JrySeries.QueryParameter(originText, JrySeries.QueryMode.Star,
+                                return new Series.QueryParameter(originText, Series.QueryMode.Star,
                                     star);
                             }
                             break;
@@ -279,15 +279,15 @@ namespace JryVideo.Core.Managers
                 return null;
             }
 
-            public async Task<IEnumerable<JrySeries>> StartQuery(int skip, int take)
+            public async Task<IEnumerable<Series>> StartQuery(int skip, int take)
             {
                 var queryParameter = this.QueryParameter;
-                return queryParameter.Mode == JrySeries.QueryMode.Any
+                return queryParameter.Mode == Series.QueryMode.Any
                     ? (await this.seriesManager.LoadAsync(skip, take)).ToList(take)
                     : (await this.seriesManager.Source.QueryAsync(queryParameter, skip, take)).ToList(take);
             }
 
-            public bool IsMatch(JrySeries series, JryVideoInfo video)
+            public bool IsMatch(Series series, JryVideoInfo video)
             {
                 if (series == null) throw new ArgumentNullException(nameof(series));
                 if (video == null) throw new ArgumentNullException(nameof(video));
@@ -295,10 +295,10 @@ namespace JryVideo.Core.Managers
                 var queryParameter = this.QueryParameter;
                 switch (queryParameter.Mode)
                 {
-                    case JrySeries.QueryMode.Any:
+                    case Series.QueryMode.Any:
                         return true;
 
-                    case JrySeries.QueryMode.OriginText:
+                    case Series.QueryMode.OriginText:
                         if (series.Names.Any(z => z.Contains(queryParameter.Keyword, StringComparison.OrdinalIgnoreCase)) ||
                             video.Names.Any(z => z.Contains(queryParameter.Keyword, StringComparison.OrdinalIgnoreCase)))
                         {
@@ -306,40 +306,40 @@ namespace JryVideo.Core.Managers
                         }
                         break;
 
-                    case JrySeries.QueryMode.SeriesId:
+                    case Series.QueryMode.SeriesId:
                         if (series.Id == queryParameter.Keyword) return true;
                         break;
 
-                    case JrySeries.QueryMode.VideoId:
+                    case Series.QueryMode.VideoId:
                         if (video.Id == queryParameter.Keyword) return true;
                         break;
 
-                    case JrySeries.QueryMode.EntityId:
+                    case Series.QueryMode.EntityId:
                         return true;
 
-                    case JrySeries.QueryMode.DoubanId:
+                    case Series.QueryMode.DoubanId:
                         if (video.DoubanId == queryParameter.Keyword) return true;
                         break;
 
-                    case JrySeries.QueryMode.Tag:
+                    case Series.QueryMode.Tag:
                         if ((series.Tags != null && series.Tags.Any(z => z == queryParameter.Keyword)) ||
                             (video.Tags != null && video.Tags.Any(z => z == queryParameter.Keyword)))
                             return true;
                         break;
 
-                    case JrySeries.QueryMode.VideoType:
+                    case Series.QueryMode.VideoType:
                         if (video.Type == queryParameter.Keyword) return true;
                         break;
 
-                    case JrySeries.QueryMode.VideoYear:
+                    case Series.QueryMode.VideoYear:
                         if (video.Year.ToString() == queryParameter.Keyword) return true;
                         break;
 
-                    case JrySeries.QueryMode.ImdbId:
+                    case Series.QueryMode.ImdbId:
                         if (video.ImdbId == queryParameter.Keyword) return true;
                         break;
 
-                    case JrySeries.QueryMode.Star:
+                    case Series.QueryMode.Star:
                         return this.starArray.Contains(video.Star);
 
                     default:
@@ -361,16 +361,16 @@ namespace JryVideo.Core.Managers
             var oldValue = e.Value2;
             var newValue = e.Value3;
 
-            JrySeries.QueryParameter queryParameter;
+            Series.QueryParameter queryParameter;
             switch (type)
             {
                 case JryFlagType.SeriesTag:
                 case JryFlagType.VideoTag:
-                    queryParameter = new JrySeries.QueryParameter(oldValue, JrySeries.QueryMode.Tag, oldValue);
+                    queryParameter = new Series.QueryParameter(oldValue, Series.QueryMode.Tag, oldValue);
                     break;
 
                 case JryFlagType.VideoType:
-                    queryParameter = new JrySeries.QueryParameter(oldValue, JrySeries.QueryMode.VideoType, oldValue);
+                    queryParameter = new Series.QueryParameter(oldValue, Series.QueryMode.VideoType, oldValue);
                     break;
 
                 default:

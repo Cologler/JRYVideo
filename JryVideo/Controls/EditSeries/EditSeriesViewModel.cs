@@ -14,19 +14,19 @@ using static JryVideo.Common.Helper;
 
 namespace JryVideo.Controls.EditSeries
 {
-    public class EditSeriesViewModel : EditorItemViewModel<JrySeries>
+    public class EditSeriesViewModel : EditorItemViewModel<Series>
     {
         [EditableField(IsSubEditableViewModel = true)]
-        public NameEditableViewModel<JrySeries> NamesViewModel { get; }
-            = new NameEditableViewModel<JrySeries>(false);
+        public NameEditableViewModel<Series> NamesViewModel { get; }
+            = new NameEditableViewModel<Series>(false);
 
-        public override void ReadFromObject(JrySeries obj)
+        public override void ReadFromObject(Series obj)
         {
             base.ReadFromObject(obj);
             this.TagsViewModel.ReadTags(obj);
         }
 
-        public override void WriteToObject(JrySeries obj)
+        public override void WriteToObject(Series obj)
         {
             base.WriteToObject(obj);
             obj.ImdbId = obj.ImdbId.IsNullOrWhiteSpace() ? null : obj.ImdbId.Trim();
@@ -56,11 +56,11 @@ namespace JryVideo.Controls.EditSeries
             }
         }
 
-        public async Task<JrySeries> CommitAsync()
+        public async Task<Series> CommitAsync()
         {
             var series = this.GetCommitObject();
             Debug.Assert(series != null);
-            if (this.Action == ObjectChangedAction.Create) series.Version = Upgrader<JrySeries>.MaxVersion;
+            if (this.Action == ObjectChangedAction.Create) series.Version = Upgrader<Series>.MaxVersion;
             this.WriteToObject(series);
 
             SeriesManager.BuildSeriesMetaData(series);

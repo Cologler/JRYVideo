@@ -30,7 +30,7 @@ namespace JryVideo.Selectors.SeriesSelector
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
             => this.DialogResult = true;
 
-        public static JrySeries Select(Window parent, JrySeries without = null)
+        public static Series Select(Window parent, Series without = null)
         {
             var window = new SeriesSelectorWindow { Owner = parent };
             if (without != null)

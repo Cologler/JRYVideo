@@ -105,7 +105,7 @@ namespace JryVideo.Data.MongoDb
         }
 
         public ISeriesSet GetSeriesSet()
-            => new MongoSeriesDataSource(this, this.Database.GetCollection<JrySeries>("Series"));
+            => new MongoSeriesDataSource(this, this.Database.GetCollection<Series>("Series"));
 
         internal IMongoCollection<Model.JryVideo> VideoCollection
             => this.Database.GetCollection<Model.JryVideo>("Video");

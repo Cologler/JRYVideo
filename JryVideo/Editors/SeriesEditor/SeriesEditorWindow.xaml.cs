@@ -26,7 +26,7 @@ namespace JryVideo.Editors.SeriesEditor
             return this;
         }
 
-        void ViewModel_Updated(object sender, JrySeries e)
+        void ViewModel_Updated(object sender, Series e)
         {
             if (this.GetUIDispatcher().CheckAccessOrBeginInvoke(this.ViewModel_Updated, sender, e))
             {

@@ -1,33 +1,33 @@
-﻿using Jasily.ComponentModel;
-using JryVideo.Data.DataSources;
-using JryVideo.Model;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Jasily.ComponentModel;
+using JryVideo.Data.DataSources;
+using JryVideo.Model;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoSeriesDataSource : MongoJryEntitySet<JrySeries>, ISeriesSet
+    public class MongoSeriesDataSource : MongoJryEntitySet<Series>, ISeriesSet
     {
-        public MongoSeriesDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<JrySeries> collection)
+        public MongoSeriesDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<Series> collection)
             : base(engine, collection)
         {
         }
 
-        public async Task<IEnumerable<JrySeries>> QueryAsync(JrySeries.QueryParameter search, int skip, int take)
+        public async Task<IEnumerable<Series>> QueryAsync(Series.QueryParameter search, int skip, int take)
         {
-            var builder = Builders<JrySeries>.Filter;
-            FilterDefinition<JrySeries> filter;
+            var builder = Builders<Series>.Filter;
+            FilterDefinition<Series> filter;
 
             switch (search.Mode)
             {
-                case JrySeries.QueryMode.OriginText:
-                    var q1 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.OriginText:
+                    var q1 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Names)
                         .ToString();
@@ -37,12 +37,12 @@ namespace JryVideo.Data.MongoDb
                         builder.Regex(q1, new BsonRegularExpression(new Regex(Regex.Escape(search.Keyword), RegexOptions.IgnoreCase))));
                     break;
 
-                case JrySeries.QueryMode.SeriesId:
+                case Series.QueryMode.SeriesId:
                     var s = await this.FindAsync(search.Keyword);
-                    return s == null ? Enumerable.Empty<JrySeries>() : s.IntoArray();
+                    return s == null ? Enumerable.Empty<Series>() : s.IntoArray();
 
-                case JrySeries.QueryMode.VideoId:
-                    var q2 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.VideoId:
+                    var q2 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Id)
                         .ToString();
@@ -50,7 +50,7 @@ namespace JryVideo.Data.MongoDb
                     filter = builder.Eq(q2, search.Keyword);
                     break;
 
-                case JrySeries.QueryMode.EntityId:
+                case Series.QueryMode.EntityId:
                     var q3 = PropertySelector<Model.JryVideo>.Start()
                         .SelectMany(z => z.Entities)
                         .Select(z => z.Id)
@@ -58,8 +58,8 @@ namespace JryVideo.Data.MongoDb
                     Debug.Assert(q3 == "Entities.Id");
                     var it = await this.Engine.VideoCollection.FindAsync(Builders<Model.JryVideo>.Filter.Eq(q3, search.Keyword));
                     var en = (await it.ToListAsync()).FirstOrDefault();
-                    if (en == null) return Enumerable.Empty<JrySeries>();
-                    var q4 = PropertySelector<JrySeries>.Start()
+                    if (en == null) return Enumerable.Empty<Series>();
+                    var q4 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Id)
                         .ToString();
@@ -67,8 +67,8 @@ namespace JryVideo.Data.MongoDb
                     filter = builder.Eq(q4, en.Id);
                     break;
 
-                case JrySeries.QueryMode.DoubanId:
-                    var q5 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.DoubanId:
+                    var q5 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.DoubanId)
                         .ToString();
@@ -76,22 +76,22 @@ namespace JryVideo.Data.MongoDb
                     filter = builder.Eq(q5, search.Keyword);
                     break;
 
-                case JrySeries.QueryMode.Tag:
-                    var q6 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.Tag:
+                    var q6 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Tags)
                         .ToString();
                     Debug.Assert(q6 == "Videos.Tags");
                     filter = builder.Or(
-                        builder.Eq(nameof(JrySeries.Tags), search.Keyword),
+                        builder.Eq(nameof(Series.Tags), search.Keyword),
                         builder.Eq(q6, search.Keyword));
                     break;
 
-                case JrySeries.QueryMode.Any:
+                case Series.QueryMode.Any:
                     throw new InvalidOperationException();
 
-                case JrySeries.QueryMode.VideoType:
-                    var q7 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.VideoType:
+                    var q7 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Type)
                         .ToString();
@@ -99,9 +99,9 @@ namespace JryVideo.Data.MongoDb
                     filter = builder.Eq(q7, search.Keyword);
                     break;
 
-                case JrySeries.QueryMode.VideoYear:
-                    var year = JrySeries.QueryParameter.GetYear(search.Keyword);
-                    var q8 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.VideoYear:
+                    var year = Series.QueryParameter.GetYear(search.Keyword);
+                    var q8 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Year)
                         .ToString();
@@ -109,8 +109,8 @@ namespace JryVideo.Data.MongoDb
                     filter = builder.Eq(q8, year);
                     break;
 
-                case JrySeries.QueryMode.ImdbId:
-                    var q9 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.ImdbId:
+                    var q9 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.ImdbId)
                         .ToString();
@@ -118,13 +118,13 @@ namespace JryVideo.Data.MongoDb
                     filter = builder.Eq(q9, search.Keyword);
                     break;
 
-                case JrySeries.QueryMode.Star:
-                    var q10 = PropertySelector<JrySeries>.Start()
+                case Series.QueryMode.Star:
+                    var q10 = PropertySelector<Series>.Start()
                         .SelectMany(z => z.Videos)
                         .Select(z => z.Star)
                         .ToString();
                     Debug.Assert(q10 == "Videos.Star");
-                    var stars = JrySeries.QueryParameter.GetStar(search.Keyword);
+                    var stars = Series.QueryParameter.GetStar(search.Keyword);
                     Debug.Assert(stars.Length > 0);
                     filter = builder.In(q10, stars);
                     break;
@@ -135,7 +135,7 @@ namespace JryVideo.Data.MongoDb
 
             return await (await this.Collection.FindAsync(
                 filter,
-                options: new FindOptions<JrySeries, JrySeries>()
+                options: new FindOptions<Series, Series>()
                 {
                     Skip = skip,
                     Limit = take,
@@ -144,25 +144,25 @@ namespace JryVideo.Data.MongoDb
                 .ToListAsync();
         }
 
-        protected override SortDefinition<JrySeries> BuildDefaultSort()
+        protected override SortDefinition<Series> BuildDefaultSort()
         {
-            var sort = PropertySelector<JrySeries>.Start(z => z)
+            var sort = PropertySelector<Series>.Start(z => z)
                 .SelectMany(z => z.Videos)
                 .Select(z => z.Created)
                 .ToString();
             Debug.Assert(sort == "Videos.Created");
-            return Builders<JrySeries>.Sort.Descending(sort);
+            return Builders<Series>.Sort.Descending(sort);
         }
 
-        public async Task<IEnumerable<JrySeries>> ListTrackingAsync()
+        public async Task<IEnumerable<Series>> ListTrackingAsync()
         {
-            var builder = Builders<JrySeries>.Filter;
+            var builder = Builders<Series>.Filter;
 
             var filter = builder.Eq("Videos.IsTracking", true);
 
             return await (await this.Collection.FindAsync(
                 filter,
-                options: new FindOptions<JrySeries, JrySeries>()
+                options: new FindOptions<Series, Series>()
                 {
                     Sort = this.BuildDefaultSort()
                 }))

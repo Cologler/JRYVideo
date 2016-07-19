@@ -6,9 +6,9 @@ using JryVideo.Model;
 
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
-    public class Patch0002 : IPatch<JrySeries>, IPatch<JryCover>
+    public class Patch0002 : IPatch<Series>, IPatch<JryCover>
     {
-        public Task<bool> UpgradeAsync(JrySeries series)
+        public Task<bool> UpgradeAsync(Series series)
         {
             foreach (var video in series.Videos)
             {
@@ -17,7 +17,7 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
                 video.CoverId = null;
             }
 
-            return Task.FromResult(true);
+            return Patch0000.TrueTask;
         }
 
         public Task<bool> UpgradeAsync(JryCover item)

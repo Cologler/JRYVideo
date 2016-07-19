@@ -7,7 +7,7 @@ using JryVideo.Model.Interfaces;
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
     public class Patch0000 :
-        IPatch<JrySeries>, IEveryTimePatch<JrySeries>,
+        IPatch<Series>, IEveryTimePatch<Series>,
         IPatch<JryCover>, IEveryTimePatch<JryCover>,
         IPatch<VideoRoleCollection>, IEveryTimePatch<VideoRoleCollection>,
         IPatch<Artist>, IEveryTimePatch<Artist>,
@@ -23,7 +23,7 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
             await ((MongoEntitySet<T>)reader).NotExistsFieldCursorAsync(nameof(IObject.Version), async z => await provider.UpdateAsync(z));
         }
 
-        public Task<bool> UpgradeAsync(JrySeries series) => TrueTask;
+        public Task<bool> UpgradeAsync(Series series) => TrueTask;
 
         public Task<bool> UpgradeAsync(JryCover cover) => TrueTask;
 
@@ -35,7 +35,7 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
 
         public Task<bool> UpgradeAsync(Model.JryVideo item) => TrueTask;
 
-        public Task ExecuteAsync(IJasilyEntitySetReader<JrySeries, string> reader, IObjectEditProvider<JrySeries> provider)
+        public Task ExecuteAsync(IJasilyEntitySetReader<Series, string> reader, IObjectEditProvider<Series> provider)
             => this.CreateVersionAsync(reader, provider);
 
         public Task ExecuteAsync(IJasilyEntitySetReader<JryCover, string> reader, IObjectEditProvider<JryCover> provider)

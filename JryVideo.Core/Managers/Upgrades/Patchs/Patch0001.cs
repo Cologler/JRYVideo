@@ -8,13 +8,13 @@ using JryVideo.Model;
 namespace JryVideo.Core.Managers.Upgrades.Patchs
 {
     public class Patch0001 :
-        IGlobalPatch<JrySeries>,
+        IGlobalPatch<Series>,
         IGlobalPatch<JryCover>,
         IGlobalPatch<VideoRoleCollection>,
         IGlobalPatch<Artist>,
         IGlobalPatch<Model.JryVideo>
     {
-        public async Task<bool> UpgradeAsync(DataCenter dataCenter, JrySeries series)
+        public async Task<bool> UpgradeAsync(DataCenter dataCenter, Series series)
         {
             foreach (var video in series.Videos)
             {
@@ -153,7 +153,7 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
             return true;
         }
 
-        Task<bool> IPatch<JrySeries>.UpgradeAsync(JrySeries item)
+        Task<bool> IPatch<Series>.UpgradeAsync(Series item)
         {
             throw new NotImplementedException();
         }

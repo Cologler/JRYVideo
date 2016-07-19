@@ -319,7 +319,7 @@ namespace JryVideo.Core.Managers
 
         private class SeriesRef : ObjectRef
         {
-            public SeriesRef(JrySeries series)
+            public SeriesRef(Series series)
                 : base(series)
             {
             }

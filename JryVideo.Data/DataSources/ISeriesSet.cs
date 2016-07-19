@@ -1,14 +1,14 @@
-﻿using Jasily.Data;
-using JryVideo.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Jasily.Data;
+using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {
-    public interface ISeriesSet : IJasilyEntitySetProvider<JrySeries, string>
+    public interface ISeriesSet : IJasilyEntitySetProvider<Series, string>
     {
-        Task<IEnumerable<JrySeries>> QueryAsync(JrySeries.QueryParameter search, int skip, int take);
+        Task<IEnumerable<Series>> QueryAsync(Series.QueryParameter search, int skip, int take);
 
-        Task<IEnumerable<JrySeries>> ListTrackingAsync();
+        Task<IEnumerable<Series>> ListTrackingAsync();
     }
 }

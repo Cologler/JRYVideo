@@ -1,15 +1,15 @@
-﻿using JryVideo.Core;
-using JryVideo.Core.Managers;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Core;
+using JryVideo.Core.Managers;
+using JryVideo.Model;
 
 namespace JryVideo.AutoComplete
 {
     public class SeriesAutoComplete
     {
-        public async Task<bool> AutoCompleteAsync(SeriesManager manager, JrySeries series)
+        public async Task<bool> AutoCompleteAsync(SeriesManager manager, Series series)
         {
             var haschanged = false;
 
@@ -35,7 +35,7 @@ namespace JryVideo.AutoComplete
             return false;
         }
 
-        public async Task<bool> AutoCompleteRoleAsync(VideoRoleManager manager, JrySeries series)
+        public async Task<bool> AutoCompleteRoleAsync(VideoRoleManager manager, Series series)
         {
             if (!series.TheTVDBId.IsNullOrWhiteSpace())
             {

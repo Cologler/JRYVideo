@@ -27,13 +27,13 @@ namespace JryVideo.Core.Managers
             dataCenter.VideoManager.EntitiesRemoved += this.VideoManager_EntitiesRemoved;
         }
 
-        private async void SeriesManager_ItemUpdated(object sender, ChangingEventArgs<JrySeries> e)
+        private async void SeriesManager_ItemUpdated(object sender, ChangingEventArgs<Series> e)
         {
             var dict = CalcFlagDictionary(BuildFlagDictionary(e.New), BuildFlagDictionary(e.Old));
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        private async void SeriesManager_ItemCreated(object sender, JrySeries e)
+        private async void SeriesManager_ItemCreated(object sender, Series e)
         {
             var dict = CalcFlagDictionary(BuildFlagDictionary(e));
             await this.ApplyFlagDictionaryAsync(dict);
@@ -52,7 +52,7 @@ namespace JryVideo.Core.Managers
             }
         }
 
-        private static Dictionary<JryFlagType, List<string>> BuildFlagDictionary(JrySeries series)
+        private static Dictionary<JryFlagType, List<string>> BuildFlagDictionary(Series series)
         {
             if (series.Tags != null)
             {

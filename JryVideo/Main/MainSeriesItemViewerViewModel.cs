@@ -1,14 +1,14 @@
-using Jasily.Diagnostics;
-using JryVideo.Common;
-using JryVideo.Core.Managers;
-using JryVideo.Model;
-using JryVideo.Selectors.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using Jasily.Diagnostics;
+using JryVideo.Common;
+using JryVideo.Core.Managers;
+using JryVideo.Model;
+using JryVideo.Selectors.Common;
 
 namespace JryVideo.Main
 {
@@ -218,7 +218,7 @@ namespace JryVideo.Main
 
             public bool HasNext { get; private set; }
 
-            public List<JrySeries> Items { get; private set; }
+            public List<Series> Items { get; private set; }
 
             private SearchResult()
             {
@@ -262,13 +262,13 @@ namespace JryVideo.Main
 
             private SeriesManager.Query query;
 
-            private async Task<IEnumerable<JrySeries>> BuildQueryAsync(SeriesManager manager)
+            private async Task<IEnumerable<Series>> BuildQueryAsync(SeriesManager manager)
             {
                 this.query = manager.GetQuery(this.searchText);
                 return await this.query.StartQuery(this.pageIndex * this.pageSize, this.pageSize + 1);
             }
 
-            public bool IsMatch(JrySeries series, JryVideoInfo video) => this.query?.IsMatch(series, video) ?? video.IsTracking;
+            public bool IsMatch(Series series, JryVideoInfo video) => this.query?.IsMatch(series, video) ?? video.IsTracking;
 
             public bool IsSearchTextEquals(string searchText)
             {

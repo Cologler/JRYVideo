@@ -10,16 +10,16 @@ using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public sealed class SeriesViewModel : JasilyViewModel<JrySeries>
+    public sealed class SeriesViewModel : JasilyViewModel<Series>
     {
         private static readonly RefreshPropertiesMapper Mapper = new RefreshPropertiesMapper(typeof(SeriesViewModel));
         private readonly List<VideoInfoViewModel> videoViewModels = new List<VideoInfoViewModel>();
 
-        public SeriesViewModel(JrySeries source)
+        public SeriesViewModel(Series source)
             : base(source)
         {
             this.PropertiesMapper = Mapper;
-            this.NameViewModel = new NameableViewModel<JrySeries>(source);
+            this.NameViewModel = new NameableViewModel<Series>(source);
 
             this.videoViewModels.AddRange(source.Videos
                 .OrderBy(z => z.GroupIndex)
@@ -27,7 +27,7 @@ namespace JryVideo.Common
                 .Select(z => new VideoInfoViewModel(this, z)));
         }
 
-        public NameableViewModel<JrySeries> NameViewModel { get; }
+        public NameableViewModel<Series> NameViewModel { get; }
 
         public IEnumerable<VideoInfoViewModel> VideoViewModels => this.videoViewModels;
 

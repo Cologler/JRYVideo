@@ -9,6 +9,7 @@ using JryVideo.Core.TheTVDB;
 using JryVideo.Editors.RoleEditor;
 using JryVideo.Model;
 using JryVideo.Model.Interfaces;
+using Series = JryVideo.Model.Series;
 
 namespace JryVideo.Common
 {
@@ -32,7 +33,7 @@ namespace JryVideo.Common
 
         public IImdbItem ImdbItem { get; private set; }
 
-        public bool IsSeriesRole => this.ImdbItem is JrySeries;
+        public bool IsSeriesRole => this.ImdbItem is Series;
 
         public bool IsMajor { get; }
 

@@ -90,7 +90,7 @@ namespace JryVideo.Core.Managers
             return result;
         }
 
-        public async Task<CombineResult> CanCombineAsync(JrySeries to, JrySeries from)
+        public async Task<CombineResult> CanCombineAsync(Series to, Series from)
         {
             var result = await this.SeriesManager.CanCombineAsync(to.Id, from.Id);
             if (!result.CanCombine) return result;
@@ -99,7 +99,7 @@ namespace JryVideo.Core.Managers
             return CombineResult.True;
         }
 
-        public async Task<CombineResult> CombineAsync(JrySeries to, JrySeries from)
+        public async Task<CombineResult> CombineAsync(Series to, Series from)
         {
             var result = await this.CanCombineAsync(to, from);
             if (result.CanCombine)

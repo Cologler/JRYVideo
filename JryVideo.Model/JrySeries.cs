@@ -7,9 +7,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JrySeries : RootObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem, ITagable
+    public sealed class Series : RootObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem, ITagable
     {
-        public JrySeries()
+        public Series()
         {
             this.Names = new List<string>();
             this.Videos = new List<JryVideoInfo>();
@@ -50,14 +50,14 @@ namespace JryVideo.Model
 
             if (this.Names.Count == 0)
             {
-                JasilyLogger.Current.WriteLine<JrySeries>(JasilyLogger.LoggerMode.Debug, "series name can not be empty.");
+                JasilyLogger.Current.WriteLine<Series>(JasilyLogger.LoggerMode.Debug, "series name can not be empty.");
                 return true;
             }
 
             return false;
         }
 
-        public void CombineFrom(JrySeries other)
+        public void CombineFrom(Series other)
         {
             this.Names = this.Names.Concat(other.Names).Distinct().ToList();
             this.Videos = this.Videos.Concat(other.Videos).ToList();

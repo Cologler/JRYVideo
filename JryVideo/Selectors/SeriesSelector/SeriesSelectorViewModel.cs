@@ -9,7 +9,7 @@ using JryVideo.Selectors.Common;
 
 namespace JryVideo.Selectors.SeriesSelector
 {
-    public sealed class SeriesSelectorViewModel : BaseSelectorViewModel<SeriesViewModel, JrySeries>
+    public sealed class SeriesSelectorViewModel : BaseSelectorViewModel<SeriesViewModel, Series>
     {
         protected override bool OnFilter(SeriesViewModel obj)
         {
