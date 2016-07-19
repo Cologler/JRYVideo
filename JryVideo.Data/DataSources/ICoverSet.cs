@@ -1,11 +1,10 @@
-﻿using Jasily.Data;
-using JryVideo.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {
-    public interface ICoverSet : IJasilyEntitySetProvider<JryCover, string>
+    public interface ICoverSet : IEntitySet<JryCover>
     {
         Task<IEnumerable<JryCover>> FindAsync(JryCover.QueryParameter parameter);
     }

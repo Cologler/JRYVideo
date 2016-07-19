@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using Jasily.Data;
 using JryVideo.Data.Attributes;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
@@ -113,7 +112,7 @@ namespace JryVideo.Data.MongoDb
         public IFlagableSet<Model.JryVideo> GetVideoSet()
             => new MongoVideoDataSource(this, this.VideoCollection);
 
-        public IJasilyEntitySetProvider<UserWatchInfo, string> GetUserWatchInfoSet()
+        public IEntitySet<UserWatchInfo> GetUserWatchInfoSet()
             => new MongoEntitySet<UserWatchInfo>(this, this.Database.GetCollection<UserWatchInfo>("UserWatchInfo"));
 
         public IFlagSet GetFlagSet()
@@ -131,7 +130,7 @@ namespace JryVideo.Data.MongoDb
         private IMongoCollection<JrySettingItem> SettingCollection()
             => this.Database.GetCollection<JrySettingItem>("Setting");
 
-        public IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet()
+        public IEntitySet<JrySettingItem> GetSettingSet()
             => new MongoEntitySet<JrySettingItem>(this, this.SettingCollection());
 
         public string Name => DataSourceProviderName;

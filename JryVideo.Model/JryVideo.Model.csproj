@@ -65,6 +65,7 @@
     <Compile Include="InterfaceExtension.cs" />
     <Compile Include="Interfaces\IExtraCoverParent.cs" />
     <Compile Include="Interfaces\IObject.cs" />
+    <Compile Include="Interfaces\IQueryBy.cs" />
     <Compile Include="Interfaces\IUpdated.cs" />
     <Compile Include="ITagable.cs" />
     <Compile Include="ITheTVDBItem.cs" />

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
+using JryVideo.Model.Interfaces;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class Series : RootObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem, ITagable
+    public sealed class Series : RootObject, IJryChild<JryVideoInfo>, INameable, IImdbItem, ITheTVDBItem, ITagable,
+        IQueryBy<Series.QueryParameter>
     {
         public Series()
         {

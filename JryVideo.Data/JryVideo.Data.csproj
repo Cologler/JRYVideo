@@ -42,9 +42,11 @@
     <Compile Include="Attributes\OptionalParameterAttribute.cs" />
     <Compile Include="Attributes\RequiredParameterAttribute.cs" />
     <Compile Include="DataSources\IArtistSet.cs" />
+    <Compile Include="DataSources\IEntitySet.cs" />
     <Compile Include="DataSources\IFlagableSet.cs" />
     <Compile Include="DataSources\IFlagSet.cs" />
     <Compile Include="DataSources\ICoverSet.cs" />
+    <Compile Include="DataSources\IQueryableEntitySet.cs" />
     <Compile Include="DataSources\ISeriesSet.cs" />
     <Compile Include="DataSources\IVideoRoleCollectionSet.cs" />
     <Compile Include="IJryVideoDataEngineInitializeParameters.cs" />

@@ -1,11 +1,10 @@
-﻿using Jasily.Data;
-using JryVideo.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {
-    public interface IVideoRoleCollectionSet : IJasilyEntitySetProvider<VideoRoleCollection, string>
+    public interface IVideoRoleCollectionSet : IEntitySet<VideoRoleCollection>
     {
         Task<IEnumerable<VideoRoleCollection>> FindAsync(VideoRoleCollection.QueryParameter parameter);
     }

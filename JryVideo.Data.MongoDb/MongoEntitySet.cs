@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Jasily.Data;
+using JryVideo.Data.DataSources;
 using JryVideo.Model.Interfaces;
 using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoEntitySet<TEntity> : IJasilyEntitySetProvider<TEntity, string>, IJasilyLoggerObject<TEntity>
+    public class MongoEntitySet<TEntity> : IEntitySet<TEntity>, IJasilyLoggerObject<TEntity>
         where TEntity : class, IObject
     {
         internal IMongoCollection<TEntity> Collection { get; }

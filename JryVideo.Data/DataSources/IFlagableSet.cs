@@ -1,11 +1,11 @@
-﻿using Jasily.Data;
-using JryVideo.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Jasily.Data;
+using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {
-    public interface IFlagableSet<T> : IJasilyEntitySetProvider<T, string>
+    public interface IFlagableSet<T> : IEntitySet<T>
         where T : class, IJasilyEntity<string>
     {
         Task<IEnumerable<T>> QueryAsync(JryFlagType type, string flag);

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Jasily.Data;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 
@@ -21,7 +20,7 @@ namespace JryVideo.Data
 
         IFlagableSet<Model.JryVideo> GetVideoSet();
 
-        IJasilyEntitySetProvider<UserWatchInfo, string> GetUserWatchInfoSet();
+        IEntitySet<UserWatchInfo> GetUserWatchInfoSet();
 
         IFlagSet GetFlagSet();
 
@@ -31,6 +30,6 @@ namespace JryVideo.Data
 
         IVideoRoleCollectionSet GetVideoRoleInfoSet();
 
-        IJasilyEntitySetProvider<JrySettingItem, string> GetSettingSet();
+        IEntitySet<JrySettingItem> GetSettingSet();
     }
 }
