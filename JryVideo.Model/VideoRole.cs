@@ -30,8 +30,6 @@ namespace JryVideo.Model
             set { this.RoleName = value; }
         }
 
-        CoverType ICoverParent.CoverType => CoverType.Role;
-
         string ICoverParent.CoverId => this.Id;
 
         public string GetMajorName() => this.RoleName?.FirstOrDefault();

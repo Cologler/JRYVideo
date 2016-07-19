@@ -25,8 +25,6 @@ namespace JryVideo.Model
 
         public string GetMajorName() => this.Names[0];
 
-        CoverType ICoverParent.CoverType => CoverType.Artist;
-
         string ICoverParent.CoverId => this.Id;
 
         #region remote id
