@@ -156,14 +156,19 @@ namespace JryVideo.Core.Managers
 
         private CombineResult CanCombine(Series to, Series @from)
         {
-            if (to.TheTVDBId != null && from.TheTVDBId != null && to.TheTVDBId != from.TheTVDBId)
+            if (!JryObject.CanCombineField(to.TheTVDBId, from.TheTVDBId))
             {
                 return CombineResult.False("have diff TheTVDB id.");
             }
 
-            if (to.ImdbId != null && from.ImdbId != null && to.ImdbId != from.ImdbId)
+            if (!JryObject.CanCombineField(to.ImdbId, from.ImdbId))
             {
                 return CombineResult.False("have diff douban id.");
+            }
+
+            if (!JryObject.CanCombineField(to.WorldLineId, from.WorldLineId))
+            {
+                return CombineResult.False("have diff world line id.");
             }
 
             return CombineResult.True;

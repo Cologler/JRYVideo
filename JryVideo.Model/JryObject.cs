@@ -83,10 +83,7 @@ namespace JryVideo.Model
             return first.Concat(second).Distinct().ToList();
         }
 
-        protected static bool CanCombineField(string left, string right)
-        {
-            return left == null || right == null || left == right;
-        }
+        public static bool CanCombineField(string left, string right) => left == null || right == null || left == right;
 
         public virtual void CheckError()
         {

@@ -27,27 +27,19 @@ namespace JryVideo.Viewer.VideoViewer
         public VideoViewerPage()
         {
             this.InitializeComponent();
-
             this.GoBackButton.Click += this.GoBackButton_Click;
+        }
+
+        public VideoViewerPage(VideoInfoViewModel info)
+            : this()
+        {
+            this.DataContext = this.ViewModel = new VideoViewerViewModel(info);
+            SearchEngineCenter.Engines.ForEach(z => AppendToContextMenu(this.SeriesContextMenu, z));
         }
 
         private void GoBackButton_Click(object sender, RoutedEventArgs e) => this.ClickedGoBack?.Invoke(this);
 
-        public VideoViewerViewModel ViewModel { get; private set; }
-
-        internal static VideoViewerPage BuildPage(VideoInfoViewModel info)
-        {
-            var vm = new VideoViewerViewModel(info);
-
-            var page = new VideoViewerPage()
-            {
-                ViewModel = vm,
-                DataContext = vm
-            };
-
-            SearchEngineCenter.Engines.ForEach(z => AppendToContextMenu(page.SeriesContextMenu, z));
-            return page;
-        }
+        public VideoViewerViewModel ViewModel { get; }
 
         private static void AppendToContextMenu(ContextMenu menu, ISearchEngine engine)
         {

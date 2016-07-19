@@ -72,6 +72,9 @@ namespace JryVideo.Model
 
             if (!CanCombineField(this.TheTVDBId, other.TheTVDBId)) throw new InvalidOperationException();
             this.TheTVDBId = this.TheTVDBId ?? other.TheTVDBId;
+
+            if (!CanCombineField(this.WorldLineId, other.WorldLineId)) throw new InvalidOperationException();
+            this.WorldLineId = this.WorldLineId ?? other.WorldLineId;
         }
 
         public override void Saving()
@@ -184,7 +187,9 @@ namespace JryVideo.Model
 
             ImdbId,
 
-            Star
+            Star,
+
+            WorldLineId
         }
 
         [CanBeNull]

@@ -33,5 +33,11 @@ namespace JryVideo.Model
 
             return false;
         }
+
+        public override void CheckError()
+        {
+            base.CheckError();
+            DataChecker.NotNull(this.BinaryData);
+        }
     }
 }

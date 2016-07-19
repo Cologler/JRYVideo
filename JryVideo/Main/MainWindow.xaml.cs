@@ -112,7 +112,7 @@ namespace JryVideo.Main
 
         private async void NavigateToVideoViewerPage(VideoInfoViewModel info)
         {
-            var page = VideoViewerPage.BuildPage(info);
+            var page = new VideoViewerPage(info);
             page.ClickedGoBack += this.VideoViewerPage_ClickedGoBack;
             page.ClickedOtherVideo += this.VideoViewerPage_ClickedOtherVideo;
 

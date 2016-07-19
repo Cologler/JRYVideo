@@ -127,6 +127,10 @@ namespace JryVideo.Data.MongoDb
                     yield return builder.In(VideosStarProperty, stars);
                     yield break;
 
+                case Series.QueryMode.WorldLineId:
+                    yield return builder.Eq(z => z.WorldLineId, parameter.Keyword);
+                    yield break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
