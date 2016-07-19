@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JryVideo.Model.Interfaces;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class VideoRoleCollection : VideoInfoAttached
+    public sealed class VideoRoleCollection : VideoInfoAttached,
+        IQueryBy<VideoRoleCollection.QueryParameter>
     {
         [CanBeNull]
         [BsonIgnoreIfDefault]

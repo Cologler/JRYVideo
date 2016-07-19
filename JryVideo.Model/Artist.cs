@@ -6,8 +6,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed partial class Artist : RootObject, IEquatable<Artist>, ICoverParent, INameable, ITheTVDBItem,
-        IImdbItem
+    public sealed partial class Artist : RootObject, IEquatable<Artist>,
+        ICoverParent, INameable, ITheTVDBItem,
+        IImdbItem, IQueryBy<Artist.QueryParameter>
     {
         public Artist()
         {

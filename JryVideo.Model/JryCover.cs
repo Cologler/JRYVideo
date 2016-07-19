@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using JryVideo.Model.Interfaces;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed partial class JryCover : RootObject
+    public sealed partial class JryCover : RootObject,
+        IQueryBy<JryCover.QueryParameter>
     {
         public CoverType CoverType { get; set; }
 

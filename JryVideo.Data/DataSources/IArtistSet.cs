@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using JryVideo.Model;
+﻿using JryVideo.Model;
 
 namespace JryVideo.Data.DataSources
 {
-    public interface IArtistSet : IEntitySet<Artist>
+    public interface IArtistSet : IQueryableEntitySet<Artist, Artist.QueryParameter>
     {
-        Task<IEnumerable<Artist>> FindAsync(Artist.QueryParameter parameter);
     }
 }

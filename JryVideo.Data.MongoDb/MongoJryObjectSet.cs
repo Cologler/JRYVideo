@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using JryVideo.Model.Interfaces;
 using MongoDB.Driver;
@@ -21,17 +23,20 @@ namespace JryVideo.Data.MongoDb
         }
     }
 
-    public abstract class MongoJryEntitySet<T, TFilterParameters> : MongoJryEntitySet<T>
-        where T : JryObject, IObject
+    public abstract class MongoJryEntitySet<T, TFilterParameters> : MongoJryEntitySet<T>, IQueryableEntitySet<T, TFilterParameters>
+        where T : JryObject, IObject, IQueryBy<TFilterParameters>
     {
         protected MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
             : base(engine, collection)
         {
         }
 
-        public async Task<IEnumerable<T>> FindAsync(TFilterParameters parameter)
+        public Task<IEnumerable<T>> FindAsync(TFilterParameters parameter)
+            => this.QueryAsync(parameter, 0, int.MaxValue);
+
+        public async Task<IEnumerable<T>> QueryAsync(TFilterParameters queryParameter, int skip, int take)
         {
-            var filters = this.BuildFilters(parameter).ToArray();
+            var filters = this.BuildFilters(queryParameter).ToArray();
             if (filters.Length == 0) return Enumerable.Empty<T>();
             var filter = filters.Skip(1).Aggregate(filters[0], (current, f) => Builders<T>.Filter.Or(current, f));
 
