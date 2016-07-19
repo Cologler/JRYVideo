@@ -14,9 +14,15 @@ namespace JryVideo.Data.MongoDb
 {
     public class MongoSeriesDataSource : MongoJryEntitySet<Series, Series.QueryParameter>, ISeriesSet
     {
+        private static readonly string SortProperty = PropertySelector<Series>.Start(z => z)
+                .SelectMany(z => z.Videos)
+                .Select(z => z.Created)
+                .ToString();
+
         public MongoSeriesDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<Series> collection)
             : base(engine, collection)
         {
+            Debug.Assert(SortProperty == "Videos.Created");
         }
 
         public override async Task<IEnumerable<Series>> QueryAsync(Series.QueryParameter parameter, int skip, int take)
@@ -136,15 +142,7 @@ namespace JryVideo.Data.MongoDb
             }
         }
 
-        protected override SortDefinition<Series> BuildDefaultSort()
-        {
-            var sort = PropertySelector<Series>.Start(z => z)
-                .SelectMany(z => z.Videos)
-                .Select(z => z.Created)
-                .ToString();
-            Debug.Assert(sort == "Videos.Created");
-            return Builders<Series>.Sort.Descending(sort);
-        }
+        protected override SortDefinition<Series> BuildDefaultSort() => Builders<Series>.Sort.Descending(SortProperty);
 
         public async Task<IEnumerable<Series>> ListTrackingAsync()
         {

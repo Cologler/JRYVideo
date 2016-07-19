@@ -102,7 +102,7 @@ namespace JryVideo.Data.MongoDb
                 .ToDictionary(z => z.Id);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> ListAsync(int skip = 0, int take = Int32.MaxValue)
+        public virtual async Task<IEnumerable<TEntity>> ListAsync(int skip = 0, int take = int.MaxValue)
         {
             this.Engine.TestPass();
             var option = new FindOptions<TEntity, TEntity>()
@@ -110,9 +110,7 @@ namespace JryVideo.Data.MongoDb
                 Skip = skip,
                 Limit = take
             };
-            var sorter = this.BuildDefaultSort();
-            if (sorter != null) option.Sort = sorter;
-
+            option.Sort = this.BuildDefaultSort() ?? option.Sort;
             return await (await this.Collection.FindAsync(_ => true, option)).ToListAsync();
         }
 

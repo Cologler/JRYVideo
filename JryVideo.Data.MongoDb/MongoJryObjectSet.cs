@@ -16,8 +16,6 @@ namespace JryVideo.Data.MongoDb
             : base(engine, collection)
         {
         }
-
-        protected override SortDefinition<T> BuildDefaultSort() => Builders<T>.Sort.Descending(z => z.Created);
     }
 
     public abstract class MongoJryEntitySet<T, TFilterParameters> : MongoJryEntitySet<T>, IQueryableEntitySet<T, TFilterParameters>
@@ -41,12 +39,13 @@ namespace JryVideo.Data.MongoDb
                 ? filters[0]
                 : filters.Skip(1).Aggregate(filters[0], (current, f) => Builders<T>.Filter.Or(current, f));
 
-            return await (await this.Collection.FindAsync(filter, new FindOptions<T, T>
+            var options = new FindOptions<T, T>
             {
                 Skip = skip,
-                Limit = take,
-                Sort = this.BuildDefaultSort()
-            })).ToListAsync();
+                Limit = take
+            };
+            options.Sort = this.BuildDefaultSort() ?? options.Sort;
+            return await (await this.Collection.FindAsync(filter, options)).ToListAsync();
         }
 
         protected abstract IEnumerable<FilterDefinition<T>> BuildFilters(TFilterParameters parameter);

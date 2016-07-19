@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace JryVideo.Data.MongoDb
 {
-    public class MongoFlagDataSource : MongoJryEntitySet<JryFlag>, IFlagSet
+    public class MongoFlagDataSource : MongoJryEntitySet<JryFlag, JryFlagType>, IFlagSet
     {
         private static readonly FindOneAndUpdateOptions<JryFlag, JryFlag> IncrementOptions =
                new FindOneAndUpdateOptions<JryFlag, JryFlag> { IsUpsert = true };
@@ -19,10 +19,10 @@ namespace JryVideo.Data.MongoDb
         {
         }
 
-        public async Task<IEnumerable<JryFlag>> QueryAsync(JryFlagType parameter, int skip, int take)
-            => (await (await this.Collection.FindAsync(Builders<JryFlag>.Filter.Eq(t => t.Type, parameter)))
-                .ToListAsync())
-                .OrderByDescending(z => z.Count);
+        protected override IEnumerable<FilterDefinition<JryFlag>> BuildFilters(JryFlagType parameter)
+        {
+            yield return Builders<JryFlag>.Filter.Eq(t => t.Type, parameter);
+        }
 
         public async Task<bool> IncrementAsync(JryFlagType type, string value, int count)
         {
@@ -73,5 +73,7 @@ namespace JryVideo.Data.MongoDb
 
         private Task CollectAsync()
             => this.Collection.FindOneAndDeleteAsync(Builders<JryFlag>.Filter.Lt(z => z.Count, 1));
+
+        protected override SortDefinition<JryFlag> BuildDefaultSort() => Builders<JryFlag>.Sort.Descending(z => z.Count);
     }
 }
