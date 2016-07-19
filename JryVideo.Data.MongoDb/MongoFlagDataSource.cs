@@ -19,15 +19,10 @@ namespace JryVideo.Data.MongoDb
         {
         }
 
-        public async Task<IEnumerable<JryFlag>> QueryAsync(JryFlagType type)
-        {
-            var filter = Builders<JryFlag>.Filter;
-
-            return (await (await this.Collection.FindAsync(
-                filter.Eq(t => t.Type, type)))
+        public async Task<IEnumerable<JryFlag>> QueryAsync(JryFlagType type, int skip, int take)
+            => (await (await this.Collection.FindAsync(Builders<JryFlag>.Filter.Eq(t => t.Type, type)))
                 .ToListAsync())
                 .OrderByDescending(z => z.Count);
-        }
 
         public async Task<bool> IncrementAsync(JryFlagType type, string value, int count)
         {

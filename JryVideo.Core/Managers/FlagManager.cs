@@ -39,7 +39,7 @@ namespace JryVideo.Core.Managers
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        public async Task<IEnumerable<JryFlag>> LoadAsync(JryFlagType type) => await this.Source.QueryAsync(type);
+        public async Task<IEnumerable<JryFlag>> LoadAsync(JryFlagType type) => await this.Source.QueryAsync(type, 0, int.MaxValue);
 
         private async Task ApplyFlagDictionaryAsync(Dictionary<JryFlagType, Dictionary<string, int>> dict)
         {

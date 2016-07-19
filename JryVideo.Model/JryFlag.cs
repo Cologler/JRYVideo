@@ -4,7 +4,8 @@ using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Model
 {
-    public class JryFlag : RootObject, IJasilyLoggerObject<JryFlag>, IUpdated
+    public class JryFlag : RootObject, IJasilyLoggerObject<JryFlag>, IUpdated,
+        IQueryBy<JryFlagType>
     {
         public JryFlagType Type { get; set; }
 
