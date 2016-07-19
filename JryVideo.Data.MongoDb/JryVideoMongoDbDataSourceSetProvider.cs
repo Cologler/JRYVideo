@@ -118,8 +118,8 @@ namespace JryVideo.Data.MongoDb
         public IFlagSet GetFlagSet()
             => new MongoFlagDataSource(this, this.Database.GetCollection<JryFlag>("Flag"));
 
-        public ICoverSet GetCoverSet()
-            => new MongoCoverDataSource(this, this.Database.GetCollection<JryCover>("Cover"));
+        public IEntitySet<JryCover> GetCoverSet()
+            => new MongoEntitySet<JryCover>(this, this.Database.GetCollection<JryCover>("Cover"));
 
         public IArtistSet GetArtistSet()
             => new MongoArtistDataSource(this, this.Database.GetCollection<Artist>("Artist"));

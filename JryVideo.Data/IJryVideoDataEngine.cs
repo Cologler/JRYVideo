@@ -24,7 +24,7 @@ namespace JryVideo.Data
 
         IFlagSet GetFlagSet();
 
-        ICoverSet GetCoverSet();
+        IEntitySet<JryCover> GetCoverSet();
 
         IArtistSet GetArtistSet();
 

@@ -55,7 +55,6 @@
     <Compile Include="MongoArtistDataSource.cs" />
     <Compile Include="MongoEntitySet.cs" />
     <Compile Include="MongoFlagDataSource.cs" />
-    <Compile Include="MongoCoverDataSource.cs" />
     <Compile Include="MongoJryObjectSet.cs" />
     <Compile Include="MongoSeriesDataSource.cs" />
     <Compile Include="MongoVideoDataSource.cs" />

@@ -71,7 +71,6 @@
     <Compile Include="ITheTVDBItem.cs" />
     <Compile Include="JryFlag.cs" />
     <Compile Include="JryFlagType.cs" />
-    <Compile Include="JryCoverSourceType.cs" />
     <Compile Include="CoverType.cs" />
     <Compile Include="Artist.cs" />
     <Compile Include="JryFormatType.cs" />

@@ -14,12 +14,12 @@ using JryVideo.Model.Interfaces;
 
 namespace JryVideo.Core.Managers
 {
-    public class CoverManager : JryObjectManager<JryCover, ICoverSet>, IJasilyLoggerObject<CoverManager>
+    public class CoverManager : JryObjectManager<JryCover, IEntitySet<JryCover>>, IJasilyLoggerObject<CoverManager>
     {
         private readonly MemoryCache MemoryCache;
         private readonly Dictionary<string, Task<bool>> downloaders = new Dictionary<string, Task<bool>>();
 
-        public CoverManager(ICoverSet source)
+        public CoverManager(IEntitySet<JryCover> source)
             : base(source)
         {
             this.MemoryCache = MemoryCache.Default;
