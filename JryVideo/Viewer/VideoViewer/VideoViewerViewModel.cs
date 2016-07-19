@@ -80,36 +80,29 @@ namespace JryVideo.Viewer.VideoViewer
             await this.VideoRoleCollection.AutoCompleteAsync();
         }
 
-        public void ReloadEpisodes()
+        public async void ReloadEpisodes()
         {
-            var video = this.Video?.Source;
-            if (video == null)
+            var user = await this.GetManagers().UserWatchInfoManager.FindAsync(this.InfoView.Source.Id);
+            var episodesCount = this.InfoView.Source.EpisodesCount;
+            var watcheds = Enumerable.Range(1, episodesCount)
+                .Select(z => new WatchedEpisodeChecker(z))
+                .ToArray();
+            if (user.Watcheds != null)
             {
-                this.Watcheds.Clear();
+                foreach (var ep in user.Watcheds.Where(z => z <= episodesCount))
+                {
+                    watcheds[ep - 1].IsWatched = true;
+                }
             }
-            else
+            var min = Math.Min(episodesCount, this.Watcheds.Count);
+            if (min > 0)
             {
-                var episodesCount = this.InfoView.Source.EpisodesCount;
-                var watcheds = Enumerable.Range(1, episodesCount)
-                    .Select(z => new WatchedEpisodeChecker(z))
-                    .ToArray();
-                if (video.Watcheds != null)
+                for (var i = 0; i < min; i++)
                 {
-                    foreach (var ep in video.Watcheds.Where(z => z <= episodesCount))
-                    {
-                        watcheds[ep - 1].IsWatched = true;
-                    }
+                    watcheds[i].IsWatched = this.Watcheds[i].IsWatched;
                 }
-                var min = Math.Min(episodesCount, this.Watcheds.Count);
-                if (min > 0)
-                {
-                    for (var i = 0; i < min; i++)
-                    {
-                        watcheds[i].IsWatched = this.Watcheds[i].IsWatched;
-                    }
-                }
-                this.Watcheds.Reset(watcheds);
             }
+            this.Watcheds.Reset(watcheds);
         }
 
         public ObservableCollection<WatchedEpisodeChecker> Watcheds { get; }
@@ -123,24 +116,18 @@ namespace JryVideo.Viewer.VideoViewer
 
         public async Task<bool> WatchSaveAsync()
         {
-            var manager = this.GetManagers().VideoManager;
-            var video = await manager.FindAsync(this.InfoView.Source.Id);
-            if (video == null)
-            {
-                Debug.Assert(false);
-                return false;
-            }
-
+            var manager = this.GetManagers().UserWatchInfoManager;
+            var user = await manager.FindAsync(this.InfoView.Source.Id);
             var watched = this.Watcheds.Where(z => z.IsWatched)
                 .Select(z => z.Episode)
                 .OrderBy(z => z)
                 .ToList();
             if (watched.Count == 0)
             {
-                if (video.Watcheds != null)
+                if (user.Watcheds != null)
                 {
-                    video.Watcheds = null;
-                    if (await manager.UpdateAsync(video))
+                    user.Watcheds = null;
+                    if (await manager.UpdateAsync(user))
                     {
                         this.ShowStatueMessage("watched updated.");
                         return true;
@@ -149,10 +136,10 @@ namespace JryVideo.Viewer.VideoViewer
             }
             else
             {
-                if (video.Watcheds?.Count != watched.Count || !watched.SequenceEqual(video.Watcheds))
+                if (user.Watcheds?.Count != watched.Count || !watched.SequenceEqual(user.Watcheds))
                 {
-                    video.Watcheds = watched;
-                    if (await manager.UpdateAsync(video))
+                    user.Watcheds = watched;
+                    if (await manager.UpdateAsync(user))
                     {
                         this.ShowStatueMessage("watched updated.");
                         return true;

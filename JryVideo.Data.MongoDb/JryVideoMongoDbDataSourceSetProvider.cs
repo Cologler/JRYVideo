@@ -1,12 +1,12 @@
-﻿using Jasily.Data;
+﻿using System;
+using System.Linq;
+using System.Security.Authentication;
+using System.Threading.Tasks;
+using Jasily.Data;
 using JryVideo.Data.Attributes;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 using MongoDB.Driver;
-using System;
-using System.Linq;
-using System.Security.Authentication;
-using System.Threading.Tasks;
 
 namespace JryVideo.Data.MongoDb
 {
@@ -112,6 +112,9 @@ namespace JryVideo.Data.MongoDb
 
         public IFlagableSet<Model.JryVideo> GetVideoSet()
             => new MongoVideoDataSource(this, this.VideoCollection);
+
+        public IJasilyEntitySetProvider<UserWatchInfo, string> GetUserWatchInfoSet()
+            => new MongoEntitySet<UserWatchInfo>(this, this.Database.GetCollection<UserWatchInfo>("UserWatchInfo"));
 
         public IFlagSet GetFlagSet()
             => new MongoFlagDataSource(this, this.Database.GetCollection<JryFlag>("Flag"));

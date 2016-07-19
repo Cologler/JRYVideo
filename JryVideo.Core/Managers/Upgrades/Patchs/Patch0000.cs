@@ -11,7 +11,8 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
         IPatch<JryCover>, IEveryTimePatch<JryCover>,
         IPatch<VideoRoleCollection>, IEveryTimePatch<VideoRoleCollection>,
         IPatch<Artist>, IEveryTimePatch<Artist>,
-        IPatch<JryFlag>, IEveryTimePatch<JryFlag>
+        IPatch<JryFlag>, IEveryTimePatch<JryFlag>,
+        IPatch<Model.JryVideo>, IEveryTimePatch<Model.JryVideo>
     {
         public static readonly Task<bool> TrueTask = Task.FromResult(true);
         public static readonly Task<bool> FalseTask = Task.FromResult(false);
@@ -32,6 +33,8 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
 
         public Task<bool> UpgradeAsync(JryFlag item) => TrueTask;
 
+        public Task<bool> UpgradeAsync(Model.JryVideo item) => TrueTask;
+
         public Task ExecuteAsync(IJasilyEntitySetReader<JrySeries, string> reader, IObjectEditProvider<JrySeries> provider)
             => this.CreateVersionAsync(reader, provider);
 
@@ -45,6 +48,9 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
             => this.CreateVersionAsync(reader, provider);
 
         public Task ExecuteAsync(IJasilyEntitySetReader<JryFlag, string> reader, IObjectEditProvider<JryFlag> provider)
+            => this.CreateVersionAsync(reader, provider);
+
+        public Task ExecuteAsync(IJasilyEntitySetReader<Model.JryVideo, string> reader, IObjectEditProvider<Model.JryVideo> provider)
             => this.CreateVersionAsync(reader, provider);
     }
 }

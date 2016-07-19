@@ -81,4 +81,14 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public string Uri { get; set; }
     }
+
+    public partial class JryVideo
+    {
+        /// <summary>
+        /// 尽量排序，但是不一定排序
+        /// </summary>
+        [Obsolete]
+        [BsonIgnoreIfDefault]
+        public List<int> Watcheds { get; set; }
+    }
 }

@@ -83,6 +83,7 @@
     <Compile Include="JrySeries.cs" />
     <Compile Include="JrySettingItem.cs" />
     <Compile Include="JryVideo.cs" />
+    <Compile Include="UserInfo.cs" />
     <Compile Include="VideoRole.cs" />
     <Compile Include="JryVideoInfo.cs" />
     <Compile Include="Obsolete.cs" />

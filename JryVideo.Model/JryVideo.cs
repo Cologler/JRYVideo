@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
-    public sealed class JryVideo : VideoInfoAttached, IJryChild<JryEntity>
+    public sealed partial class JryVideo : VideoInfoAttached, IJryChild<JryEntity>
     {
         public JryVideo()
         {
@@ -14,12 +13,6 @@ namespace JryVideo.Model
 
         [NotNull]
         public List<JryEntity> Entities { get; set; }
-
-        /// <summary>
-        /// 尽量排序，但是不一定排序
-        /// </summary>
-        [BsonIgnoreIfDefault]
-        public List<int> Watcheds { get; set; }
 
         List<JryEntity> IJryChild<JryEntity>.Childs => this.Entities;
 

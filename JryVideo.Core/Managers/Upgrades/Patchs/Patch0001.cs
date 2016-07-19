@@ -11,7 +11,8 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
         IGlobalPatch<JrySeries>,
         IGlobalPatch<JryCover>,
         IGlobalPatch<VideoRoleCollection>,
-        IGlobalPatch<Artist>
+        IGlobalPatch<Artist>,
+        IGlobalPatch<Model.JryVideo>
     {
         public async Task<bool> UpgradeAsync(DataCenter dataCenter, JrySeries series)
         {
@@ -133,6 +134,25 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
             await dataCenter.CoverManager.Source.RemoveAsync(oldKey);
         }
 
+        /// <summary>
+        /// return true if upgrade success
+        /// </summary>
+        /// <param name="dataCenter"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task<bool> UpgradeAsync(DataCenter dataCenter, Model.JryVideo item)
+        {
+            if (item.Watcheds != null)
+            {
+                var manager = dataCenter.UserWatchInfoManager;
+                var userWatchInfo = await manager.FindAsync(item.Id);
+                userWatchInfo.Watcheds = item.Watcheds;
+                await manager.UpdateAsync(userWatchInfo);
+                item.Watcheds = null;
+            }
+            return true;
+        }
+
         Task<bool> IPatch<JrySeries>.UpgradeAsync(JrySeries item)
         {
             throw new NotImplementedException();
@@ -149,6 +169,11 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
         }
 
         Task<bool> IPatch<Artist>.UpgradeAsync(Artist item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IPatch<Model.JryVideo>.UpgradeAsync(Model.JryVideo item)
         {
             throw new NotImplementedException();
         }

@@ -74,8 +74,8 @@ namespace JryVideo.Common
                 {
                     var isWatched = await Task.Run(async () =>
                     {
-                        var video = await this.GetManagers().VideoManager.FindAsync(this.Source.Id);
-                        return video?.Watcheds?.Contains(playing.Episode.Value);
+                        var user = await this.GetManagers().UserWatchInfoManager.FindAsync(this.Source.Id);
+                        return user.Watcheds?.Contains(playing.Episode.Value);
                     });
 
                     if (isWatched != null && playing.IsWatched != isWatched.Value)
@@ -323,13 +323,13 @@ namespace JryVideo.Common
             var ep = this.TodayWatched?.Episode;
             if (ep == null) return;
             this.TodayWatched.IsWatched = true;
-            var manager = this.GetManagers().VideoManager;
-            var video = await manager.FindAsync(this.Source.Id);
-            if (video == null) return;
-            if (video.Watcheds == null) video.Watcheds = new List<int>();
-            if (video.Watcheds.Contains(ep.Value)) return;
-            video.Watcheds.Add(ep.Value);
-            await manager.UpdateAsync(video);
+            var manager = this.GetManagers().UserWatchInfoManager;
+            var user = await manager.FindAsync(this.Source.Id);
+            if (user == null) return;
+            if (user.Watcheds == null) user.Watcheds = new List<int>();
+            if (user.Watcheds.Contains(ep.Value)) return;
+            user.Watcheds.Add(ep.Value);
+            await manager.UpdateAsync(user);
             this.NotifyPropertyChanged(nameof(this.IsEnableWatchedButton));
         }
 

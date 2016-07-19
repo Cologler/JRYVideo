@@ -74,6 +74,7 @@
     <Compile Include="Managers\Upgrades\Upgrader.cs" />
     <Compile Include="Managers\Upgrades\Patchs\Patch0000.cs" />
     <Compile Include="Managers\Upgrades\Patchs\Patch0002.cs" />
+    <Compile Include="Managers\UserWatchInfoManager.cs" />
     <Compile Include="Managers\VideoInfoManager.cs" />
     <Compile Include="Managers\VideoManager.cs" />
     <Compile Include="Managers\VideoRoleManager.cs" />
