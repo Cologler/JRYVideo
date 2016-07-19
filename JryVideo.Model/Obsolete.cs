@@ -55,7 +55,7 @@ namespace JryVideo.Model
     {
         [Obsolete]
         [BsonIgnoreIfDefault]
-        public JryCoverSourceType CoverSourceType { get; set; }
+        public int CoverSourceType { get; set; }
 
         [Obsolete]
         [BsonIgnoreIfDefault]

@@ -22,7 +22,7 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
 
         public Task<bool> UpgradeAsync(JryCover item)
         {
-            item.CoverSourceType = default(JryCoverSourceType);
+            item.CoverSourceType = default(int);
             item.DoubanId = null;
             item.ImdbId = null;
             item.SeriesId = null;
