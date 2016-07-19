@@ -19,8 +19,8 @@ namespace JryVideo.Data.MongoDb
         {
         }
 
-        public async Task<IEnumerable<JryFlag>> QueryAsync(JryFlagType type, int skip, int take)
-            => (await (await this.Collection.FindAsync(Builders<JryFlag>.Filter.Eq(t => t.Type, type)))
+        public async Task<IEnumerable<JryFlag>> QueryAsync(JryFlagType parameter, int skip, int take)
+            => (await (await this.Collection.FindAsync(Builders<JryFlag>.Filter.Eq(t => t.Type, parameter)))
                 .ToListAsync())
                 .OrderByDescending(z => z.Count);
 

@@ -12,15 +12,12 @@ namespace JryVideo.Data.MongoDb
     public class MongoJryEntitySet<T> : MongoEntitySet<T>
         where T : JryObject, IObject
     {
-        public MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
+        protected MongoJryEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<T> collection)
             : base(engine, collection)
         {
         }
 
-        protected override SortDefinition<T> BuildDefaultSort()
-        {
-            return Builders<T>.Sort.Descending(z => z.Created);
-        }
+        protected override SortDefinition<T> BuildDefaultSort() => Builders<T>.Sort.Descending(z => z.Created);
     }
 
     public abstract class MongoJryEntitySet<T, TFilterParameters> : MongoJryEntitySet<T>, IQueryableEntitySet<T, TFilterParameters>
@@ -34,13 +31,22 @@ namespace JryVideo.Data.MongoDb
         public Task<IEnumerable<T>> FindAsync(TFilterParameters parameter)
             => this.QueryAsync(parameter, 0, int.MaxValue);
 
-        public async Task<IEnumerable<T>> QueryAsync(TFilterParameters queryParameter, int skip, int take)
+        public virtual async Task<IEnumerable<T>> QueryAsync(TFilterParameters parameter, int skip, int take)
         {
-            var filters = this.BuildFilters(queryParameter).ToArray();
-            if (filters.Length == 0) return Enumerable.Empty<T>();
-            var filter = filters.Skip(1).Aggregate(filters[0], (current, f) => Builders<T>.Filter.Or(current, f));
+            var filters = this.BuildFilters(parameter).ToArray();
 
-            return await (await this.Collection.FindAsync(filter)).ToListAsync();
+            if (filters.Length == 0) return Enumerable.Empty<T>();
+
+            var filter = filters.Length == 1
+                ? filters[0]
+                : filters.Skip(1).Aggregate(filters[0], (current, f) => Builders<T>.Filter.Or(current, f));
+
+            return await (await this.Collection.FindAsync(filter, new FindOptions<T, T>
+            {
+                Skip = skip,
+                Limit = take,
+                Sort = this.BuildDefaultSort()
+            })).ToListAsync();
         }
 
         protected abstract IEnumerable<FilterDefinition<T>> BuildFilters(TFilterParameters parameter);
