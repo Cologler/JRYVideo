@@ -104,22 +104,11 @@ namespace JryVideo.Model
                 this.Keyword = value;
             }
 
-            public static bool CanBeYear(string text)
-            {
-                Debug.Assert(text.Length > 0);
-                return text.All(char.IsDigit) && text.Length < 5;
-            }
+            public static bool CanBeYear(string text) => text.Length == 4 && text.All(char.IsDigit);
 
             public static int GetYear(string text) => int.Parse(text);
 
-            public static bool CanBeStar(string text)
-            {
-                Debug.Assert(text.Length > 0);
-
-                var array = GetStar(text);
-                Debug.Assert(array != null);
-                return array.Length > 0;
-            }
+            public static bool CanBeStar(string text) => GetStar(text).Length > 0;
 
             public static int[] GetStar(string text)
             {
@@ -195,5 +184,8 @@ namespace JryVideo.Model
 
             Star
         }
+
+        [CanBeNull]
+        public string WorldLineId { get; set; }
     }
 }

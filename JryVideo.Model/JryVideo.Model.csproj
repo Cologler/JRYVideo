@@ -80,7 +80,7 @@
     <Compile Include="JryInfo.cs" />
     <Compile Include="JryInvalidError.cs" />
     <Compile Include="JryObject.cs" />
-    <Compile Include="JrySeries.cs" />
+    <Compile Include="Series.cs" />
     <Compile Include="JrySettingItem.cs" />
     <Compile Include="JryVideo.cs" />
     <Compile Include="UserInfo.cs" />
