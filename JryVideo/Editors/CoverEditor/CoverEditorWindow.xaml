@@ -164,7 +164,6 @@
             <Button x:Name="ChooseButton"
                     Grid.Row="2"
                     Grid.Column="1"
-                    IsEnabled="False"
                     Content="choose"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"

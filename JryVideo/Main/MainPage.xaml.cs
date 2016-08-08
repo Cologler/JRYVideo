@@ -46,8 +46,8 @@ namespace JryVideo.Main
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                await JryVideoCore.Current.InitializeAsync();
                 this.DataContext = this.ViewModel = new MainViewModel();
+                await JryVideoCore.Current.InitializeAsync();
                 this.ViewModel.ReloadAsync();
                 this.processTrackTask = new ProcessTrackTask(this.ViewModel);
                 this.processTrackTask.CurrentWatchVideo += this.ProcessTrackTask_CurrentWatchVideo;

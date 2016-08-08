@@ -23,8 +23,13 @@ namespace JryVideo.Editors.CoverEditor
         private byte[] binaryData;
         private ImageViewModel imageViewModel;
         private bool isChanged;
+        private string coverId;
 
-        [EditableField]
+        private CoverEditorViewModel()
+        {
+            
+        }
+        
         public string Uri
         {
             get { return this.uri; }
@@ -115,14 +120,13 @@ namespace JryVideo.Editors.CoverEditor
         public async Task<JryCover> CommitAsync()
         {
             var coverManager = this.GetManagers().CoverManager;
-
             var obj = this.GetCommitObject();
-
             if (this.Action == ObjectChangedAction.Modify && !this.isChanged)
             {
                 return obj;
             }
-
+            obj.Id = this.coverId;
+            obj.CoverType = CoverType.Video;
             this.WriteToObject(obj);
             return await this.CommitAsync(coverManager, obj);
         }
@@ -137,15 +141,17 @@ namespace JryVideo.Editors.CoverEditor
 
         public static async Task<CoverEditorViewModel> FromAsync(CoverManager manager, ICoverParent coverParent)
         {
-            var viewModel = new CoverEditorViewModel();
-            if (coverParent.CoverId == null) // since cover id equal id, new object may contain null cover id.
+            var viewModel = new CoverEditorViewModel
+            {
+                coverId = coverParent.CoverId
+            };
+            if (viewModel.coverId == null) // since cover id equal id, new object may contain null cover id.
             {
                 throw new ArgumentNullException();
             }
             else
             {
-                var cover = await manager.FindAsync(coverParent.CoverId);
-
+                var cover = await manager.FindAsync(viewModel.coverId);
                 if (cover == null)
                 {
                     viewModel.CreateMode();
