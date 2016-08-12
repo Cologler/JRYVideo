@@ -56,8 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArtistType.cs" />
-    <Compile Include="DataChecker.cs" />
-    <Compile Include="DataCheckerException.cs" />
     <Compile Include="IImdbItem.cs" />
     <Compile Include="IJryChild.cs" />
     <Compile Include="Interfaces\ICoverParent.cs" />

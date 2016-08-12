@@ -87,10 +87,10 @@ namespace JryVideo.Model
         public override void CheckError()
         {
             base.CheckError();
-            DataChecker.NotNull(this.Names);
-            DataChecker.NotNull(this.Videos);
-            DataChecker.NotEmpty(this.Names);
-            this.Names.ForEach(z => DataChecker.NotEmpty(z));
+            DataCheck.NotNull(this.Names);
+            DataCheck.NotNull(this.Videos);
+            DataCheck.NotEmpty(this.Names);
+            DataCheck.ItemNotWhiteSpace(this.Names);
             this.Videos.ForEach(z => z.CheckError());
         }
 

@@ -44,8 +44,8 @@ namespace JryVideo.Model
         public override void CheckError()
         {
             base.CheckError();
-            DataChecker.True(this.Count >= 0);
-            DataChecker.NotEmpty(this.Value);
+            DataCheck.True(this.Count >= 0);
+            DataCheck.NotWhiteSpace(this.Value);
         }
     }
 }

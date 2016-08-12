@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace JryVideo.Model
@@ -31,7 +32,7 @@ namespace JryVideo.Model
         public override void CheckError()
         {
             base.CheckError();
-            DataChecker.NotNull(this.Entities);
+            DataCheck.NotNull(this.Entities);
         }
     }
 }

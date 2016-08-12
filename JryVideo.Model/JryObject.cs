@@ -87,8 +87,8 @@ namespace JryVideo.Model
 
         public virtual void CheckError()
         {
-            DataChecker.NotEmpty(this.Id);
-            if (this.Created == null) throw new DataCheckerException("Created is not initialize.");
+            DataCheck.NotWhiteSpace(this.Id);
+            DataCheck.NotNull(this.Created);
         }
     }
 }

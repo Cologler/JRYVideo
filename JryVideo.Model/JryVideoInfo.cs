@@ -216,11 +216,11 @@ namespace JryVideo.Model
         public override void CheckError()
         {
             base.CheckError();
-            DataChecker.NotNull(this.Names);
-            DataChecker.NotEmpty(this.Type);
-            DataChecker.True(IsYearValid(this.Year));
-            DataChecker.True(IsIndexValid(this.Index));
-            DataChecker.True(IsEpisodesCountValid(this.EpisodesCount));
+            DataCheck.NotNull(this.Names);
+            DataCheck.NotWhiteSpace(this.Type);
+            DataCheck.True(IsYearValid(this.Year));
+            DataCheck.True(IsIndexValid(this.Index));
+            DataCheck.True(IsEpisodesCountValid(this.EpisodesCount));
         }
     }
 }
