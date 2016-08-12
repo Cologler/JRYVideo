@@ -1,13 +1,12 @@
-﻿using Jasily.Desktop.Windows.Navigation;
-using JryVideo.Common;
-using JryVideo.Viewer.VideoViewer;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Enums;
 using System.Threading.Tasks;
 using System.Windows;
+using Jasily.Desktop.Windows.Navigation;
 using Jasily.IO;
+using JryVideo.Common;
+using JryVideo.Viewer.VideoViewer;
 
 namespace JryVideo.Main
 {

@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Jasily.Desktop.Windows;
+using Jasily.Windows;
 using MahApps.Metro.Controls;
 
 namespace JryVideo.Common.Dialogs

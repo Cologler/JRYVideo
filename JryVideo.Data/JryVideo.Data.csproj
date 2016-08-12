@@ -61,10 +61,6 @@
       <Project>{E90943E3-39C3-4649-9FE7-17096CBCD95E}</Project>
       <Name>Jasily.Core.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Jasily\Jasily.Core.Linq\Jasily.Core.Linq.csproj">
-      <Project>{801800ea-fe7c-40ad-838d-f2a887de03de}</Project>
-      <Name>Jasily.Core.Linq</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily.Core\Jasily.Core.csproj">
       <Project>{8442E8E7-D515-4481-8A36-71711B1FBF79}</Project>
       <Name>Jasily.Core</Name>

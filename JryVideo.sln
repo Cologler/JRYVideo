@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryVideo", "JryVideo\JryVideo.csproj", "{B58150EA-B988-4B97-BE29-77FF0ED7493C}"
 EndProject
@@ -20,8 +20,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily", "Jasily\Jasily\Jasily.csproj", "{6ADB6547-070B-4518-A2D1-E3BC349730BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.Desktop", "Jasily\Jasily.Desktop\Jasily.Desktop.csproj", "{613D8F93-1CC9-4C5D-A67A-290175FC4878}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.Core.Linq", "Jasily\Jasily.Core.Linq\Jasily.Core.Linq.csproj", "{801800EA-FE7C-40AD-838D-F2A887DE03DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.EverythingSDK", "EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK\Jasily.EverythingSDK.csproj", "{54757096-EB16-40D7-9EB7-833293D2DAF7}"
 EndProject
@@ -75,10 +73,6 @@ Global
 		{613D8F93-1CC9-4C5D-A67A-290175FC4878}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{613D8F93-1CC9-4C5D-A67A-290175FC4878}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{613D8F93-1CC9-4C5D-A67A-290175FC4878}.Release|Any CPU.Build.0 = Release|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{54757096-EB16-40D7-9EB7-833293D2DAF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{54757096-EB16-40D7-9EB7-833293D2DAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54757096-EB16-40D7-9EB7-833293D2DAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU

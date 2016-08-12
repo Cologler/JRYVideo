@@ -92,6 +92,7 @@
     <Compile Include="Common\LocalizationHelper.cs" />
     <Compile Include="Common\MulitLineConverter.cs" />
     <Compile Include="Common\NameableViewModel.cs" />
+    <Compile Include="Common\ObjectChangedAction.cs" />
     <Compile Include="Common\SeriesViewModel.cs" />
     <Compile Include="Common\ValidationRules\FlagValueValidationRule.cs" />
     <Compile Include="Common\VideoGroupingViewModel.cs" />
@@ -454,10 +455,6 @@
     <ProjectReference Include="..\Jasily\Jasily.Core.Desktop\Jasily.Core.Desktop.csproj">
       <Project>{e90943e3-39c3-4649-9fe7-17096cbcd95e}</Project>
       <Name>Jasily.Core.Desktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Jasily\Jasily.Core.Linq\Jasily.Core.Linq.csproj">
-      <Project>{801800ea-fe7c-40ad-838d-f2a887de03de}</Project>
-      <Name>Jasily.Core.Linq</Name>
     </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily.Core\Jasily.Core.csproj">
       <Project>{8442e8e7-d515-4481-8a36-71711b1fbf79}</Project>
