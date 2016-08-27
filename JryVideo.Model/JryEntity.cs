@@ -1,8 +1,8 @@
-using JetBrains.Annotations;
-using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryVideo.Model
 {
@@ -51,31 +51,15 @@ namespace JryVideo.Model
         /// </summary>
         public string Extension { get; set; }
 
-        protected override bool InnerTestHasError()
+        public override void CheckError()
         {
-            if (base.InnerTestHasError()) return true;
-
-            if (this.Fansubs == null ||
-                this.SubTitleLanguages == null ||
-                this.Tags == null ||
-                this.TrackLanguages == null)
-            {
-                throw new ArgumentException();
-            }
-
-            if (IsResolutionInvalid(this.Resolution))
-            {
-                this.Log(JasilyLogger.LoggerMode.Debug, "entity resolution can not be empty.");
-                return true;
-            }
-
-            if (IsExtensionInvalid(this.Extension))
-            {
-                this.Log(JasilyLogger.LoggerMode.Debug, "entity extension can not be empty.");
-                return true;
-            }
-
-            return false;
+            base.CheckError();
+            DataCheck.NotNull(this.Fansubs);
+            DataCheck.NotNull(this.SubTitleLanguages);
+            DataCheck.NotNull(this.Tags);
+            DataCheck.NotNull(this.TrackLanguages);
+            DataCheck.False(IsResolutionInvalid(this.Resolution));
+            DataCheck.False(IsExtensionInvalid(this.Extension));
         }
 
         public static bool IsResolutionInvalid(string resolution)

@@ -18,25 +18,6 @@ namespace JryVideo.Model
         public static string BuildFlagId(JryFlagType type, string value)
             => $"{(int)type}/{value.ThrowIfNullOrEmpty("value")}";
 
-        protected override bool InnerTestHasError()
-        {
-            if (base.InnerTestHasError()) return true;
-
-            if (this.Count < 0)
-            {
-                this.Log(JasilyLogger.LoggerMode.Debug, "flag count can not less than 0.");
-                return true;
-            }
-
-            if (IsValueInvalid(this.Value))
-            {
-                this.Log(JasilyLogger.LoggerMode.Release, "flag value can not be empty.");
-                return true;
-            }
-
-            return false;
-        }
-
         public static bool IsValueInvalid(string value) => value.IsNullOrWhiteSpace();
 
         public DateTime Updated { get; set; }
@@ -45,7 +26,7 @@ namespace JryVideo.Model
         {
             base.CheckError();
             DataCheck.True(this.Count >= 0);
-            DataCheck.NotWhiteSpace(this.Value);
+            DataCheck.False(IsValueInvalid(this.Value));
         }
     }
 }

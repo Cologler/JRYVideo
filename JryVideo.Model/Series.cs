@@ -41,24 +41,6 @@ namespace JryVideo.Model
 
         List<JryVideoInfo> IJryChild<JryVideoInfo>.Childs => this.Videos;
 
-        protected override bool InnerTestHasError()
-        {
-            if (base.InnerTestHasError()) return true;
-
-            if (this.Names == null || this.Videos == null)
-            {
-                throw new ArgumentException();
-            }
-
-            if (this.Names.Count == 0)
-            {
-                JasilyLogger.Current.WriteLine<Series>(JasilyLogger.LoggerMode.Debug, "series name can not be empty.");
-                return true;
-            }
-
-            return false;
-        }
-
         public void CombineFrom(Series other)
         {
             this.Names = this.Names.Concat(other.Names).Distinct().ToList();
@@ -75,13 +57,6 @@ namespace JryVideo.Model
 
             if (!CanCombineField(this.WorldLineId, other.WorldLineId)) throw new InvalidOperationException();
             this.WorldLineId = this.WorldLineId ?? other.WorldLineId;
-        }
-
-        public override void Saving()
-        {
-            base.Saving();
-
-            if (this.Tags?.Count == 0) this.Tags = null;
         }
 
         public override void CheckError()

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Jasily.ComponentModel.Editable;
@@ -66,12 +65,6 @@ namespace JryVideo.Common
         /// <returns></returns>
         protected async Task<T> CommitAsync(IObjectEditProvider<T> provider, T obj)
         {
-            if (obj.HasError())
-            {
-                if (Debugger.IsAttached) Debugger.Break();
-                return null;
-            }
-
             switch (this.Action)
             {
                 case ObjectChangedAction.Create:

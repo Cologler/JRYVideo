@@ -25,7 +25,7 @@ namespace JryVideo.Core.Managers
             this.Source = source;
         }
 
-        public TProvider Source { get; }
+        internal TProvider Source { get; }
 
         public async Task<IEnumerable<T>> LoadAsync()
             => await this.Source.ListAsync(0, int.MaxValue);
@@ -38,9 +38,6 @@ namespace JryVideo.Core.Managers
 
         public virtual async Task<bool> InsertAsync(T obj)
         {
-            obj.Saving();
-            if (obj.HasError()) return false;
-
             if (await this.InsertCoreAsync(obj))
             {
                 this.ItemCreated?.BeginInvoke(this, obj);
@@ -49,13 +46,15 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        protected virtual async Task<bool> InsertCoreAsync(T obj) => await this.Source.InsertAsync(obj);
+        protected virtual async Task<bool> InsertCoreAsync(T obj)
+        {
+            obj.CheckError();
+            return await this.Source.InsertAsync(obj);
+        }
 
         public async Task<bool> InsertOrUpdateAsync(T obj)
         {
-            obj.Saving();
-            if (obj.HasError()) return false;
-
+            obj.CheckError();
             if (await this.Source.InsertOrUpdateAsync(obj))
             {
                 this.ItemCreatedOrUpdated?.BeginInvoke(this, obj);
@@ -67,9 +66,7 @@ namespace JryVideo.Core.Managers
         protected virtual async Task<bool> InsertAsync(IEnumerable<T> objs)
         {
             var items = objs as T[] ?? objs.ToArray();
-            items.ForEach(z => z.Saving());
-            if (items.Any(obj => obj.HasError())) return false;
-
+            items.ForEach(z => z.CheckError());
             if (await this.Source.InsertAsync(items))
             {
                 this.ItemCreated?.BeginInvoke(this, items);
@@ -80,9 +77,7 @@ namespace JryVideo.Core.Managers
 
         public virtual async Task<bool> UpdateAsync(T obj)
         {
-            obj.Saving();
-            if (obj.HasError()) return false;
-
+            obj.CheckError();
             var old = await this.Source.FindAsync(obj.Id);
             Debug.Assert(obj != null);
             if (await this.Source.UpdateAsync(obj))

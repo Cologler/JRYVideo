@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
 
@@ -16,18 +15,6 @@ namespace JryVideo.Model
         public List<JryEntity> Entities { get; set; }
 
         List<JryEntity> IJryChild<JryEntity>.Childs => this.Entities;
-
-        protected override bool InnerTestHasError()
-        {
-            if (base.InnerTestHasError()) return true;
-
-            if (this.Entities == null)
-            {
-                throw new ArgumentException();
-            }
-
-            return false;
-        }
 
         public override void CheckError()
         {

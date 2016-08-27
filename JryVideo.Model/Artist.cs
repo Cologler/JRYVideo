@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Annotations;
 using JryVideo.Model.Interfaces;
 using MongoDB.Bson.Serialization.Attributes;
@@ -44,16 +45,12 @@ namespace JryVideo.Model
 
         #endregion
 
-        protected override bool InnerTestHasError()
+        public override void CheckError()
         {
-            if (base.InnerTestHasError()) return true;
-
-            if (this.Names == null)
-            {
-                throw new ArgumentException();
-            }
-
-            return this.Names.Count == 0;
+            base.CheckError();
+            DataCheck.NotNull(this.Names);
+            DataCheck.NotEmpty(this.Names);
+            DataCheck.ItemNotEmpty(this.Names);
         }
 
         /// <summary>
@@ -97,15 +94,6 @@ namespace JryVideo.Model
             public string TheTVDBId { get; set; }
 
             public string DoubanId { get; set; }
-        }
-
-        public override void Saving()
-        {
-            base.Saving();
-
-            if (this.TheTVDBId.IsNullOrWhiteSpace()) this.TheTVDBId = null;
-            if (this.DoubanId.IsNullOrWhiteSpace()) this.DoubanId = null;
-            if (this.ImdbId.IsNullOrWhiteSpace()) this.ImdbId = null;
         }
     }
 }

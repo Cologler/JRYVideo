@@ -21,23 +21,11 @@ namespace JryVideo.Model
         [BsonIgnoreIfDefault]
         public int? Opacity { get; set; }
 
-        protected override bool InnerTestHasError()
-        {
-            if (base.InnerTestHasError()) return true;
-
-            if (this.BinaryData == null || this.BinaryData.Length == 0)
-            {
-                JasilyLogger.Current.WriteLine<JryCover>(JasilyLogger.LoggerMode.Debug, "cover data can not be empty.");
-                return true;
-            }
-
-            return false;
-        }
-
         public override void CheckError()
         {
             base.CheckError();
             DataCheck.NotNull(this.BinaryData);
+            DataCheck.False(this.BinaryData.Length == 0);
         }
     }
 }

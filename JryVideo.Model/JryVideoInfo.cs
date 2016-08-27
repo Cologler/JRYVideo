@@ -125,58 +125,11 @@ namespace JryVideo.Model
             return Convert.ToInt32((dt - this.StartDate.Value).TotalDays / 7) + 1;
         }
 
-        protected override bool InnerTestHasError()
-        {
-            if (base.InnerTestHasError()) return true;
-
-            if (this.Names == null)
-            {
-                throw new ArgumentException();
-            }
-
-            if (this.Type.IsNullOrWhiteSpace())
-            {
-                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video type can not be empty.");
-                return true;
-            }
-
-            if (!IsYearValid(this.Year))
-            {
-                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video year was invalid.");
-                return true;
-            }
-
-            if (!IsIndexValid(this.Index))
-            {
-                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video index was invalid.");
-                return true;
-            }
-
-            if (!IsEpisodesCountValid(this.EpisodesCount))
-            {
-                JasilyLogger.Current.WriteLine<JryVideoInfo>(JasilyLogger.LoggerMode.Release, "video episodes count was invalid.");
-                return true;
-            }
-
-            return false;
-        }
-
         public static bool IsYearValid(int year) => year < 2100 && year > 1900;
 
         public static bool IsIndexValid(int index) => index > 0;
 
         public static bool IsEpisodesCountValid(int episodesCount) => episodesCount >= 0;
-
-        public override void Saving()
-        {
-            base.Saving();
-
-#pragma warning disable 612
-            if (this.Roles != null) this.Roles = null;
-#pragma warning restore 612
-
-            if (this.Tags?.Count == 0) this.Tags = null;
-        }
 
         public void CombineFrom(JryVideoInfo other)
         {
@@ -221,6 +174,11 @@ namespace JryVideo.Model
             DataCheck.True(IsYearValid(this.Year));
             DataCheck.True(IsIndexValid(this.Index));
             DataCheck.True(IsEpisodesCountValid(this.EpisodesCount));
+
+#pragma warning disable 612
+            if (this.Roles != null) this.Roles = null;
+#pragma warning restore 612
+            if (this.Tags?.Count == 0) this.Tags = null;
         }
     }
 }

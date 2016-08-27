@@ -36,7 +36,6 @@ namespace JryVideo.Core.Managers
 
         public async Task<bool> InsertAsync(TSub entity)
         {
-            entity.Saving();
             this.ObjectSet.Add(entity);
             return await this.parentManager.UpdateAsync(this.Parent);
         }

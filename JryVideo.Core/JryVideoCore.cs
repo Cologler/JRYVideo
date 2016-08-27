@@ -71,15 +71,12 @@ namespace JryVideo.Core
         {
             this.InitializeTheTVDBClient();
 
-            var debugMode = false;
 #if DEBUG
-            debugMode = true;
-#endif
-
             foreach (var dc in new[] { this.DataAgent.NormalDataCenter, /*this.SecureDataCenter*/ })
             {
                 new DatabaseHealthTester(dc).RunOnDebugAsync();
             }
+#endif
 
             if (this.RunArgs != null)
             {

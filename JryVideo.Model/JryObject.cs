@@ -40,33 +40,6 @@ namespace JryVideo.Model
 
         public static string NewGuid() => Guid.NewGuid().ToString().ToUpper();
 
-        public bool HasError()
-        {
-            if (this.InnerTestHasError())
-            {
-                JasilyLogger.Current.WriteLine(JasilyLogger.LoggerMode.Debug, "object has error.", this.GetType());
-                JasilyLogger.Current.WriteLine(JasilyLogger.LoggerMode.Debug, this.Print() + "\r\n", this.GetType());
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        protected virtual bool InnerTestHasError()
-        {
-            if (string.IsNullOrWhiteSpace(this.Id) || this.Created == DateTime.MinValue)
-                throw new Exception("forgot to build meta data.");
-
-            return false;
-        }
-
-        public virtual void Saving()
-        {
-            if (string.IsNullOrWhiteSpace(this.Description)) this.Description = null;
-        }
-
         /// <summary>
         /// return 'type [id]'
         /// </summary>
@@ -89,6 +62,7 @@ namespace JryVideo.Model
         {
             DataCheck.NotWhiteSpace(this.Id);
             DataCheck.NotNull(this.Created);
+            DataCheck.True(this.Created != DateTime.MinValue);
         }
     }
 }
