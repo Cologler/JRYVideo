@@ -56,6 +56,18 @@ namespace JryVideo.Common
             base.RefreshProperties();
         }
 
+        #region name selector for main view
+
+        [NotifyPropertyChanged]
+        public INameableViewModel MajorNameViewModel =>
+            this.Source.Names.Count > 0 ? (INameableViewModel)this.NameViewModel : this.SeriesView.NameViewModel;
+
+        [NotifyPropertyChanged]
+        public INameableViewModel MinorNameViewModel =>
+            this.Source.Names.Count == 0 ? (INameableViewModel)this.NameViewModel : this.SeriesView.NameViewModel;
+
+        #endregion
+
         public bool NeedGroup { get; set; }
 
         private async void RefreshGroup(GroupFactory groupFactory)

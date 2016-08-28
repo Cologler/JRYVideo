@@ -88,6 +88,7 @@
     <Compile Include="Common\EntityViewModel.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Common\IAutoGenerateCoverProvider.cs" />
+    <Compile Include="Common\INameableViewModel.cs" />
     <Compile Include="Common\JryVideoViewModel.cs" />
     <Compile Include="Common\LocalizationHelper.cs" />
     <Compile Include="Common\MulitLineConverter.cs" />

@@ -1,14 +1,14 @@
-using Jasily.Chinese.PinYin;
-using Jasily.ComponentModel;
-using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Jasily.Chinese.PinYin;
+using Jasily.ComponentModel;
+using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public sealed class NameableViewModel<T> : JasilyViewModel<T>
+    public sealed class NameableViewModel<T> : JasilyViewModel<T>, INameableViewModel
         where T : INameable
     {
         private static readonly PinYinManager PinYinManager = PinYinManager.CreateInstance();

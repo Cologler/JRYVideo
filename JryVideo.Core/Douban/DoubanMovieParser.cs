@@ -1,7 +1,7 @@
-﻿using Jasily.SDK.Douban.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Jasily.SDK.Douban.Entities;
 
 namespace JryVideo.Core.Douban
 {
@@ -57,16 +57,13 @@ namespace JryVideo.Core.Douban
             {
                 if (this.ParseSeriesName(name)) continue;
 
-                var spliter = name.Split(new string[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries);
+                this.entityNames.Add(name);
+                var spliter = name.Split(new[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries);
                 if (spliter.Length > 0)
                 {
                     if (!this.ParseSeriesName(spliter[0]))
                     {
                         this.seriesNames.Add(spliter[0]);
-                    }
-                    if (spliter.Length > 1)
-                    {
-                        this.entityNames.Add(spliter[1]);
                     }
                 }
             }

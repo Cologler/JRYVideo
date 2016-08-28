@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Jasily.ComponentModel;
 using JryVideo.Model;
 
@@ -22,9 +21,6 @@ namespace JryVideo.Common
         public string YearWithIndex => $"({this.Source.Year}) {this.Source.Index}";
 
         [NotifyPropertyChanged]
-        public string VideoNames => this.Source.Names.FirstOrDefault() ?? String.Empty;
-
-        [NotifyPropertyChanged]
         public string VideoFullNames => this.Source.Names.Count == 0 ? null : this.Source.Names.AsLines();
 
         [NotifyPropertyChanged]
@@ -41,9 +37,9 @@ namespace JryVideo.Common
         /// </summary>
         public override void RefreshProperties()
         {
-            base.RefreshProperties();
             this.NameViewModel.RefreshProperties();
             this.CoverViewModel.RefreshProperties();
+            base.RefreshProperties();
         }
     }
 }
