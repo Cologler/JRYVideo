@@ -56,14 +56,17 @@ namespace JryVideo.Core.Douban
             foreach (var name in json.ParseName())
             {
                 if (this.ParseSeriesName(name)) continue;
-
-                this.entityNames.Add(name);
+                
                 var spliter = name.Split(new[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries);
                 if (spliter.Length > 0)
                 {
                     if (!this.ParseSeriesName(spliter[0]))
                     {
                         this.seriesNames.Add(spliter[0]);
+                    }
+                    if (spliter.Length == 2)
+                    {
+                        this.entityNames.Add(name);
                     }
                 }
             }

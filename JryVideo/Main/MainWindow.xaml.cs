@@ -116,7 +116,7 @@ namespace JryVideo.Main
             page.ClickedOtherVideo += this.VideoViewerPage_ClickedOtherVideo;
 
             page.ViewModel.InfoView.SeriesView.PropertiesRefreshed += this.InfoView_PropertiesRefreshed;
-            this.CaptionTextBlock.Text = Caption + " | " + info.SeriesView.NameViewModel.FirstLine;
+            this.CaptionTextBlock.Text = Caption + " | " + info.MajorNameViewModel.FirstLine;
             this.MainFrame.Navigate(page);
             await page.ViewModel.LoadAsync();
         }
