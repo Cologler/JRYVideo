@@ -16,11 +16,19 @@ namespace JryVideo.Data.MongoDb
         protected override IEnumerable<FilterDefinition<VideoRoleCollection>> BuildFilters(VideoRoleCollection.QueryParameter parameter)
         {
             if (parameter.ActorId != null)
-                yield return Builders<VideoRoleCollection>.Filter.Or(
-                    Builders<VideoRoleCollection>.Filter.Eq(PropertySelector<VideoRoleCollection>.Start(z => z)
-                        .SelectMany(z => z.MajorRoles).Select(z => z.Id).ToString(), parameter.ActorId),
-                    Builders<VideoRoleCollection>.Filter.Eq(PropertySelector<VideoRoleCollection>.Start(z => z)
-                        .SelectMany(z => z.MinorRoles).Select(z => z.Id).ToString(), parameter.ActorId));
+            {
+                yield return
+                    Builders<VideoRoleCollection>.Filter.Eq(
+                        PropertySelector<VideoRoleCollection>.Start(z => z)
+                            .SelectMany(z => z.MajorRoles)
+                            .Select(z => z.ActorId).ToString(),
+                        parameter.ActorId) | 
+                    Builders<VideoRoleCollection>.Filter.Eq(
+                        PropertySelector<VideoRoleCollection>.Start(z => z)
+                            .SelectMany(z => z.MinorRoles)
+                            .Select(z => z.ActorId).ToString(),
+                        parameter.ActorId);
+            }
         }
     }
 }
