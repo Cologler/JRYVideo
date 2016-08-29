@@ -194,6 +194,7 @@ namespace JryVideo.Main
                 return
                     this.Text.Equals(obj.SeriesView.Source.Id, StringComparison.OrdinalIgnoreCase) ||
                     this.Text.Equals(obj.Source.Id, StringComparison.OrdinalIgnoreCase) ||
+                    this.Text.Equals(obj.Source.Index.ToString()) ||
                     obj.Source.Names
                         .Concat(obj.SeriesView.Source.Names)
                         .Concat(obj.NameViewModel.QueryStrings)

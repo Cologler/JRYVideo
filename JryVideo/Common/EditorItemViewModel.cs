@@ -149,7 +149,7 @@ namespace JryVideo.Common
             }
 
             public void AddRange(IEnumerable<string> items)
-                => this.Names = this.Names.AsLines(StringSplitOptions.RemoveEmptyEntries).Concat(items).AsLines();
+                => this.Names = this.Names.AsLines(StringSplitOptions.RemoveEmptyEntries).Concat(items).Distinct().AsLines();
         }
     }
 }

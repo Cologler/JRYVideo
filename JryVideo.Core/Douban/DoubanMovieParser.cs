@@ -58,16 +58,14 @@ namespace JryVideo.Core.Douban
                 if (this.ParseSeriesName(name)) continue;
                 
                 var spliter = name.Split(new[] { ":", "：" }, 2, StringSplitOptions.RemoveEmptyEntries);
-                if (spliter.Length > 0)
+                if (!this.ParseSeriesName(spliter[0]))
                 {
-                    if (!this.ParseSeriesName(spliter[0]))
-                    {
-                        this.seriesNames.Add(spliter[0]);
-                    }
-                    if (spliter.Length == 2)
-                    {
-                        this.entityNames.Add(name);
-                    }
+                    this.seriesNames.Add(spliter[0]);
+                }
+
+                if (spliter.Length == 2)
+                {
+                    this.entityNames.Add(name);
                 }
             }
         }
