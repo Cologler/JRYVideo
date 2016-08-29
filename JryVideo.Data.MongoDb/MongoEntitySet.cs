@@ -158,7 +158,6 @@ namespace JryVideo.Data.MongoDb
             this.Engine.TestPass();
             this.Print(entity, "update");
             this.BeforeSave(entity);
-            this.Log(JasilyLogger.LoggerMode.Release, "update \r\n" + entity.Print() + "\r\n");
             var filter = Builders<TEntity>.Filter;
             return (await this.Collection.ReplaceOneAsync(
                 filter.Eq(t => t.Id, entity.Id),
