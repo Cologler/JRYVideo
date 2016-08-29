@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using JryVideo.Core.Managers.Upgrades;
 using JryVideo.Data.DataSources;
 using JryVideo.Model;
 
@@ -57,7 +58,8 @@ namespace JryVideo.Core.Managers
                     artist = new Artist()
                     {
                         TheTVDBId = actor.Id,
-                        Names = new List<string>() { actor.Name.Trim() }
+                        Names = new List<string>() { actor.Name.Trim() },
+                        Version = Upgrader<Artist>.MaxVersion
                     };
                     artist.BuildMetaData();
                     await this.artistManager.InsertAsync(artist);

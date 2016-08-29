@@ -229,7 +229,8 @@ namespace JryVideo.Controls.EditVideo
                 var parser = DoubanMovieParser.Parse(info);
                 this.NamesViewModel.AddRange(parser.SeriesNames
                     .Where(z => !this.Parent.Source.Names.Contains(z))
-                    .Concat(parser.EntityNames));
+                    .Concat(parser.EntityNames)
+                    .Select(z => z.Trim()));
 
                 var defaultValue = (Application.Current as App)?.UserConfig?.DefaultValue;
                 if (defaultValue != null)
