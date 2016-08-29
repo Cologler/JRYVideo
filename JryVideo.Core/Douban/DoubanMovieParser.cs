@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Jasily.SDK.Douban.Entities;
 
@@ -49,6 +50,9 @@ namespace JryVideo.Core.Douban
             {
                 this.EpisodesCount = json.EpisodesCount;
             }
+
+            this.seriesNames.Reset(this.seriesNames.Select(z => z.Trim()).ToArray());
+            this.entityNames.Reset(this.entityNames.Select(z => z.Trim()).ToArray());
         }
 
         private void LoadName(Movie json)
