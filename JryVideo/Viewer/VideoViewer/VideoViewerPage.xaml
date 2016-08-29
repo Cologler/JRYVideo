@@ -82,12 +82,20 @@
                     </Grid.ContextMenu>
 
                     <TextBlock Text="{Binding InfoView.SeriesView.NameViewModel.FirstLine}"
-                               Style="{StaticResource LabelTextBlockStyle}" />
+                               Style="{StaticResource LabelTextBlockStyle}"
+                               HorizontalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="16"
+                               FontFamily="Microsoft YaHei UI" />
 
                     <TextBlock Grid.Row="1"
                                Visibility="{Binding InfoView.SeriesView.NameViewModel.SecondLine, Converter={StaticResource NullCollapsedValueConverter}}"
                                Text="{Binding InfoView.SeriesView.NameViewModel.SecondLine}"
-                               Style="{StaticResource LabelTextBlockStyle}" />
+                               Style="{StaticResource LabelTextBlockStyle}"
+                               HorizontalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="16"
+                               FontFamily="Microsoft YaHei UI" />
                 </Grid>
 
                 <Grid Grid.Row="2"
@@ -181,7 +189,7 @@
                           Grid.Column="1"
                           Background="#00000000"
                           ToolTip="{Binding InfoView.VideoFullNames}">
-                        <TextBlock Text="{Binding InfoView.VideoNames}"
+                        <TextBlock Text="{Binding InfoView.NameViewModel.FullName}"
                                    Style="{StaticResource LabelTextBlockStyle}" />
                     </Grid>
 
