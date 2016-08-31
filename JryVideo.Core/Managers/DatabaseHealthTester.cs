@@ -223,6 +223,7 @@ namespace JryVideo.Core.Managers
                         this.ConnectToFlag(JryFlagType.EntityFansub, entity.Fansubs);
                         this.ConnectToFlag(JryFlagType.EntitySubTitleLanguage, entity.SubTitleLanguages);
                         this.ConnectToFlag(JryFlagType.EntityTrackLanguage, entity.TrackLanguages);
+                        this.ConnectToFlag(JryFlagType.EntityTag, entity.Tags);
                     }
                 }
             });

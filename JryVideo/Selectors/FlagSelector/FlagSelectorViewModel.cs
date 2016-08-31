@@ -49,17 +49,24 @@ namespace JryVideo.Selectors.FlagSelector
 
         public async Task LoadAsync()
         {
-            var items = (await this.GetManagers().FlagManager.LoadAsync(this.Type)).ToArray();
-            var flags = items.Select(z => new FlagViewModel(z)).ToArray();
-
-            this.SelectedItems.Reset(await flags
-                .Where(z => this.SelectedStrings.Contains(z.Source.Value))
-                .ToArrayAsync());
-
-            this.Items.Collection.Reset(await flags
+            const int recentlyCount = 3;
+            var flags = await (await this.GetManagers().FlagManager.LoadAsync(this.Type))
+                .Select(z => new FlagViewModel(z))
                 .OrderByDescending(z => z.Source.Updated)
-                .ThenByDescending(z => z.Source.Count)
-                .ToArrayAsync());
+                .ToArrayAsync();
+            if (flags.Length > recentlyCount)
+            {
+                var recent = flags.Take(recentlyCount).ToArray();
+                var next = await flags.Skip(recentlyCount).OrderByDescending(z => z.Source.Count).ToArrayAsync();
+                Debug.Assert(recent.Length + next.Length == flags.Length);
+                flags = recent.Concat(next).ToArray();
+            }
+            var selected = await flags
+                .Where(z => this.SelectedStrings.Contains(z.Source.Value))
+                .ToArrayAsync();
+
+            this.SelectedItems.Reset(selected);
+            this.Items.Collection.Reset(flags);
         }
 
         public void Sync() => this.SelectedStrings.Reset(this.SelectedItems.Select(z => z.Source.Value));
