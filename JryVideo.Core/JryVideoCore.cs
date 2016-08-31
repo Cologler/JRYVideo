@@ -72,10 +72,7 @@ namespace JryVideo.Core
             this.InitializeTheTVDBClient();
 
 #if DEBUG
-            foreach (var dc in new[] { this.DataAgent.NormalDataCenter, /*this.SecureDataCenter*/ })
-            {
-                new DatabaseHealthTester(dc).RunOnDebugAsync();
-            }
+            new DatabaseHealthTester(this.DataAgent.NormalDataCenter).RunOnDebugAsync();
 #endif
 
             if (this.RunArgs != null)

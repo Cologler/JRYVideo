@@ -101,6 +101,7 @@
                 <Grid Grid.Row="2"
                       Height="333"
                       Width="250"
+                      Margin="0,6,0,0"
                       Background="#00000000">
                     <Grid.ContextMenu>
                         <ContextMenu>
@@ -126,7 +127,7 @@
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0"

@@ -20,6 +20,7 @@ namespace JryVideo.Viewer.VideoViewer
 {
     public sealed class VideoViewerViewModel : JasilyViewModel
     {
+        private bool isWatchedInfoLoaded;
         private VideoViewModel video;
 
         public VideoViewerViewModel(VideoInfoViewModel info)
@@ -103,6 +104,7 @@ namespace JryVideo.Viewer.VideoViewer
                 }
             }
             this.Watcheds.Reset(watcheds);
+            this.isWatchedInfoLoaded = true;
         }
 
         public ObservableCollection<WatchedEpisodeChecker> Watcheds { get; }
@@ -116,6 +118,8 @@ namespace JryVideo.Viewer.VideoViewer
 
         public async Task<bool> WatchSaveAsync()
         {
+            if (!this.isWatchedInfoLoaded) return false;
+
             var manager = this.GetManagers().UserWatchInfoManager;
             var user = await manager.FindAsync(this.InfoView.Source.Id);
             var watched = this.Watcheds.Where(z => z.IsWatched)
