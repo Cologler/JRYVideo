@@ -26,14 +26,22 @@ namespace JryVideo.Core.Managers
             throw new NotSupportedException();
         }
 
+        public async Task AddVideoAsync(Resource resource, JryVideoInfo video)
+        {
+            if (resource.VideoIds.Contains(video.Id)) return;
+            resource.VideoIds.Add(video.Id);
+            await this.UpdateAsync(resource);
+        }
+
         public async Task<bool> RemoveAsync(JryVideoInfo video, Resource resource)
         {
+            var oldCount = resource.VideoIds.Count;
             resource.VideoIds = resource.VideoIds.Where(z => z != video.Id).ToList();
             if (resource.VideoIds.Count == 0)
             {
                 await base.RemoveAsync(resource);
             }
-            else
+            else if (oldCount != resource.VideoIds.Count)
             {
                 await this.UpdateAsync(resource);
             }

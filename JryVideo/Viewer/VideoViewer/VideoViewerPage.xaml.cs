@@ -346,5 +346,12 @@ namespace JryVideo.Viewer.VideoViewer
 
         private async void CombineActorsMenuItem_OnClick(object sender, RoutedEventArgs e)
             => await this.ViewModel.VideoRoleCollection.CombineActorsAsync();
+
+        private void ResourceAddVideoMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var resource = ((FrameworkElement) sender).DataContext as EntityViewModel;
+            Debug.Assert(resource != null);
+            this.ViewModel.ResourceAddVideo(resource);
+        }
     }
 }

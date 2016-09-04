@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using JryVideo.Common;
 using JryVideo.Model;
 
@@ -17,9 +18,12 @@ namespace JryVideo.Selectors.VideoSelector
         public void Initialize(SeriesViewModel series, string defaultId = null)
             => this.SelectVideoControl.Initialize(series, defaultId);
 
-        public static SelectResult<JryVideoInfo> Select(Window parent, SeriesViewModel source, JryVideoInfo without = null, string defaultId = null)
+        public static SelectResult<JryVideoInfo> Select(SeriesViewModel source, JryVideoInfo without = null, string defaultId = null)
         {
-            var dialog = new VideoSelectorWindow() { Owner = parent };
+            var dialog = new VideoSelectorWindow
+            {
+                Owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(z => z.IsActive)
+            };
             if (without != null)
             {
                 dialog.SelectVideoControl.ViewModel.Withouts.Add(without.Id);

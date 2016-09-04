@@ -90,7 +90,7 @@ namespace JryVideo.Controls.EditVideo
 
         private void SelectLastVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+            var result = VideoSelectorWindow.Select(
                 this.ViewModel.Parent,
                 without: this.ViewModel.GetCommitObject(),
                 defaultId: this.ViewModel.LastVideoViewModel?.Source.Id);
@@ -102,7 +102,7 @@ namespace JryVideo.Controls.EditVideo
 
         private void SelectNextVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
+            var result = VideoSelectorWindow.Select(
                 this.ViewModel.Parent,
                 without: this.ViewModel.GetCommitObject(),
                 defaultId: this.ViewModel.NextVideoViewModel?.Source.Id);

@@ -270,6 +270,14 @@
                                                         <RowDefinition Height="Auto" />
                                                         <RowDefinition Height="Auto" />
                                                     </Grid.RowDefinitions>
+                                                    <Grid.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="add another video"
+                                                                      Click="ResourceAddVideoMenuItem_OnClick">
+                                                                
+                                                            </MenuItem>
+                                                        </ContextMenu>
+                                                    </Grid.ContextMenu>
 
                                                     <Grid VerticalAlignment="Center"
                                                           HorizontalAlignment="Left">

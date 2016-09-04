@@ -14,6 +14,7 @@ using JryVideo.Core.Models;
 using JryVideo.Core.TheTVDB;
 using JryVideo.Model;
 using JryVideo.Model.Interfaces;
+using JryVideo.Selectors.VideoSelector;
 using JryVideo.Selectors.WebImageSelector;
 
 namespace JryVideo.Viewer.VideoViewer
@@ -353,6 +354,15 @@ namespace JryVideo.Viewer.VideoViewer
                     builder.Uri.AddRange(urls);
                     return await this.coverManager.BuildCoverAsync(builder);
                 });
+            }
+        }
+
+        internal async void ResourceAddVideo(EntityViewModel resource)
+        {
+            var video = VideoSelectorWindow.Select(this.InfoView.SeriesView, this.InfoView.Source);
+            if (video.IsAccept && video.Value != null)
+            {
+                await this.GetManagers().ResourceManager.AddVideoAsync(resource.Source, video.Value);
             }
         }
     }

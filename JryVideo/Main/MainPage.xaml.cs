@@ -309,8 +309,7 @@ namespace JryVideo.Main
             var vm = ((FrameworkElement)sender).DataContext as VideoInfoViewModel;
             if (vm != null)
             {
-                var result = VideoSelectorWindow.Select(this.TryFindParent<Window>(),
-                    vm.SeriesView, without: vm);
+                var result = VideoSelectorWindow.Select(vm.SeriesView, vm);
                 if (!result.IsAccept) return;
                 var video = result.Value;
                 if (video == null) return;
