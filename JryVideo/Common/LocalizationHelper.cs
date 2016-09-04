@@ -14,21 +14,21 @@ namespace JryVideo.Common
                     return Resources.JryFlagType_VideoYear;
                 case JryFlagType.VideoType:
                     return Resources.JryFlagType_VideoType;
-                case JryFlagType.EntityResolution:
+                case JryFlagType.ResourceResolution:
                     return Resources.JryFlagType_EntityResolution;
-                case JryFlagType.EntityQuality:
+                case JryFlagType.ResourceQuality:
                     return Resources.JryFlagType_EntityFilmSource;
-                case JryFlagType.EntityExtension:
+                case JryFlagType.ResourceExtension:
                     return Resources.JryFlagType_EntityExtension;
-                case JryFlagType.EntityFansub:
+                case JryFlagType.ResourceFansub:
                     return Resources.JryFlagType_EntityFansub;
-                case JryFlagType.EntitySubTitleLanguage:
+                case JryFlagType.ResourceSubTitleLanguage:
                     return Resources.JryFlagType_EntitySubTitleLanguage;
-                case JryFlagType.EntityTrackLanguage:
+                case JryFlagType.ResourceTrackLanguage:
                     return Resources.JryFlagType_EntityTrackLanguage;
-                case JryFlagType.EntityAudioSource:
+                case JryFlagType.ResourceAudioSource:
                     return Resources.JryFlagType_EntityAudioSource;
-                case JryFlagType.EntityTag:
+                case JryFlagType.ResourceTag:
                     return Resources.JryFlagType_EntityTag;
                 case JryFlagType.SeriesTag:
                     return Resources.JryFlagType_SeriesTag;

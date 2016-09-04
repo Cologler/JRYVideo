@@ -41,9 +41,6 @@ namespace JryVideo.Data.MongoDb
         private static readonly string VideosStarProperty = PropertySelector<Series>.Start()
             .SelectMany(z => z.Videos).Select(z => z.Star).ToString();
 
-        private static readonly string EntitiesIdProperty = PropertySelector<Model.JryVideo>.Start()
-            .SelectMany(z => z.Entities).Select(z => z.Id).ToString();
-
         public MongoSeriesDataSource(JryVideoMongoDbDataEngine engine, IMongoCollection<Series> collection)
             : base(engine, collection)
         {
@@ -56,7 +53,6 @@ namespace JryVideo.Data.MongoDb
             Debug.Assert(VideosYearProperty == "Videos.Year");
             Debug.Assert(VideosImdbIdProperty == "Videos.ImdbId");
             Debug.Assert(VideosStarProperty == "Videos.Star");
-            Debug.Assert(EntitiesIdProperty == "Entities.Id");
         }
 
         public override async Task<IEnumerable<Series>> QueryAsync(Series.QueryParameter parameter, int skip, int take)
@@ -64,12 +60,15 @@ namespace JryVideo.Data.MongoDb
             switch (parameter.Mode)
             {
                 case Series.QueryMode.EntityId:
-                    var it = await this.Engine.VideoCollection.FindAsync(Builders<Model.JryVideo>.Filter.Eq(
-                        EntitiesIdProperty, parameter.Keyword));
-                    var en = (await it.ToListAsync()).FirstOrDefault();
-                    if (en == null) return Enumerable.Empty<Series>();
-                    parameter = new Series.QueryParameter(parameter.OriginText, Series.QueryMode.VideoId, en.Id);
-                    break;
+                    var resource = await this.Engine.GetResourceDataSource().FindAsync(parameter.Keyword);
+                    var series = new List<Series>(resource.VideoIds.Count);
+                    foreach (var videoId in resource.VideoIds)
+                    {
+                        series.Add((await this.QueryAsync(
+                            new Series.QueryParameter(parameter.OriginText, Series.QueryMode.VideoId, videoId),
+                            0, int.MaxValue)).Single());
+                    }
+                    return series.Distinct().Skip(skip).Take(take).ToArray();
             }
 
             return await base.QueryAsync(parameter, skip, take);

@@ -154,6 +154,6 @@ namespace JryVideo.Core.Managers
             return result;
         }
 
-        private async void SeriesManager_ItemRemoved(object sender, string e) => await this.RemoveAsync(e);
+        private async void SeriesManager_ItemRemoved(object sender, Series e) => await this.RemoveAsync(e.Id);
     }
 }

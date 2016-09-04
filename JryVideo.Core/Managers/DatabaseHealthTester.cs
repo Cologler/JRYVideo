@@ -37,7 +37,7 @@ namespace JryVideo.Core.Managers
                 await this.BuildFlagAsync();
                 await this.dataCenter.CoverManager.Source.CursorAsync(this.BuildCover);
                 await this.BuildSeriesAsync();
-                await this.BuildVideoAsync();
+                await this.BuildResourceAsync();
                 await this.dataCenter.VideoRoleManager.Source.CursorAsync(z =>
                 {
                     if (!this.videoInfoRefs.ContainsKey(z.Id) &&
@@ -204,28 +204,26 @@ namespace JryVideo.Core.Managers
             });
         }
 
-        private async Task BuildVideoAsync()
+        private async Task BuildResourceAsync()
         {
-            await this.dataCenter.VideoManager.Source.CursorAsync(z =>
+            await this.dataCenter.ResourceManager.Source.CursorAsync(z =>
             {
-                if (!this.videoIdFromSeries.ContainsKey(z.Id))
+                if (z.VideoIds.Count == 0) throw new NotSupportedException();
+                foreach (var id in z.VideoIds)
                 {
-                    this.Errors.Add(new MissingVideoError(z.Id, z.GetType()));
-                }
-                else
-                {
-                    foreach (var entity in z.Entities)
+                    if (!this.videoIdFromSeries.ContainsKey(id))
                     {
-                        this.ConnectToFlag(JryFlagType.EntityResolution, entity.Resolution);
-                        if (!string.IsNullOrEmpty(entity.Quality)) this.ConnectToFlag(JryFlagType.EntityQuality, entity.Quality);
-                        if (!string.IsNullOrEmpty(entity.AudioSource)) this.ConnectToFlag(JryFlagType.EntityAudioSource, entity.AudioSource);
-                        this.ConnectToFlag(JryFlagType.EntityExtension, entity.Extension);
-                        this.ConnectToFlag(JryFlagType.EntityFansub, entity.Fansubs);
-                        this.ConnectToFlag(JryFlagType.EntitySubTitleLanguage, entity.SubTitleLanguages);
-                        this.ConnectToFlag(JryFlagType.EntityTrackLanguage, entity.TrackLanguages);
-                        this.ConnectToFlag(JryFlagType.EntityTag, entity.Tags);
+                        this.Errors.Add(new MissingVideoError(id, z.GetType()));
                     }
                 }
+                this.ConnectToFlag(JryFlagType.ResourceResolution, z.Resolution);
+                if (!string.IsNullOrEmpty(z.Quality)) this.ConnectToFlag(JryFlagType.ResourceQuality, z.Quality);
+                if (!string.IsNullOrEmpty(z.AudioSource)) this.ConnectToFlag(JryFlagType.ResourceAudioSource, z.AudioSource);
+                this.ConnectToFlag(JryFlagType.ResourceExtension, z.Extension);
+                this.ConnectToFlag(JryFlagType.ResourceFansub, z.Fansubs);
+                this.ConnectToFlag(JryFlagType.ResourceSubTitleLanguage, z.SubTitleLanguages);
+                this.ConnectToFlag(JryFlagType.ResourceTrackLanguage, z.TrackLanguages);
+                this.ConnectToFlag(JryFlagType.ResourceTag, z.Tags);
             });
         }
 

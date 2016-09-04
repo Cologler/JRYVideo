@@ -10,20 +10,20 @@
 
         VideoTag = 13,
 
-        EntityResolution = 21,
+        ResourceResolution = 21,
 
-        EntityQuality = 22,
+        ResourceQuality = 22,
 
-        EntityExtension = 23,
+        ResourceExtension = 23,
 
-        EntityFansub = 24,
+        ResourceFansub = 24,
 
-        EntitySubTitleLanguage = 25,
+        ResourceSubTitleLanguage = 25,
 
-        EntityTrackLanguage = 26,
+        ResourceTrackLanguage = 26,
 
-        EntityAudioSource = 27,
+        ResourceAudioSource = 27,
 
-        EntityTag = 28,
+        ResourceTag = 28,
     }
 }

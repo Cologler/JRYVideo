@@ -39,23 +39,6 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        protected override async Task<bool> InsertAsync(IEnumerable<Series> objs)
-        {
-            if (await base.InsertAsync(objs))
-            {
-                var videos = objs.SelectMany(z => z.Videos).ToArray();
-
-                if (videos.Length > 0)
-                {
-                    this.VideoInfoCreated.BeginFire(this, videos.ToArray());
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
         public override Task<bool> UpdateAsync(Series series) => this.UpdateAsync(series, true);
 
         private async Task<bool> UpdateAsync(Series series, bool isRaiseEvent)

@@ -22,18 +22,18 @@ namespace JryVideo.Core.Managers
             this.ProviderManager = dataEngine;
             this.CoverManager = new CoverManager(dataEngine.GetCoverSet());
             this.SeriesManager = new SeriesManager(this, dataEngine.GetSeriesSet());
-            this.VideoManager = new VideoManager(dataEngine.GetVideoSet());
             this.FlagManager = new FlagManager(dataEngine.GetFlagSet());
             this.ArtistManager = new ArtistManager(dataEngine.GetArtistSet());
             this.VideoRoleManager = new VideoRoleManager(this.SeriesManager, this.ArtistManager, dataEngine.GetVideoRoleInfoSet());
+            this.ResourceManager = new ResourceManager(dataEngine.GetResourceDataSource());
             this.UserWatchInfoManager = new UserWatchInfoManager(dataEngine.GetUserWatchInfoSet());
 
             // initialize
             this.SeriesManager.Initialize(this);
-            this.VideoManager.Initialize(this);
             this.FlagManager.Initialize(this);
             this.VideoRoleManager.Initialize(this);
             this.CoverManager.Initialize(this);
+            this.ResourceManager.Initialize(this);
 
             this.Journal.Initialize(this);
         }
@@ -44,8 +44,6 @@ namespace JryVideo.Core.Managers
 
         public SeriesManager SeriesManager { get; }
 
-        public VideoManager VideoManager { get; }
-
         public FlagManager FlagManager { get; }
 
         public ArtistManager ArtistManager { get; }
@@ -53,6 +51,8 @@ namespace JryVideo.Core.Managers
         public VideoRoleManager VideoRoleManager { get; }
 
         public UserWatchInfoManager UserWatchInfoManager { get; }
+
+        public ResourceManager ResourceManager { get; }
 
         public DataJournal Journal { get; } = new DataJournal();
 

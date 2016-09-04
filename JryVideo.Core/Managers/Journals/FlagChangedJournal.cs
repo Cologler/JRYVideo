@@ -15,7 +15,7 @@ namespace JryVideo.Core.Managers.Journals
 
         public bool IsObsolete(Type type)
         {
-            if (type == typeof(JryEntity) && (int)this.FlagType > 20)
+            if (type == typeof(Resource) && (int)this.FlagType > 20)
                 return true;
 
             if ((type == typeof(Series) || type == typeof(JryVideoInfo)) && (int)this.FlagType < 20)

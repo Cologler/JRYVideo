@@ -18,7 +18,7 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace JryVideo.Editors.EntityEditor
 {
-    public class EntityEditorViewModel : EditorItemViewModel<JryEntity>
+    public class EntityEditorViewModel : EditorItemViewModel<Resource>
     {
         private string resolution;
         private string filmSource;
@@ -28,19 +28,19 @@ namespace JryVideo.Editors.EntityEditor
         private bool isRegexChecked;
         private string format;
         private string[] formatArray;
-        private ThreadUnsafeSemaphore readingSemaphore = new ThreadUnsafeSemaphore(1);
+        private readonly ThreadUnsafeSemaphore readingSemaphore = new ThreadUnsafeSemaphore(1);
 
         public EntityEditorViewModel()
         {
-            this.FansubsViewModel = new SelectFlagViewModel(JryFlagType.EntityFansub);
-            this.SubTitleLanguagesViewModel = new SelectFlagViewModel(JryFlagType.EntitySubTitleLanguage);
-            this.TrackLanguagesViewModel = new SelectFlagViewModel(JryFlagType.EntityTrackLanguage);
-            this.TagsViewModel = new SelectFlagViewModel(JryFlagType.EntityTag);
+            this.FansubsViewModel = new SelectFlagViewModel(JryFlagType.ResourceFansub);
+            this.SubTitleLanguagesViewModel = new SelectFlagViewModel(JryFlagType.ResourceSubTitleLanguage);
+            this.TrackLanguagesViewModel = new SelectFlagViewModel(JryFlagType.ResourceTrackLanguage);
+            this.TagsViewModel = new SelectFlagViewModel(JryFlagType.ResourceTag);
         }
 
-        public Model.JryVideo Video { get; private set; }
+        public Model.JryVideoInfo Video { get; private set; }
 
-        public void Initialize(Model.JryVideo video)
+        public void Initialize(Model.JryVideoInfo video)
         {
             this.Video = video;
         }
@@ -51,16 +51,16 @@ namespace JryVideo.Editors.EntityEditor
             {
                 switch (flagType)
                 {
-                    case JryFlagType.EntityFansub:
+                    case JryFlagType.ResourceFansub:
                         return this.FansubsViewModel.Collection;
 
-                    case JryFlagType.EntitySubTitleLanguage:
+                    case JryFlagType.ResourceSubTitleLanguage:
                         return this.SubTitleLanguagesViewModel.Collection;
 
-                    case JryFlagType.EntityTrackLanguage:
+                    case JryFlagType.ResourceTrackLanguage:
                         return this.TrackLanguagesViewModel.Collection;
 
-                    case JryFlagType.EntityTag:
+                    case JryFlagType.ResourceTag:
                         return this.TagsViewModel.Collection;
 
                     default:
@@ -89,10 +89,10 @@ namespace JryVideo.Editors.EntityEditor
         {
             var manager = this.GetManagers().FlagManager;
 
-            this.Resolutions.AddRange((await manager.LoadAsync(JryFlagType.EntityResolution)).Select(z => z.Value));
-            this.FilmSources.AddRange((await manager.LoadAsync(JryFlagType.EntityQuality)).Select(z => z.Value));
-            this.AudioSources.AddRange((await manager.LoadAsync(JryFlagType.EntityAudioSource)).Select(z => z.Value));
-            this.Extensions.AddRange((await manager.LoadAsync(JryFlagType.EntityExtension)).Select(z => z.Value));
+            this.Resolutions.AddRange((await manager.LoadAsync(JryFlagType.ResourceResolution)).Select(z => z.Value));
+            this.FilmSources.AddRange((await manager.LoadAsync(JryFlagType.ResourceQuality)).Select(z => z.Value));
+            this.AudioSources.AddRange((await manager.LoadAsync(JryFlagType.ResourceAudioSource)).Select(z => z.Value));
+            this.Extensions.AddRange((await manager.LoadAsync(JryFlagType.ResourceExtension)).Select(z => z.Value));
         }
 
         [EditableField]
@@ -151,16 +151,16 @@ namespace JryVideo.Editors.EntityEditor
             }
         }
 
-        public override void ReadFromObject(JryEntity obj)
+        public override void ReadFromObject(Resource obj)
         {
             using (this.readingSemaphore.Acquire())
             {
                 base.ReadFromObject(obj);
 
-                this[JryFlagType.EntityFansub].Reset(obj.Fansubs);
-                this[JryFlagType.EntitySubTitleLanguage].Reset(obj.SubTitleLanguages);
-                this[JryFlagType.EntityTrackLanguage].Reset(obj.TrackLanguages);
-                this[JryFlagType.EntityTag].Reset(obj.Tags);
+                this[JryFlagType.ResourceFansub].Reset(obj.Fansubs.EmptyIfNull());
+                this[JryFlagType.ResourceSubTitleLanguage].Reset(obj.SubTitleLanguages.EmptyIfNull());
+                this[JryFlagType.ResourceTrackLanguage].Reset(obj.TrackLanguages.EmptyIfNull());
+                this[JryFlagType.ResourceTag].Reset(obj.Tags.EmptyIfNull());
 
                 if (obj.Format != null)
                 {
@@ -182,20 +182,23 @@ namespace JryVideo.Editors.EntityEditor
             }
         }
 
-        public override void WriteToObject(JryEntity obj)
+        public override void WriteToObject(Resource obj)
         {
             base.WriteToObject(obj);
 
-            obj.Fansubs = this[JryFlagType.EntityFansub].Distinct().OrderBy(z => z).ToList();
-            obj.SubTitleLanguages = this[JryFlagType.EntitySubTitleLanguage].Distinct().OrderBy(z => z).ToList();
-            obj.TrackLanguages = this[JryFlagType.EntityTrackLanguage].Distinct().OrderBy(z => z).ToList();
-            obj.Tags = this[JryFlagType.EntityTag].Distinct().OrderBy(z => z).ToList();
+            var tagWriter = new Func<IEnumerable<string>, List<string>>(
+                z => z.Distinct().OrderBy(x => x).ToList().NullIfEmpty());
+
+            obj.Fansubs = tagWriter(this[JryFlagType.ResourceFansub]);
+            obj.SubTitleLanguages = tagWriter(this[JryFlagType.ResourceSubTitleLanguage]);
+            obj.TrackLanguages = tagWriter(this[JryFlagType.ResourceTrackLanguage]);
+            obj.Tags = tagWriter(this[JryFlagType.ResourceTag].Distinct());
 
             if (!this.Format.IsNullOrWhiteSpace())
             {
                 Debug.Assert(this.IsRegexChecked != this.IsWildcardChecked);
 
-                obj.Format = new JryFormat()
+                obj.Format = new FileNameFormat()
                 {
                     Type = this.IsRegexChecked ? JryFormatType.Regex : JryFormatType.Wildcard,
                     Value = this.Format
@@ -203,36 +206,41 @@ namespace JryVideo.Editors.EntityEditor
             }
         }
 
-        public async Task<JryEntity> CommitAsync(MetroWindow window)
+        public async Task<Resource> CommitAsync(MetroWindow window)
         {
-            if (JryEntity.IsExtensionInvalid(this.Extension))
+            if (Resource.IsExtensionInvalid(this.Extension))
             {
                 await window.ShowMessageAsync("error", "invalid extension.");
                 return null;
             }
 
-            if (JryEntity.IsResolutionInvalid(this.Resolution))
+            if (Resource.IsResolutionInvalid(this.Resolution))
             {
                 await window.ShowMessageAsync("error", "invalid resolution.");
                 return null;
             }
 
-            var entity = this.GetCommitObject();
+            var resource = this.GetCommitObject();
 
-            this.WriteToObject(entity);
-
-            var provider = this.GetManagers().VideoManager.GetEntityManager(this.Video);
+            this.WriteToObject(resource);
+            var provider = this.GetManagers().ResourceManager;
+            resource.VideoIds.Reset(resource.VideoIds.Append(this.Video.Id).Distinct().ToArray());
 
             if (this.Action == ObjectChangedAction.Create)
             {
-                if (provider.IsExists(entity))
+                var exists = await provider.QueryByVideoIdAsync(this.Video.Id).SelectAsync(z => z.ToArray());
+                if (exists.Length > 0)
                 {
-                    await window.ShowMessageAsync("error", "had same entity.");
-                    return null;
+                    var cc = new Resource.ContentComparer();
+                    if (exists.Any(item => cc.Equals(item, resource)))
+                    {
+                        await window.ShowMessageAsync("error", "had same resource.");
+                        return null;
+                    }
                 }
             }
 
-            return await base.CommitAsync(provider, entity);
+            return await base.CommitAsync(provider, resource);
         }
 
         public async void ParseFiles(string[] files)
@@ -283,22 +291,22 @@ namespace JryVideo.Editors.EntityEditor
             var flagManager = this.GetManagers().FlagManager;
             if (this.fansubFlags == null)
             {
-                this.fansubFlags = (await flagManager.LoadAsync(JryFlagType.EntityFansub))
+                this.fansubFlags = (await flagManager.LoadAsync(JryFlagType.ResourceFansub))
                     .Select(z => z.Value).ToArray();
             }
             if (this.subTitleLanguagesFlags == null)
             {
-                this.subTitleLanguagesFlags = (await flagManager.LoadAsync(JryFlagType.EntitySubTitleLanguage))
+                this.subTitleLanguagesFlags = (await flagManager.LoadAsync(JryFlagType.ResourceSubTitleLanguage))
                     .Select(z => z.Value).ToArray();
             }
             if (this.trackLanguageFlags == null)
             {
-                this.trackLanguageFlags = (await flagManager.LoadAsync(JryFlagType.EntityTrackLanguage))
+                this.trackLanguageFlags = (await flagManager.LoadAsync(JryFlagType.ResourceTrackLanguage))
                     .Select(z => z.Value).ToArray();
             }
             if (this.tagFlags == null)
             {
-                this.tagFlags = (await flagManager.LoadAsync(JryFlagType.EntityTag))
+                this.tagFlags = (await flagManager.LoadAsync(JryFlagType.ResourceTag))
                     .Select(z => z.Value).ToArray();
             }
 
@@ -308,10 +316,10 @@ namespace JryVideo.Editors.EntityEditor
 
                 foreach (var flagTemplate in new[]
                 {
-                    new { Type = JryFlagType.EntityFansub, Flags = this.fansubFlags },
-                    new { Type = JryFlagType.EntitySubTitleLanguage, Flags = this.subTitleLanguagesFlags },
-                    new { Type = JryFlagType.EntityTrackLanguage, Flags = this.trackLanguageFlags },
-                    new { Type = JryFlagType.EntityTag, Flags = this.tagFlags },
+                    new { Type = JryFlagType.ResourceFansub, Flags = this.fansubFlags },
+                    new { Type = JryFlagType.ResourceSubTitleLanguage, Flags = this.subTitleLanguagesFlags },
+                    new { Type = JryFlagType.ResourceTrackLanguage, Flags = this.trackLanguageFlags },
+                    new { Type = JryFlagType.ResourceTag, Flags = this.tagFlags },
                 })
                 {
                     var col = this[flagTemplate.Type];
@@ -375,11 +383,11 @@ namespace JryVideo.Editors.EntityEditor
                         .ToArray();
                     this.GetUIDispatcher().BeginInvoke(() =>
                     {
-                        this[JryFlagType.EntityFansub].Reset(this[JryFlagType.EntityFansub]
+                        this[JryFlagType.ResourceFansub].Reset(this[JryFlagType.ResourceFansub]
                             .ToArray()
                            .Concat(fansubs)
                            .Distinct());
-                        this[JryFlagType.EntitySubTitleLanguage].Reset(this[JryFlagType.EntitySubTitleLanguage]
+                        this[JryFlagType.ResourceSubTitleLanguage].Reset(this[JryFlagType.ResourceSubTitleLanguage]
                             .ToArray()
                             .Concat(langs)
                             .Distinct());

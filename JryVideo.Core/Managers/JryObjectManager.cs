@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.EventArgses;
-using System.Linq;
 using System.Threading.Tasks;
 using Jasily.Data;
 using JryVideo.Model;
@@ -17,7 +16,7 @@ namespace JryVideo.Core.Managers
         internal event EventHandler<T> ItemCreated;
         internal event EventHandler<T> ItemCreatedOrUpdated;
         internal event EventHandler<ChangingEventArgs<T>> ItemUpdated;
-        internal event EventHandler<string> ItemRemoved;
+        internal event EventHandler<T> ItemRemoved;
         internal event EventHandler<ICoverParent> CoverParentRemoving;
 
         protected JryObjectManager(TProvider source)
@@ -63,18 +62,6 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
-        protected virtual async Task<bool> InsertAsync(IEnumerable<T> objs)
-        {
-            var items = objs as T[] ?? objs.ToArray();
-            items.ForEach(z => z.CheckError());
-            if (await this.Source.InsertAsync(items))
-            {
-                this.ItemCreated?.BeginInvoke(this, items);
-                return true;
-            }
-            return false;
-        }
-
         public virtual async Task<bool> UpdateAsync(T obj)
         {
             obj.CheckError();
@@ -88,11 +75,20 @@ namespace JryVideo.Core.Managers
             return false;
         }
 
+        public virtual async Task<bool> RemoveAsync(T obj)
+        {
+            if (await this.Source.RemoveAsync(obj.Id))
+            {
+                this.ItemRemoved?.BeginInvoke(this, obj);
+                return true;
+            }
+            return false;
+        }
+
         public virtual async Task<bool> RemoveAsync(string id)
         {
             if (await this.Source.RemoveAsync(id))
             {
-                this.ItemRemoved?.BeginInvoke(this, id);
                 return true;
             }
             return false;

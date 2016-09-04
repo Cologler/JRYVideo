@@ -73,14 +73,13 @@
     <Compile Include="Artist.cs" />
     <Compile Include="JryFormatType.cs" />
     <Compile Include="JryCover.cs" />
-    <Compile Include="JryEntity.cs" />
-    <Compile Include="JryFormat.cs" />
+    <Compile Include="FileNameFormat.cs" />
     <Compile Include="JryInfo.cs" />
     <Compile Include="JryInvalidError.cs" />
     <Compile Include="JryObject.cs" />
+    <Compile Include="Resource.cs" />
     <Compile Include="Series.cs" />
     <Compile Include="JrySettingItem.cs" />
-    <Compile Include="JryVideo.cs" />
     <Compile Include="UserWatchInfo.cs" />
     <Compile Include="VideoRole.cs" />
     <Compile Include="JryVideoInfo.cs" />

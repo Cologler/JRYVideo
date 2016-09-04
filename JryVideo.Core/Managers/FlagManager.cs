@@ -22,9 +22,27 @@ namespace JryVideo.Core.Managers
             dataCenter.SeriesManager.VideoInfoCreated += this.SeriesManager_VideoInfoCreated;
             dataCenter.SeriesManager.VideoInfoUpdated += this.SeriesManager_VideoInfoUpdated;
             dataCenter.SeriesManager.VideoInfoRemoved += this.SeriesManager_VideoInfoRemoved;
-            dataCenter.VideoManager.EntitiesCreated += this.VideoManager_EntitiesCreated;
-            dataCenter.VideoManager.EntitiesUpdated += this.VideoManager_EntitiesUpdated;
-            dataCenter.VideoManager.EntitiesRemoved += this.VideoManager_EntitiesRemoved;
+            dataCenter.ResourceManager.ItemCreated += this.ResourceManager_ItemCreated;
+            dataCenter.ResourceManager.ItemUpdated += this.ResourceManager_ItemUpdated;
+            dataCenter.ResourceManager.ItemRemoved += this.ResourceManager_ItemRemoved;
+        }
+
+        private async void ResourceManager_ItemRemoved(object sender, Resource e)
+        {
+            var dict = CalcFlagDictionary(null, BuildFlagDictionary(e));
+            await this.ApplyFlagDictionaryAsync(dict);
+        }
+
+        private async void ResourceManager_ItemUpdated(object sender, ChangingEventArgs<Resource> e)
+        {
+            var dict = CalcFlagDictionary(BuildFlagDictionary(e.New), BuildFlagDictionary(e.Old));
+            await this.ApplyFlagDictionaryAsync(dict);
+        }
+
+        private async void ResourceManager_ItemCreated(object sender, Resource e)
+        {
+            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
+            await this.ApplyFlagDictionaryAsync(dict);
         }
 
         private async void SeriesManager_ItemUpdated(object sender, ChangingEventArgs<Series> e)
@@ -90,44 +108,36 @@ namespace JryVideo.Core.Managers
             };
         }
 
-        private static Dictionary<JryFlagType, List<string>> BuildFlagDictionary(IEnumerable<JryEntity> infos)
+        private static Dictionary<JryFlagType, List<string>> BuildFlagDictionary(Resource resource)
         {
-            return new Dictionary<JryFlagType, List<string>>()
+            return new Dictionary<JryFlagType, List<string>>
             {
-                // single in entity
+                // single in resource
                 {
-                    JryFlagType.EntityExtension,
-                    infos.Select(z => z.Extension).ToList()
+                    JryFlagType.ResourceExtension, new List<string> { resource.Extension }
                 },
                 {
-                    JryFlagType.EntityResolution,
-                    infos.Select(z => z.Resolution).ToList()
+                    JryFlagType.ResourceResolution, new List<string> { resource.Resolution }
                 },
                 {
-                    JryFlagType.EntityQuality,
-                    infos.Where(z => !string.IsNullOrEmpty(z.Quality)).Select(z => z.Quality).ToList()
+                    JryFlagType.ResourceQuality, new List<string>().AppendIfNotNull(resource.Quality)
                 },
                 {
-                    JryFlagType.EntityAudioSource,
-                    infos.Where(z => !string.IsNullOrEmpty(z.AudioSource)).Select(z => z.AudioSource).ToList()
+                    JryFlagType.ResourceAudioSource, new List<string>().AppendIfNotNull(resource.AudioSource)
                 },
 
-                // muilt in entity
+                // muilt in resource
                 {
-                    JryFlagType.EntityFansub,
-                    infos.SelectMany(z => z.Fansubs).ToList()
+                    JryFlagType.ResourceFansub, new List<string>().AppendRangeIfNotNull(resource.Fansubs)
                 },
                 {
-                    JryFlagType.EntitySubTitleLanguage,
-                    infos.SelectMany(z => z.SubTitleLanguages).ToList()
+                    JryFlagType.ResourceSubTitleLanguage, new List<string>().AppendRangeIfNotNull(resource.SubTitleLanguages)
                 },
                 {
-                    JryFlagType.EntityTrackLanguage,
-                    infos.SelectMany(z => z.TrackLanguages).ToList()
+                    JryFlagType.ResourceTrackLanguage, new List<string>().AppendRangeIfNotNull(resource.TrackLanguages)
                 },
                 {
-                    JryFlagType.EntityTag,
-                    infos.SelectMany(z => z.Tags).ToList()
+                    JryFlagType.ResourceTag, new List<string>().AppendRangeIfNotNull(resource.Tags)
                 }
             };
         }
@@ -180,34 +190,16 @@ namespace JryVideo.Core.Managers
             await this.ApplyFlagDictionaryAsync(dict);
         }
 
-        private async void VideoManager_EntitiesCreated(object sender, IEnumerable<JryEntity> e)
-        {
-            var dict = CalcFlagDictionary(BuildFlagDictionary(e));
-            await this.ApplyFlagDictionaryAsync(dict);
-        }
-
-        private async void VideoManager_EntitiesUpdated(object sender, IEnumerable<ChangingEventArgs<JryEntity>> e)
-        {
-            var dict = CalcFlagDictionary(BuildFlagDictionary(e.Select(z => z.New)), BuildFlagDictionary(e.Select(z => z.Old)));
-            await this.ApplyFlagDictionaryAsync(dict);
-        }
-
-        private async void VideoManager_EntitiesRemoved(object sender, IEnumerable<JryEntity> e)
-        {
-            var dict = CalcFlagDictionary(null, BuildFlagDictionary(e));
-            await this.ApplyFlagDictionaryAsync(dict);
-        }
-
         public static bool CanReplace(JryFlagType type)
         {
             switch (type)
             {
                 case JryFlagType.VideoYear:
 
-                case JryFlagType.EntityResolution:
-                case JryFlagType.EntityExtension:
-                case JryFlagType.EntityAudioSource:
-                case JryFlagType.EntityQuality:
+                case JryFlagType.ResourceResolution:
+                case JryFlagType.ResourceExtension:
+                case JryFlagType.ResourceAudioSource:
+                case JryFlagType.ResourceQuality:
                     return false;
 
                 case JryFlagType.SeriesTag:
@@ -216,10 +208,10 @@ namespace JryVideo.Core.Managers
                 case JryFlagType.VideoTag:
                     return false;
 
-                case JryFlagType.EntityFansub:
-                case JryFlagType.EntitySubTitleLanguage:
-                case JryFlagType.EntityTrackLanguage:
-                case JryFlagType.EntityTag:
+                case JryFlagType.ResourceFansub:
+                case JryFlagType.ResourceSubTitleLanguage:
+                case JryFlagType.ResourceTrackLanguage:
+                case JryFlagType.ResourceTag:
                     return true;
 
                 default:

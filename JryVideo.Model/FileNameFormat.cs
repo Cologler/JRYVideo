@@ -2,7 +2,7 @@ using System;
 
 namespace JryVideo.Model
 {
-    public sealed class JryFormat : IEquatable<JryFormat>
+    public sealed class FileNameFormat : IEquatable<FileNameFormat>
     {
         public JryFormatType Type { get; set; }
 
@@ -15,7 +15,7 @@ namespace JryVideo.Model
         /// 如果当前对象等于 <paramref name="other"/> 参数，则为 true；否则为 false。
         /// </returns>
         /// <param name="other">与此对象进行比较的对象。</param>
-        public bool Equals(JryFormat other)
+        public bool Equals(FileNameFormat other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -36,12 +36,12 @@ namespace JryVideo.Model
             }
         }
 
-        public static bool operator ==(JryFormat left, JryFormat right)
+        public static bool operator ==(FileNameFormat left, FileNameFormat right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(JryFormat left, JryFormat right)
+        public static bool operator !=(FileNameFormat left, FileNameFormat right)
         {
             return !Equals(left, right);
         }

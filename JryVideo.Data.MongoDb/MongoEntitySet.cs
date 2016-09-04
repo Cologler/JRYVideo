@@ -17,6 +17,8 @@ namespace JryVideo.Data.MongoDb
 
         public JryVideoMongoDbDataEngine Engine { get; }
 
+        public  FilterDefinitionBuilder<TEntity> FilterDefinitionBuilder { get; } = Builders<TEntity>.Filter;
+
         public MongoEntitySet(JryVideoMongoDbDataEngine engine, IMongoCollection<TEntity> collection)
         {
             this.Engine = engine;

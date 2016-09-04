@@ -1,7 +1,7 @@
-﻿using JryVideo.Model;
-using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Windows;
+using JryVideo.Model;
+using MahApps.Metro.Controls;
 
 namespace JryVideo.Editors.EntityEditor
 {
@@ -17,7 +17,7 @@ namespace JryVideo.Editors.EntityEditor
             this.InitializeComponent();
         }
 
-        public EntityEditorWindow CreateOrCloneMode(Model.JryVideo video, JryEntity entity = null)
+        public EntityEditorWindow CreateOrCloneMode(Model.JryVideoInfo video, Resource entity = null)
         {
             this.Page.ViewModel.Initialize(video);
             if (entity == null)
@@ -32,7 +32,7 @@ namespace JryVideo.Editors.EntityEditor
             return this;
         }
 
-        public EntityEditorWindow ModifyMode(Model.JryVideo video, JryEntity entity)
+        public EntityEditorWindow ModifyMode(Model.JryVideoInfo video, Resource entity)
         {
             this.Page.ViewModel.Initialize(video);
             this.Page.ViewModel.ModifyMode(entity);

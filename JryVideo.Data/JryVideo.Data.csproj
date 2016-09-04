@@ -47,6 +47,7 @@
     <Compile Include="DataSources\IFlagSet.cs" />
     <Compile Include="DataSources\ICoverSet.cs" />
     <Compile Include="DataSources\IQueryableEntitySet.cs" />
+    <Compile Include="DataSources\IResourceDataSource.cs" />
     <Compile Include="DataSources\ISeriesSet.cs" />
     <Compile Include="DataSources\IVideoRoleCollectionSet.cs" />
     <Compile Include="IJryVideoDataEngineInitializeParameters.cs" />

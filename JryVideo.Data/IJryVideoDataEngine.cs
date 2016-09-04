@@ -18,8 +18,6 @@ namespace JryVideo.Data
 
         ISeriesSet GetSeriesSet();
 
-        IFlagableSet<Model.JryVideo> GetVideoSet();
-
         IEntitySet<UserWatchInfo> GetUserWatchInfoSet();
 
         IFlagSet GetFlagSet();
@@ -31,5 +29,7 @@ namespace JryVideo.Data
         IVideoRoleCollectionSet GetVideoRoleInfoSet();
 
         IEntitySet<JrySettingItem> GetSettingSet();
+
+        IResourceDataSource GetResourceDataSource();
     }
 }

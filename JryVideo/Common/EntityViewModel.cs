@@ -1,16 +1,16 @@
-using Jasily.ComponentModel;
-using Jasily.EverythingSDK;
-using JryVideo.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Jasily.ComponentModel;
+using Jasily.EverythingSDK;
+using JryVideo.Model;
 
 namespace JryVideo.Common
 {
-    public sealed class EntityViewModel : JasilyViewModel<JryEntity>
+    public sealed class EntityViewModel : JasilyViewModel<Resource>
     {
-        public EntityViewModel(JryEntity source)
+        public EntityViewModel(Resource source)
             : base(source)
         {
             this.RefreshProperties();
@@ -27,10 +27,10 @@ namespace JryVideo.Common
         public string DisplaySubTitleLanguages => ListToLine(this.Source.SubTitleLanguages);
 
         [NotifyPropertyChanged]
-        public bool HasSubTitleLanguages => this.Source.SubTitleLanguages.Count > 0;
+        public bool HasSubTitleLanguages => this.Source.SubTitleLanguages != null;
 
         [NotifyPropertyChanged]
-        public bool DontHasSubTitleLanguages => this.Source.SubTitleLanguages.Count == 0;
+        public bool DontHasSubTitleLanguages => this.Source.SubTitleLanguages == null;
 
         [NotifyPropertyChanged]
         public string DisplayTrackLanguages => ListToLine(this.Source.TrackLanguages);
@@ -46,7 +46,7 @@ namespace JryVideo.Common
             ? null
             : string.Format("({0}), {1}", this.Source.Format.Type, this.Source.Format.Value);
 
-        private static string ListToLine(List<string> lines) => lines.Count > 0 ? lines.JoinAsString(" / ") : "[EMPTY]";
+        private static string ListToLine(List<string> lines) => lines != null && lines.Count > 0 ? lines.JoinAsString(" / ") : "[EMPTY]";
 
         public async Task<IEnumerable<string>> SearchByEveryThingAsync()
         {

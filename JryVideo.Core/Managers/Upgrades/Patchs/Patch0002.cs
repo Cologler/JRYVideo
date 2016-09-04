@@ -31,5 +31,10 @@ namespace JryVideo.Core.Managers.Upgrades.Patchs
             item.Uri = null;
             return Patch0000.TrueTask;
         }
+
+        public Task<bool> UpgradeAsync(Model.JryVideo item)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

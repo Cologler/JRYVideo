@@ -80,14 +80,12 @@ namespace JryVideo.Viewer.VideoViewer
 
         private async void AddEntityMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (this.ViewModel.Video == null) return;
-
             var dlg = new EntityEditorWindow()
             {
                 Owner = this.TryFindParent<MetroWindow>()
-            }.CreateOrCloneMode(this.ViewModel.Video.Source);
+            }.CreateOrCloneMode(this.ViewModel.InfoView.Source);
 
-            if (dlg.ShowDialog() == true || this.ViewModel.Video.IsObsolete)
+            if (dlg.ShowDialog() == true)
             {
                 await this.ViewModel.ReloadVideoAsync();
             }
@@ -123,7 +121,7 @@ namespace JryVideo.Viewer.VideoViewer
                 var dlg = new EntityEditorWindow()
                 {
                     Owner = w
-                }.ModifyMode(this.ViewModel.Video.Source, vm.Source);
+                }.ModifyMode(this.ViewModel.InfoView.Source, vm.Source);
 
                 if (dlg.ShowDialog() == true)
                 {
@@ -149,7 +147,7 @@ namespace JryVideo.Viewer.VideoViewer
                 var entity = ((FrameworkElement)sender).DataContext as EntityViewModel;
                 if (entity != null)
                 {
-                    await this.ViewModel.Video.RemoveAsync(entity);
+                    await this.ViewModel.RemoveAsync(entity);
                     await this.ViewModel.ReloadVideoAsync();
                     this.ViewModel.EntitesView.View.Refresh();
                 }
@@ -249,7 +247,7 @@ namespace JryVideo.Viewer.VideoViewer
                 var dlg = new EntityEditorWindow()
                 {
                     Owner = w
-                }.CreateOrCloneMode(this.ViewModel.Video.Source, vm.Source);
+                }.CreateOrCloneMode(this.ViewModel.InfoView.Source, vm.Source);
 
                 if (dlg.ShowDialog() == true)
                 {

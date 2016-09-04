@@ -109,9 +109,6 @@ namespace JryVideo.Data.MongoDb
         internal IMongoCollection<Model.JryVideo> VideoCollection
             => this.Database.GetCollection<Model.JryVideo>("Video");
 
-        public IFlagableSet<Model.JryVideo> GetVideoSet()
-            => new MongoVideoDataSource(this, this.VideoCollection);
-
         public IEntitySet<UserWatchInfo> GetUserWatchInfoSet()
             => new MongoEntitySet<UserWatchInfo>(this, this.Database.GetCollection<UserWatchInfo>("UserWatchInfo"));
 
@@ -132,6 +129,9 @@ namespace JryVideo.Data.MongoDb
 
         public IEntitySet<JrySettingItem> GetSettingSet()
             => new MongoEntitySet<JrySettingItem>(this, this.SettingCollection());
+
+        public IResourceDataSource GetResourceDataSource()
+            => new MongoResourceDataSource(this, this.Database.GetCollection<Resource>("Resource"));
 
         public string Name => DataSourceProviderName;
     }

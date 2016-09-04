@@ -108,14 +108,14 @@ namespace JryVideo.Main
                         break;
 
 
-                    case JryFlagType.EntityResolution:
-                    case JryFlagType.EntityQuality:
-                    case JryFlagType.EntityExtension:
-                    case JryFlagType.EntityFansub:
-                    case JryFlagType.EntitySubTitleLanguage:
-                    case JryFlagType.EntityTrackLanguage:
-                    case JryFlagType.EntityAudioSource:
-                    case JryFlagType.EntityTag:
+                    case JryFlagType.ResourceResolution:
+                    case JryFlagType.ResourceQuality:
+                    case JryFlagType.ResourceExtension:
+                    case JryFlagType.ResourceFansub:
+                    case JryFlagType.ResourceSubTitleLanguage:
+                    case JryFlagType.ResourceTrackLanguage:
+                    case JryFlagType.ResourceAudioSource:
+                    case JryFlagType.ResourceTag:
                         throw new NotSupportedException();
 
                     default:

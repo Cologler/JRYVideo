@@ -56,8 +56,8 @@
     <Compile Include="MongoEntitySet.cs" />
     <Compile Include="MongoFlagDataSource.cs" />
     <Compile Include="MongoJryObjectSet.cs" />
+    <Compile Include="MongoResourceDataSource.cs" />
     <Compile Include="MongoSeriesDataSource.cs" />
-    <Compile Include="MongoVideoDataSource.cs" />
     <Compile Include="MongoVideoRoleCollectionDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

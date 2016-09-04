@@ -20,16 +20,16 @@ namespace JryVideo.Configs
         {
             switch (type)
             {
-                case JryFlagType.EntityFansub:
+                case JryFlagType.ResourceFansub:
                     return this.Fansubs ?? Empty<MapperValue>.Enumerable;
 
-                case JryFlagType.EntitySubTitleLanguage:
+                case JryFlagType.ResourceSubTitleLanguage:
                     return this.SubTitleLanguages ?? Empty<MapperValue>.Enumerable;
 
-                case JryFlagType.EntityTrackLanguage:
+                case JryFlagType.ResourceTrackLanguage:
                     return this.TrackLanguages ?? Empty<MapperValue>.Enumerable;
 
-                case JryFlagType.EntityTag:
+                case JryFlagType.ResourceTag:
                     return this.Tags ?? Empty<MapperValue>.Enumerable;
 
                 default:

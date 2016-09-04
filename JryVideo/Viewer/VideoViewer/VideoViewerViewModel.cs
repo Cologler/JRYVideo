@@ -21,7 +21,6 @@ namespace JryVideo.Viewer.VideoViewer
     public sealed class VideoViewerViewModel : JasilyViewModel
     {
         private bool isWatchedInfoLoaded;
-        private VideoViewModel video;
 
         public VideoViewerViewModel(VideoInfoViewModel info)
         {
@@ -36,12 +35,6 @@ namespace JryVideo.Viewer.VideoViewer
 
         public VideoInfoViewModel InfoView { get; }
 
-        public VideoViewModel Video
-        {
-            get { return this.video; }
-            private set { this.SetPropertyRef(ref this.video, value); }
-        }
-
         public BackgroundImageViewModel Background { get; }
 
         public VideoRoleCollectionViewModel VideoRoleCollection { get; }
@@ -53,25 +46,21 @@ namespace JryVideo.Viewer.VideoViewer
             await this.AutoCompleteAsync();
         }
 
+        public async Task<bool> RemoveAsync(EntityViewModel entity)
+        {
+            var manager = this.GetManagers().ResourceManager;
+            return await manager.RemoveAsync(this.InfoView.Source, entity.Source);
+        }
+
         public async Task ReloadVideoAsync()
         {
             this.EntitesView.Collection.Clear();
-            var video = await this.GetManagers().VideoManager.FindAsync(this.InfoView.Source.Id);
-            if (video == null)
-            {
-                this.Video = null;
-            }
-            else
-            {
-                this.Video = new VideoViewModel(video);
-
-                this.EntitesView.Collection.Reset(video.Entities
-                    .Select(z => new EntityViewModel(z))
-                    .GroupBy(v => v.Source.Resolution ?? "unknown")
-                    .OrderBy(z => z.Key)
-                    .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g.OrderBy(this.CompareEntityViewModel))));
-            }
-
+            var res = await this.GetManagers().ResourceManager.QueryByVideoIdAsync(this.InfoView.Source.Id);
+            this.EntitesView.Collection.Reset(res
+                .Select(z => new EntityViewModel(z))
+                .GroupBy(v => v.Source.Resolution ?? "unknown")
+                .OrderBy(z => z.Key)
+                .Select(g => new ObservableCollectionGroup<string, EntityViewModel>(g.Key, g.OrderBy(this.CompareEntityViewModel))));
             this.ReloadEpisodes();
         }
 
