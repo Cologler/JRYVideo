@@ -150,7 +150,7 @@ namespace JryVideo.Model
 
             VideoId,
 
-            EntityId,
+            ResourceId,
 
             DoubanId,
 

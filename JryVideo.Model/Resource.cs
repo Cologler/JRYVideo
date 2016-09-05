@@ -18,6 +18,9 @@ namespace JryVideo.Model
             this.TrackLanguages = new List<string>();
         }
 
+        /// <summary>
+        /// for current, video id only in same series.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public List<string> VideoIds { get; set; } = new List<string>();

@@ -59,16 +59,10 @@ namespace JryVideo.Data.MongoDb
         {
             switch (parameter.Mode)
             {
-                case Series.QueryMode.EntityId:
+                case Series.QueryMode.ResourceId:
                     var resource = await this.Engine.GetResourceDataSource().FindAsync(parameter.Keyword);
-                    var series = new List<Series>(resource.VideoIds.Count);
-                    foreach (var videoId in resource.VideoIds)
-                    {
-                        series.Add((await this.QueryAsync(
-                            new Series.QueryParameter(parameter.OriginText, Series.QueryMode.VideoId, videoId),
-                            0, int.MaxValue)).Single());
-                    }
-                    return series.Distinct().Skip(skip).Take(take).ToArray();
+                    return await this.QueryAsync(
+                        new Series.QueryParameter(parameter.OriginText, Series.QueryMode.VideoId, resource.VideoIds.First()), 0, 1);
             }
 
             return await base.QueryAsync(parameter, skip, take);

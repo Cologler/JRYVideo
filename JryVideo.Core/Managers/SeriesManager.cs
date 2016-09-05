@@ -224,8 +224,9 @@ namespace JryVideo.Core.Managers
                             return new Series.QueryParameter(originText, Series.QueryMode.VideoId,
                                 originText.Substring(index + 1));
 
-                        case "entity-id":
-                            return new Series.QueryParameter(originText, Series.QueryMode.EntityId,
+                        case "resource-id":
+                        case "res-id":
+                            return new Series.QueryParameter(originText, Series.QueryMode.ResourceId,
                                 originText.Substring(index + 1));
 
                         case "douban-id":
@@ -302,7 +303,7 @@ namespace JryVideo.Core.Managers
                         if (video.Id == queryParameter.Keyword) return true;
                         break;
 
-                    case Series.QueryMode.EntityId:
+                    case Series.QueryMode.ResourceId:
                         return true;
 
                     case Series.QueryMode.DoubanId:
