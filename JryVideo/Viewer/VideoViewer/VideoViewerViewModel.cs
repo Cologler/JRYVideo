@@ -359,6 +359,11 @@ namespace JryVideo.Viewer.VideoViewer
 
         internal async void ResourceAddVideo(EntityViewModel resource)
         {
+            var selector = VideoSelectorWindow.Create(this.InfoView.SeriesView);
+            foreach (var videoId in resource.Source.VideoIds)
+            {
+                selector.AddWithout(videoId);
+            }
             var video = VideoSelectorWindow.Select(this.InfoView.SeriesView, this.InfoView.Source);
             if (video.IsAccept && video.Value != null)
             {

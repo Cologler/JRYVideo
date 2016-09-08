@@ -228,7 +228,7 @@ namespace JryVideo.Editors.EntityEditor
 
             if (this.Action == ObjectChangedAction.Create)
             {
-                var exists = await provider.QueryByVideoIdAsync(this.Video.Id).SelectAsync(z => z.ToArray());
+                var exists = await provider.QueryByVideoIdAsync(this.Video.Id).AsyncSelect(z => z.ToArray());
                 if (exists.Length > 0)
                 {
                     var cc = new Resource.ContentComparer();

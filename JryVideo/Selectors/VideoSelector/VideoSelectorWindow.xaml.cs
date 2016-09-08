@@ -15,24 +15,44 @@ namespace JryVideo.Selectors.VideoSelector
             this.InitializeComponent();
         }
 
-        public void Initialize(SeriesViewModel series, string defaultId = null)
-            => this.SelectVideoControl.Initialize(series, defaultId);
-
-        public static SelectResult<JryVideoInfo> Select(SeriesViewModel source, JryVideoInfo without = null, string defaultId = null)
+        public static VideoSelectorWindow Create(SeriesViewModel source)
         {
             var dialog = new VideoSelectorWindow
             {
                 Owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(z => z.IsActive)
             };
-            if (without != null)
-            {
-                dialog.SelectVideoControl.ViewModel.Withouts.Add(without.Id);
-            }
-            dialog.SelectVideoControl.Initialize(source, defaultId);
+            dialog.SelectVideoControl.ViewModel.Series = source;
+            return dialog;
+        }
 
-            return dialog.ShowDialog() == true
-                ? SelectResult<JryVideoInfo>.Selected(dialog.SelectVideoControl.ViewModel.Items.Selected?.Source)
+        public SelectResult<JryVideoInfo> GetResult()
+        {
+            this.SelectVideoControl.ViewModel.Initialize();
+            return this.ShowDialog() == true
+                ? SelectResult<JryVideoInfo>.Selected(this.SelectVideoControl.ViewModel.Items.Selected?.Source)
                 : SelectResult<JryVideoInfo>.NonAccept;
+        }
+
+        public string DefaultVideoId
+        {
+            get { return this.SelectVideoControl.ViewModel.DefaultVideoId; }
+            set { this.SelectVideoControl.ViewModel.DefaultVideoId = value; }
+        }
+
+        public void AddWithout(string videoId)
+        {
+            if (videoId == null) return;
+            this.SelectVideoControl.ViewModel.Withouts.Add(videoId);
+        }
+
+        public static SelectResult<JryVideoInfo> Select(SeriesViewModel source, params JryVideoInfo[] withouts)
+        {
+            var dialog = Create(source);
+            foreach (var id in withouts.Select(z => z.Id))
+            {
+                dialog.AddWithout(id);
+            }
+            return dialog.GetResult();
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)

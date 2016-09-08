@@ -90,10 +90,10 @@ namespace JryVideo.Controls.EditVideo
 
         private void SelectLastVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var result = VideoSelectorWindow.Select(
-                this.ViewModel.Parent,
-                without: this.ViewModel.GetCommitObject(),
-                defaultId: this.ViewModel.LastVideoViewModel?.Source.Id);
+            var window = VideoSelectorWindow.Create(this.ViewModel.Parent);
+            window.AddWithout(this.ViewModel.GetCommitObject()?.Id);
+            window.DefaultVideoId = this.ViewModel.LastVideoViewModel?.Source.Id;
+            var result = window.GetResult();
             if (result.IsAccept)
             {
                 this.ViewModel.ChangeContextVideo(true, result.Value);
@@ -102,10 +102,10 @@ namespace JryVideo.Controls.EditVideo
 
         private void SelectNextVideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var result = VideoSelectorWindow.Select(
-                this.ViewModel.Parent,
-                without: this.ViewModel.GetCommitObject(),
-                defaultId: this.ViewModel.NextVideoViewModel?.Source.Id);
+            var window = VideoSelectorWindow.Create(this.ViewModel.Parent);
+            window.AddWithout(this.ViewModel.GetCommitObject()?.Id);
+            window.DefaultVideoId = this.ViewModel.NextVideoViewModel?.Source.Id;
+            var result = window.GetResult();
             if (result.IsAccept)
             {
                 this.ViewModel.ChangeContextVideo(false, result.Value);

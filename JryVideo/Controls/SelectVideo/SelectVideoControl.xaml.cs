@@ -25,7 +25,11 @@ namespace JryVideo.Controls.SelectVideo
         public SelectVideoViewModel ViewModel { get; } = new SelectVideoViewModel();
 
         public void Initialize(SeriesViewModel series, string defaultId = null)
-            => this.ViewModel.Initialize(series, defaultId);
+        {
+            this.ViewModel.Series = series;
+            this.ViewModel.DefaultVideoId = defaultId;
+            this.ViewModel.Initialize();
+        }
 
         private async void MoveToGroupMenuItem_OnClick(object sender, RoutedEventArgs e)
         {

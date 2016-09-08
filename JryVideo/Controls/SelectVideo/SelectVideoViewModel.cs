@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -6,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using Jasily.ComponentModel;
-using Jasily.Diagnostics;
 using JryVideo.Common;
 using JryVideo.Model;
 using JryVideo.Selectors.Common;
@@ -15,6 +15,10 @@ namespace JryVideo.Controls.SelectVideo
 {
     public sealed class SelectVideoViewModel : BaseSelectorViewModel<VideoInfoViewModel, JryVideoInfo>
     {
+        private bool isInitialized;
+        private string defaultVideoId;
+        private SeriesViewModel series;
+
         public SelectVideoViewModel()
         {
             var grouping = PropertySelector<VideoInfoViewModel>.Start(z => z.Source.GroupIndex).ToString();
@@ -25,12 +29,31 @@ namespace JryVideo.Controls.SelectVideo
                 x.Source.GroupIndex.CompareTo(y.Source.GroupIndex));
         }
 
-        public SeriesViewModel Series { get; private set; }
-
-        public void Initialize(SeriesViewModel series, string defaultId = null)
+        public SeriesViewModel Series
         {
-            Debug.Assert(series != null);
-            this.Series = series;
+            get { return this.series; }
+            set
+            {
+                Debug.Assert(this.series == null);
+                if (this.isInitialized) throw new InvalidOperationException();
+                this.series = value;
+            }
+        }
+
+        public string DefaultVideoId
+        {
+            get { return this.defaultVideoId; }
+            set
+            {
+                if (this.isInitialized) throw new InvalidOperationException();
+                this.defaultVideoId = value;
+            }
+        }
+
+        public void Initialize()
+        {
+            this.isInitialized = true;
+            if (this.Series == null) throw new InvalidOperationException();
 
             var groups = this.Series.VideoViewModels.Select(z => z.Source)
                 .GroupBy(z => z.GroupIndex)
@@ -41,9 +64,9 @@ namespace JryVideo.Controls.SelectVideo
             this.TargetGroups.Add(new Group(this.TargetGroups.Count));
 
             this.Items.Collection.Reset(series.VideoViewModels);
-            if (defaultId != null)
+            if (this.DefaultVideoId != null)
             {
-                this.Items.Selected = this.Items.Collection.FirstOrDefault(z => z.Source.Id == defaultId);
+                this.Items.Selected = this.Items.Collection.FirstOrDefault(z => z.Source.Id == this.DefaultVideoId);
             }
         }
 
