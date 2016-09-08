@@ -182,42 +182,17 @@ namespace JryVideo.Core.Douban
             return String.Format(@"http://img{0}.douban.com/view/photo/raw/public{1}", server, item);
         }
 
-        public static IEnumerable<string> ParseName(Artist json)
-        {
-            if (!string.IsNullOrWhiteSpace(json.Name))
-                yield return json.Name;
-
-            if (!string.IsNullOrWhiteSpace(json.OriginName))
-                yield return json.OriginName;
-
-            if (json.OtherNames != null)
-            {
-                foreach (var name in json.OtherNames.Where(z => !String.IsNullOrWhiteSpace(z)))
-                {
-                    yield return name;
-                }
-            }
-
-            if (json.OtherOriginNames != null)
-            {
-                foreach (var name in json.OtherOriginNames.Where(z => !String.IsNullOrWhiteSpace(z)))
-                {
-                    yield return name;
-                }
-            }
-        }
-
         public static IEnumerable<string> ParseName(this Movie json)
         {
-            if (!String.IsNullOrWhiteSpace(json.Title))
+            if (!string.IsNullOrWhiteSpace(json.Title))
                 yield return json.Title;
 
-            if (!String.IsNullOrWhiteSpace(json.OriginalTitle))
+            if (!string.IsNullOrWhiteSpace(json.OriginalTitle))
                 yield return json.OriginalTitle;
 
             if (json.OtherNames != null)
             {
-                foreach (var originName in json.OtherNames.Where(z => !String.IsNullOrWhiteSpace(z)))
+                foreach (var originName in json.OtherNames.Where(z => !string.IsNullOrWhiteSpace(z)))
                 {
                     if (originName.EndsWith("(港)") || originName.EndsWith("(台)"))
                         yield return originName.Substring(0, originName.Length - 3);

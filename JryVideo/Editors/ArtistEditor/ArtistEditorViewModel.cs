@@ -44,9 +44,8 @@ namespace JryVideo.Editors.ArtistEditor
             var doubanId = this.DoubanId;
             if (string.IsNullOrWhiteSpace(doubanId)) return;
             var info = await DoubanHelper.TryGetArtistInfoAsync(doubanId);
-            if (info == null) return;
-            var names = DoubanHelper.ParseName(info).ToArray();
-            if (names.Length > 0)
+            var names = info?.AllNames().ToArray();
+            if (names?.Length > 0)
             {
                 for (var i = 0; i < names.Length; i++)
                 {

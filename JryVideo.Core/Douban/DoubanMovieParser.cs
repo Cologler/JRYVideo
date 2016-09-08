@@ -57,7 +57,7 @@ namespace JryVideo.Core.Douban
 
         private void LoadName(Movie json)
         {
-            foreach (var name in json.ParseName())
+            foreach (var name in json.AllNames())
             {
                 if (this.ParseSeriesName(name)) continue;
                 
