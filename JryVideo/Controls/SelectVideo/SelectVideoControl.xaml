@@ -96,7 +96,7 @@
                         </StackPanel>
 
                         <TextBlock Grid.Row="2"
-                                   Text="{Binding VideoNames}"
+                                   Text="{Binding NameViewModel.FirstLine}"
                                    Margin="2,0"
                                    TextTrimming="CharacterEllipsis"
                                    HorizontalAlignment="Center" />
