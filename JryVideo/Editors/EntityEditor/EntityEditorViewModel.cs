@@ -313,7 +313,6 @@ namespace JryVideo.Editors.EntityEditor
             var mapper = ((App)Application.Current).UserConfig?.Mapper;
             if (mapper != null)
             {
-
                 foreach (var flagTemplate in new[]
                 {
                     new { Type = JryFlagType.ResourceFansub, Flags = this.fansubFlags },

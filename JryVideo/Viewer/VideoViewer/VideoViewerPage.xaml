@@ -220,7 +220,7 @@
                         <MenuItem Visibility="{Binding InfoView.HasLast, Converter={StaticResource BooleanToVisibilityConverter}}"
                                   Header="last video"
                                   Click="GoLastVideoMenuItem_OnClick"/>
-                        <MenuItem Header="item">
+                        <MenuItem Header="str">
                             <MenuItem Header="add"
                                       x:Name="AddEntityMenuItem"
                                       Click="AddEntityMenuItem_OnClick" />

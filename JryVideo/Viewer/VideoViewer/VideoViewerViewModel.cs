@@ -344,8 +344,8 @@ namespace JryVideo.Viewer.VideoViewer
                 return await Task.Run(async () =>
                 {
                     var array = (await client.GetBannersBySeriesIdAsync(theTVDBId)).ToArray();
-                    var urls = array.Where(z => z.Season == index).RandomSort()
-                        .Concat(array.Where(z => z.Season != index).RandomSort())
+                    var urls = array.Where(z => z.Season == index).RandomSort(new Random())
+                        .Concat(array.Where(z => z.Season != index).RandomSort(new Random()))
                         .Where(banner => banner.BannerType == BannerType.Fanart)
                         .Select(z => z.BuildUrl(client))
                         .ToArray();

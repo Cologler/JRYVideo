@@ -108,6 +108,7 @@
     <Compile Include="Common\Windows\JryVideoWindowExtension.cs" />
     <Compile Include="Configs\MapperConfig.cs" />
     <Compile Include="Configs\MapperValue.cs" />
+    <Compile Include="Configs\FlagTriggerConfigItem.cs" />
     <Compile Include="Configs\UserConfig.cs" />
     <Compile Include="Configs\DefaultValue.cs" />
     <Compile Include="Controls\EditFlag\EditFlagUserControl.xaml.cs">

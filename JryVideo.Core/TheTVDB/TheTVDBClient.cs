@@ -1,10 +1,10 @@
-﻿using Jasily.Net;
-using JryVideo.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Jasily.Net;
+using JryVideo.Model;
 
 namespace JryVideo.Core.TheTVDB
 {
@@ -37,7 +37,7 @@ namespace JryVideo.Core.TheTVDB
             if (!imdbId.StartsWith("tt")) throw new ArgumentException(nameof(imdbId));
             if (this.allMirror.Count == 0) throw new NotSupportedException();
 
-            var url = $"{this.allMirror.RandomTake().MirrorPath}/api/GetSeriesByRemoteID.php?imdbid={imdbId}";
+            var url = $"{this.allMirror.RandomTake(new Random()).MirrorPath}/api/GetSeriesByRemoteID.php?imdbid={imdbId}";
             var request = WebRequest.CreateHttp(url);
             var result = (await request.GetResultAsBytesAsync()).AsXml<SeriesArray>();
             if (result.IsSuccess && result.Result?.Series != null) return result.Result.Series;
@@ -57,14 +57,14 @@ namespace JryVideo.Core.TheTVDB
             if (banner == null) throw new ArgumentNullException(nameof(banner));
             if (this.bannerMirror.Count == 0) throw new NotSupportedException();
 
-            return $"{this.bannerMirror.RandomTake().MirrorPath}/banners/{banner}";
+            return $"{this.bannerMirror.RandomTake(new Random()).MirrorPath}/banners/{banner}";
         }
 
         public async Task<IEnumerable<Banner>> GetBannersBySeriesIdAsync(string seriesId)
         {
             if (seriesId == null) throw new ArgumentNullException(nameof(seriesId));
 
-            var url = $"{this.allMirror.RandomTake().MirrorPath}/api/{this.apiKey}/series/{seriesId}/banners.xml";
+            var url = $"{this.allMirror.RandomTake(new Random()).MirrorPath}/api/{this.apiKey}/series/{seriesId}/banners.xml";
             var request = WebRequest.CreateHttp(url);
             var result = (await request.GetResultAsBytesAsync()).AsXml<BannerArray>();
             return result.IsSuccess && result.Result.Banners != null
@@ -76,7 +76,7 @@ namespace JryVideo.Core.TheTVDB
         {
             if (seriesId == null) throw new ArgumentNullException(nameof(seriesId));
 
-            var url = $"{this.allMirror.RandomTake().MirrorPath}/api/{this.apiKey}/series/{seriesId}/actors.xml";
+            var url = $"{this.allMirror.RandomTake(new Random()).MirrorPath}/api/{this.apiKey}/series/{seriesId}/actors.xml";
             var request = WebRequest.CreateHttp(url);
             var result = (await request.GetResultAsBytesAsync()).AsXml<ActorArray>();
             return result.IsSuccess && result.Result.Actors != null
