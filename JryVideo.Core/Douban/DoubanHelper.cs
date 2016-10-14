@@ -14,7 +14,7 @@ namespace JryVideo.Core.Douban
     {
         public static async Task<Movie> TryGetMovieInfoAsync(string doubanId)
         {
-            var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/subject/" + doubanId);
+            var request = WebRequest.CreateHttp("https://api.douban.com/v2/movie/subject/" + doubanId);
             using (var result = await request.GetResultAsBytesAsync())
             {
                 PrintInDebug(result);
@@ -103,7 +103,7 @@ namespace JryVideo.Core.Douban
 
         public static async Task<Artist> TryGetArtistInfoAsync(string doubanId)
         {
-            var request = WebRequest.CreateHttp("http://api.douban.com/v2/movie/celebrity/" + doubanId);
+            var request = WebRequest.CreateHttp("https://api.douban.com/v2/movie/celebrity/" + doubanId);
             var result = await request.GetResultAsBytesAsync();
             PrintInDebug(result);
             if (result.IsSuccess)
