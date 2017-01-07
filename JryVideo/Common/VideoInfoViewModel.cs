@@ -582,5 +582,30 @@ namespace JryVideo.Common
         {
             await this.SeriesView.AutoCompleteAsync();
         }
+
+        private HashSet<string> queryIndex;
+        private string[] querStrings;
+
+        public bool QueryFilter(string queryTextUpper)
+        {
+            if (this.queryIndex == null)
+            {
+                var set = new HashSet<string>();
+                set.Add(this.SeriesView.Source.Id.ToUpper());
+                set.Add(this.Source.Id.ToUpper());
+                set.Add(this.Source.Index.ToString());
+                this.querStrings = this.Source.Names
+                    .Concat(this.SeriesView.Source.Names)
+                    .Concat(this.NameViewModel.QueryStrings)
+                    .Concat(this.SeriesView.NameViewModel.QueryStrings).Select(z => z.ToUpper()).ToArray();
+                foreach (var name in this.querStrings)
+                {
+                    set.Add(name);
+                }
+                this.queryIndex = set;
+            }
+
+            return this.queryIndex.Contains(queryTextUpper) || this.querStrings.Any(z => z.Contains(queryTextUpper));
+        }
     }
 }

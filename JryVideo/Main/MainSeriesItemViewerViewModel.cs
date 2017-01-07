@@ -182,30 +182,16 @@ namespace JryVideo.Main
                 this.OnlyTracking = isOnlyTracking;
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    this.Text = text.Trim();
+                    this.Text = text.Trim().ToUpper();
                 }
             }
 
             public bool Where(VideoInfoViewModel obj)
-            {
-                if (this.OnlyTracking && !obj.Source.IsTracking) return false;
-                if (this.Text == null) return true;
-
-                return
-                    this.Text.Equals(obj.SeriesView.Source.Id, StringComparison.OrdinalIgnoreCase) ||
-                    this.Text.Equals(obj.Source.Id, StringComparison.OrdinalIgnoreCase) ||
-                    this.Text.Equals(obj.Source.Index.ToString()) ||
-                    obj.Source.Names
-                        .Concat(obj.SeriesView.Source.Names)
-                        .Concat(obj.NameViewModel.QueryStrings)
-                        .Concat(obj.SeriesView.NameViewModel.QueryStrings)
-                        .Any(z => z.Contains(this.Text, StringComparison.OrdinalIgnoreCase));
-            }
+                => (!this.OnlyTracking || obj.Source.IsTracking) &&
+                (this.Text == null || obj.QueryFilter(this.Text));
 
             public bool Equals(FilterInfo other)
-            {
-                return other != null && other.Text == this.Text && other.OnlyTracking == this.OnlyTracking;
-            }
+                => other != null && other.OnlyTracking == this.OnlyTracking && other.Text == this.Text;
         }
 
         private class SearchResult
