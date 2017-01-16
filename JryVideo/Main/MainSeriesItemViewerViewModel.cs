@@ -19,7 +19,6 @@ namespace JryVideo.Main
         private bool hasNext;
         private bool isOnlyTracking;
         private SearchResult searchResultView;
-        private FilterInfo filter;
         private SeriesViewModel[] serieses;
 
         public MainSeriesItemViewerViewModel()
@@ -28,13 +27,15 @@ namespace JryVideo.Main
             this.PageSize = 50;
         }
 
-        protected override bool OnFilter(VideoInfoViewModel obj) => this.filter?.Where(obj) != false;
+        protected override bool OnFilter(VideoInfoViewModel obj) => this.Filter?.Where(obj) != false;
 
         public string SearchText
         {
             get { return this.searchText; }
             set { this.SetPropertyRef(ref this.searchText, value); }
         }
+
+        public FilterInfo Filter { get; private set; }
 
         public bool HasLast
         {
@@ -133,11 +134,11 @@ namespace JryVideo.Main
 
         protected override bool OnResetFilter(string filterText)
         {
-            var filter = this.filter;
+            var filter = this.Filter;
             var next = new FilterInfo(this.IsOnlyTracking, filterText);
             if (filter == null || !filter.Equals(next))
             {
-                this.filter = next;
+                this.Filter = next;
                 return true;
             }
             return false;
@@ -171,7 +172,7 @@ namespace JryVideo.Main
 
         public void AllObsoleted() => this.serieses?.ForEach(z => z.SetObsoleted());
 
-        private class FilterInfo : IEquatable<FilterInfo>
+        public class FilterInfo : IEquatable<FilterInfo>
         {
             public bool OnlyTracking { get; }
 

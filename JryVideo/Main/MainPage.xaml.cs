@@ -51,6 +51,7 @@ namespace JryVideo.Main
                 this.ViewModel.ReloadAsync();
                 this.processTrackTask = new ProcessTrackTask(this.ViewModel);
                 this.processTrackTask.CurrentWatchVideo += this.ProcessTrackTask_CurrentWatchVideo;
+                this.processTrackTask.Start();
             }
         }
 
