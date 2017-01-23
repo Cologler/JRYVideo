@@ -26,6 +26,8 @@ namespace JryVideo.Controls.EditVideo
 {
     public class EditVideoViewModel : EditorItemViewModel<JryVideoInfo>
     {
+        private static readonly HashSet<string> YearOptions = new HashSet<string>();
+
         private ImageViewModel imageViewModel;
         private string selectedType;
         private CoverEditorViewModel cover;
@@ -352,7 +354,11 @@ namespace JryVideo.Controls.EditVideo
         public async Task LoadAsync()
         {
             // year
-            this.YearCollection.AddRange(Enumerable.Range(DateTime.Now.Year - 7, 8).Select(z => z.ToString()));
+            if (YearOptions.Count == 0)
+            {
+                YearOptions.AddRange(Enumerable.Range(DateTime.Now.Year - 7, 9).Select(z => z.ToString()));
+            }
+            this.YearCollection.AddRange(YearOptions.OrderBy(z => z));
 
             // index
             this.IndexCollection.AddRange(Enumerable.Range(1, 8).Select(z => z.ToString()));
@@ -409,6 +415,8 @@ namespace JryVideo.Controls.EditVideo
             {
                 return;
             }
+
+            YearOptions.Add(this.Year.Value);
 
             var obj = this.GetCommitObject();
             this.WriteToObject(obj);
