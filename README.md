@@ -1,8 +1,8 @@
 # JRYVideo
 
-[![Join the chat at https://gitter.im/Cologler/JRYVideo](https://badges.gitter.im/Cologler/JRYVideo.svg)](https://gitter.im/Cologler/JRYVideo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+**项目（没 bug 的话）不打算再维护了，因为引用了老版本的库。**
 
-JRYVideo a video tracker
+**哪天无聊再进行重写。**
 
 ## 怎么编译
 
